@@ -4,7 +4,7 @@
 
 #include "mip.h"
 #include "plugin/clap/mip_clap.h"
-#include "plugin/clap/mip_clap_host.h"
+#include "plugin/clap/mip_clap_plugin_host.h"
 #include "plugin/clap/mip_clap_instance.h"
 
 //----------------------------------------------------------------------
@@ -45,8 +45,8 @@ public:
   bool clap_entry_init(const char *plugin_path) {
     //MIP_ClapPrint("-> true\n");
 
-    //MDescriptor = _mip_create_descriptor();
-    MDescriptor = new DESC(); // where is this deleted ??????
+    //MDescriptor = new DESC(); // where is this deleted ??????
+    MDescriptor = _MIP_CreateDescriptor();
 
     MClapDescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
     MClapDescriptor->clap_version = CLAP_VERSION;
@@ -117,11 +117,10 @@ public:
   */
 
   const clap_plugin* clap_entry_create_plugin(const clap_host* host, const char* plugin_id) {
-    MIP_ClapHost* claphost = new MIP_ClapHost();
+    MIP_ClapPluginHost* claphost = new MIP_ClapPluginHost();
     clap_plugin* plugin = (clap_plugin*)malloc(sizeof(clap_plugin));
-
-    //MIP_Instance* instance = _mip_create_instance(MDescriptor);  // deleted by MIP_ClapInstance destructor
-    MIP_Instance* instance = new INST(MDescriptor);  // deleted by MIP_ClapInstance destructor
+    //MIP_Instance* instance = new INST(MDescriptor);  // deleted by MIP_ClapInstance destructor
+    MIP_Instance* instance = _MIP_CreateInstance(MDescriptor);
     instance->setPluginFormat(MIP_PLUGIN_FORMAT_CLAP);
     MIP_ClapInstance*  clapinstance = new MIP_ClapInstance(instance,claphost);
     plugin->desc              = MClapDescriptor;

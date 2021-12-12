@@ -14,7 +14,7 @@ private:
   struct clap_host MClapHost = {
     CLAP_VERSION,
     this,
-    "clap-test",
+    "MIP_ClapHost",
     "Tor-Helge Skei",
     "https://torhelgeskei.com",
     "0.0.1",

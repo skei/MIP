@@ -10,6 +10,7 @@
 #include "plugin/mip_instance.h"
 #include "plugin/mip_editor.h"
 #include "plugin/clap/mip_clap_utils.h"
+#include "plugin/clap/mip_clap_plugin_host.h"
 #include "base/mip_queue.h"
 
 typedef MIP_Queue<uint32_t,1024> MIP_HostParameterQueue;
@@ -28,7 +29,7 @@ private:
   MIP_Descriptor*              MDescriptor           = nullptr;
   MIP_Instance*                MInstance             = nullptr;
   MIP_ProcessContext           MProcessContext       = {};
-  MIP_ClapHost*                MHost                 = nullptr;
+  MIP_ClapPluginHost*          MHost                 = nullptr;
   MIP_Editor*                  MEditor               = nullptr;
   bool                          MEditorIsOpen         = false;
   MIP_HostParameterQueue       MHostParameterQueue   = {};
@@ -47,7 +48,7 @@ private:
 public:
 //------------------------------
 
-  MIP_ClapInstance(MIP_Instance* AInstance, MIP_ClapHost* AHost) {
+  MIP_ClapInstance(MIP_Instance* AInstance, MIP_ClapPluginHost* AHost) {
     //MIP_Print("\n");
     MInstance = AInstance;
     MDescriptor = MInstance->getDescriptor();
