@@ -1,0 +1,19 @@
+MIP
+
+multum in parvo
+"much in little"
+
+plugin wrappers, abstractions, simplifications, helpers, ..
+
+* linux
+* (windows)
+
+* clap
+* (vst2)
+* (vst3)
+* (lv2?)
+
+* xcb
+* (gdi)
+* (cairo)
+

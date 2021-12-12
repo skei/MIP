@@ -1,0 +1,529 @@
+# depslib dependency file v1.0
+1639262947 source:/DISKS/sda2/code/git/mip/build/build.cpp
+	"mip.h"
+
+1639258507 /DISKS/sda2/code/git/mip/src/mip.h
+	<stdlib.h>
+	<stdint.h>
+	<stdio.h>
+	<memory.h>
+	<string.h>
+	<math.h>
+	"debug/mip_debug.h"
+	"plugin/mip_descriptor.h"
+	"plugin/mip_instance.h"
+	"plugin/mip_editor.h"
+	"plugin/exe/mip_exe.h"
+	"plugin/clap/mip_clap.h"
+	"plugin/vst2/mip_vst2.h"
+	"plugin/vst3/mip_vst3.h"
+
+1639252397 /DISKS/sda2/code/git/mip/src/mip_descriptor.h
+	"mip.h"
+	"mip_parameter.h"
+	"mip_utils.h"
+
+1639244967 /DISKS/sda2/code/git/mip/src/mip_parameter.h
+	"mip.h"
+	<vector>
+
+1639249719 /DISKS/sda2/code/git/mip/src/mip_instance.h
+	"mip.h"
+	"mip_editor.h"
+	"mip_process_context.h"
+
+1639252980 /DISKS/sda2/code/git/mip/src/mip_editor.h
+	"mip.h"
+	"mip_descriptor.h"
+	"mip_editor.h"
+	"mip_widget.h"
+	"mip_window.h"
+
+1639243576 /DISKS/sda2/code/git/mip/src/gui_widget.h
+
+1639241059 /DISKS/sda2/code/git/mip/src/mip_process_context.h
+	"mip.h"
+
+1639255375 /DISKS/sda2/code/git/mip/src/mip_utils.h
+	"mip.h"
+
+1639247065 /DISKS/sda2/code/git/mip/src/mip_gui_widget.h
+	"mip.h"
+	"mip_gui.h"
+	<vector>
+
+1639236850 /DISKS/sda2/code/git/mip/src/mip_gui.h
+
+1639250793 /DISKS/sda2/code/git/mip/src/mip_exe.h
+	"mip.h"
+
+1639247018 /DISKS/sda2/code/git/mip/src/mip_clap.h
+	"mip.h"
+	"clap/all.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/all.h
+	"clap.h"
+	"ext/audio-ports.h"
+	"ext/audio-ports-config.h"
+	"ext/gui.h"
+	"ext/gui-x11.h"
+	"ext/gui-win32.h"
+	"ext/gui-cocoa.h"
+	"ext/gui-free-standing.h"
+	"ext/log.h"
+	"ext/params.h"
+	"ext/render.h"
+	"ext/state.h"
+	"ext/latency.h"
+	"ext/thread-check.h"
+	"ext/timer-support.h"
+	"ext/fd-support.h"
+	"ext/note-name.h"
+	"ext/note-ports.h"
+	"ext/event-filter.h"
+	"ext/draft/preset-load.h"
+	"ext/draft/quick-controls.h"
+	"ext/draft/thread-pool.h"
+	"ext/draft/track-info.h"
+	"ext/draft/tuning.h"
+	"ext/draft/file-reference.h"
+	"ext/draft/vst2-convert.h"
+	"ext/draft/vst3-convert.h"
+	"ext/draft/midi-mappings.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/clap.h
+	"plugin.h"
+	"host.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/plugin.h
+	"macros.h"
+	"host.h"
+	"process.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/macros.h
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/host.h
+	"version.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/version.h
+	<stdbool.h>
+	<stdint.h>
+	"macros.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/process.h
+	"events.h"
+	"audio-buffer.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/events.h
+	<stdbool.h>
+	<stddef.h>
+	"fixedpoint.h"
+	"id.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/fixedpoint.h
+	<stdint.h>
+	"macros.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/id.h
+	<stdint.h>
+	"macros.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/audio-buffer.h
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/audio-ports.h
+	"../clap.h"
+	"../chmap.h"
+	"../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/chmap.h
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/string-sizes.h
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/audio-ports-config.h
+	"../clap.h"
+	"../chmap.h"
+	"../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/gui.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/gui-x11.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/gui-win32.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/gui-cocoa.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/gui-free-standing.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/log.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/params.h
+	"../clap.h"
+	"../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/render.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/state.h
+	"../clap.h"
+	"../stream.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/stream.h
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/latency.h
+	"../clap.h"
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/thread-check.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/timer-support.h
+	<stddef.h>
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/fd-support.h
+	<stddef.h>
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/note-name.h
+	"../clap.h"
+	"../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/note-ports.h
+	"../clap.h"
+	"../chmap.h"
+	"../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/event-filter.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/draft/preset-load.h
+	"../../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/draft/quick-controls.h
+	"../../clap.h"
+	"../../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/draft/thread-pool.h
+	"../../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/draft/track-info.h
+	"../../clap.h"
+	"../../chmap.h"
+	"../../color.h"
+	"../../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/color.h
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/draft/tuning.h
+	"../../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/draft/file-reference.h
+	"../../clap.h"
+	"../../hash.h"
+	"../../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/hash.h
+	"clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/draft/vst2-convert.h
+	"../../clap.h"
+	"../../stream.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/draft/vst3-convert.h
+	"../../clap.h"
+	"../../stream.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/clap/ext/draft/midi-mappings.h
+	"../../clap.h"
+
+1639246050 /DISKS/sda2/code/git/mip/src/mip_vst2.h
+	"mip.h"
+
+1639246100 /DISKS/sda2/code/git/mip/src/mip_vst3.h
+	"mip.h"
+
+1639249948 /DISKS/sda2/code/git/mip/src/mip_gui_window.h
+
+1639250736 /DISKS/sda2/code/git/mip/src/mip_debug.h
+
+1639251190 /DISKS/sda2/code/git/mip/src/mip_widget.h
+	"mip.h"
+	<vector>
+
+1639250496 /DISKS/sda2/code/git/mip/src/mip_window.h
+	"mip.h"
+	"mip_widget.h"
+
+1639260008 /DISKS/sda2/code/git/mip/src/plugin/exe/mip_exe.h
+	"mip.h"
+	"gui/mip_window.h"
+
+1639251456 /DISKS/sda2/code/git/mip/src/plugin/clap/mip_clap.h
+	"mip.h"
+	"extern/clap/all.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/all.h
+	"clap.h"
+	"ext/audio-ports.h"
+	"ext/audio-ports-config.h"
+	"ext/gui.h"
+	"ext/gui-x11.h"
+	"ext/gui-win32.h"
+	"ext/gui-cocoa.h"
+	"ext/gui-free-standing.h"
+	"ext/log.h"
+	"ext/params.h"
+	"ext/render.h"
+	"ext/state.h"
+	"ext/latency.h"
+	"ext/thread-check.h"
+	"ext/timer-support.h"
+	"ext/fd-support.h"
+	"ext/note-name.h"
+	"ext/note-ports.h"
+	"ext/event-filter.h"
+	"ext/draft/preset-load.h"
+	"ext/draft/quick-controls.h"
+	"ext/draft/thread-pool.h"
+	"ext/draft/track-info.h"
+	"ext/draft/tuning.h"
+	"ext/draft/file-reference.h"
+	"ext/draft/vst2-convert.h"
+	"ext/draft/vst3-convert.h"
+	"ext/draft/midi-mappings.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/clap.h
+	"plugin.h"
+	"host.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/plugin.h
+	"macros.h"
+	"host.h"
+	"process.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/macros.h
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/host.h
+	"version.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/version.h
+	<stdbool.h>
+	<stdint.h>
+	"macros.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/process.h
+	"events.h"
+	"audio-buffer.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/events.h
+	<stdbool.h>
+	<stddef.h>
+	"fixedpoint.h"
+	"id.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/fixedpoint.h
+	<stdint.h>
+	"macros.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/id.h
+	<stdint.h>
+	"macros.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/audio-buffer.h
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/audio-ports.h
+	"../clap.h"
+	"../chmap.h"
+	"../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/chmap.h
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/string-sizes.h
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/audio-ports-config.h
+	"../clap.h"
+	"../chmap.h"
+	"../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/gui.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/gui-x11.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/gui-win32.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/gui-cocoa.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/gui-free-standing.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/log.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/params.h
+	"../clap.h"
+	"../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/render.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/state.h
+	"../clap.h"
+	"../stream.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/stream.h
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/latency.h
+	"../clap.h"
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/thread-check.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/timer-support.h
+	<stddef.h>
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/fd-support.h
+	<stddef.h>
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/note-name.h
+	"../clap.h"
+	"../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/note-ports.h
+	"../clap.h"
+	"../chmap.h"
+	"../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/event-filter.h
+	"../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/draft/preset-load.h
+	"../../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/draft/quick-controls.h
+	"../../clap.h"
+	"../../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/draft/thread-pool.h
+	"../../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/draft/track-info.h
+	"../../clap.h"
+	"../../chmap.h"
+	"../../color.h"
+	"../../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/color.h
+	<stdint.h>
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/draft/tuning.h
+	"../../clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/draft/file-reference.h
+	"../../clap.h"
+	"../../hash.h"
+	"../../string-sizes.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/hash.h
+	"clap.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/draft/vst2-convert.h
+	"../../clap.h"
+	"../../stream.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/draft/vst3-convert.h
+	"../../clap.h"
+	"../../stream.h"
+
+1638095229 /DISKS/sda2/code/git/mip/src/extern/clap/ext/draft/midi-mappings.h
+	"../../clap.h"
+
+1639251669 /DISKS/sda2/code/git/mip/src/plugin/vst2/mip_vst2.h
+	"mip.h"
+
+1639251676 /DISKS/sda2/code/git/mip/src/plugin/vst3/mip_vst3.h
+	"mip.h"
+
+1639261472 /DISKS/sda2/code/git/mip/src/plugin/mip_descriptor.h
+	"mip.h"
+	"plugin/mip_parameter.h"
+	"base/mip_utils.h"
+
+1639244967 /DISKS/sda2/code/git/mip/src/plugin/mip_parameter.h
+	"mip.h"
+	<vector>
+
+1639259372 /DISKS/sda2/code/git/mip/src/plugin/mip_instance.h
+	"mip.h"
+	"plugin/mip_editor.h"
+	"plugin/mip_process_context.h"
+
+1639263045 /DISKS/sda2/code/git/mip/src/plugin/mip_editor.h
+	"mip.h"
+	"plugin/mip_descriptor.h"
+	"plugin/mip_editor.h"
+	"gui/mip_widget.h"
+	"gui/mip_window.h"
+
+1639254469 /DISKS/sda2/code/git/mip/src/gui/mip_widget.h
+	"mip.h"
+	<vector>
+
+1639261743 /DISKS/sda2/code/git/mip/src/gui/mip_window.h
+	"mip.h"
+	"mip_widget.h"
+
+1639241059 /DISKS/sda2/code/git/mip/src/plugin/mip_process_context.h
+	"mip.h"
+
+1639259140 /DISKS/sda2/code/git/mip/src/debug/mip_debug.h
+	"debug/mip_debug_print.h"
+	"debug/mip_debug_assert.h"
+	"debug/mip_debug_callstack.h"
+	"debug/mip_debug_crash_handler.h"
+
+1639258872 /DISKS/sda2/code/git/mip/src/debug/mip_debug_print.h
+	<stdarg.h>
+	<sys/time.h>
+	<sys/syscall.h>
+	<sys/unistd.h>
+	<unistd.h>
+	<sys/socket.h>
+	<sys/un.h>
+
+1639258807 /DISKS/sda2/code/git/mip/src/debug/mip_debug_callstack.h
+	<stdio.h>
+	<sys/unistd.h>
+	<cxxabi.h>
+	<execinfo.h>
+
+1639258822 /DISKS/sda2/code/git/mip/src/debug/mip_debug_crash_handler.h
+	<signal.h>
+
+1639259213 /DISKS/sda2/code/git/mip/src/debug/mip_debug_assert.h
+	<assert.h>
+
+1639255375 /DISKS/sda2/code/git/mip/src/base/mip_utils.h
+	"mip.h"
+
