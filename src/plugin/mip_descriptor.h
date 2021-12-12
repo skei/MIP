@@ -61,13 +61,11 @@ public:
 //------------------------------
 
   MIP_Descriptor() {
-    MIP_PRINT;
   }
 
   //----------
 
   virtual ~MIP_Descriptor() {
-    MIP_PRINT;
     deleteParameters();
   }
 

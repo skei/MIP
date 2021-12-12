@@ -93,7 +93,6 @@ public:
 //------------------------------
 
   MIP_Editor(MIP_EditorListener* AListener, MIP_Descriptor* ADescriptor) {
-    MIP_PRINT;
     MListener   = AListener;
     MDescriptor = ADescriptor;
     uint32_t num = MDescriptor->getNumParameters();
@@ -105,7 +104,6 @@ public:
   //----------
 
   virtual ~MIP_Editor() {
-    MIP_PRINT;
     if (MParameterToWidget) free(MParameterToWidget);
     if (MWindow) delete MWindow;
 
@@ -126,7 +124,6 @@ public:
 //------------------------------
 
   bool attach(const char* AName, void* AParent) {
-    MIP_PRINT;
     MAttachedName = AName;
     MAttachedParent = AParent;
     MIP_FRect rect = MDescriptor->getEditorRect();
@@ -142,7 +139,6 @@ public:
   //----------
 
   bool open() {
-    MIP_PRINT;
     MWindow->open();
     MIsOpen = true;
     return true;
@@ -151,7 +147,6 @@ public:
   //----------
 
   void close() {
-    MIP_PRINT;
     MWindow->close();
     MIsOpen = false;
   }
@@ -161,7 +156,6 @@ public:
 //------------------------------
 
   void updateParameter(uint32_t AIndex, float AValue, bool ARedraw=false) {
-    MIP_PRINT;
     MIP_Widget* widget = MParameterToWidget[AIndex];
     if (widget) {
       widget->updateValue(AValue);
@@ -172,7 +166,6 @@ public:
   //----------
 
   void redrawParameter(uint32_t AIndex) {
-    MIP_PRINT;
     MIP_Widget* widget = MParameterToWidget[AIndex];
     if (widget) widget->redraw();
   }
@@ -180,7 +173,6 @@ public:
   //----------
 
   void connectParameter(MIP_Widget* AWidget, int32_t AParameterIndex) {
-    MIP_PRINT;
     MParameterToWidget[AParameterIndex] = AWidget;
     AWidget->setParameterIndex(AParameterIndex);
     AWidget->on_connect(AParameterIndex);
@@ -194,14 +186,12 @@ public: // MIP_EditorListener
   // pass on to instance
 
   void on_editor_parameter(uint32_t AIndex, float AValue) override {
-    MIP_PRINT;
     if (MListener) MListener->on_editor_parameter(AIndex,AValue);
   }
 
   //----------
 
   void on_editor_resize(uint32_t AWidth, uint32_t AHeight) override {
-    MIP_PRINT;
     if (MListener) MListener->on_editor_resize(AWidth,AHeight);
   }
 

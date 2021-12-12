@@ -3,15 +3,13 @@
 //----------------------------------------------------------------------
 
 #include "mip.h"
-#include "plugin/clap/mip_clap.h"
-
-#include "mip_clap.h"
+#include "base/mip_queue.h"
 #include "plugin/mip_descriptor.h"
 #include "plugin/mip_instance.h"
 #include "plugin/mip_editor.h"
+#include "plugin/clap/mip_clap.h"
 #include "plugin/clap/mip_clap_utils.h"
 #include "plugin/clap/mip_clap_plugin_host.h"
-#include "base/mip_queue.h"
 
 typedef MIP_Queue<uint32_t,1024> MIP_HostParameterQueue;
 
@@ -26,21 +24,23 @@ private:
 private:
 //------------------------------
 
-  MIP_Descriptor*              MDescriptor           = nullptr;
-  MIP_Instance*                MInstance             = nullptr;
-  MIP_ProcessContext           MProcessContext       = {};
-  MIP_ClapPluginHost*          MHost                 = nullptr;
-  MIP_Editor*                  MEditor               = nullptr;
-  bool                          MEditorIsOpen         = false;
-  MIP_HostParameterQueue       MHostParameterQueue   = {};
+  MIP_Descriptor*         MDescriptor           = nullptr;
+  MIP_Instance*           MInstance             = nullptr;
+  MIP_ProcessContext      MProcessContext       = {};
+  MIP_ClapPluginHost*     MHost                 = nullptr;
+  MIP_Editor*             MEditor               = nullptr;
+  bool                    MEditorIsOpen         = false;
+  MIP_HostParameterQueue  MHostParameterQueue   = {};
 
-  float                         MSampleRate           = 0.0;
-  uint32_t                      MMinFrames            = 0;
-  uint32_t                      MMaxFrames            = 0; //INT_MAX;
-  bool                          MIsProcessing         = false;
-  uint32_t                      MSelectedPortConfig   = 0;
+  float                   MSampleRate           = 0.0;
+  uint32_t                MMinFrames            = 0;
+  uint32_t                MMaxFrames            = 0; //INT_MAX;
+  bool                    MIsProcessing         = false;
+  uint32_t                MSelectedPortConfig   = 0;
 
-  clap_plugin_render_mode       MRenderMode           = CLAP_RENDER_REALTIME;
+  clap_plugin_render_mode MRenderMode           = CLAP_RENDER_REALTIME;
+
+  uint32_t                MPluginIndex          = 0;
 
 
 
@@ -48,11 +48,11 @@ private:
 public:
 //------------------------------
 
-  MIP_ClapInstance(MIP_Instance* AInstance, MIP_ClapPluginHost* AHost) {
-    //MIP_Print("\n");
+  MIP_ClapInstance(uint32_t AIndex, MIP_Instance* AInstance, MIP_ClapPluginHost* AHost) {
+    MPluginIndex = AIndex;
     MInstance = AInstance;
-    MDescriptor = MInstance->getDescriptor();
     MHost = AHost;
+    MDescriptor = MInstance->getDescriptor();
     MProcessContext.inputs  = (float**)malloc(sizeof(float*) * MDescriptor->getNumInputs());
     MProcessContext.outputs = (float**)malloc(sizeof(float*) * MDescriptor->getNumOutputs());
   }
@@ -60,7 +60,6 @@ public:
   //----------
 
   virtual ~MIP_ClapInstance() {
-    //MIP_Print("\n");
     free(MProcessContext.inputs);
     free(MProcessContext.outputs);
     if (MInstance) delete MInstance;
@@ -86,7 +85,6 @@ public: // editor listener
   */
 
   void on_editor_parameter(uint32_t AIndex, float AValue) override {
-    //MIP_Print("index %i value %.3f\n",AIndex,AValue);
     MIP_Parameter* parameter = MDescriptor->getParameter(AIndex);
     float value = parameter->from01(AValue);
     MInstance->setParameterValue(AIndex,value);
@@ -100,7 +98,6 @@ public: // editor listener
   //----------
 
   void on_editor_resize(uint32_t AWidth, uint32_t AHeight) override {
-    //MIP_Print("width %i height %i\n",AWidth,AHeight);
   }
 
 
@@ -223,7 +220,6 @@ private:
     uint8_t msg1 = event->midi.data[0];
     uint8_t msg2 = event->midi.data[1];
     uint8_t msg3 = event->midi.data[2];
-    //MIP_Print("MIDI %i : %02x %02x %02x\n",event->time,msg1,msg2,msg3);
     MInstance->on_plugin_midi(/*event->time,*/msg1,msg2,msg3);
   }
 
@@ -239,7 +235,6 @@ private:
   void handleInputEvents(const clap_event_list* in_events) {
     if (in_events) {
       uint32_t num = in_events->size(in_events);
-      //MIP_Print("num %i\n",num);
       for (uint32_t i=0; i<num; i++) {
         const clap_event* event = in_events->get(in_events,i);
         if (event) {
@@ -323,11 +318,13 @@ public:
   */
 
   bool clap_instance_init() {
-    //MIP_ClapPrint("-> true\n");
-    MInstance->on_plugin_init();
-    MInstance->setDefaultParameterValues();
-    MInstance->updateAllParameters();
-    return true;
+    bool result = MInstance->on_plugin_init();
+    if (result) {
+      MInstance->setDefaultParameterValues();
+      MInstance->updateAllParameters();
+      return true;
+    }
+    return false;
   }
 
   //----------
@@ -338,12 +335,9 @@ public:
   */
 
   void clap_instance_destroy() {
-    //MIP_ClapPrint("\n");
-
 //
 //    MInstance->on_plugin_destroy();
 //
-
   }
 
   //----------
@@ -359,12 +353,10 @@ public:
   */
 
   bool clap_instance_activate(double sample_rate, uint32_t minframes, uint32_t maxframes) {
-    //MIP_ClapPrint("sample_rate %.2f minframes %i maxframes %i -> true\n",sample_rate,minframes,maxframes);
     MSampleRate = sample_rate;
     MMinFrames  = minframes;
     MMaxFrames  = maxframes;
-    MInstance->on_plugin_activate(MSampleRate,MMinFrames,MMaxFrames);
-    return true;
+    return MInstance->on_plugin_activate(MSampleRate,MMinFrames,MMaxFrames);
   }
 
   //----------
@@ -372,7 +364,6 @@ public:
   /* */
 
   void clap_instance_deactivate() {
-    //MIP_ClapPrint("\n");
     MInstance->on_plugin_deactivate();
   }
 
@@ -385,10 +376,8 @@ public:
   */
 
   bool clap_instance_start_processing() {
-    //MIP_ClapPrint("-> true\n");
-    MIsProcessing = true;
-    MInstance->on_plugin_startProcessing();
-    return true;
+    MIsProcessing = MInstance->on_plugin_startProcessing();
+    return MIsProcessing;
   }
 
   //----------
@@ -396,9 +385,8 @@ public:
   /* */
 
   void clap_instance_stop_processing() {
-    //MIP_ClapPrint("\n");
-    MIsProcessing = false;
     MInstance->on_plugin_stopProcessing();
+    MIsProcessing = false;
   }
 
   //----------
@@ -410,7 +398,6 @@ public:
   */
 
   clap_process_status clap_instance_process(const clap_process *process) {
-    //MIP_Print("process: %p\n",process);
 
     handleInputEvents(process->in_events);
 
@@ -451,21 +438,19 @@ public:
   */
 
   const void *clap_instance_get_extension(const char *id) {
-    const void* ptr = nullptr;
-    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG) == 0)  { ptr = &MClapAudioPortsConfig; }
-    if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)         { ptr = &MClapAudioPorts; }
-    if (strcmp(id,CLAP_EXT_EVENT_FILTER) == 0)        { ptr = &MClapEventFilter; }
-    if (strcmp(id,CLAP_EXT_FD_SUPPORT) == 0)          { ptr = &MClapFdSupport; }
-    if (strcmp(id,CLAP_EXT_GUI) == 0)                 { ptr = &MClapGui; }
-    if (strcmp(id,CLAP_EXT_GUI_X11) == 0)             { ptr = &MClapGuiX11; }
-    if (strcmp(id,CLAP_EXT_LATENCY) == 0)             { ptr = &MClapLatency; }
-    if (strcmp(id,CLAP_EXT_NOTE_NAME) == 0)           { ptr = &MClapNoteName; }
-    if (strcmp(id,CLAP_EXT_PARAMS) == 0)              { ptr = &MClapParams; }
-    if (strcmp(id,CLAP_EXT_RENDER) == 0)              { ptr = &MClapRender; }
-    if (strcmp(id,CLAP_EXT_STATE) == 0)               { ptr = &MClapState; }
-    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT) == 0)       { ptr = &MClapTimerSupport; }
-    //MIP_ClapPrint("id %s -> %p\n",id,ptr);
-    return ptr;
+    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG) == 0)  { return &MClapAudioPortsConfig; }
+    if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)         { return &MClapAudioPorts; }
+    if (strcmp(id,CLAP_EXT_EVENT_FILTER) == 0)        { return &MClapEventFilter; }
+    if (strcmp(id,CLAP_EXT_FD_SUPPORT) == 0)          { return &MClapFdSupport; }
+    if (strcmp(id,CLAP_EXT_GUI) == 0)                 { return &MClapGui; }
+    if (strcmp(id,CLAP_EXT_GUI_X11) == 0)             { return &MClapGuiX11; }
+    if (strcmp(id,CLAP_EXT_LATENCY) == 0)             { return &MClapLatency; }
+    if (strcmp(id,CLAP_EXT_NOTE_NAME) == 0)           { return &MClapNoteName; }
+    if (strcmp(id,CLAP_EXT_PARAMS) == 0)              { return &MClapParams; }
+    if (strcmp(id,CLAP_EXT_RENDER) == 0)              { return &MClapRender; }
+    if (strcmp(id,CLAP_EXT_STATE) == 0)               { return &MClapState; }
+    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT) == 0)       { return &MClapTimerSupport; }
+    return nullptr;
   }
 
   //----------
@@ -477,7 +462,6 @@ public:
   */
 
   void clap_instance_on_main_thread() {
-    //MIP_ClapPrint("\n");
   }
 
 //------------------------------
@@ -517,7 +501,6 @@ public: // extensions
   */
 
   uint32_t clap_audio_ports_config_count() {
-    //MIP_ClapPrint("-> 1\n");
     return 1;
   }
 
@@ -534,7 +517,6 @@ public: // extensions
   */
 
   bool clap_audio_ports_config_get(uint32_t index, clap_audio_ports_config *config) {
-    //MIP_ClapPrint("index %i",index);
     switch(index) {
       case 0:
         config->id                    = 0;
@@ -546,7 +528,6 @@ public: // extensions
         //MIP_ClapDPrint(" -> true\n");
         return true;
     }
-    //MIP_ClapDPrint(" -> false\n");
     return false;
   }
 
@@ -559,7 +540,6 @@ public: // extensions
   */
 
   bool clap_audio_ports_config_select(clap_id config_id) {
-    //MIP_ClapPrint("config_id %i -> true\n",config_id);
     MSelectedPortConfig = config_id;
     return true;
   }
@@ -585,32 +565,13 @@ public: // extensions
   */
 
   uint32_t clap_audio_ports_count(bool is_input) {
-    //MIP_ClapPrint("is_input %s", is_input ? "true" : "false" );
     if (is_input) {
-      //if (MDescriptor->options.is_synth) {
-      //  //MIP_ClapDPrint(" -> 0\n");
-      //  return 0;
-      //}
-      //else {
-        if (MDescriptor->getNumInputs() > 0) {
-          //MIP_ClapDPrint(" -> 1\n");
-          return 1;
-        }
-        else {
-          //MIP_ClapDPrint(" -> 0\n");
-          return 0;
-        }
-      //}
+      if (MDescriptor->getNumInputs() > 0) return 1;
+      else return 0;
     }
     else {
-      if (MDescriptor->getNumOutputs() > 0) {
-        //MIP_ClapDPrint(" -> 1\n");
-        return 1;
-      }
-      else {
-        //MIP_ClapDPrint(" -> 0\n");
-        return 0;
-      }
+      if (MDescriptor->getNumOutputs() > 0) return 1;
+      else return 0;
     }
   }
 
@@ -624,7 +585,6 @@ public: // extensions
   */
 
   bool clap_audio_ports_get(uint32_t index, bool is_input, clap_audio_port_info *info) {
-    //MIP_ClapPrint("index %i is_input %s",index, is_input ? "true" : "false" );
     if (is_input) {
       switch(index) {
         case 0:
@@ -636,7 +596,6 @@ public: // extensions
           info->is_main       = true;   // there can only be 1 main input and output
           info->is_cv         = false;  // control voltage
           info->in_place      = true;   // if true the daw can use the same buffer for input and output, only for main input to main output
-          //MIP_ClapDPrint(" -> true\n");
           return true;
       }
     }
@@ -651,11 +610,9 @@ public: // extensions
           info->is_main       = true;   // there can only be 1 main input and output
           info->is_cv         = false;  // control voltage
           info->in_place      = true;   // if true the daw can use the same buffer for input and output, only for main input to main output
-          //MIP_ClapDPrint(" -> true\n");
           return true;
       }
     }
-    //MIP_ClapDPrint(" -> false\n");
     return false;
   }
 
@@ -677,19 +634,18 @@ public: // extensions
 
   bool clap_event_filter_accepts(clap_event_type event_type) {
     switch (event_type) {
-      case CLAP_EVENT_NOTE_ON:          /* MIP_ClapPrint("event_type CLAP_EVENT_NOTE_ON -> true\n");         */ return true; break;
-      case CLAP_EVENT_NOTE_OFF:         /* MIP_ClapPrint("event_type CLAP_EVENT_NOTE_OFF -> true\n");        */ return true; break;
-      case CLAP_EVENT_NOTE_END:         /* MIP_ClapPrint("event_type CLAP_EVENT_NOTE_END -> true\n");        */ return true; break;
-      case CLAP_EVENT_NOTE_CHOKE:       /* MIP_ClapPrint("event_type CLAP_EVENT_NOTE_CHOKE -> true\n");      */ return true; break;
-      case CLAP_EVENT_NOTE_EXPRESSION:  /* MIP_ClapPrint("event_type CLAP_EVENT_NOTE_EXPRESSION -> true\n"); */ return true; break;
-      case CLAP_EVENT_NOTE_MASK:        /* MIP_ClapPrint("event_type CLAP_EVENT_NOTE_MASK -> true\n");       */ return true; break;
-      case CLAP_EVENT_PARAM_VALUE:      /* MIP_ClapPrint("event_type CLAP_EVENT_PARAM_VALUE -> true\n");     */ return true; break;
-      case CLAP_EVENT_PARAM_MOD:        /* MIP_ClapPrint("event_type CLAP_EVENT_PARAM_MOD -> true\n");       */ return true; break;
-      case CLAP_EVENT_TRANSPORT:        /* MIP_ClapPrint("event_type CLAP_EVENT_TRANSPORT -> true\n");       */ return true; break;
-      case CLAP_EVENT_MIDI:             /* MIP_ClapPrint("event_type CLAP_EVENT_MIDI -> true\n");            */ return true; break;
-      case CLAP_EVENT_MIDI_SYSEX:       /* MIP_ClapPrint("event_type CLAP_EVENT_MIDI_SYSEX -> true\n");      */ return true; break;
+      case CLAP_EVENT_NOTE_ON:          return true;
+      case CLAP_EVENT_NOTE_OFF:         return true;
+      case CLAP_EVENT_NOTE_END:         return true;
+      case CLAP_EVENT_NOTE_CHOKE:       return true;
+      case CLAP_EVENT_NOTE_EXPRESSION:  return true;
+      case CLAP_EVENT_NOTE_MASK:        return true;
+      case CLAP_EVENT_PARAM_VALUE:      return true;
+      case CLAP_EVENT_PARAM_MOD:        return true;
+      case CLAP_EVENT_TRANSPORT:        return true;
+      case CLAP_EVENT_MIDI:             return true;
+      case CLAP_EVENT_MIDI_SYSEX:       return true;
     }
-    //MIP_ClapPrint("event_type %i <unknown> -> false\n",event_type);
     return false;
   }
 
@@ -715,7 +671,6 @@ public: // extensions
   */
 
   void clap_fd_support_on_fd(clap_fd fd, clap_fd_flags flags) {
-    //MIP_ClapPrint("fd %i flags %i\n",fd,flags);
   }
 
   //------------------------------
@@ -754,7 +709,7 @@ public: // extensions
   // note: the editor doesn't have a window yet!
 
   bool clap_gui_create() {
-    MEditor = _MIP_CreateEditor(this,MDescriptor);
+    MEditor = MIP_CreateEditor(MPluginIndex,this,MDescriptor);
 //    MEditor = _mip_create_editor(this,MDescriptor);
 //    bool result = MInstance->on_plugin_createEditor(MEditor);
 //    return result;
@@ -810,7 +765,6 @@ public: // extensions
   */
 
   bool clap_gui_can_resize() {
-    //MIP_ClapPrint("-> false\n");
     if (MDescriptor->canResizeEditor()) return true;
     return false;
   }
@@ -826,7 +780,6 @@ public: // extensions
   */
 
   void clap_gui_round_size(uint32_t *width, uint32_t *height) {
-    //MIP_ClapPrint("-> (*width %i *height %i)\n",MDescriptor->editorWidth,MDescriptor->editorHeight);
     *width  = MDescriptor->getEditorRect().w;
     *height = MDescriptor->getEditorRect().h;
   }
@@ -891,7 +844,6 @@ public: // extensions
   */
 
   bool clap_gui_x11_attach(const char* display_name, unsigned long window) {
-    //MIP_ClapPrint("display_name: %s, window: %i -> true\n",display_name,window);
     MEditor->attach(display_name,(void*)window);
     //MEditorIsOpen = MInstance->on_plugin_openEditor(MEditor);     // see show?
     return true;
@@ -907,7 +859,6 @@ public: // extensions
   */
 
   uint32_t clap_latency_get() {
-    //MIP_ClapPrint("-> 0\n");
     return 0;
   }
 
@@ -926,7 +877,6 @@ public: // extensions
   */
 
   uint32_t clap_note_name_count() {
-    //MIP_ClapPrint("-> 0\n");
     return 0;
   }
 
@@ -938,7 +888,6 @@ public: // extensions
   */
 
   bool clap_note_name_get(uint32_t index, clap_note_name *note_name) {
-    //MIP_ClapPrint("index %i -> false\n",index);
     return false;
   }
 
@@ -1027,7 +976,6 @@ public: // extensions
   */
 
   uint32_t clap_params_count() {
-    //MIP_ClapPrint("-> %i\n",MDescriptor->parameters.size());
     return MDescriptor->getNumParameters();
   }
 
@@ -1051,7 +999,6 @@ public: // extensions
   */
 
   bool clap_params_get_info(int32_t param_index, clap_param_info *param_info) {
-    //MIP_ClapPrint("param_index %i -> true\n",param_index);
     MIP_Parameter* parameter = MDescriptor->getParameter(param_index);
     uint32_t flags = 0;
     if (parameter->isHidden())    param_info->flags |= CLAP_PARAM_IS_HIDDEN;
@@ -1127,8 +1074,6 @@ public: // extensions
   */
 
   void clap_params_flush(const clap_event_list *input_parameter_changes, const clap_event_list *output_parameter_changes) {
-    //MIP_ClapPrint("\n");
-    MIP_Print("\n");
     handleInputEvents(input_parameter_changes);
     handleOutputEvents(output_parameter_changes);
   }
@@ -1154,7 +1099,6 @@ public: // extensions
   */
 
   void clap_render_set(clap_plugin_render_mode mode) {
-    //MIP_ClapPrint("mode %i\n",mode);
     MRenderMode = mode;
   }
 
@@ -1178,7 +1122,6 @@ public: // extensions
   */
 
   bool clap_state_save(clap_ostream *stream) {
-    MIP_Print("Saving state..\n");
     MIP_Assert(stream);
       uint32_t version = MDescriptor->getVersion();
       stream->write(stream,&version,sizeof(uint32_t));
@@ -1188,7 +1131,6 @@ public: // extensions
         float value = MInstance->getParameterValue(i);
         stream->write(stream,&value,sizeof(float));
       }
-    MIP_Print("Saving state.. OK\n");
     return true;
   }
 
@@ -1205,7 +1147,6 @@ public: // extensions
   */
 
   bool clap_state_load(clap_istream *stream) {
-    MIP_Print("Loading state..\n");
     MIP_Assert(stream);
     uint32_t version = 0;
     stream->read(stream,&version,sizeof(uint32_t));
@@ -1216,7 +1157,6 @@ public: // extensions
       stream->read(stream,&value,sizeof(float));
       MInstance->setParameterValue(i,value);
     }
-    MIP_Print("Saving state.. OK\n");
     return true;
   }
 
@@ -1247,7 +1187,6 @@ public: // extension callbacks
   static uint32_t clap_audio_ports_config_count_callback(const clap_plugin *plugin) {
     MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
     return instance->clap_audio_ports_config_count();
-    return 0;
   }
 
   static bool clap_audio_ports_config_get_callback(const clap_plugin *plugin, uint32_t index, clap_audio_ports_config *config) {

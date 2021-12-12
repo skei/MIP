@@ -13,15 +13,23 @@
 //
 //----------------------------------------------------------------------
 
-template <class DESC, class INST, class EDIT>
 class MIP_ClapPlugin {
 
 //------------------------------
 private:
 //------------------------------
 
-  MIP_Descriptor*         MDescriptor     = nullptr;
-  clap_plugin_descriptor* MClapDescriptor = nullptr;
+//------------------------------
+public:
+//------------------------------
+
+  MIP_ClapPlugin() {
+  }
+
+  //----------
+
+  ~MIP_ClapPlugin() {
+  };
 
 //------------------------------
 public:
@@ -43,26 +51,25 @@ public:
   //----------
 
   bool clap_entry_init(const char *plugin_path) {
-    //MIP_ClapPrint("-> true\n");
-
-    //MDescriptor = new DESC(); // where is this deleted ??????
-    MDescriptor = _MIP_CreateDescriptor();
-
-    MClapDescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
-    MClapDescriptor->clap_version = CLAP_VERSION;
-    MClapDescriptor->id           = MDescriptor->getIdString();
-    MClapDescriptor->name         = MDescriptor->getName();
-    MClapDescriptor->vendor       = MDescriptor->getAuthor();
-    MClapDescriptor->url          = MDescriptor->getUrl();
-    MClapDescriptor->manual_url   = "";
-    MClapDescriptor->support_url  = "";
-    MClapDescriptor->version      = MDescriptor->getVersionString();
-    MClapDescriptor->description  = "";
-    MClapDescriptor->keywords     = ""; // Arbitrary list of keywords, separated by `;'
-
-    if (MDescriptor->isSynth()) MClapDescriptor->plugin_type  = CLAP_PLUGIN_INSTRUMENT;
-    else MClapDescriptor->plugin_type  = CLAP_PLUGIN_AUDIO_EFFECT; //CLAP_PLUGIN_EVENT_EFFECT, CLAP_PLUGIN_ANALYZER
-
+    //MIP_RegisterPlugins()
+    uint32_t num = MIP_GetNumPlugins();
+    for (uint32_t i=0; i<num; i++) {
+      MIP_PluginInfo* info = MIP_GetPluginInfo(i);
+      clap_plugin_descriptor* clapdescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor)); // who deletes this?
+      clapdescriptor->clap_version = CLAP_VERSION;
+      clapdescriptor->id           = info->desc->getIdString();
+      clapdescriptor->name         = info->desc->getName();
+      clapdescriptor->vendor       = info->desc->getAuthor();
+      clapdescriptor->url          = info->desc->getUrl();
+      clapdescriptor->manual_url   = "";
+      clapdescriptor->support_url  = "";
+      clapdescriptor->version      = info->desc->getVersionString();
+      clapdescriptor->description  = "";
+      clapdescriptor->keywords     = "";
+      if (info->desc->isSynth()) clapdescriptor->plugin_type = CLAP_PLUGIN_INSTRUMENT;
+      else clapdescriptor->plugin_type  = CLAP_PLUGIN_AUDIO_EFFECT; //CLAP_PLUGIN_EVENT_EFFECT, CLAP_PLUGIN_ANALYZER
+      info->ptr = clapdescriptor;
+    }
     return true;
   }
 
@@ -72,12 +79,11 @@ public:
   */
 
   void clap_entry_deinit(void) {
-    //MIP_ClapPrint("\n");
-    if (MClapDescriptor) free(MClapDescriptor);
-    MClapDescriptor = nullptr;
-    // crash..
-    //if (MDescriptor) delete MDescriptor; // deleted in  ~MIP_Instance()
-    //MDescriptor = nullptr;
+    uint32_t num = MIP_GetNumPlugins();
+    for (uint32_t i=0; i<num; i++) {
+      MIP_PluginInfo* info = MIP_GetPluginInfo(i);
+      free(info->ptr);
+    }
   }
 
   //----------
@@ -88,8 +94,7 @@ public:
   */
 
   uint32_t clap_entry_get_plugin_count() {
-    //MIP_ClapPrint("-> 1\n");
-    return 1;
+    return MIP_GetNumPlugins();
   }
 
   //----------
@@ -102,8 +107,8 @@ public:
   */
 
   const clap_plugin_descriptor* clap_entry_get_plugin_descriptor(uint32_t index) {
-    //MIP_ClapPrint("index %i -> 0x%p\n",index,MClapDescriptor);
-    return MClapDescriptor;
+    MIP_PluginInfo* info = MIP_GLOBAL_PLUGIN_LIST.getPlugin(index);
+    return (clap_plugin_descriptor*)info->ptr;
   }
 
   //----------
@@ -117,13 +122,20 @@ public:
   */
 
   const clap_plugin* clap_entry_create_plugin(const clap_host* host, const char* plugin_id) {
-    MIP_ClapPluginHost* claphost = new MIP_ClapPluginHost();
-    clap_plugin* plugin = (clap_plugin*)malloc(sizeof(clap_plugin));
-    //MIP_Instance* instance = new INST(MDescriptor);  // deleted by MIP_ClapInstance destructor
-    MIP_Instance* instance = _MIP_CreateInstance(MDescriptor);
+    uint32_t index = MIP_GLOBAL_PLUGIN_LIST.findPluginByIdString(plugin_id);//)  0;
+    //MIP_Print("*** index = %i\n",index);
+    MIP_PluginInfo*         info            = MIP_GetPluginInfo(index);
+    MIP_Descriptor*         descriptor      = info->desc;
+    MIP_Instance*           instance        = MIP_CreateInstance(index,descriptor);           // deleted by MIP_ClapInstance destructor
+    MIP_ClapPluginHost*     claphost        = new MIP_ClapPluginHost();
+    MIP_ClapInstance*       clapinstance    = new MIP_ClapInstance(index,instance,claphost);
+    clap_plugin*            plugin          = (clap_plugin*)malloc(sizeof(clap_plugin));
+
+    //clap_plugin_descriptor* clapdescriptor  = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
+    clap_plugin_descriptor* clapdescriptor  = (clap_plugin_descriptor*)info->ptr;
+
     instance->setPluginFormat(MIP_PLUGIN_FORMAT_CLAP);
-    MIP_ClapInstance*  clapinstance = new MIP_ClapInstance(instance,claphost);
-    plugin->desc              = MClapDescriptor;
+    plugin->desc              = clapdescriptor;
     plugin->plugin_data       = clapinstance;
     plugin->init              = clap_instance_init_callback;
     plugin->destroy           = clap_instance_destroy_callback;
@@ -134,7 +146,6 @@ public:
     plugin->process           = clap_instance_process_callback;
     plugin->get_extension     = clap_instance_get_extension_callback;
     plugin->on_main_thread    = clap_instance_on_main_thread_callback;
-    //MIP_ClapPrint("plugin_id %s -> %p\n",plugin_id,plugin);
     return plugin;
   }
 
@@ -145,7 +156,6 @@ public:
   */
 
   uint32_t clap_entry_get_invalidation_sources_count(void) {
-    //MIP_ClapPrint("-> 0\n");
     return 0;
   }
 
@@ -157,7 +167,6 @@ public:
   */
 
   const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources(uint32_t index) {
-    //MIP_ClapPrint("index %i -> NULL\n",index);
     return nullptr;
   }
 
@@ -169,7 +178,6 @@ public:
   */
 
   void clap_entry_refresh(void) {
-    //MIP_ClapPrint("\n");
   }
 
 //------------------------------
@@ -244,73 +252,59 @@ public:
 //
 //----------------------------------------------------------------------
 
-#define MIP_CLAP_MAIN(D,I,E)                                                                                  \
-                                                                                                              \
-MIP_ClapPlugin<D,I,E> MIP_GLOBAL_CLAP_PLUGIN;                                                                 \
-                                                                                                              \
-/*----------*/                                                                                                \
-                                                                                                              \
-static bool clap_entry_init_callback(const char *plugin_path) {                                               \
-  MIP_PRINT;                                                                                                  \
-  return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_init(plugin_path);                                                 \
-}                                                                                                             \
-                                                                                                              \
-static void clap_entry_deinit_callback() {                                                                    \
-  MIP_PRINT;                                                                                                  \
-  MIP_GLOBAL_CLAP_PLUGIN.clap_entry_deinit();                                                                 \
-}                                                                                                             \
-                                                                                                              \
-static uint32_t clap_entry_get_plugin_count_callback() {                                                      \
-  MIP_PRINT;                                                                                                  \
-  return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_plugin_count();                                                \
-}                                                                                                             \
-                                                                                                              \
-static const clap_plugin_descriptor* clap_entry_get_plugin_descriptor_callback(uint32_t index) {              \
-  MIP_PRINT;                                                                                                  \
-  return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_plugin_descriptor(index);                                      \
-}                                                                                                             \
-                                                                                                              \
-static const clap_plugin* clap_entry_create_plugin_callback(const clap_host* host, const char* plugin_id) {   \
-  MIP_PRINT;                                                                                                  \
-  return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_create_plugin(host,plugin_id);                                     \
-}                                                                                                             \
-                                                                                                              \
-static uint32_t clap_entry_get_invalidation_sources_count_callback(void) {                                    \
-  MIP_PRINT;                                                                                                  \
-  return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_sources_count();                                  \
-}                                                                                                             \
-                                                                                                              \
-static const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources_callback(uint32_t index) {  \
-  MIP_PRINT;                                                                                                  \
-  return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_sources(index);                                   \
-}                                                                                                             \
-                                                                                                              \
-static void clap_entry_refresh_callback(void) {                                                               \
-  MIP_PRINT;                                                                                                  \
-  MIP_GLOBAL_CLAP_PLUGIN.clap_entry_refresh();                                                                \
-}                                                                                                             \
-                                                                                                              \
-/*----------*/                                                                                                \
-                                                                                                              \
-bool print_clap_welcome() { MIP_Print("Hello world from CLAP!\n"); return true; }                             \
-bool has_printed = print_clap_welcome();                                                                      \
-                                                                                                              \
-/*----------*/                                                                                                \
-                                                                                                              \
-                                                                                                              \
-/*__attribute__((visibility("default")))*/                                                                    \
-__MIP_EXPORT                                                                                                  \
-struct clap_plugin_entry CLAP_ENTRY_STRUCT asm("clap_plugin_entry") = {                                       \
-  CLAP_VERSION,                                                                                               \
-  clap_entry_init_callback,                                                                                   \
-  clap_entry_deinit_callback,                                                                                 \
-  clap_entry_get_plugin_count_callback,                                                                       \
-  clap_entry_get_plugin_descriptor_callback,                                                                  \
-  clap_entry_create_plugin_callback,                                                                          \
-  clap_entry_get_invalidation_sources_count_callback,                                                         \
-  clap_entry_get_invalidation_sources_callback,                                                               \
-  clap_entry_refresh_callback                                                                                 \
-};                                                                                                            \
+#define MIP_CLAP_MAIN                                                                                           \
+                                                                                                                \
+  MIP_ClapPlugin MIP_GLOBAL_CLAP_PLUGIN;                                                                        \
+                                                                                                                \
+  /*----------*/                                                                                                \
+                                                                                                                \
+  static bool clap_entry_init_callback(const char *plugin_path) {                                               \
+    return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_init(plugin_path);                                                 \
+  }                                                                                                             \
+                                                                                                                \
+  static void clap_entry_deinit_callback() {                                                                    \
+    MIP_GLOBAL_CLAP_PLUGIN.clap_entry_deinit();                                                                 \
+  }                                                                                                             \
+                                                                                                                \
+  static uint32_t clap_entry_get_plugin_count_callback() {                                                      \
+    return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_plugin_count();                                                \
+  }                                                                                                             \
+                                                                                                                \
+  static const clap_plugin_descriptor* clap_entry_get_plugin_descriptor_callback(uint32_t index) {              \
+    return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_plugin_descriptor(index);                                      \
+  }                                                                                                             \
+                                                                                                                \
+  static const clap_plugin* clap_entry_create_plugin_callback(const clap_host* host, const char* plugin_id) {   \
+    return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_create_plugin(host,plugin_id);                                     \
+  }                                                                                                             \
+                                                                                                                \
+  static uint32_t clap_entry_get_invalidation_sources_count_callback(void) {                                    \
+    return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_sources_count();                                  \
+  }                                                                                                             \
+                                                                                                                \
+  static const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources_callback(uint32_t index) {  \
+    return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_sources(index);                                   \
+  }                                                                                                             \
+                                                                                                                \
+  static void clap_entry_refresh_callback(void) {                                                               \
+    MIP_GLOBAL_CLAP_PLUGIN.clap_entry_refresh();                                                                \
+  }                                                                                                             \
+                                                                                                                \
+  /*----------*/                                                                                                \
+                                                                                                                \
+  /*__attribute__((visibility("default")))*/                                                                    \
+  __MIP_EXPORT                                                                                                  \
+  struct clap_plugin_entry CLAP_ENTRY_STRUCT asm("clap_plugin_entry") = {                                       \
+    CLAP_VERSION,                                                                                               \
+    clap_entry_init_callback,                                                                                   \
+    clap_entry_deinit_callback,                                                                                 \
+    clap_entry_get_plugin_count_callback,                                                                       \
+    clap_entry_get_plugin_descriptor_callback,                                                                  \
+    clap_entry_create_plugin_callback,                                                                          \
+    clap_entry_get_invalidation_sources_count_callback,                                                         \
+    clap_entry_get_invalidation_sources_callback,                                                               \
+    clap_entry_refresh_callback                                                                                 \
+  };                                                                                                            \
 
 //----------------------------------------------------------------------
 #endif

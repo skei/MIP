@@ -11,7 +11,7 @@
 //
 //----------------------------------------------------------------------
 
-template <class DESC, class INST, class EDIT>
+//template <class DESC, class INST, class EDIT>
 class MIP_Exe {
 
 //------------------------------
@@ -25,13 +25,11 @@ public:
 //------------------------------
 
   MIP_Exe() {
-    MIP_PRINT;
   }
 
   //----------
 
   ~MIP_Exe() {
-    MIP_PRINT;
   }
 
 //------------------------------
@@ -41,14 +39,21 @@ public:
   //TODO: error checking, safety..
 
   int main(int argc, char** argv) {
-    MIP_PRINT;
-    DESC* descriptor = new DESC();
-    INST* instance = new INST(descriptor);
+    //DESC* descriptor = new DESC();
+
+    //MIP_Descriptor* descriptor = MIP_CreateDescriptor(0);
+    MIP_PluginInfo* info = MIP_GLOBAL_PLUGIN_LIST.getPlugin(0);
+    MIP_Descriptor* descriptor = info->desc;
+
+    //INST* instance = new INST(descriptor);
+    MIP_Instance* instance = MIP_CreateInstance(0,descriptor);
+
     instance->on_plugin_init();
     instance->on_plugin_activate(44100.0,128,128);
     instance->on_plugin_startProcessing();
     if (descriptor->hasEditor()) {
-      EDIT* editor = new EDIT(instance,descriptor);
+      //EDIT* editor = new EDIT(instance,descriptor);
+      MIP_Editor* editor = MIP_CreateEditor(0,instance,descriptor);
       editor->attach("",nullptr);
       MIP_Window* window = editor->getWindow();
       instance->on_plugin_openEditor(window);
@@ -59,7 +64,7 @@ public:
       delete editor;
     }
     delete instance;
-    delete descriptor;
+    //delete descriptor;
     return 0;
   }
 
@@ -71,14 +76,22 @@ public:
 //
 //----------------------------------------------------------------------
 
-#define MIP_EXE_MAIN(D,I,E)                     \
-                                                \
-  MIP_Exe<D,I,E> MIP_GLOBAL_EXE;                \
-                                                \
-  int main(int argc, char** argv) {             \
-    MIP_PRINT;                                  \
-    return MIP_GLOBAL_EXE.main(argc,argv);      \
-  }                                             \
+/* #define MIP_EXE_MAIN(D,I,E) */
+
+#define MIP_EXE_MAIN                              \
+                                                  \
+  MIP_Exe MIP_GLOBAL_EXE;                         \
+                                                  \
+  int main(int argc, char** argv) {               \
+    return MIP_GLOBAL_EXE.main(argc,argv);        \
+  }                                               \
+                                                  \
+  /* MIP_Exe<D,I,E> MIP_GLOBAL_EXE;           */  \
+  /*                                          */  \
+  /* int main(int argc, char** argv) {        */  \
+  /*   MIP_PRINT;                             */  \
+  /*   return MIP_GLOBAL_EXE.main(argc,argv); */  \
+  /* }                                        */  \
 
 
 //----------------------------------------------------------------------

@@ -1,4 +1,8 @@
 
+// nc -U -l -k /tmp/mip.socket
+#define MIP_DEBUG_PRINT_SOCKET
+#define MIP_DEBUG_PRINT_THREAD
+#define MIP_DEBUG_PRINT_TIME
 
 #include "mip.h"
 
@@ -16,24 +20,23 @@ class myDescriptor
 public:
 //------------------------------
 
-  myDescriptor() {
-    MIP_PRINT;
+  myDescriptor()
+  : MIP_Descriptor() {
     MName = "myPlugin";
     MAuthor = "me";
     MVersion = 0x00000001;
-    MHasEditor = true;
-    setEditorSize(640,480);
     appendInput("input1");
     appendInput("input2");
     appendOutput("input1");
     appendOutput("input2");
-    appendParameter( new MIP_Parameter("param1"));
+    //appendParameter( new MIP_Parameter("param1"));
+    //MHasEditor = true;
+    //setEditorSize(640,480);
   }
 
   //----------
 
   virtual ~myDescriptor() {
-    MIP_PRINT;
   }
 
 };
@@ -52,11 +55,9 @@ public:
 
   myEditor(MIP_EditorListener* AListener, MIP_Descriptor* ADescriptor)
   : MIP_Editor(AListener,ADescriptor) {
-    MIP_PRINT;
   }
 
   virtual ~myEditor() {
-    MIP_PRINT;
   }
 
 };
@@ -82,11 +83,9 @@ public:
 
   myInstance(MIP_Descriptor* ADescriptor)
   : MIP_Instance(ADescriptor) {
-    MIP_PRINT;
   }
 
   virtual ~myInstance() {
-    MIP_PRINT;
   }
 
 //------------------------------
@@ -160,4 +159,24 @@ public:
 //
 //----------------------------------------------------------------------
 
-MIP_MAIN(myDescriptor,myInstance,myEditor);
+void MIP_RegisterPlugins() {
+  MIP_Descriptor* descriptor = new myDescriptor();
+  MIP_RegisterPlugin(descriptor);
+}
+
+//----------
+
+MIP_Instance* MIP_CreateInstance(uint32_t AIndex, MIP_Descriptor* ADescriptor) {
+  if (AIndex == 0) return new myInstance(ADescriptor);
+  else return nullptr;
+}
+
+//----------
+
+MIP_Editor* MIP_CreateEditor(uint32_t AIndex, MIP_EditorListener* AListener, MIP_Descriptor* ADescriptor) {
+  MIP_PRINT;
+  if (AIndex == 0) return new myEditor(AListener,ADescriptor);
+  else return nullptr;
+}
+
+MIP_MAIN;

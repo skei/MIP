@@ -24,14 +24,12 @@ public:
 //------------------------------
 
   MIP_Instance(MIP_Descriptor* ADescriptor) {
-    MIP_PRINT;
     MDescriptor = ADescriptor;
   }
 
   //----------
 
   virtual ~MIP_Instance() {
-    MIP_PRINT;
   }
 
 //------------------------------
@@ -75,9 +73,9 @@ public:
   virtual void      on_plugin_parameter(uint32_t AIndex, float AValue) {}
   virtual void      on_plugin_midi(uint8_t AMsg1, uint8_t AMsg2, uint8_t AMsg3) {}
   virtual void      on_plugin_expression(uint32_t AKey, uint32_t AExpression, float AValue) {}
-  //virtual bool      on_plugin_createEditor(MIP_Window* AWindow) { return false; }
-  //virtual void      on_plugin_destroyEditor() {}
-  //virtual bool      on_plugin_attachEditor() { return false; }
+//virtual bool      on_plugin_createEditor(MIP_Window* AWindow) { return false; }
+//virtual void      on_plugin_destroyEditor() {}
+//virtual bool      on_plugin_attachEditor() { return false; }
   virtual bool      on_plugin_openEditor(MIP_Window* AWindow) { return false; }
   virtual void      on_plugin_closeEditor() {}
   virtual void      on_plugin_updateEditor() {}
@@ -87,14 +85,12 @@ private: // editor listener
 //------------------------------
 
   void on_editor_parameter(uint32_t AIndex, float AValue) final {
-    MIP_PRINT;
     //TODO
   }
 
   //----------
 
   void on_editor_resize(uint32_t AWidth, uint32_t AHeight) final {
-    MIP_PRINT;
     //TODO
   }
 

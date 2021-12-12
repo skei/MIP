@@ -218,6 +218,7 @@
 		<Unit filename="../src/plugin/clap/mip_clap_hosted_plugin.h" />
 		<Unit filename="../src/plugin/clap/mip_clap_instance.h" />
 		<Unit filename="../src/plugin/clap/mip_clap_plugin.h" />
+		<Unit filename="../src/plugin/clap/mip_clap_plugin_host.h" />
 		<Unit filename="../src/plugin/clap/mip_clap_utils.h" />
 		<Unit filename="../src/plugin/exe/mip_exe.h" />
 		<Unit filename="../src/plugin/lv2/mip_lv2.h" />
@@ -228,6 +229,8 @@
 		<Unit filename="../src/plugin/mip_instance.h" />
 		<Unit filename="../src/plugin/mip_parameter.h" />
 		<Unit filename="../src/plugin/mip_plugin.h" />
+		<Unit filename="../src/plugin/mip_plugin_host.h" />
+		<Unit filename="../src/plugin/mip_plugin_list.h" />
 		<Unit filename="../src/plugin/mip_process_context.h" />
 		<Unit filename="../src/plugin/vst2/mip_vst2.h" />
 		<Unit filename="../src/plugin/vst3/mip_vst3.h" />
