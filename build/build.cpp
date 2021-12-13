@@ -29,9 +29,9 @@ public:
     appendInput("input2");
     appendOutput("input1");
     appendOutput("input2");
-//    appendParameter( new MIP_Parameter("param1"));
-//    appendParameter( new MIP_Parameter("param2"));
-//    appendParameter( new MIP_Parameter("param3"));
+    appendParameter( new MIP_Parameter("param1") );
+    appendParameter( new MIP_Parameter("param2") );
+    appendParameter( new MIP_Parameter("param3") );
     //MHasEditor = true;
     //setEditorSize(640,480);
   }
