@@ -2,6 +2,11 @@
 #define mip_exe_included
 //----------------------------------------------------------------------
 
+#define MIP_EXE_AUDIO_SAMPLERATE  44100.0
+#define MIP_EXE_AUDIO_BLOCKSIZE   256
+
+//----------
+
 #include "mip.h"
 #include "gui/mip_window.h"
 
@@ -11,7 +16,6 @@
 //
 //----------------------------------------------------------------------
 
-//template <class DESC, class INST, class EDIT>
 class MIP_Exe {
 
 //------------------------------
@@ -33,38 +37,68 @@ public:
   }
 
 //------------------------------
+private:
+//------------------------------
+
+  void start_audio(float ASampleRate=44100.0, uint32_t ABlockSize=256) {
+  }
+
+  //----------
+
+  void stop_audio() {
+  }
+
+//------------------------------
 public:
 //------------------------------
 
   //TODO: error checking, safety..
 
   int main(int argc, char** argv) {
-    //DESC* descriptor = new DESC();
 
-    //MIP_Descriptor* descriptor = MIP_CreateDescriptor(0);
+    MIP_Print("Starting audio\n");
+    start_audio(MIP_EXE_AUDIO_SAMPLERATE,MIP_EXE_AUDIO_BLOCKSIZE);
+    MIP_Print("Audio started\n");
+
+    MIP_Print("Initializing plugin\n");
     MIP_PluginInfo* info = MIP_PLUGIN_LIST.getPluginInfo(0);
-    MIP_Descriptor* descriptor = info->desc;
-
-    //INST* instance = new INST(descriptor);
-    MIP_Instance* instance = MIP_CreateInstance(0,descriptor);
-
+    MIP_PluginDescriptor* descriptor = info->desc;
+    MIP_PluginInstance* instance = MIP_CreateInstance(0,descriptor);
     instance->on_plugin_init();
-    instance->on_plugin_activate(44100.0,128,128);
+    instance->on_plugin_activate(MIP_EXE_AUDIO_SAMPLERATE,MIP_EXE_AUDIO_BLOCKSIZE,MIP_EXE_AUDIO_BLOCKSIZE);
     instance->on_plugin_startProcessing();
+    MIP_Print("Plugin initialized\n");
+
     if (descriptor->hasEditor()) {
-      //EDIT* editor = new EDIT(instance,descriptor);
-      MIP_Editor* editor = MIP_CreateEditor(0,instance,descriptor);
+
+      MIP_Print("Opening editor\n");
+      MIP_PluginEditor* editor = MIP_CreateEditor(0,instance,descriptor);
       editor->attach("",nullptr);
       MIP_Window* window = editor->getWindow();
       instance->on_plugin_openEditor(window);
       editor->open();
+      MIP_Print("Editor opened\n");
+
       window->eventLoop();
+
+      MIP_Print("Closing editor\n");
       instance->on_plugin_closeEditor();
       editor->close();
       delete editor;
+      MIP_Print("Editor closed\n");
+
     }
+    MIP_Print("Shutting down plugin\n");
+    instance->on_plugin_stopProcessing();
+    instance->on_plugin_deactivate();
+    instance->on_plugin_deinit();
     delete instance;
-    //delete descriptor;
+    MIP_Print("Plugin shut down\n");
+
+    MIP_Print("Stopping audio\n");
+    stop_audio();
+    MIP_Print("Audio stopped\n");
+
     return 0;
   }
 
@@ -76,8 +110,6 @@ public:
 //
 //----------------------------------------------------------------------
 
-/* #define MIP_EXE_MAIN(D,I,E) */
-
 #define MIP_EXE_MAIN                              \
                                                   \
   MIP_Exe MIP_GLOBAL_EXE;                         \
@@ -85,13 +117,6 @@ public:
   int main(int argc, char** argv) {               \
     return MIP_GLOBAL_EXE.main(argc,argv);        \
   }                                               \
-                                                  \
-  /* MIP_Exe<D,I,E> MIP_GLOBAL_EXE;           */  \
-  /*                                          */  \
-  /* int main(int argc, char** argv) {        */  \
-  /*   MIP_PRINT;                             */  \
-  /*   return MIP_GLOBAL_EXE.main(argc,argv); */  \
-  /* }                                        */  \
 
 
 //----------------------------------------------------------------------

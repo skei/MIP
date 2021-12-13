@@ -1,10 +1,10 @@
-#ifndef mip_host_included
-#define mip_host_included
+#ifndef mip_hosted_plugin_host_included
+#define mip_hosted_plugin_host_included
 //----------------------------------------------------------------------
 
 #include "mip.h"
 
-class MIP_Host {
+class MIP_HostedPluginHost {
 };
 
 //----------------------------------------------------------------------

@@ -5,7 +5,7 @@
 #include "mip.h"
 #include "plugin/clap/mip_clap.h"
 #include "plugin/clap/mip_clap_plugin_host.h"
-#include "plugin/clap/mip_clap_instance.h"
+#include "plugin/clap/mip_clap_plugin_instance.h"
 
 void print_clap_plugin_entry();
 
@@ -23,7 +23,6 @@ public:
 
   MIP_ClapPlugin() {
     MIP_ClapPrint("\n");
-    print_clap_plugin_entry();
   }
 
   //----------
@@ -31,11 +30,6 @@ public:
   ~MIP_ClapPlugin() {
     MIP_ClapPrint("\n");
   };
-
-//------------------------------
-public:
-//------------------------------
-
 
 //------------------------------
 public:
@@ -57,6 +51,9 @@ public:
   //----------
 
   bool clap_entry_init(const char *plugin_path) {
+
+    print_clap_plugin_entry();
+
     uint32_t num = MIP_PLUGIN_LIST.getNumPlugins();
     MIP_ClapPrint("plugin_path '%s' -> %s\n",plugin_path, (num > 0) ? "true" : "false" );
     for (uint32_t i=0; i<num; i++) {
@@ -159,9 +156,9 @@ public:
 
     uint32_t          index         = MIP_PLUGIN_LIST.findPluginByIdString(plugin_id);//)  0;
     MIP_PluginInfo*   info          = MIP_PLUGIN_LIST.getPluginInfo(index);
-    MIP_Descriptor*   descriptor    = info->desc;
-    MIP_Instance*     instance      = MIP_CreateInstance(index,descriptor);           // deleted by MIP_ClapInstance destructor
-    MIP_ClapInstance* clapinstance  = new MIP_ClapInstance(index,instance/*,claphost*/);
+    MIP_PluginDescriptor*   descriptor    = info->desc;
+    MIP_PluginInstance*     instance      = MIP_CreateInstance(index,descriptor);           // deleted by MIP_ClapPluginInstance destructor
+    MIP_ClapPluginInstance* clapinstance  = new MIP_ClapPluginInstance(index,instance,host);
 
     instance->setPluginFormat(MIP_PLUGIN_FORMAT_CLAP);
 
@@ -223,19 +220,19 @@ public:
 public:
 //------------------------------
 
-  // trampolines to MIP_ClapInstance
+  // trampolines to MIP_ClapPluginInstance
 
   //----------
 
   static
   bool clap_instance_init_callback(const struct clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_instance_init();
   }
 
   static
   void clap_instance_destroy_callback(const struct clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_instance_destroy();
     delete instance;
     //free(plugin);
@@ -243,43 +240,43 @@ public:
 
   static
   bool clap_instance_activate_callback(const struct clap_plugin *plugin, double sample_rate, uint32_t minframes, uint32_t maxframes) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_instance_activate(sample_rate,minframes,maxframes);
   }
 
   static
   void clap_instance_deactivate_callback(const struct clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_instance_deactivate();
   }
 
   static
   bool clap_instance_start_processing_callback(const struct clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_instance_start_processing();
   }
 
   static
   void clap_instance_stop_processing_callback(const struct clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_instance_stop_processing();
   }
 
   static
   clap_process_status clap_instance_process_callback(const struct clap_plugin *plugin, const clap_process *process) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_instance_process(process);
   }
 
   static
   const void *clap_instance_get_extension_callback(const struct clap_plugin *plugin, const char *id) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_instance_get_extension(id);
   }
 
   static
   void clap_instance_on_main_thread_callback(const struct clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_instance_on_main_thread();
   }
 
@@ -346,18 +343,19 @@ public:
   };                                                                                                            \
                                                                                                                 \
   /*----------*/                                                                                                \
+  /* testing  */                                                                                                \
                                                                                                                 \
   void print_clap_plugin_entry() {                                                                              \
     MIP_ClapPrint("clap_plugin_entry:\n");                                                                      \
-    MIP_ClapDPrint("  clap_version:                   %i.%i.%i\n",CLAP_ENTRY_STRUCT.clap_version.major,CLAP_ENTRY_STRUCT.clap_version.minor,CLAP_ENTRY_STRUCT.clap_version.revision); \
-    MIP_ClapDPrint("  init                            %p\n", CLAP_ENTRY_STRUCT.init);                           \
-    MIP_ClapDPrint("  deinit                          %p\n", CLAP_ENTRY_STRUCT.deinit);                         \
-    MIP_ClapDPrint("  get_plugin_count                %p\n", CLAP_ENTRY_STRUCT.get_plugin_count);               \
-    MIP_ClapDPrint("  get_plugin_descriptor           %p\n", CLAP_ENTRY_STRUCT.get_plugin_descriptor);          \
-    MIP_ClapDPrint("  create_plugin                   %p\n", CLAP_ENTRY_STRUCT.create_plugin);                  \
-    MIP_ClapDPrint("  get_invalidation_source_count   %p\n", CLAP_ENTRY_STRUCT.get_invalidation_source_count); \
-    MIP_ClapDPrint("  get_invalidation_source         %p\n", CLAP_ENTRY_STRUCT.get_invalidation_source);        \
-    MIP_ClapDPrint("  refresh                         %p\n", CLAP_ENTRY_STRUCT.refresh);                        \
+    MIP_ClapDPrint("  .clap_version:                  %i.%i.%i\n",CLAP_ENTRY_STRUCT.clap_version.major,CLAP_ENTRY_STRUCT.clap_version.minor,CLAP_ENTRY_STRUCT.clap_version.revision); \
+    MIP_ClapDPrint("  .init                           %p\n", CLAP_ENTRY_STRUCT.init);                           \
+    MIP_ClapDPrint("  .deinit                         %p\n", CLAP_ENTRY_STRUCT.deinit);                         \
+    MIP_ClapDPrint("  .get_plugin_count               %p\n", CLAP_ENTRY_STRUCT.get_plugin_count);               \
+    MIP_ClapDPrint("  .get_plugin_descriptor          %p\n", CLAP_ENTRY_STRUCT.get_plugin_descriptor);          \
+    MIP_ClapDPrint("  .create_plugin                  %p\n", CLAP_ENTRY_STRUCT.create_plugin);                  \
+    MIP_ClapDPrint("  .get_invalidation_source_count  %p\n", CLAP_ENTRY_STRUCT.get_invalidation_source_count);  \
+    MIP_ClapDPrint("  .get_invalidation_source        %p\n", CLAP_ENTRY_STRUCT.get_invalidation_source);        \
+    MIP_ClapDPrint("  .refresh                        %p\n", CLAP_ENTRY_STRUCT.refresh);                        \
   };                                                                                                            \
 
 //----------------------------------------------------------------------

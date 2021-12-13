@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 
 #include "mip.h"
-#include "plugin/mip_parameter.h"
+#include "plugin/mip_plugin_parameter.h"
 #include "base/mip_rect.h"
 #include "base/mip_utils.h"
 
@@ -26,7 +26,7 @@ typedef std::vector<MIP_PluginPort*> MIP_PluginPorts;
 
 //----------------------------------------------------------------------
 
-class MIP_Descriptor {
+class MIP_PluginDescriptor {
 
 //------------------------------
 private:
@@ -41,31 +41,33 @@ private:
 protected:
 //------------------------------
 
-  const char*     MName             = "";
-  const char*     MAuthor           = "";
-  uint32_t        MVersion          = 0;
-  const char*     MVersionText      = "";
-  const char*     MUrl              = "";
-  const char*     MManualUrl        = "";
-  const char*     MSupportUrl       = "";
-  MIP_Parameters  MParameters       = {};
-  MIP_PluginPorts MInputs           = {};
-  MIP_PluginPorts MOutputs          = {};
-  bool            MIsSynth          = false;
-  bool            MHasEditor        = false;
-  bool            MCanResizeEditor  = false;
-  MIP_FRect       MEditorRect       = {};
+  const char*           MName             = "";
+  const char*           MAuthor           = "";
+  uint32_t              MVersion          = 0;
+  const char*           MVersionText      = "";
+  const char*           MDescription      = "";
+  const char*           MLicense          = "";
+  const char*           MUrl              = "";
+  const char*           MManualUrl        = "";
+  const char*           MSupportUrl       = "";
+  MIP_PluginParameters  MParameters       = {};
+  MIP_PluginPorts       MInputPorts       = {};
+  MIP_PluginPorts       MOutputPorts      = {};
+  bool                  MIsSynth          = false;
+  bool                  MHasEditor        = false;
+  bool                  MCanResizeEditor  = false;
+  MIP_FRect             MEditorRect       = {};
 
 //------------------------------
 public:
 //------------------------------
 
-  MIP_Descriptor() {
+  MIP_PluginDescriptor() {
   }
 
   //----------
 
-  virtual ~MIP_Descriptor() {
+  virtual ~MIP_PluginDescriptor() {
     deleteParameters();
   }
 
@@ -73,28 +75,30 @@ public:
 public:
 //------------------------------
 
-  const char*     getName()                 { return MName; }
-  const char*     getAuthor()               { return MAuthor; }
-  uint32_t        getVersion()              { return MVersion; }
-  const char*     getVersionText()          { return MVersionText; }
-  const char*     getUrl()                  { return MUrl; }
-  const char*     getManualUrl()            { return MManualUrl; }
-  const char*     getSuportUrl()            { return MSupportUrl; }
+  const char*           getName()                 { return MName; }
+  const char*           getAuthor()               { return MAuthor; }
+  uint32_t              getVersion()              { return MVersion; }
+  const char*           getVersionText()          { return MVersionText; }
+  const char*           getDescription()          { return MDescription; }
+  const char*           getLicense()              { return MLicense; }
+  const char*           getUrl()                  { return MUrl; }
+  const char*           getManualUrl()            { return MManualUrl; }
+  const char*           getSupportUrl()           { return MSupportUrl; }
 
-  uint32_t        getNumInputs()            { return MInputs.size(); }
-  MIP_PluginPort* getInput(uint32_t i)      { return MInputs[i]; }
-  uint32_t        getNumOutputs()           { return MOutputs.size(); }
-  MIP_PluginPort* getOutput(uint32_t i)     { return MOutputs[i]; }
-  uint32_t        getNumParameters()        { return MParameters.size(); }
-  MIP_Parameter*  getParameter(uint32_t i)  { return MParameters[i]; }
+  uint32_t              getNumInputPorts()        { return MInputPorts.size(); }
+  MIP_PluginPort*       getInputPort(uint32_t i)  { return MInputPorts[i]; }
+  uint32_t              getNumOutputPorts()       { return MOutputPorts.size(); }
+  MIP_PluginPort*       getOutputPort(uint32_t i) { return MOutputPorts[i]; }
+  uint32_t              getNumParameters()        { return MParameters.size(); }
+  MIP_PluginParameter*  getParameter(uint32_t i)  { return MParameters[i]; }
 
-  MIP_FRect       getEditorRect()           { return MEditorRect; }
+  MIP_FRect             getEditorRect()           { return MEditorRect; }
 
-  bool            hasEditor()               { return MHasEditor; }
-  bool            canResizeEditor()         { return MCanResizeEditor; }
-  bool            isSynth()                 { return MIsSynth; }
-//bool            canSendMidi()             { return MCanSendMidi; }
-//bool            canReceiveMidi()          { return MCanReceiveMidi; }
+  bool                  hasEditor()               { return MHasEditor; }
+  bool                  canResizeEditor()         { return MCanResizeEditor; }
+  bool                  isSynth()                 { return MIsSynth; }
+//bool                  canSendMidi()             { return MCanSendMidi; }
+//bool                  canReceiveMidi()          { return MCanReceiveMidi; }
 
   //----------
 
@@ -178,46 +182,51 @@ public:
 public:
 //------------------------------
 
-  void appendInput(MIP_PluginPort* APort) {
-    MInputs.push_back(APort);
+  void appendInputPort(MIP_PluginPort* APort) {
+    MInputPorts.push_back(APort);
   }
 
-  void appendInput(const char* AName) {
-    MIP_PluginPort* port = new MIP_PluginPort(AName,MIP_PLUGIN_PORT_AUDIO,1,MIP_PLUGIN_PORT_INPUT);
-    MInputs.push_back(port);
+  void appendInputPort(const char* AName="", uint32_t AChannels=2) {
+    MIP_PluginPort* port = new MIP_PluginPort(AName,MIP_PLUGIN_PORT_AUDIO,AChannels,MIP_PLUGIN_PORT_INPUT);
+    MInputPorts.push_back(port);
   }
 
-  void deleteInputs() {
-    for (uint32_t i=0; i<MInputs.size(); i++) {
-      delete MInputs[i];
-      MInputs[i] = nullptr;
+  void deleteInputPorts() {
+    for (uint32_t i=0; i<MInputPorts.size(); i++) {
+      delete MInputPorts[i];
+      MInputPorts[i] = nullptr;
     }
   }
 
   //----------
 
-  void appendOutput(MIP_PluginPort* APort) {
-    MOutputs.push_back(APort);
+  void appendOutputPort(MIP_PluginPort* APort) {
+    MOutputPorts.push_back(APort);
   }
 
-  void appendOutput(const char* AName) {
-    MIP_PluginPort* port = new MIP_PluginPort(AName,MIP_PLUGIN_PORT_AUDIO,1,MIP_PLUGIN_PORT_OUTPUT);
-    MOutputs.push_back(port);
+  void appendOutputPort(const char* AName, uint32_t AChannels=2) {
+    MIP_PluginPort* port = new MIP_PluginPort(AName,MIP_PLUGIN_PORT_AUDIO,AChannels,MIP_PLUGIN_PORT_OUTPUT);
+    MOutputPorts.push_back(port);
   }
 
-  void deleteOutputs() {
-    for (uint32_t i=0; i<MOutputs.size(); i++) {
-      delete MOutputs[i];
-      MOutputs[i] = nullptr;
+  void deleteOutputPorts() {
+    for (uint32_t i=0; i<MOutputPorts.size(); i++) {
+      delete MOutputPorts[i];
+      MOutputPorts[i] = nullptr;
     }
   }
 
   //----------
 
-  void appendParameter(MIP_Parameter* AParameter) {
+  void appendParameter(MIP_PluginParameter* AParameter) {
     uint32_t index = MParameters.size();
     AParameter->MIndex = index;
     MParameters.push_back(AParameter);
+  }
+
+  void appendParameter(const char* AName="", float ADefValue=0.0, float AMinValue=0.0, float AMaxValue=1.0, uint32_t ANumSteps=0) {
+    MIP_PluginParameter* param = new MIP_PluginParameter(AName,ADefValue,AMinValue,AMaxValue,ANumSteps);
+    appendParameter(param);
   }
 
   void deleteParameters() {

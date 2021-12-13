@@ -5,14 +5,14 @@
 #include "mip.h"
 
 //#include <vector>
-class MIP_Parameter;
-typedef std::vector<MIP_Parameter*> MIP_Parameters;
+class MIP_PluginParameter;
+typedef std::vector<MIP_PluginParameter*> MIP_PluginParameters;
 
 //----------------------------------------------------------------------
 
-class MIP_Parameter {
+class MIP_PluginParameter {
 
-  friend class MIP_Descriptor;
+  friend class MIP_PluginDescriptor;
 
 //------------------------------
 private:
@@ -40,7 +40,7 @@ protected:
 public:
 //------------------------------
 
-  MIP_Parameter(const char* AName="", float ADefValue=0.0, float AMinValue=0.0, float AMaxValue=1.0, uint32_t ANumSteps=0) {
+  MIP_PluginParameter(const char* AName="", float ADefValue=0.0, float AMinValue=0.0, float AMaxValue=1.0, uint32_t ANumSteps=0) {
     MName = AName;
     MDefValue = ADefValue;
     MMinValue = AMinValue;
@@ -50,7 +50,7 @@ public:
 
   //----------
 
-  virtual ~MIP_Parameter() {
+  virtual ~MIP_PluginParameter() {
   }
 
 //------------------------------

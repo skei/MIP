@@ -68,63 +68,51 @@
 //
 //----------------------------------------------------------------------
 
-//#ifdef MIP_PLUGIN_ALL
-//  #define MIP_PLUGIN_CLAP
-//  #define MIP_PLUGIN_DSSI
-//  #define MIP_PLUGIN_EXE
-//  #define MIP_PLUGIN_LADSPA
-//  #define MIP_PLUGIN_LV2
-//  #define MIP_PLUGIN_VST2
-//  #define MIP_PLUGIN_VST3
-//#endif
-//
-////----------
-//
-//#undef MIP_PLUGIN_DEFINED
-//
-//  #ifdef MIP_NO_PLUGIN
-//    #define MIP_PLUGIN_DEFINED
-//  #endif
-//
-//  #ifdef MIP_PLUGIN_CLAP
-//    #define MIP_PLUGIN_DEFINED
-//    #define MIP_CLAP
-//  #endif
-//
-//  #ifdef MIP_PLUGIN_DSSI
-//    #define MIP_PLUGIN_DEFINED
-//    #define MIP_DSSI
-//  #endif
-//
-//  #ifdef MIP_PLUGIN_EXE
-//    #define MIP_PLUGIN_DEFINED
-//    #define MIP_EXE
-//  #endif
-//
-//  #ifdef MIP_PLUGIN_LADSPA
-//    #define MIP_PLUGIN_DEFINED
-//    #define MIP_LADSPA
-//  #endif
-//
-//  #ifdef MIP_PLUGIN_LV2
-//    #define MIP_PLUGIN_DEFINED
-//    #define MIP_LV2
-//  #endif
-//
-//  #ifdef MIP_PLUGIN_VST2
-//    #define MIP_PLUGIN_DEFINED
-//    #define MIP_VST2
-//  #endif
-//
-//  #ifdef MIP_PLUGIN_VST3
-//    #define MIP_PLUGIN_DEFINED
-//    #define MIP_VST3
-//  #endif
-//
-//#ifndef MIP_PLUGIN_DEFINED
-//  #warning no plugin format defined!
-//  #define MIP_NO_PLUGIN
-//#endif
+#ifdef MIP_PLUGIN_ALL
+  #define MIP_PLUGIN_CLAP
+  #define MIP_PLUGIN_EXE
+  #define MIP_PLUGIN_LV2
+  #define MIP_PLUGIN_VST2
+  #define MIP_PLUGIN_VST3
+#endif
+
+//----------
+
+#undef MIP_PLUGIN_DEFINED
+
+  #ifdef MIP_NO_PLUGIN
+    #define MIP_PLUGIN_DEFINED
+  #endif
+
+  #ifdef MIP_PLUGIN_CLAP
+    #define MIP_PLUGIN_DEFINED
+    #define MIP_CLAP
+  #endif
+
+  #ifdef MIP_PLUGIN_EXE
+    #define MIP_PLUGIN_DEFINED
+    #define MIP_EXE
+  #endif
+
+  #ifdef MIP_PLUGIN_LV2
+    #define MIP_PLUGIN_DEFINED
+    #define MIP_LV2
+  #endif
+
+  #ifdef MIP_PLUGIN_VST2
+    #define MIP_PLUGIN_DEFINED
+    #define MIP_VST2
+  #endif
+
+  #ifdef MIP_PLUGIN_VST3
+    #define MIP_PLUGIN_DEFINED
+    #define MIP_VST3
+  #endif
+
+#ifndef MIP_PLUGIN_DEFINED
+  #warning No plugin format defined!
+  #define MIP_NO_PLUGIN
+#endif
 
 //----------------------------------------------------------------------
 //
@@ -132,29 +120,30 @@
 //
 //----------------------------------------------------------------------
 
-//#undef MIP_GUI_DEFINED
-//
-//  #ifdef MIP_NO_GUI
-//    #define MIP_GUI_DEFINED
-//  #endif
-//
-//  #ifdef MIP_GUI_XCB
-//    #define MIP_GUI_DEFINED
-//    #define MIP_USE_XCB
-//  #endif
-//
-//  #ifdef MIP_GUI_CAIRO
-//    #define MIP_GUI_DEFINED
-//    #undef  MIP_GUI_XCB
-//    #define MIP_USE_XCB
-//    #define MIP_USE_CAIRO
-//  #endif
-//
-//#ifndef MIP_GUI_DEFINED
-//  #warning no gui type defined!
-//  #undef MIP_USE_XCB
-//  #undef MIP_USE_CAIRO
-//#endif
+#undef MIP_GUI_DEFINED
+
+  #ifdef MIP_NO_GUI
+    #define MIP_GUI_DEFINED
+  #endif
+
+  #ifdef MIP_GUI_XCB
+    #define MIP_GUI_DEFINED
+    #define MIP_USE_XCB
+  #endif
+
+  #ifdef MIP_GUI_CAIRO
+    #define MIP_GUI_DEFINED
+    #undef  MIP_GUI_XCB
+    #define MIP_USE_XCB
+    #define MIP_USE_CAIRO
+  #endif
+
+#ifndef MIP_GUI_DEFINED
+  #warning No gui type defined!
+  #define MIP_NO_GUI
+  #undef  MIP_USE_XCB
+  #undef  MIP_USE_CAIRO
+#endif
 
 //----------------------------------------------------------------------
 #endif

@@ -1,11 +1,15 @@
-#ifndef mip_clap_host_included
-#define mip_clap_host_included
+#ifndef mip_clap_hosted_plugin_host_included
+#define mip_clap_hosted_plugin_host_included
 //----------------------------------------------------------------------
+
+// we _are_ the host, give MClapHost to hosted plugins
+
+// should be MIP_ClapHostedPluginHost
 
 #include "mip.h"
 #include "plugin/clap/mip_clap.h"
 
-class MIP_ClapHost {
+class MIP_ClapHostedPluginHost {
 
 //------------------------------
 private:

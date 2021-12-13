@@ -4,8 +4,8 @@
 
 #include "mip.h"
 #include "base/mip_rect.h"
-#include "plugin/mip_descriptor.h"
-#include "plugin/mip_editor.h"
+#include "plugin/mip_plugin_descriptor.h"
+
 #include "gui/mip_widget.h"
 #include "gui/mip_window.h"
 
@@ -34,14 +34,14 @@ class MIP_EditorWindow
 private:
 //------------------------------
 
-  MIP_Descriptor*     MDescriptor = nullptr;
+  MIP_PluginDescriptor*     MDescriptor = nullptr;
   MIP_EditorListener* MListener   = nullptr;  // editor
 
 //------------------------------
 public:
 //------------------------------
 
-  MIP_EditorWindow(MIP_Descriptor* ADescriptor, MIP_EditorListener* AListener, int32_t AWidth, int32_t AHeight, void* AParent)
+  MIP_EditorWindow(MIP_PluginDescriptor* ADescriptor, MIP_EditorListener* AListener, int32_t AWidth, int32_t AHeight, void* AParent)
   : MIP_Window(AWidth,AHeight,AParent) {
     MIP_PRINT;
     MDescriptor = ADescriptor;
@@ -72,7 +72,7 @@ public: // MIP_Window
 //
 //----------------------------------------------------------------------
 
-class MIP_Editor
+class MIP_PluginEditor
 : public MIP_EditorListener {
 
 //------------------------------
@@ -80,7 +80,7 @@ protected:
 //------------------------------
 
   MIP_EditorListener* MListener           = nullptr; // instance
-  MIP_Descriptor*     MDescriptor         = nullptr;
+  MIP_PluginDescriptor*     MDescriptor         = nullptr;
   MIP_Widget**        MParameterToWidget  = nullptr;
   const char*         MAttachedName       = nullptr;
   void*               MAttachedParent     = nullptr;
@@ -92,7 +92,7 @@ protected:
 public:
 //------------------------------
 
-  MIP_Editor(MIP_EditorListener* AListener, MIP_Descriptor* ADescriptor) {
+  MIP_PluginEditor(MIP_EditorListener* AListener, MIP_PluginDescriptor* ADescriptor) {
     MListener   = AListener;
     MDescriptor = ADescriptor;
     uint32_t num = MDescriptor->getNumParameters();
@@ -103,7 +103,7 @@ public:
 
   //----------
 
-  virtual ~MIP_Editor() {
+  virtual ~MIP_PluginEditor() {
     if (MParameterToWidget) free(MParameterToWidget);
     if (MWindow) delete MWindow;
 

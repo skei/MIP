@@ -12,10 +12,10 @@ extern void MIP_RegisterPlugins();
 //----------------------------------------------------------------------
 
 struct MIP_PluginInfo {
-  MIP_Descriptor* desc      = nullptr;
+  MIP_PluginDescriptor* desc      = nullptr;
   void*           clap_desc = nullptr; // clap_plugin_descriptor* / ...
   // vst3, vst2, lv2
-  MIP_PluginInfo(MIP_Descriptor* d) {
+  MIP_PluginInfo(MIP_PluginDescriptor* d) {
     desc = d;
   }
 };
@@ -54,7 +54,7 @@ public:
 
 public:
 
-  void appendPlugin(MIP_Descriptor* desc) {
+  void appendPlugin(MIP_PluginDescriptor* desc) {
     MIP_PluginInfo* info = new MIP_PluginInfo(desc);
     MPlugins.push_back(info);
   }

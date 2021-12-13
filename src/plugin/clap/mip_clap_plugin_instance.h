@@ -4,9 +4,9 @@
 
 #include "mip.h"
 #include "base/mip_queue.h"
-#include "plugin/mip_descriptor.h"
-#include "plugin/mip_instance.h"
-#include "plugin/mip_editor.h"
+#include "plugin/mip_plugin_descriptor.h"
+#include "plugin/mip_plugin_instance.h"
+#include "plugin/mip_plugin_editor.h"
 #include "plugin/clap/mip_clap.h"
 #include "plugin/clap/mip_clap_utils.h"
 #include "plugin/clap/mip_clap_plugin_host.h"
@@ -21,18 +21,18 @@ typedef MIP_Queue<uint32_t,1024> MIP_HostParameterQueue;
 //----------------------------------------------------------------------
 
 
-class MIP_ClapInstance
+class MIP_ClapPluginInstance
 : public MIP_EditorListener {
 
 //------------------------------
 private:
 //------------------------------
 
-  MIP_Descriptor*         MDescriptor           = nullptr;
-  MIP_Instance*           MInstance             = nullptr;
+  MIP_PluginDescriptor*         MDescriptor           = nullptr;
+  MIP_PluginInstance*           MInstance             = nullptr;
   MIP_ProcessContext      MProcessContext       = {};
   MIP_ClapPluginHost*     MHost                 = nullptr;
-  MIP_Editor*             MEditor               = nullptr;
+  MIP_PluginEditor*             MEditor               = nullptr;
   bool                    MEditorIsOpen         = false;
   MIP_HostParameterQueue  MHostParameterQueue   = {};
 
@@ -52,22 +52,28 @@ private:
 public:
 //------------------------------
 
-  MIP_ClapInstance(uint32_t AIndex, MIP_Instance* AInstance/*, MIP_ClapPluginHost* AHost*/) {
+  MIP_ClapPluginInstance(uint32_t AIndex, MIP_PluginInstance* AInstance, const clap_host* host ) {
     MIP_ClapPrint("index %i instance %p\n",AIndex,AInstance);
     MPluginIndex = AIndex;
     MInstance = AInstance;
 
     //MHost = AHost;
-    MHost = new MIP_ClapPluginHost();
+    MHost = new MIP_ClapPluginHost(host);
 
     MDescriptor = MInstance->getDescriptor();
-    MProcessContext.inputs  = (float**)malloc(sizeof(float*) * MDescriptor->getNumInputs());
-    MProcessContext.outputs = (float**)malloc(sizeof(float*) * MDescriptor->getNumOutputs());
+
+    // TODO, for now, assume stereo
+
+    //MProcessContext.inputs  = (float**)malloc(sizeof(float*) * MDescriptor->getNumInputPorts());
+    //MProcessContext.outputs = (float**)malloc(sizeof(float*) * MDescriptor->getNumOutputPorts());
+
+    MProcessContext.inputs  = (float**)malloc(sizeof(float*) * 2);
+    MProcessContext.outputs = (float**)malloc(sizeof(float*) * 2);
   }
 
   //----------
 
-  virtual ~MIP_ClapInstance() {
+  virtual ~MIP_ClapPluginInstance() {
     MIP_ClapPrint("\n");
     free(MProcessContext.inputs);
     free(MProcessContext.outputs);
@@ -95,7 +101,7 @@ public: // editor listener
   */
 
   void on_editor_parameter(uint32_t AIndex, float AValue) override {
-    MIP_Parameter* parameter = MDescriptor->getParameter(AIndex);
+    MIP_PluginParameter* parameter = MDescriptor->getParameter(AIndex);
     float value = parameter->from01(AValue);
     MInstance->setParameterValue(AIndex,value);
     MHostParameterQueue.write(AIndex);
@@ -583,9 +589,11 @@ public: // extensions
     [main-thread]
   */
 
+  //TODO: for now, assume stereo in/out
+
   uint32_t clap_audio_ports_count(bool is_input) {
     if (is_input) {
-      if (MDescriptor->getNumInputs() > 0) {
+      if (MDescriptor->getNumInputPorts() > 0) {
         MIP_ClapPrint("is_input %s -> 1\n",is_input?"true":"false");
         return 1;
       }
@@ -595,7 +603,7 @@ public: // extensions
       }
     }
     else {
-      if (MDescriptor->getNumOutputs() > 0) {
+      if (MDescriptor->getNumOutputPorts() > 0) {
         MIP_ClapPrint("is_input %s -> 1\n",is_input?"true":"false");
         return 1;
       }
@@ -621,7 +629,7 @@ public: // extensions
         case 0:
           info->id            = 0;
           strncpy(info->name,"port",CLAP_NAME_SIZE);
-          info->channel_count = MDescriptor->getNumInputs();
+          info->channel_count = 2;//MDescriptor->getNumInputs();
           info->channel_map   = CLAP_CHMAP_STEREO;
           info->sample_size   = 32;     // 32 for float and 64 for double
           info->is_main       = true;   // there can only be 1 main input and output
@@ -636,7 +644,7 @@ public: // extensions
         case 0:
           info->id            = 0;
           strncpy(info->name,"port",CLAP_NAME_SIZE);
-          info->channel_count = MDescriptor->getNumOutputs();;
+          info->channel_count = 2;//MDescriptor->getNumOutputs();;
           info->channel_map   = CLAP_CHMAP_STEREO;
           info->sample_size   = 32;     // 32 for float and 64 for double
           info->is_main       = true;   // there can only be 1 main input and output
@@ -1053,12 +1061,12 @@ public: // extensions
 
   bool clap_params_get_info(int32_t param_index, clap_param_info *param_info) {
     MIP_ClapPrint("param_index %i -> true\n",param_index);
-    MIP_Parameter* parameter = MDescriptor->getParameter(param_index);
+    MIP_PluginParameter* parameter = MDescriptor->getParameter(param_index);
     uint32_t flags = 0;
-    if (parameter->isHidden())    param_info->flags |= CLAP_PARAM_IS_HIDDEN;
-    if (parameter->isReadOnly())  param_info->flags |= CLAP_PARAM_IS_READONLY;
-    if (parameter->canModulate()) param_info->flags |= CLAP_PARAM_IS_MODULATABLE;
-    if (parameter->getNumSteps() > 1)         param_info->flags |= CLAP_PARAM_IS_STEPPED;
+    if (parameter->isHidden())        param_info->flags |= CLAP_PARAM_IS_HIDDEN;
+    if (parameter->isReadOnly())      param_info->flags |= CLAP_PARAM_IS_READONLY;
+    if (parameter->canModulate())     param_info->flags |= CLAP_PARAM_IS_MODULATABLE;
+    if (parameter->getNumSteps() > 1) param_info->flags |= CLAP_PARAM_IS_STEPPED;
     strncpy(param_info->name,parameter->getName(),CLAP_NAME_SIZE);
     strncpy(param_info->module,"",CLAP_MODULE_SIZE);
     param_info->flags         = flags;
@@ -1096,7 +1104,7 @@ public: // extensions
   bool clap_params_value_to_text(clap_id param_id, double value, char *display, uint32_t size) {
     MIP_ClapPrint("param_id %i, value %f -> true\n",param_id,value);
     char buffer[256];
-    MIP_Parameter* param = MDescriptor->getParameter(param_id);
+    MIP_PluginParameter* param = MDescriptor->getParameter(param_id);
     param->getDisplayText(value,buffer);
     strncpy(display,buffer,size);
     //display[size-1] = 0;
@@ -1246,176 +1254,176 @@ public: // extension callbacks
   // clap.audio-ports-config
 
   static uint32_t clap_audio_ports_config_count_callback(const clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_audio_ports_config_count();
   }
 
   static bool clap_audio_ports_config_get_callback(const clap_plugin *plugin, uint32_t index, clap_audio_ports_config *config) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_audio_ports_config_get(index,config);
 
   }
 
   static bool clap_audio_ports_config_select_callback(const clap_plugin *plugin, clap_id config_id) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_audio_ports_config_select(config_id);
   }
 
   // clap.audio-ports
 
   static uint32_t clap_audio_ports_count_callback(const clap_plugin *plugin, bool is_input) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_audio_ports_count(is_input);
 
   }
 
   static bool clap_audio_ports_get_callback(const clap_plugin* plugin, uint32_t index, bool is_input, clap_audio_port_info *info) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_audio_ports_get(index,is_input,info);
   };
 
   // clap.event-filter
 
   static bool clap_event_filter_accepts_callback(const clap_plugin *plugin, clap_event_type event_type) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_event_filter_accepts(event_type);
   }
 
   // clap.fd-support
 
   static void clap_fd_support_on_fd_callback(const clap_plugin *plugin, clap_fd fd, clap_fd_flags flags) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_fd_support_on_fd(fd,flags);
   }
 
   // clap.gui
 
   static bool clap_gui_create_callback(const clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_gui_create();
   }
 
   static void clap_gui_destroy_callback(const clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_gui_destroy();
   }
 
   static void clap_gui_set_scale_callback(const clap_plugin *plugin, double scale) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_gui_set_scale(scale);
   }
 
   static bool clap_gui_get_size_callback(const clap_plugin *plugin, uint32_t *width, uint32_t *height) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_gui_get_size(width,height);
   }
 
   static bool clap_gui_can_resize_callback(const clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_gui_can_resize();
   }
 
   static void clap_gui_round_size_callback(const clap_plugin *plugin, uint32_t *width, uint32_t *height) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_gui_round_size(width,height);
   }
 
   static bool clap_gui_set_size_callback(const clap_plugin *plugin, uint32_t width, uint32_t height) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_gui_set_size(width,height);
   }
 
   static void clap_gui_show_callback(const clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_gui_show();
   }
 
   static void clap_gui_hide_callback(const clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_gui_hide();
   }
 
   // clap.gui-x11
 
   static bool clap_gui_x11_attach_callback(const clap_plugin * plugin, const char* display_name, unsigned long window) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_gui_x11_attach(display_name,window);
   }
 
   // clap.latency
 
   static uint32_t clap_latency_get_callback(const clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_latency_get();
   }
 
   // clap.note-name
 
   static uint32_t clap_note_name_count_callback(const clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_note_name_count();
   }
 
   static bool clap_note_name_get_callback(const clap_plugin *plugin, uint32_t index, clap_note_name *note_name) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_note_name_get(index,note_name);
   }
 
   // clap.params
 
   static uint32_t clap_params_count_callback(const clap_plugin *plugin) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_params_count();
   }
 
   static bool clap_params_get_info_callback(const clap_plugin *plugin, int32_t param_index, clap_param_info *param_info) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_params_get_info(param_index,param_info);
   }
 
   static bool clap_params_get_value_callback(const clap_plugin *plugin, clap_id param_id, double *value) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_params_get_value(param_id,value);
   }
 
   static bool clap_params_value_to_text_callback(const clap_plugin *plugin, clap_id param_id, double value, char *display, uint32_t size) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_params_value_to_text(param_id,value,display,size);
   }
 
   static bool clap_params_text_to_value_callback(const clap_plugin *plugin, clap_id param_id, const char* display, double* value) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_params_text_to_value(param_id,display,value);
   }
 
   static void clap_params_flush_callback(const clap_plugin* plugin, const clap_event_list *input_parameter_changes, const clap_event_list *output_parameter_changes) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_params_flush(input_parameter_changes,output_parameter_changes);
   }
 
   // clap.render
 
   static void clap_render_set_callback(const clap_plugin *plugin, clap_plugin_render_mode mode) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_render_set(mode);
   }
 
   // clap.state
 
   static bool clap_state_save_callback(const clap_plugin *plugin, clap_ostream *stream) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_state_save(stream);
   }
 
   static bool clap_state_load_callback(const clap_plugin *plugin, clap_istream *stream) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     return instance->clap_state_load(stream);
   }
 
   // clap.timer-support
 
   static void clap_timer_support_on_timer_callback(const clap_plugin *plugin, clap_id timer_id) {
-    MIP_ClapInstance* instance = (MIP_ClapInstance*)plugin->plugin_data;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
     instance->clap_timer_support_on_timer(timer_id);
   }
 

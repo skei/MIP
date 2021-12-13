@@ -19,11 +19,12 @@ class MIP_Widget {
 protected:
 //------------------------------
 
-  MIP_Widget* MParent       = nullptr;
-  MIP_Widgets MChildren     = {};
+  MIP_Widget* MParent         = nullptr;
+  MIP_Widgets MChildren       = {};
 
-  MIP_FRect MRect           = {};
-  int32_t   MParameterIndex = -1;
+  MIP_FRect   MRect           = {};
+  int32_t     MParameterIndex = -1;
+  float       MValue          = 0.0;
 
 //------------------------------
 public:
@@ -42,9 +43,12 @@ public:
 public:
 //------------------------------
 
+  float   getValue()                        { return 0.0; }
+  void    setValue()                        { MValue = 0.0; }
+
   int32_t getParameterIndex()               { return -1; }
   void    setParameterIndex(int32_t AIndex) { MParameterIndex = AIndex; }
-  float   getValue()                        { return 0.0; }
+
 
 //------------------------------
 public:
@@ -115,8 +119,6 @@ public:
   virtual void do_widget_setHint(MIP_Widget* AWidget, const char* AHint) {
     if (MParent) MParent->do_widget_setHint(AWidget,AHint);
   }
-
-  //
 
 };
 

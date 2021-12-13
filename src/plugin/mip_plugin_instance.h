@@ -3,33 +3,33 @@
 //----------------------------------------------------------------------
 
 #include "mip.h"
-#include "plugin/mip_editor.h"
+#include "plugin/mip_plugin_editor.h"
 #include "plugin/mip_process_context.h"
 
 //----------------------------------------------------------------------
 
-class MIP_Instance
+class MIP_PluginInstance
 : public MIP_EditorListener {
 
 //------------------------------
 protected:
 //------------------------------
 
-  MIP_Descriptor* MDescriptor   = nullptr;
-  MIP_Editor*     MEditor       = nullptr;
+  MIP_PluginDescriptor* MDescriptor   = nullptr;
+  MIP_PluginEditor*     MEditor       = nullptr;
   uint32_t        MPluginFormat = MIP_PLUGIN_FORMAT_NONE;
 
 //------------------------------
 public:
 //------------------------------
 
-  MIP_Instance(MIP_Descriptor* ADescriptor) {
+  MIP_PluginInstance(MIP_PluginDescriptor* ADescriptor) {
     MDescriptor = ADescriptor;
   }
 
   //----------
 
-  virtual ~MIP_Instance() {
+  virtual ~MIP_PluginInstance() {
   }
 
 //------------------------------
@@ -37,7 +37,7 @@ public:
 //------------------------------
 
   void            setPluginFormat(uint32_t AFormat) { MPluginFormat = AFormat; }
-  MIP_Descriptor* getDescriptor()                   { return MDescriptor; }
+  MIP_PluginDescriptor* getDescriptor()                   { return MDescriptor; }
 
 //------------------------------
 public:
@@ -56,7 +56,7 @@ public:
   void updateAllParameters() {
   }
 
-  void updateAllEditorParameters(MIP_Editor* AEditor, bool ARedraw) {
+  void updateAllEditorParameters(MIP_PluginEditor* AEditor, bool ARedraw) {
   }
 
 //------------------------------
