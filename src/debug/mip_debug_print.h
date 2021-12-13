@@ -9,7 +9,9 @@ nc -U -l -k /tmp/mip.socket
 
 #include <stdarg.h>   // va_
 //#include "mip.h"
-//#include "base/mip_stdlib.h"
+#include "base/mip_utils.h"
+
+//----------
 
 void MIP_NoPrint(const char*,...) {}
 
@@ -23,11 +25,11 @@ void MIP_NoPrint(const char*,...) {}
     double _mip_debug_start_time = 0.0;
   #endif
 
-  #ifdef MIP_DEBUG_PRINT_THREAD
-    #include <sys/syscall.h>
-    #include <sys/unistd.h>
-    #define gettid() syscall(SYS_gettid)
-  #endif
+  //#ifdef MIP_DEBUG_PRINT_THREAD
+  //  #include <sys/syscall.h>
+  //  #include <sys/unistd.h>
+  //  #define gettid() syscall(SYS_gettid)
+  //#endif
 
   #ifdef MIP_DEBUG_PRINT_SOCKET
     #include <unistd.h>
@@ -71,19 +73,19 @@ void MIP_NoPrint(const char*,...) {}
   // thread
   //----------------------------------------------------------------------
 
-  #ifdef MIP_DEBUG_PRINT_THREAD
-
-  pid_t _mip_debug_get_process_id() {
-    return getpid();
-  }
-
-  //----------
-
-  pid_t _mip_debug_get_thread_id() {
-    return gettid();
-  }
-
-  #endif
+  //#ifdef MIP_DEBUG_PRINT_THREAD
+  //
+  //pid_t _mip_debug_get_process_id() {
+  //  return getpid();
+  //}
+  //
+  ////----------
+  //
+  //pid_t _mip_debug_get_thread_id() {
+  //  return gettid();
+  //}
+  //
+  //#endif
 
   //----------------------------------------------------------------------
   // thread
@@ -141,7 +143,7 @@ void MIP_NoPrint(const char*,...) {}
       strcat(_mip_debug_prefix_buffer,buffer);
     #endif
     #ifdef MIP_DEBUG_PRINT_THREAD
-      uint32_t thread_id = _mip_debug_get_thread_id();
+      uint32_t thread_id = MIP_GetThreadId(); // _mip_debug_get_thread_id();
       sprintf(buffer,"%i:",thread_id);
       strcat(_mip_debug_prefix_buffer,buffer);
     #endif

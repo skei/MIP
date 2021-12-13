@@ -7,6 +7,8 @@
 #include "plugin/clap/mip_clap_plugin_host.h"
 #include "plugin/clap/mip_clap_instance.h"
 
+void print_clap_plugin_entry();
+
 //----------------------------------------------------------------------
 //
 //
@@ -21,6 +23,7 @@ public:
 
   MIP_ClapPlugin() {
     MIP_ClapPrint("\n");
+    print_clap_plugin_entry();
   }
 
   //----------
@@ -28,6 +31,11 @@ public:
   ~MIP_ClapPlugin() {
     MIP_ClapPrint("\n");
   };
+
+//------------------------------
+public:
+//------------------------------
+
 
 //------------------------------
 public:
@@ -116,6 +124,17 @@ public:
     MIP_PluginInfo* info = MIP_PLUGIN_LIST.getPluginInfo(index);
     const clap_plugin_descriptor* desc = (clap_plugin_descriptor*)info->clap_desc;
     MIP_ClapPrint("index %i -> %p\n",index,desc);
+    MIP_ClapDPrint("  clap_version: %i.%i.%i\n",desc->clap_version.major,desc->clap_version.minor,desc->clap_version.revision);
+    MIP_ClapDPrint("  id:           %s\n",desc->id);
+    MIP_ClapDPrint("  name:         %s\n",desc->name);
+    MIP_ClapDPrint("  vendor:       %s\n",desc->vendor);
+    MIP_ClapDPrint("  url:          %s\n",desc->url);
+    MIP_ClapDPrint("  manual_url:   %s\n",desc->manual_url);
+    MIP_ClapDPrint("  support_url:  %s\n",desc->support_url);
+    MIP_ClapDPrint("  version:      %s\n",desc->version);
+    MIP_ClapDPrint("  description:  %s\n",desc->description);
+    MIP_ClapDPrint("  keywords:     %s\n",desc->keywords);
+    MIP_ClapDPrint("  plugin_type:  %i\n",desc->plugin_type);
     return desc;
   }
 
@@ -131,13 +150,12 @@ public:
 
   const clap_plugin* clap_entry_create_plugin(const clap_host* host, const char* plugin_id) {
     MIP_ClapPrint("host %p plugin_id '%s' -> ...\n",host,plugin_id);
-
-      MIP_ClapDPrint("  name:         %s\n",host->name);
-      MIP_ClapDPrint("  version:      %s\n",host->version);
-      MIP_ClapDPrint("  vendor:       %s\n",host->vendor);
-      MIP_ClapDPrint("  url:          %s\n",host->url);
-      MIP_ClapDPrint("  clap_version: %i.%i.%i\n",host->clap_version.major,host->clap_version.minor,host->clap_version.revision);
-      MIP_ClapDPrint("  host_data:    %p\n",host->host_data);
+    MIP_ClapDPrint("  name:         %s\n",host->name);
+    MIP_ClapDPrint("  version:      %s\n",host->version);
+    MIP_ClapDPrint("  vendor:       %s\n",host->vendor);
+    MIP_ClapDPrint("  url:          %s\n",host->url);
+    MIP_ClapDPrint("  clap_version: %i.%i.%i\n",host->clap_version.major,host->clap_version.minor,host->clap_version.revision);
+    MIP_ClapDPrint("  host_data:    %p\n",host->host_data);
 
     uint32_t          index         = MIP_PLUGIN_LIST.findPluginByIdString(plugin_id);//)  0;
     MIP_PluginInfo*   info          = MIP_PLUGIN_LIST.getPluginInfo(index);
@@ -163,6 +181,7 @@ public:
     clapplug->on_main_thread    = clap_instance_on_main_thread_callback;
 
     MIP_ClapPrint("... -> %p\n",clapplug);
+
     return clapplug;
   }
 
@@ -172,7 +191,7 @@ public:
     Get the number of invalidation source.
   */
 
-  uint32_t clap_entry_get_invalidation_sources_count(void) {
+  uint32_t clap_entry_get_invalidation_source_count(void) {
     MIP_ClapPrint("-> 0\n");
     return 0;
   }
@@ -184,7 +203,7 @@ public:
     [thread-safe]
   */
 
-  const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources(uint32_t index) {
+  const clap_plugin_invalidation_source* clap_entry_get_invalidation_source(uint32_t index) {
     MIP_ClapPrint("index %i -> NULL\n",index);
     return nullptr;
   }
@@ -298,12 +317,12 @@ public:
     return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_create_plugin(host,plugin_id);                                     \
   }                                                                                                             \
                                                                                                                 \
-  static uint32_t clap_entry_get_invalidation_sources_count_callback(void) {                                    \
-    return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_sources_count();                                  \
+  static uint32_t clap_entry_get_invalidation_source_count_callback(void) {                                     \
+    return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_source_count();                                   \
   }                                                                                                             \
                                                                                                                 \
-  static const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources_callback(uint32_t index) {  \
-    return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_sources(index);                                   \
+  static const clap_plugin_invalidation_source* clap_entry_get_invalidation_source_callback(uint32_t index) {   \
+    return MIP_GLOBAL_CLAP_PLUGIN.clap_entry_get_invalidation_source(index);                                    \
   }                                                                                                             \
                                                                                                                 \
   static void clap_entry_refresh_callback(void) {                                                               \
@@ -321,9 +340,24 @@ public:
     clap_entry_get_plugin_count_callback,                                                                       \
     clap_entry_get_plugin_descriptor_callback,                                                                  \
     clap_entry_create_plugin_callback,                                                                          \
-    clap_entry_get_invalidation_sources_count_callback,                                                         \
-    clap_entry_get_invalidation_sources_callback,                                                               \
+    clap_entry_get_invalidation_source_count_callback,                                                          \
+    clap_entry_get_invalidation_source_callback,                                                                \
     clap_entry_refresh_callback                                                                                 \
+  };                                                                                                            \
+                                                                                                                \
+  /*----------*/                                                                                                \
+                                                                                                                \
+  void print_clap_plugin_entry() {                                                                              \
+    MIP_ClapPrint("clap_plugin_entry:\n");                                                                      \
+    MIP_ClapDPrint("  clap_version:                   %i.%i.%i\n",CLAP_ENTRY_STRUCT.clap_version.major,CLAP_ENTRY_STRUCT.clap_version.minor,CLAP_ENTRY_STRUCT.clap_version.revision); \
+    MIP_ClapDPrint("  init                            %p\n", CLAP_ENTRY_STRUCT.init);                           \
+    MIP_ClapDPrint("  deinit                          %p\n", CLAP_ENTRY_STRUCT.deinit);                         \
+    MIP_ClapDPrint("  get_plugin_count                %p\n", CLAP_ENTRY_STRUCT.get_plugin_count);               \
+    MIP_ClapDPrint("  get_plugin_descriptor           %p\n", CLAP_ENTRY_STRUCT.get_plugin_descriptor);          \
+    MIP_ClapDPrint("  create_plugin                   %p\n", CLAP_ENTRY_STRUCT.create_plugin);                  \
+    MIP_ClapDPrint("  get_invalidation_source_count   %p\n", CLAP_ENTRY_STRUCT.get_invalidation_source_count); \
+    MIP_ClapDPrint("  get_invalidation_source         %p\n", CLAP_ENTRY_STRUCT.get_invalidation_source);        \
+    MIP_ClapDPrint("  refresh                         %p\n", CLAP_ENTRY_STRUCT.refresh);                        \
   };                                                                                                            \
 
 //----------------------------------------------------------------------

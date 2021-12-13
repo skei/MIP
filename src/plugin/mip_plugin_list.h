@@ -2,6 +2,11 @@
 #define mip_plugin_list_included
 //----------------------------------------------------------------------
 
+/*
+  your plugin must implement this function..
+  call MIP_PLUGIN_LIST.appendPlugin() for each of your (sub-) plugins
+*/
+
 extern void MIP_RegisterPlugins();
 
 //----------------------------------------------------------------------
@@ -9,6 +14,10 @@ extern void MIP_RegisterPlugins();
 struct MIP_PluginInfo {
   MIP_Descriptor* desc      = nullptr;
   void*           clap_desc = nullptr; // clap_plugin_descriptor* / ...
+  // vst3, vst2, lv2
+  MIP_PluginInfo(MIP_Descriptor* d) {
+    desc = d;
+  }
 };
 
 //----------
@@ -46,9 +55,7 @@ public:
 public:
 
   void appendPlugin(MIP_Descriptor* desc) {
-    MIP_PluginInfo* info = (MIP_PluginInfo*)malloc(sizeof(MIP_PluginInfo));
-    memset((void*)info,0,sizeof(MIP_PluginInfo));
-    info->desc = desc;
+    MIP_PluginInfo* info = new MIP_PluginInfo(desc);
     MPlugins.push_back(info);
   }
 
@@ -56,11 +63,9 @@ public:
 
   void deletePlugins() {
     for (uint32_t i=0; i<MPlugins.size(); i++) {
-      if (MPlugins[i]) {
-        if (MPlugins[i]->desc) delete MPlugins[i]->desc;
-        free(MPlugins[i]);
-      }
-      MPlugins[i] = nullptr;
+      if (MPlugins[i]->desc) delete MPlugins[i]->desc;
+      // each format should have deleted its own data
+      delete MPlugins[i];
     }
     MPlugins.clear();
   }
@@ -69,7 +74,6 @@ public:
 
   uint32_t getNumPlugins() {
     return MPlugins.size();
-    MIP_PRINT;
   }
 
   //----------

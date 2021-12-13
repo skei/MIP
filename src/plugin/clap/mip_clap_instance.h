@@ -392,8 +392,9 @@ public:
   */
 
   bool clap_instance_start_processing() {
+    MIP_ClapPrint("\n");
     MIsProcessing = MInstance->on_plugin_startProcessing();
-    MIP_ClapPrint("-> %s\n",MIsProcessing?"true":"false");
+    MIP_ClapPrint("returning %s\n",MIsProcessing?"true":"false");
     return MIsProcessing;
   }
 
@@ -451,18 +452,18 @@ public:
   */
 
   const void *clap_instance_get_extension(const char *id) {
-    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG) == 0)  { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapAudioPortsConfig);  return &MClapAudioPortsConfig;  }
-    if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)         { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapAudioPorts);        return &MClapAudioPorts;        }
-    if (strcmp(id,CLAP_EXT_EVENT_FILTER) == 0)        { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapEventFilter);       return &MClapEventFilter;       }
-    if (strcmp(id,CLAP_EXT_FD_SUPPORT) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapFdSupport);         return &MClapFdSupport;         }
-    if (strcmp(id,CLAP_EXT_GUI) == 0)                 { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGui);               return &MClapGui;               }
-    if (strcmp(id,CLAP_EXT_GUI_X11) == 0)             { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGuiX11);            return &MClapGuiX11;            }
-    if (strcmp(id,CLAP_EXT_LATENCY) == 0)             { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapLatency);           return &MClapLatency;           }
-    if (strcmp(id,CLAP_EXT_NOTE_NAME) == 0)           { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapNoteName);          return &MClapNoteName;          }
-    if (strcmp(id,CLAP_EXT_PARAMS) == 0)              { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapParams);            return &MClapParams;            }
-    if (strcmp(id,CLAP_EXT_RENDER) == 0)              { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapRender);            return &MClapRender;            }
-    if (strcmp(id,CLAP_EXT_STATE) == 0)               { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapState);             return &MClapState;             }
-    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT) == 0)       { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapTimerSupport);      return &MClapTimerSupport;      }
+//    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG) == 0)  { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapAudioPortsConfig);  return &MClapAudioPortsConfig;  }
+//    if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)         { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapAudioPorts);        return &MClapAudioPorts;        }
+//    if (strcmp(id,CLAP_EXT_EVENT_FILTER) == 0)        { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapEventFilter);       return &MClapEventFilter;       }
+//    if (strcmp(id,CLAP_EXT_FD_SUPPORT) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapFdSupport);         return &MClapFdSupport;         }
+//    if (strcmp(id,CLAP_EXT_GUI) == 0)                 { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGui);               return &MClapGui;               }
+//    if (strcmp(id,CLAP_EXT_GUI_X11) == 0)             { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGuiX11);            return &MClapGuiX11;            }
+//    if (strcmp(id,CLAP_EXT_LATENCY) == 0)             { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapLatency);           return &MClapLatency;           }
+//    if (strcmp(id,CLAP_EXT_NOTE_NAME) == 0)           { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapNoteName);          return &MClapNoteName;          }
+//    if (strcmp(id,CLAP_EXT_PARAMS) == 0)              { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapParams);            return &MClapParams;            }
+//    if (strcmp(id,CLAP_EXT_RENDER) == 0)              { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapRender);            return &MClapRender;            }
+//    if (strcmp(id,CLAP_EXT_STATE) == 0)               { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapState);             return &MClapState;             }
+//    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT) == 0)       { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapTimerSupport);      return &MClapTimerSupport;      }
     MIP_ClapPrint("id '%s' -> NULL\n",id);
     return nullptr;
   }
