@@ -57,6 +57,11 @@ public:
 public:
 //------------------------------
 
+  /*
+    these 'events' tricke down the widget hierarchy,
+    from the parent to the childdren..
+  */
+
   virtual void on_move() {}
   virtual void on_resize() {}
   virtual void on_paint() {}
@@ -72,13 +77,46 @@ public:
 public:
 //------------------------------
 
+  /*
+    these 'events' bubble upwards from a child widget to its parent,
+    and upwards.. until it reaches either a widget that responds to it,
+    or it reaches the window (which is-a widget)..
+  */
+
+  //------------------------------
+
+  // widget value has updated..
+
   virtual void do_widget_update(MIP_Widget* AWidget) {
     if (MParent) MParent->do_widget_update(AWidget);
   }
 
+  // widget needs to be redrawn
+
   virtual void do_widget_redraw(MIP_Widget* AWidget) {
     if (MParent) MParent->do_widget_redraw(AWidget);
   }
+
+  // widget has changed position or size..
+  // parent might need to realign its ch8ld widgets
+
+  virtual void do_widget_realign(MIP_Widget* AWidget) {
+    if (MParent) MParent->do_widget_realign(AWidget);
+  }
+
+  //
+
+  virtual void do_widget_setMouseCursor(MIP_Widget* AWidget, int32_t ACursor) {
+    if (MParent) MParent->do_widget_setMouseCursor(AWidget,ACursor);
+  }
+
+  //
+
+  virtual void do_widget_setHint(MIP_Widget* AWidget, const char* AHint) {
+    if (MParent) MParent->do_widget_setHint(AWidget,AHint);
+  }
+
+  //
 
 };
 

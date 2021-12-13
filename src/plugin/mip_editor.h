@@ -113,6 +113,14 @@ public:
 public:
 //------------------------------
 
+  virtual void on_editor_attach() {}
+  virtual void on_editor_open() {}
+  virtual void on_editor_close() {}
+
+//------------------------------
+public:
+//------------------------------
+
   bool        isOpen()    { return MIsOpen; }
   MIP_Window* getWindow() { return MWindow; }
 
@@ -126,6 +134,7 @@ public:
   bool attach(const char* AName, void* AParent) {
     MAttachedName = AName;
     MAttachedParent = AParent;
+    on_editor_attach();
     MIP_FRect rect = MDescriptor->getEditorRect();
     MWindow = new MIP_EditorWindow(MDescriptor,this,rect.w,rect.h,MAttachedParent);
     return true;
@@ -139,6 +148,7 @@ public:
   //----------
 
   bool open() {
+    on_editor_open();
     MWindow->open();
     MIsOpen = true;
     return true;
@@ -147,6 +157,7 @@ public:
   //----------
 
   void close() {
+    on_editor_close();
     MWindow->close();
     MIsOpen = false;
   }

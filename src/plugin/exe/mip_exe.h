@@ -42,7 +42,7 @@ public:
     //DESC* descriptor = new DESC();
 
     //MIP_Descriptor* descriptor = MIP_CreateDescriptor(0);
-    MIP_PluginInfo* info = MIP_GLOBAL_PLUGIN_LIST.getPlugin(0);
+    MIP_PluginInfo* info = MIP_PLUGIN_LIST.getPluginInfo(0);
     MIP_Descriptor* descriptor = info->desc;
 
     //INST* instance = new INST(descriptor);

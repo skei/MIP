@@ -16,19 +16,17 @@
 class MIP_ClapPlugin {
 
 //------------------------------
-private:
-//------------------------------
-
-//------------------------------
 public:
 //------------------------------
 
   MIP_ClapPlugin() {
+    MIP_ClapPrint("\n");
   }
 
   //----------
 
   ~MIP_ClapPlugin() {
+    MIP_ClapPrint("\n");
   };
 
 //------------------------------
@@ -51,11 +49,11 @@ public:
   //----------
 
   bool clap_entry_init(const char *plugin_path) {
-    //MIP_RegisterPlugins()
-    uint32_t num = MIP_GetNumPlugins();
+    uint32_t num = MIP_PLUGIN_LIST.getNumPlugins();
+    MIP_ClapPrint("plugin_path '%s' -> %s\n",plugin_path, (num > 0) ? "true" : "false" );
     for (uint32_t i=0; i<num; i++) {
-      MIP_PluginInfo* info = MIP_GetPluginInfo(i);
-      clap_plugin_descriptor* clapdescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor)); // who deletes this?
+      MIP_PluginInfo* info = MIP_PLUGIN_LIST.getPluginInfo(i);
+      clap_plugin_descriptor* clapdescriptor = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
       clapdescriptor->clap_version = CLAP_VERSION;
       clapdescriptor->id           = info->desc->getIdString();
       clapdescriptor->name         = info->desc->getName();
@@ -68,9 +66,11 @@ public:
       clapdescriptor->keywords     = "";
       if (info->desc->isSynth()) clapdescriptor->plugin_type = CLAP_PLUGIN_INSTRUMENT;
       else clapdescriptor->plugin_type  = CLAP_PLUGIN_AUDIO_EFFECT; //CLAP_PLUGIN_EVENT_EFFECT, CLAP_PLUGIN_ANALYZER
-      info->ptr = clapdescriptor;
+      info->clap_desc = clapdescriptor;
     }
-    return true;
+    //if (num > 0) return true;
+    //else return false;
+    return (num > 0);
   }
 
   //----------
@@ -79,10 +79,13 @@ public:
   */
 
   void clap_entry_deinit(void) {
-    uint32_t num = MIP_GetNumPlugins();
+    MIP_ClapPrint("\n");
+    uint32_t num = MIP_PLUGIN_LIST.getNumPlugins();
     for (uint32_t i=0; i<num; i++) {
-      MIP_PluginInfo* info = MIP_GetPluginInfo(i);
-      free(info->ptr);
+      MIP_PluginInfo* info = MIP_PLUGIN_LIST.getPluginInfo(i);
+      clap_plugin_descriptor* clapdescriptor = (clap_plugin_descriptor*)info->clap_desc;
+      free(clapdescriptor);
+      info->clap_desc = nullptr;
     }
   }
 
@@ -94,7 +97,10 @@ public:
   */
 
   uint32_t clap_entry_get_plugin_count() {
-    return MIP_GetNumPlugins();
+    uint32_t num = MIP_PLUGIN_LIST.getNumPlugins();
+    MIP_ClapPrint("-> %i\n",num);
+    return num;
+
   }
 
   //----------
@@ -107,8 +113,10 @@ public:
   */
 
   const clap_plugin_descriptor* clap_entry_get_plugin_descriptor(uint32_t index) {
-    MIP_PluginInfo* info = MIP_GLOBAL_PLUGIN_LIST.getPlugin(index);
-    return (clap_plugin_descriptor*)info->ptr;
+    MIP_PluginInfo* info = MIP_PLUGIN_LIST.getPluginInfo(index);
+    const clap_plugin_descriptor* desc = (clap_plugin_descriptor*)info->clap_desc;
+    MIP_ClapPrint("index %i -> %p\n",index,desc);
+    return desc;
   }
 
   //----------
@@ -122,31 +130,40 @@ public:
   */
 
   const clap_plugin* clap_entry_create_plugin(const clap_host* host, const char* plugin_id) {
-    uint32_t index = MIP_GLOBAL_PLUGIN_LIST.findPluginByIdString(plugin_id);//)  0;
-    //MIP_Print("*** index = %i\n",index);
-    MIP_PluginInfo*         info            = MIP_GetPluginInfo(index);
-    MIP_Descriptor*         descriptor      = info->desc;
-    MIP_Instance*           instance        = MIP_CreateInstance(index,descriptor);           // deleted by MIP_ClapInstance destructor
-    MIP_ClapPluginHost*     claphost        = new MIP_ClapPluginHost();
-    MIP_ClapInstance*       clapinstance    = new MIP_ClapInstance(index,instance,claphost);
-    clap_plugin*            plugin          = (clap_plugin*)malloc(sizeof(clap_plugin));
+    MIP_ClapPrint("host %p plugin_id '%s' -> ...\n",host,plugin_id);
 
-    //clap_plugin_descriptor* clapdescriptor  = (clap_plugin_descriptor*)malloc(sizeof(clap_plugin_descriptor));
-    clap_plugin_descriptor* clapdescriptor  = (clap_plugin_descriptor*)info->ptr;
+      MIP_ClapDPrint("  name:         %s\n",host->name);
+      MIP_ClapDPrint("  version:      %s\n",host->version);
+      MIP_ClapDPrint("  vendor:       %s\n",host->vendor);
+      MIP_ClapDPrint("  url:          %s\n",host->url);
+      MIP_ClapDPrint("  clap_version: %i.%i.%i\n",host->clap_version.major,host->clap_version.minor,host->clap_version.revision);
+      MIP_ClapDPrint("  host_data:    %p\n",host->host_data);
+
+    uint32_t          index         = MIP_PLUGIN_LIST.findPluginByIdString(plugin_id);//)  0;
+    MIP_PluginInfo*   info          = MIP_PLUGIN_LIST.getPluginInfo(index);
+    MIP_Descriptor*   descriptor    = info->desc;
+    MIP_Instance*     instance      = MIP_CreateInstance(index,descriptor);           // deleted by MIP_ClapInstance destructor
+    MIP_ClapInstance* clapinstance  = new MIP_ClapInstance(index,instance/*,claphost*/);
 
     instance->setPluginFormat(MIP_PLUGIN_FORMAT_CLAP);
-    plugin->desc              = clapdescriptor;
-    plugin->plugin_data       = clapinstance;
-    plugin->init              = clap_instance_init_callback;
-    plugin->destroy           = clap_instance_destroy_callback;
-    plugin->activate          = clap_instance_activate_callback;
-    plugin->deactivate        = clap_instance_deactivate_callback;
-    plugin->start_processing  = clap_instance_start_processing_callback;
-    plugin->stop_processing   = clap_instance_stop_processing_callback;
-    plugin->process           = clap_instance_process_callback;
-    plugin->get_extension     = clap_instance_get_extension_callback;
-    plugin->on_main_thread    = clap_instance_on_main_thread_callback;
-    return plugin;
+
+    clap_plugin_descriptor* clapdesc = (clap_plugin_descriptor*)info->clap_desc;
+    clap_plugin*            clapplug = (clap_plugin*)malloc(sizeof(clap_plugin));
+
+    clapplug->desc              = clapdesc;
+    clapplug->plugin_data       = clapinstance;
+    clapplug->init              = clap_instance_init_callback;
+    clapplug->destroy           = clap_instance_destroy_callback;
+    clapplug->activate          = clap_instance_activate_callback;
+    clapplug->deactivate        = clap_instance_deactivate_callback;
+    clapplug->start_processing  = clap_instance_start_processing_callback;
+    clapplug->stop_processing   = clap_instance_stop_processing_callback;
+    clapplug->process           = clap_instance_process_callback;
+    clapplug->get_extension     = clap_instance_get_extension_callback;
+    clapplug->on_main_thread    = clap_instance_on_main_thread_callback;
+
+    MIP_ClapPrint("... -> %p\n",clapplug);
+    return clapplug;
   }
 
   //----------
@@ -156,6 +173,7 @@ public:
   */
 
   uint32_t clap_entry_get_invalidation_sources_count(void) {
+    MIP_ClapPrint("-> 0\n");
     return 0;
   }
 
@@ -167,6 +185,7 @@ public:
   */
 
   const clap_plugin_invalidation_source* clap_entry_get_invalidation_sources(uint32_t index) {
+    MIP_ClapPrint("index %i -> NULL\n",index);
     return nullptr;
   }
 
@@ -178,6 +197,7 @@ public:
   */
 
   void clap_entry_refresh(void) {
+    MIP_ClapPrint("\n");
   }
 
 //------------------------------

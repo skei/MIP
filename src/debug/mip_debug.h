@@ -34,9 +34,9 @@
 
 #ifdef MIP_DEBUG
 
-  class MIP_Debug {
+  class MIP_GlobalDebug {
   public:
-    MIP_Debug() {
+    MIP_GlobalDebug() {
       #ifdef MIP_DEBUG_PRINT_TIME
       _mip_debug_time_start();
       #endif
@@ -44,7 +44,7 @@
       _mip_debug_socket_init();
       #endif
     }
-    ~MIP_Debug() {
+    ~MIP_GlobalDebug() {
       //#ifdef MIP_DEBUG_PRINT_TIME
       //#endif
       #ifdef MIP_DEBUG_PRINT_SOCKET
@@ -55,7 +55,7 @@
 
   //----------
 
-  MIP_Debug _mip_debug_;
+  MIP_GlobalDebug MIP_GLOBAL_DEBUG;
 
 #endif // MIP_DEBUG
 

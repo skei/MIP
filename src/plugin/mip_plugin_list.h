@@ -7,10 +7,11 @@ extern void MIP_RegisterPlugins();
 //----------------------------------------------------------------------
 
 struct MIP_PluginInfo {
-  uint32_t        index = 0;
-  MIP_Descriptor* desc  = nullptr;
-  void*           ptr   = nullptr;
+  MIP_Descriptor* desc      = nullptr;
+  void*           clap_desc = nullptr; // clap_plugin_descriptor* / ...
 };
+
+//----------
 
 typedef std::vector<MIP_PluginInfo*> MIP_PluginInfos;
 
@@ -20,7 +21,6 @@ typedef std::vector<MIP_PluginInfo*> MIP_PluginInfos;
 //
 //----------------------------------------------------------------------
 
-//template <class DESC, class INST, class EDIT>
 class MIP_PluginList {
 
 //------------------------------
@@ -34,7 +34,6 @@ public:
 //------------------------------
 
   MIP_PluginList() {
-    //MPlugins.clear();
     MIP_RegisterPlugins();
   }
 
@@ -46,14 +45,11 @@ public:
 
 public:
 
-  uint32_t appendPlugin(MIP_Descriptor* desc) {
-    uint32_t index = MPlugins.size();
+  void appendPlugin(MIP_Descriptor* desc) {
     MIP_PluginInfo* info = (MIP_PluginInfo*)malloc(sizeof(MIP_PluginInfo));
     memset((void*)info,0,sizeof(MIP_PluginInfo));
-    info->index = index;
     info->desc = desc;
     MPlugins.push_back(info);
-    return index;
   }
 
   //----------
@@ -78,7 +74,7 @@ public:
 
   //----------
 
-  MIP_PluginInfo* getPlugin(uint32_t index) {
+  MIP_PluginInfo* getPluginInfo(uint32_t index) {
     return MPlugins[index];
   }
 
@@ -100,25 +96,7 @@ public:
 //
 //----------------------------------------------------------------------
 
-MIP_PluginList MIP_GLOBAL_PLUGIN_LIST = {};
-
-//------------------------------
-
-void MIP_RegisterPlugin(MIP_Descriptor* desc) {
-  MIP_GLOBAL_PLUGIN_LIST.appendPlugin(desc);
-}
-
-//----------
-
-uint32_t MIP_GetNumPlugins() {
-  return MIP_GLOBAL_PLUGIN_LIST.getNumPlugins();
-}
-
-//----------
-
-MIP_PluginInfo* MIP_GetPluginInfo(uint32_t i) {
-  return MIP_GLOBAL_PLUGIN_LIST.getPlugin(i);
-}
+MIP_PluginList MIP_PLUGIN_LIST = {};
 
 //----------------------------------------------------------------------
 #endif
