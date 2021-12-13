@@ -7,16 +7,50 @@ plugin wrappers, abstractions, simplifications, helpers, ..
 v0.0.0
 in progress, prototype, proof of concept, pre-, ..
 
-* linux
-* (windows)
+# os
 
-* exe
-* clap
-* (vst2)
-* (vst3)
-* (lv2?)
+- linux
+- (windows)
 
-* xcb
-* (gdi)
-* (cairo)
+# plugin
+
+- clap
+- dssi
+- exe
+- ladspa
+- lv2
+- vst2
+- vst3
+
+# host
+
+- clap
+- dssi
+- ladspa
+
+# gui
+
+- xcb
+- cairo
+- ctx
+- (gdi)
+
+# other
+
+- header-only (except your plugin)
+- low level, un-modern c++
+- no weird/ugly build system
+- few/no external dependencies
+- 'fat' plugins (multiple plugin formats in one .so)
+- multiple (indexed) sub-plugins
+- no vst2 or vst3 sdk needed
+- parameters w/auto-conversion
+- midi input, mpe
+- hierarchial widget system
+
+# plans, roadmap
+
+- make it work
+- make it right
+- make it fast, small, stable, bugfree, pretty, etc..
 

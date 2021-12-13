@@ -1,0 +1,32 @@
+
+todo, sketches, draft, in progress, etc, etc..
+
+
+
+----------------------------------------------------------------------
+terminology
+----------------------------------------------------------------------
+
+* entry/entrypoint
+
+  this is where the host first enters the plugin.. after loading the .so
+
+* descriptor
+
+  describing your plugin.. this is const, and only ONE of these exist, and is
+  shared among all instances of the plugin
+
+* instance
+
+  a separate plugin instance
+
+* editor
+
+  takes care of the most basic connection between a plugin and gui
+
+* parameter
+
+  does NOT handle the (current) parameter values, but takes care of everything
+  else.. conversion to/from 0..1, name, label, etc...
+
+
