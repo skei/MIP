@@ -13,6 +13,7 @@
 
 
 #include "mip.h"
+#include "plugin/clap/mip_clap_hosted_instance_host.h"
 
 //----------------------------------------------------------------------
 //

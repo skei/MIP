@@ -460,18 +460,28 @@ public:
   const void *clap_instance_get_extension(const char *id) {
     if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG) == 0)  { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapAudioPortsConfig);  return &MClapAudioPortsConfig;  }
     if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)         { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapAudioPorts);        return &MClapAudioPorts;        }
+//  if (strcmp(id,CLAP_EXT_CHECK_FOR_UPDATE) == 0)    { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapCleckForUpdate);    return &MClapCheckForUpdate;    }
     if (strcmp(id,CLAP_EXT_EVENT_FILTER) == 0)        { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapEventFilter);       return &MClapEventFilter;       }
     if (strcmp(id,CLAP_EXT_FD_SUPPORT) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapFdSupport);         return &MClapFdSupport;         }
+//  if (strcmp(id,CLAP_EXT_FILE_REFERENCE) == 0)      { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapFileReference);     return &MClapFileReference;     }
     if (MDescriptor->hasEditor()) {
       if (strcmp(id,CLAP_EXT_GUI) == 0)               { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGui);               return &MClapGui;               }
       if (strcmp(id,CLAP_EXT_GUI_X11) == 0)           { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGuiX11);            return &MClapGuiX11;            }
     }
     if (strcmp(id,CLAP_EXT_LATENCY) == 0)             { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapLatency);           return &MClapLatency;           }
+//  if (strcmp(id,CLAP_EXT_MIDI_MAPPINGS) == 0)       { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapMidiMappings);      return &MClapMidiMappings;      }
     if (strcmp(id,CLAP_EXT_NOTE_NAME) == 0)           { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapNoteName);          return &MClapNoteName;          }
+//  if (strcmp(id,CLAP_EXT_NOTE_PORTS) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapNotePorts);         return &MClapNotePorts;         }
     if (strcmp(id,CLAP_EXT_PARAMS) == 0)              { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapParams);            return &MClapParams;            }
+//  if (strcmp(id,CLAP_EXT_PRESET_LOAD) == 0)         { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapPresetLoad);        return &MClapPresetLoad;        }
+//  if (strcmp(id,CLAP_EXT_QUICK_CONTROLS) == 0)      { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapQuickControls);     return &MClapQuickControls;     }
     if (strcmp(id,CLAP_EXT_RENDER) == 0)              { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapRender);            return &MClapRender;            }
     if (strcmp(id,CLAP_EXT_STATE) == 0)               { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapState);             return &MClapState;             }
     if (strcmp(id,CLAP_EXT_TIMER_SUPPORT) == 0)       { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapTimerSupport);      return &MClapTimerSupport;      }
+//  if (strcmp(id,CLAP_EXT_THREAD_POOL) == 0)         { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapThreadPool);        return &MClapThreadPool;        }
+//  if (strcmp(id,CLAP_EXT_TRACK_INFO) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapTrackInfo);         return &MClapTrackInfo;         }
+//  if (strcmp(id,CLAP_EXT_VST2_CONVERT) == 0)        { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapVst2Convert);       return &MClapVst2Convert;       }
+//  if (strcmp(id,CLAP_EXT_VST3_CONVERT) == 0)        { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapVst3Convert);       return &MClapVst3Convert;       }
     MIP_ClapPrint("id '%s' -> NULL\n",id);
     return nullptr;
   }
@@ -661,6 +671,10 @@ public: // extensions
   }
 
   //------------------------------
+  // check for update
+  //------------------------------
+
+  //------------------------------
   // event filter
   //------------------------------
 
@@ -719,6 +733,10 @@ public: // extensions
   void clap_fd_support_on_fd(clap_fd fd, clap_fd_flags flags) {
     MIP_ClapPrint("fd %i flags %i\n",fd,flags);
   }
+
+  //------------------------------
+  // file reference
+  //------------------------------
 
   //------------------------------
   // gui
@@ -920,6 +938,10 @@ public: // extensions
     MIP_ClapPrint("-> 0\n");
     return 0;
   }
+
+  //------------------------------
+  // midi mappings
+  //------------------------------
 
   //------------------------------
   // note name
@@ -1146,6 +1168,14 @@ public: // extensions
   }
 
   //------------------------------
+  // preset load
+  //------------------------------
+
+  //------------------------------
+  // quick controls
+  //------------------------------
+
+  //------------------------------
   // render
   //------------------------------
 
@@ -1231,6 +1261,10 @@ public: // extensions
   }
 
   //------------------------------
+  // thread pool
+  //------------------------------
+
+  //------------------------------
   // timer support
   //------------------------------
 
@@ -1249,6 +1283,19 @@ public: // extensions
 //      MInstance->on_plugin_updateEditor(MEditor);
 //    }
   }
+
+  //------------------------------
+  // track info
+  //------------------------------
+
+  //------------------------------
+  // vst2 convert
+  //------------------------------
+
+  //------------------------------
+  // vst3 convert
+  //------------------------------
+
 //------------------------------
 public: // extension callbacks
 //------------------------------
@@ -1444,6 +1491,10 @@ private: // extension structs
     clap_audio_ports_get_callback
   };
 
+  //struct clap_plugin_check_for_update MClapCheckForUpdate = {
+  //  clap_check_for_update_check_callback
+  //};
+
   struct clap_plugin_event_filter MClapEventFilter = {
     clap_event_filter_accepts_callback
   };
@@ -1451,6 +1502,14 @@ private: // extension structs
   struct clap_plugin_fd_support MClapFdSupport = {
     clap_fd_support_on_fd_callback
   };
+
+  //struct clap_plugin_file_reference MClapFileReference = {
+  //  clap_file_reference_count_callback
+  //  clap_file_reference_get_callback
+  //  clap_file_reference_get_hash_callback
+  //  clap_file_reference_update_path_callback
+  //  clap_file_reference_save_resources_callback
+  //};
 
   struct clap_plugin_gui MClapGui = {
     clap_gui_create_callback,
@@ -1472,6 +1531,11 @@ private: // extension structs
     clap_latency_get_callback
   };
 
+  //struct clap_plugin_midi_mappings MClapMidiMappings = {
+  //  clap_midi_mappings_count_callback,
+  //  clap_midi_mappings_get_callback
+  //};
+
   struct clap_plugin_note_name MClapNoteName = {
     clap_note_name_count_callback,
     clap_note_name_get_callback
@@ -1486,6 +1550,17 @@ private: // extension structs
     clap_params_flush_callback
   };
 
+  //struct clap_plugin_preset_load MClapPresetLoad = {
+  //  clap_preset_load_from_file_callback
+  //};
+
+  //struct clap_plugin_quick_controls MClapQuickControls = {
+  //  clap_quick_controls_count_callback
+  //  clap_quick_controls_get_callback
+  //  clap_quick_controls_select_callback
+  //  clap_quick_controls_get_selected_callback
+  //};
+
   struct clap_plugin_render MClapRender = {
     clap_render_set_callback
   };
@@ -1498,6 +1573,28 @@ private: // extension structs
   struct clap_plugin_timer_support MClapTimerSupport = {
     clap_timer_support_on_timer_callback
   };
+
+  //struct clap_plugin_thread_pool MClapThreadPool = {
+  //  clap_thread_pool_exec_callback
+  //};
+
+  //struct clap_plugin_track_info MClapTrackInfo = {
+  //  clap_track_info_changed_callback
+  //};
+
+  //struct clap_plugin_vst2_convert MClapVst2Convert = {
+  //  clap_vst2_convert_get_vst2_plugin_id_callback
+  //  clap_vst2_convert_restore_vst2_state_callback
+  //  clap_vst2_convert_convert_normalized_value_callback
+  //  clap_vst2_convert_convert_plain_value_callback
+  //};
+
+  //struct clap_plugin_vst3_convert MClapVst3Convert = {
+  //  clap_vst3_convert_get_vst3_plugin_id_callback
+  //  clap_vst3_convert_restore_vst3_state_callback
+  //  clap_vst3_convert_convert_normalized_value_callback
+  //  clap_vst3_convert_convert_plain_value_callback
+  //};
 
 };
 
