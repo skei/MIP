@@ -65,24 +65,26 @@ private: // extensions
 
   const void* clap_host_get_extension(const char *extension_id) {
     printf("> clap_host_get_extension(%s)\n",extension_id);
-    if (strcmp(extension_id,CLAP_EXT_AUDIO_PORTS) == 0)       { return &MClapHostAudioPorts; }
-    if (strcmp(extension_id,CLAP_EXT_CHECK_FOR_UPDATE) == 0)  { return &MClapHostCheckForUpdate; }
-    if (strcmp(extension_id,CLAP_EXT_EVENT_FILTER) == 0)      { return &MClapHostEventFilter; }
-    if (strcmp(extension_id,CLAP_EXT_FD_SUPPORT) == 0)        { return &MClapHostFdSupport; }
-    if (strcmp(extension_id,CLAP_EXT_FILE_REFERENCE) == 0)    { return &MClapHostFileReference; }
-    if (strcmp(extension_id,CLAP_EXT_GUI) == 0)               { return &MClapHostGui; }
-    if (strcmp(extension_id,CLAP_EXT_LATENCY) == 0)           { return &MClapHostLatency; }
-    if (strcmp(extension_id,CLAP_EXT_LOG) == 0)               { return &MClapHostLog; }
-    if (strcmp(extension_id,CLAP_EXT_MIDI_MAPPINGS) == 0)     { return &MClapHostMidiMappings; }
-    if (strcmp(extension_id,CLAP_EXT_NOTE_NAME) == 0)         { return &MClapHostNoteName; }
-    if (strcmp(extension_id,CLAP_EXT_PARAMS) == 0)            { return &MClapHostParams; }
-    if (strcmp(extension_id,CLAP_EXT_QUICK_CONTROLS) == 0)    { return &MClapHostQuickControls; }
-    if (strcmp(extension_id,CLAP_EXT_STATE) == 0)             { return &MClapHostState; }
-    if (strcmp(extension_id,CLAP_EXT_THREAD_CHECK) == 0)      { return &MClapHostThreadCheck; }
-    if (strcmp(extension_id,CLAP_EXT_THREAD_POOL) == 0)       { return &MClapHostThreadPool; }
-    if (strcmp(extension_id,CLAP_EXT_TIMER_SUPPORT) == 0)     { return &MClapHostTimerSupport; }
-    if (strcmp(extension_id,CLAP_EXT_TRACK_INFO) == 0)        { return &MClapHostTrackInfo; }
-    if (strcmp(extension_id,CLAP_EXT_TUNING) == 0)            { return &MClapHostTuning; }
+    //if (strcmp(extension_id,CLAP_EXT_AUDIO_PORTS) == 0)         { return &MClapHostAudioPorts; }
+    //if (strcmp(extension_id,CLAP_EXT_AUDIO_PORTS_CONFIG) == 0)  { return &MClapHostAudioPortsConfig; }
+    //if (strcmp(extension_id,CLAP_EXT_CHECK_FOR_UPDATE) == 0)    { return &MClapHostCheckForUpdate; }
+    //if (strcmp(extension_id,CLAP_EXT_EVENT_FILTER) == 0)        { return &MClapHostEventFilter; }
+    //if (strcmp(extension_id,CLAP_EXT_FD_SUPPORT) == 0)          { return &MClapHostFdSupport; }
+    //if (strcmp(extension_id,CLAP_EXT_FILE_REFERENCE) == 0)      { return &MClapHostFileReference; }
+    //if (strcmp(extension_id,CLAP_EXT_GUI) == 0)                 { return &MClapHostGui; }
+    //if (strcmp(extension_id,CLAP_EXT_LATENCY) == 0)             { return &MClapHostLatency; }
+    //if (strcmp(extension_id,CLAP_EXT_LOG) == 0)                 { return &MClapHostLog; }
+    //if (strcmp(extension_id,CLAP_EXT_MIDI_MAPPINGS) == 0)       { return &MClapHostMidiMappings; }
+    //if (strcmp(extension_id,CLAP_EXT_NOTE_NAME) == 0)           { return &MClapHostNoteName; }
+    //if (strcmp(extension_id,CLAP_EXT_NOTE_PORTS) == 0)          { return &MClapHostNotePorts; }
+    if (strcmp(extension_id,CLAP_EXT_PARAMS) == 0)              { return &MClapHostParams; }
+    //if (strcmp(extension_id,CLAP_EXT_QUICK_CONTROLS) == 0)      { return &MClapHostQuickControls; }
+    //if (strcmp(extension_id,CLAP_EXT_STATE) == 0)               { return &MClapHostState; }
+    //if (strcmp(extension_id,CLAP_EXT_THREAD_CHECK) == 0)        { return &MClapHostThreadCheck; }
+    //if (strcmp(extension_id,CLAP_EXT_THREAD_POOL) == 0)         { return &MClapHostThreadPool; }
+    //if (strcmp(extension_id,CLAP_EXT_TIMER_SUPPORT) == 0)       { return &MClapHostTimerSupport; }
+    //if (strcmp(extension_id,CLAP_EXT_TRACK_INFO) == 0)          { return &MClapHostTrackInfo; }
+    //if (strcmp(extension_id,CLAP_EXT_TUNING) == 0)              { return &MClapHostTuning; }
     return NULL;
   }
 
@@ -115,6 +117,13 @@ private: // extensions
 
   void clap_host_audio_ports_rescan(uint32_t flags) {
     printf("> audio-ports.rescan(%i)\n",flags);
+  }
+
+  //--------------------
+  // clap.audio-ports-config
+  //--------------------
+
+  void clap_host_audio_ports_config_rescan() {
   }
 
   //--------------------
@@ -203,6 +212,13 @@ private: // extensions
 
   void clap_host_note_name_changed() {
     printf("> note-name.changed()\n");
+  }
+
+  //--------------------
+  // clap.note-ports
+  //--------------------
+
+  void clap_host_note_ports_rescan(uint32_t flags) {
   }
 
   //--------------------
@@ -337,6 +353,13 @@ private: // callbacks
     testhost->clap_host_audio_ports_rescan(flags);
   }
 
+  // clap.audio-ports-config
+
+  static void clap_host_audio_ports_config_rescan_callback(const clap_host *host) {
+    MIP_ClapHostedInstanceHost* testhost = (MIP_ClapHostedInstanceHost*)host->host_data;
+    testhost->clap_host_audio_ports_config_rescan();
+  }
+
   // clap.check-for-update
 
   static void clap_host_check_for_update_on_new_version_callback(const clap_host *host, const clap_check_for_update_info *update_info) {
@@ -413,6 +436,13 @@ private: // callbacks
   static void clap_host_note_name_changed_callback(const clap_host* host) {
     MIP_ClapHostedInstanceHost* testhost = (MIP_ClapHostedInstanceHost*)host->host_data;
     testhost->clap_host_note_name_changed();
+  }
+
+  // clap.note-ports
+
+  static void clap_host_note_ports_rescan_callback(const clap_host *host, uint32_t flags) {
+    MIP_ClapHostedInstanceHost* testhost = (MIP_ClapHostedInstanceHost*)host->host_data;
+    testhost->clap_host_note_ports_rescan(flags);
   }
 
   // clap.params
@@ -503,6 +533,12 @@ private:
     clap_host_audio_ports_rescan_callback
   };
 
+  // clap.audio-ports-config
+
+  struct clap_host_audio_ports_config MClapHostAudioPortsConfig = {
+    clap_host_audio_ports_config_rescan_callback
+  };
+
   struct clap_host_check_for_update MClapHostCheckForUpdate = {
     clap_host_check_for_update_on_new_version_callback
   };
@@ -534,12 +570,18 @@ private:
     clap_host_log_log_callback
   };
 
+  struct clap_host_midi_mappings MClapHostMidiMappings = {
+    clap_host_midi_mappings_changed_callback
+  };
+
   struct clap_host_note_name MClapHostNoteName = {
     clap_host_note_name_changed_callback
   };
 
-  struct clap_host_midi_mappings MClapHostMidiMappings = {
-    clap_host_midi_mappings_changed_callback
+  // clap.note-ports
+
+  struct clap_host_note_ports MClapHostNotePorts = {
+    clap_host_note_ports_rescan_callback
   };
 
   struct clap_host_params MClapHostParams = {
@@ -561,13 +603,13 @@ private:
     clap_host_thread_check_is_audio_thread_callback
   };
 
+  struct clap_host_thread_pool MClapHostThreadPool = {
+    clap_host_thread_pool_request_exec_callback
+  };
+
   struct clap_host_timer_support MClapHostTimerSupport = {
     clap_host_timer_support_register_timer_callback,
     clap_host_timer_support_unregister_timer_callback
-  };
-
-  struct clap_host_thread_pool MClapHostThreadPool = {
-    clap_host_thread_pool_request_exec_callback
   };
 
   struct clap_host_track_info MClapHostTrackInfo = {
