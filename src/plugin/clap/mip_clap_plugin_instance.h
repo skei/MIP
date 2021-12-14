@@ -35,16 +35,13 @@ private:
   MIP_PluginEditor*       MEditor               = nullptr;
   bool                    MEditorIsOpen         = false;
   MIP_HostParameterQueue  MHostParameterQueue   = {};
-
   float                   MSampleRate           = 0.0;
   uint32_t                MMinFrames            = 0;
   uint32_t                MMaxFrames            = 0; //INT_MAX;
   bool                    MIsProcessing         = false;
   uint32_t                MSelectedPortConfig   = 0;
-
   clap_plugin_render_mode MRenderMode           = CLAP_RENDER_REALTIME;
-
-  uint32_t                MPluginIndex          = 0;
+  uint32_t                MPluginIndex          = 0; // uses same index for plugin and editor..
 
 
 
