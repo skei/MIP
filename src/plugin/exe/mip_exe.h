@@ -8,6 +8,7 @@
 //----------
 
 #include "mip.h"
+//#include "base/utils/mip_arguments.h"
 #include "gui/mip_window.h"
 
 //----------------------------------------------------------------------
@@ -55,6 +56,16 @@ public:
   //TODO: error checking, safety..
 
   int main(int argc, char** argv) {
+
+    //MIP_Arguments arg;
+    //arg.init(argc,argv);
+    //const char* s = arg.getValStr("-l","--long-string");
+    //MIP_Print("s = %s\n",s);
+    //int i = arg.getValInt("-p");
+    //MIP_Print("i = %i\n",i);
+    //float f = arg.getValAfterFloat("-p",':');
+    //MIP_Print("f = %f\n",f);
+
 
     MIP_Print("Starting audio\n");
     start_audio(MIP_EXE_AUDIO_SAMPLERATE,MIP_EXE_AUDIO_BLOCKSIZE);
