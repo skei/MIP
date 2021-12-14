@@ -1,8 +1,8 @@
 
 // nc -U -l -k /tmp/mip.socket
 
-//#define MIP_DEBUG_CLAP
-//#define MIP_DEBUG_PRINT_SOCKET
+#define MIP_DEBUG_CLAP
+#define MIP_DEBUG_PRINT_SOCKET
 //#define MIP_DEBUG_PRINT_THREAD
 //#define MIP_DEBUG_PRINT_TIME
 
@@ -11,12 +11,9 @@
 
 #define MIP_GUI_XCB
 #define MIP_PLUGIN_ALL
-
-#define MIP_PLUGIN_REGISTER_PLUGINS
-
+//#define MIP_PLUGIN_REGISTER_PLUGINS
 
 #include "mip.h"
-#include "plugin/clap/mip_clap_hosted_instance_host.h"
 
 //----------------------------------------------------------------------
 //

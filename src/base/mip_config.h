@@ -3,19 +3,20 @@
 //----------------------------------------------------------------------
 
 /*
+  #define MIP_LINUX
+  #define MIP_WIN32
+  #define MIP_32BIT
+  #define MIP_64BIT
+  #define MIP_LITTLE_ENDIAN
+  #define MIP_BIG_ENDIAN
+  #define MIP_CPP11
+*/
 
-#define MIP_LINUX
-#define MIP_WIN32
-#define MIP_32BIT
-#define MIP_64BIT
-#define MIP_LITTLE_ENDIAN
-#define MIP_BIG_ENDIAN
+//----------
 
-#define MIP_CPP11
-
-#define MIP_LIB
-#define MIP_EXE
-
+/*
+  #define MIP_LIB
+  #define MIP_EXE
 */
 
 //----------------------------------------------------------------------
@@ -24,10 +25,12 @@
 //#define MIP_CAIRO_USE_XCB_FOR_CLIPPING
 
 //#define MIP_DEBUG
+
   #define MIP_DEBUG_ASSERT
   #define MIP_DEBUG_CALLSTACK
   #define MIP_DEBUG_CRASH_HANDLER
   #define MIP_DEBUG_PRINT
+
 //#define MIP_DEBUG_PRINT_LOGFILE
 //#define MIP_DEBUG_PRINT_SOCKET
 //#define MIP_DEBUG_PRINT_THREAD
@@ -56,7 +59,6 @@
 //#define MIP_NO_PLUGIN
 //#define MIP_NO_STDLIB
 //#define MIP_NO_WINDOW_BUFFERING
-
 
 //#define MIP_PLUGIN_CLAP
 //#define MIP_PLUGIN_EXE
