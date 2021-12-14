@@ -15,6 +15,10 @@
 #include "base/utils/mip_bgra.h"
 #include "base/utils/mip_integer_math.h"
 
+#ifdef MIP_USE_CAIRO
+  #include "gui/cairo/mip_cairo.h"
+#endif
+
 /*
 #include "base/utils/mip_math.h"
 //#include "gui/mip_drawable.h"
@@ -31,9 +35,6 @@
   #include "extern/stb/stb_truetype.h"
 #endif
 
-#ifdef MIP_USE_CAIRO
-  #include "gui/cairo/mip_cairo.h"
-#endif
 */
 
 //----------------------------------------------------------------------
@@ -170,6 +171,7 @@ public:
 //------------------------------
 
   #ifdef MIP_USE_CAIRO
+
   cairo_surface_t* createCairoSurface() {
     cairo_surface_t* surface = cairo_image_surface_create_for_data(
       (uint8_t*)MBuffer,    // unsigned char *data,
@@ -180,6 +182,7 @@ public:
     );
     return surface;
   }
+
   #endif
 
 //------------------------------
