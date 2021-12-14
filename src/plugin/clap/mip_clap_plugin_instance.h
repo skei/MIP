@@ -459,26 +459,26 @@ public:
     if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)         { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapAudioPorts);        return &MClapAudioPorts;        }
   //if (strcmp(id,CLAP_EXT_CHECK_FOR_UPDATE) == 0)    { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapCheckForUpdate);    return &MClapCheckForUpdate;    }
     if (strcmp(id,CLAP_EXT_EVENT_FILTER) == 0)        { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapEventFilter);       return &MClapEventFilter;       }
-  //if (strcmp(id,CLAP_EXT_FD_SUPPORT) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapFdSupport);         return &MClapFdSupport;         }
-  //if (strcmp(id,CLAP_EXT_FILE_REFERENCE) == 0)      { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapFileReference);     return &MClapFileReference;     }
+    if (strcmp(id,CLAP_EXT_FD_SUPPORT) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapFdSupport);         return &MClapFdSupport;         }
+    if (strcmp(id,CLAP_EXT_FILE_REFERENCE) == 0)      { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapFileReference);     return &MClapFileReference;     }
     if (MDescriptor->hasEditor()) {
       if (strcmp(id,CLAP_EXT_GUI) == 0)               { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGui);               return &MClapGui;               }
       if (strcmp(id,CLAP_EXT_GUI_X11) == 0)           { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGuiX11);            return &MClapGuiX11;            }
     }
-  //if (strcmp(id,CLAP_EXT_LATENCY) == 0)             { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapLatency);           return &MClapLatency;           }
-  //if (strcmp(id,CLAP_EXT_MIDI_MAPPINGS) == 0)       { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapMidiMappings);      return &MClapMidiMappings;      }
-  //if (strcmp(id,CLAP_EXT_NOTE_NAME) == 0)           { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapNoteName);          return &MClapNoteName;          }
-  //if (strcmp(id,CLAP_EXT_NOTE_PORTS) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapNotePorts);         return &MClapNotePorts;         }
+    if (strcmp(id,CLAP_EXT_LATENCY) == 0)             { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapLatency);           return &MClapLatency;           }
+    if (strcmp(id,CLAP_EXT_MIDI_MAPPINGS) == 0)       { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapMidiMappings);      return &MClapMidiMappings;      }
+    if (strcmp(id,CLAP_EXT_NOTE_NAME) == 0)           { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapNoteName);          return &MClapNoteName;          }
+    if (strcmp(id,CLAP_EXT_NOTE_PORTS) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapNotePorts);         return &MClapNotePorts;         }
     if (strcmp(id,CLAP_EXT_PARAMS) == 0)              { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapParams);            return &MClapParams;            }
-  //if (strcmp(id,CLAP_EXT_PRESET_LOAD) == 0)         { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapPresetLoad);        return &MClapPresetLoad;        }
-  //if (strcmp(id,CLAP_EXT_QUICK_CONTROLS) == 0)      { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapQuickControls);     return &MClapQuickControls;     }
-  //if (strcmp(id,CLAP_EXT_RENDER) == 0)              { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapRender);            return &MClapRender;            }
-  //if (strcmp(id,CLAP_EXT_STATE) == 0)               { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapState);             return &MClapState;             }
-  //if (strcmp(id,CLAP_EXT_TIMER_SUPPORT) == 0)       { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapTimerSupport);      return &MClapTimerSupport;      }
-  //if (strcmp(id,CLAP_EXT_THREAD_POOL) == 0)         { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapThreadPool);        return &MClapThreadPool;        }
-  //if (strcmp(id,CLAP_EXT_TRACK_INFO) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapTrackInfo);         return &MClapTrackInfo;         }
-  //if (strcmp(id,CLAP_EXT_VST2_CONVERT) == 0)        { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapVst2Convert);       return &MClapVst2Convert;       }
-  //if (strcmp(id,CLAP_EXT_VST3_CONVERT) == 0)        { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapVst3Convert);       return &MClapVst3Convert;       }
+    if (strcmp(id,CLAP_EXT_PRESET_LOAD) == 0)         { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapPresetLoad);        return &MClapPresetLoad;        }
+    if (strcmp(id,CLAP_EXT_QUICK_CONTROLS) == 0)      { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapQuickControls);     return &MClapQuickControls;     }
+    if (strcmp(id,CLAP_EXT_RENDER) == 0)              { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapRender);            return &MClapRender;            }
+    if (strcmp(id,CLAP_EXT_STATE) == 0)               { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapState);             return &MClapState;             }
+    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT) == 0)       { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapTimerSupport);      return &MClapTimerSupport;      }
+    if (strcmp(id,CLAP_EXT_THREAD_POOL) == 0)         { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapThreadPool);        return &MClapThreadPool;        }
+    if (strcmp(id,CLAP_EXT_TRACK_INFO) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapTrackInfo);         return &MClapTrackInfo;         }
+    if (strcmp(id,CLAP_EXT_VST2_CONVERT) == 0)        { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapVst2Convert);       return &MClapVst2Convert;       }
+    if (strcmp(id,CLAP_EXT_VST3_CONVERT) == 0)        { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapVst3Convert);       return &MClapVst3Convert;       }
     MIP_ClapPrint("id '%s' -> NULL\n",id);
     return nullptr;
   }
@@ -498,85 +498,6 @@ public:
 //------------------------------
 public: // extensions
 //------------------------------
-
-  //------------------------------
-  // audio ports config
-  //------------------------------
-
-  /*
-    This extension provides a way for the plugin to describe possible ports
-    configurations, for example mono, stereo, surround, ... and a way for the
-    host to select a configuration.
-
-    After the plugin initialization, the host may scan the list of
-    configurations and eventually select one that fits the plugin context.
-    The host can only select a configuration if the plugin is deactivated.
-
-    A configuration is a very simple description of the audio ports:
-    - it describes the main input and output ports
-    - it has a name that can be displayed to the user
-
-    The idea behind the configurations, is to let the user choose one via a
-    menu.
-
-    Plugin with very complex configuration possibilities should let the user
-    configure the ports from the plugin GUI, and call
-    clap_host_audio_ports.rescan(CLAP_AUDIO_PORTS_RESCAN_ALL).
-  */
-
-  //----------
-
-  /*
-    gets the number of available configurations
-    [main-thread]
-  */
-
-  uint32_t clap_audio_ports_config_count() {
-    MIP_ClapPrint("-> 1\n");
-    return 1;
-  }
-
-  //----------
-
-  /*
-    gets information about a configuration
-    [main-thread]
-
-    CLAP_CHMAP_UNSPECIFIED
-    CLAP_CHMAP_MONO
-    CLAP_CHMAP_STEREO
-    CLAP_CHMAP_SURROUND
-  */
-
-  bool clap_audio_ports_config_get(uint32_t index, clap_audio_ports_config *config) {
-    switch(index) {
-      case 0:
-        config->id                    = 0;
-        strncpy(config->name,"port config 1",CLAP_NAME_SIZE);
-        config->input_channel_count   = 2;
-        config->input_channel_map     = CLAP_CHMAP_STEREO;
-        config->output_channel_count  = 2;
-        config->output_channel_map    = CLAP_CHMAP_STEREO;
-        MIP_ClapPrint("index %i -> true\n");
-        return true;
-    }
-    MIP_ClapPrint("index %i -> false\n");
-    return false;
-  }
-
-  //----------
-
-  /*
-   selects the configuration designated by id
-   returns true if the configuration could be applied
-   [main-thread,plugin-deactivated]
-  */
-
-  bool clap_audio_ports_config_select(clap_id config_id) {
-    MIP_ClapPrint("config_id %i -> true\n",config_id);
-    MSelectedPortConfig = config_id;
-    return true;
-  }
 
   //------------------------------
   // audio ports
@@ -668,11 +589,95 @@ public: // extensions
   }
 
   //------------------------------
+  // audio ports config
+  //------------------------------
+
+  /*
+    This extension provides a way for the plugin to describe possible ports
+    configurations, for example mono, stereo, surround, ... and a way for the
+    host to select a configuration.
+
+    After the plugin initialization, the host may scan the list of
+    configurations and eventually select one that fits the plugin context.
+    The host can only select a configuration if the plugin is deactivated.
+
+    A configuration is a very simple description of the audio ports:
+    - it describes the main input and output ports
+    - it has a name that can be displayed to the user
+
+    The idea behind the configurations, is to let the user choose one via a
+    menu.
+
+    Plugin with very complex configuration possibilities should let the user
+    configure the ports from the plugin GUI, and call
+    clap_host_audio_ports.rescan(CLAP_AUDIO_PORTS_RESCAN_ALL).
+  */
+
+  //----------
+
+  /*
+    gets the number of available configurations
+    [main-thread]
+  */
+
+  uint32_t clap_audio_ports_config_count() {
+    MIP_ClapPrint("-> 1\n");
+    return 1;
+  }
+
+  //----------
+
+  /*
+    gets information about a configuration
+    [main-thread]
+
+    CLAP_CHMAP_UNSPECIFIED
+    CLAP_CHMAP_MONO
+    CLAP_CHMAP_STEREO
+    CLAP_CHMAP_SURROUND
+  */
+
+  bool clap_audio_ports_config_get(uint32_t index, clap_audio_ports_config *config) {
+    switch(index) {
+      case 0:
+        config->id                    = 0;
+        strncpy(config->name,"port config 1",CLAP_NAME_SIZE);
+        config->input_channel_count   = 2;
+        config->input_channel_map     = CLAP_CHMAP_STEREO;
+        config->output_channel_count  = 2;
+        config->output_channel_map    = CLAP_CHMAP_STEREO;
+        MIP_ClapPrint("index %i -> true\n");
+        return true;
+    }
+    MIP_ClapPrint("index %i -> false\n");
+    return false;
+  }
+
+  //----------
+
+  /*
+   selects the configuration designated by id
+   returns true if the configuration could be applied
+   [main-thread,plugin-deactivated]
+  */
+
+  bool clap_audio_ports_config_select(clap_id config_id) {
+    MIP_ClapPrint("config_id %i -> true\n",config_id);
+    MSelectedPortConfig = config_id;
+    return true;
+  }
+
+  //------------------------------
   // check for update
   //------------------------------
 
-//  void clap_check_for_update_check(const clap_host *host, bool include_beta) {
-//  }
+  // [main-thread]
+
+  //void clap_check_for_update_check(const clap_host *host, bool include_beta) {
+  //}
+
+  void clap_check_for_update_check(const clap_plugin *plugin, bool include_beta) {
+  }
 
   //------------------------------
   // event filter
@@ -738,19 +743,46 @@ public: // extensions
   // file reference
   //------------------------------
 
-  void clap_file_reference_count() {
+  // returns the number of file reference this plugin has
+  // [main-thread]
+
+  uint32_t clap_file_reference_count() {
+    MIP_ClapPrint("\n");
+    return 0;
   }
 
-  void clap_file_reference_get(uint32_t index, clap_file_reference *file_reference) {
+  // gets the file reference at index
+  // returns true on success
+  // [main-thread]
+
+  bool clap_file_reference_get(uint32_t index, clap_file_reference *file_reference) {
+    MIP_ClapPrint("index %i\n",index);
+    return false;
   }
 
-  void clap_file_reference_get_hash(clap_id resource_id, clap_hash hash, uint8_t* digest, uint32_t digest_size) {
+  // This method does not compute the hash.
+  // It is only used in case of missing resource. The host may have additionnal known resource
+  // location and may be able to locate the file by using its known hash.
+  // [main-thread]
+
+  bool clap_file_reference_get_hash(clap_id resource_id, clap_hash hash, uint8_t* digest, uint32_t digest_size) {
+    MIP_ClapPrint("resource_id %i\n",resource_id);
+    return false;
   }
 
-  void clap_file_reference_update_path(clap_id resource_id, const char *path) {
+  // updates the path to a file reference
+  // [main-thread]
+
+  bool clap_file_reference_update_path(clap_id resource_id, const char *path) {
+    MIP_ClapPrint("resource_id %i path %s\n",resource_id,path);
+    return false;
   }
 
-  void clap_file_reference_save_resources() {
+  // [main-thread]
+
+  bool clap_file_reference_save_resources() {
+    MIP_ClapPrint("\n");
+    return false;
   }
 
   //------------------------------
@@ -790,9 +822,9 @@ public: // extensions
 
   bool clap_gui_create() {
     MEditor = MIP_CreateEditor(MPluginIndex,this,MDescriptor);
-//    MEditor = _mip_create_editor(this,MDescriptor);
-//    bool result = MInstance->on_plugin_createEditor(MEditor);
-//    return result;
+    //MEditor = _mip_create_editor(this,MDescriptor);
+    //bool result = MInstance->on_plugin_createEditor(MEditor);
+    //return result;
     MIP_ClapPrint("-> true\n");
     return true;
   }
@@ -807,7 +839,7 @@ public: // extensions
   void clap_gui_destroy() {
     MIP_ClapPrint("\n");
     if (MEditor) {
-//      MInstance->on_plugin_destroyEditor(MEditor);
+      //MInstance->on_plugin_destroyEditor(MEditor);
       delete MEditor;
       MEditor = nullptr;
     }
@@ -958,9 +990,13 @@ public: // extensions
   // midi mappings
   //------------------------------
 
+  // [main-thread]
+
   uint32_t clap_midi_mappings_count() {
     return 0;
   }
+
+  // [main-thread]
 
   bool clap_midi_mappings_get(uint32_t index, clap_midi_mapping *mapping) {
     return false;
@@ -1001,11 +1037,19 @@ public: // extensions
   // note-ports
   //------------------------------
 
+  // number of ports, for either input or output
+  // [main-thread]
+
   uint32_t clap_note_ports_count(bool is_input) {
+    MIP_ClapPrint("is_input %s\n", is_input?"true":"false" );
     return 0;
   }
 
+  // get info about about a note port.
+  // [main-thread]
+
   bool clap_note_ports_get(uint32_t index, bool is_input, clap_note_port_info* info) {
+    MIP_ClapPrint("index %i is_input %s\n",index,is_input?"true":"false");
     return false;
   }
 
@@ -1131,10 +1175,10 @@ public: // extensions
     strncpy(param_info->module,"",CLAP_MODULE_SIZE);
     param_info->flags         = flags;
     param_info->id            = param_index;
-    param_info->cookie        = parameter; //nullptr;
-    param_info->min_value     = parameter->getMinValue(); // 0.00
-    param_info->max_value     = parameter->getMaxValue(); // 1.0
-    param_info->default_value = parameter->getDefaultValue(); // parameter->to01(parameter->def_value);
+    param_info->cookie        = parameter;
+    param_info->min_value     = parameter->getMinValue();
+    param_info->max_value     = parameter->getMaxValue();
+    param_info->default_value = parameter->getDefaultValue();
     return true;
   }
 
@@ -1149,7 +1193,6 @@ public: // extensions
     MIP_ClapPrint("param_id %i -> true\n",param_id);
     float v = MInstance->getParameterValue(param_id); // !!!
     //v = MDescriptor->parameters[param_id]->from01(v);
-    //MIP_ClapPrint("param_id %i -> *value %.3f, true\n",param_id,v);
     *value = v;
     return true;
   }
@@ -1181,7 +1224,7 @@ public: // extensions
 
   bool clap_params_text_to_value(clap_id param_id, const char* display, double* value) {
     MIP_ClapPrint("param_id %i display '%s' -> true\n",param_id,display);
-    //int   i = atoi(display);
+    //int i = atoi(display);
     float f = atof(display);
     *value = f;
     return true;
@@ -1207,7 +1250,11 @@ public: // extensions
   // preset load
   //------------------------------
 
+  // Loads a preset in the plugin native preset file format from a path.
+  // [main-thread]
+
   bool clap_preset_load_from_file(const char *path) {
+    MIP_ClapPrint("path %s\n",path);
     return false;
   }
 
@@ -1215,18 +1262,26 @@ public: // extensions
   // quick controls
   //------------------------------
 
-  uint32_t clap_quick_controls_count(const clap_plugin *plugin) {
+  // [main-thread]
+
+  uint32_t clap_quick_controls_count() {
     return 0;
   }
 
-  bool clap_quick_controls_get(const clap_plugin *plugin, uint32_t page_index, clap_quick_controls_page *page) {
+  // [main-thread]
+
+  bool clap_quick_controls_get(uint32_t page_index, clap_quick_controls_page *page) {
     return false;
   }
 
-  void clap_quick_controls_select(const clap_plugin *plugin, clap_id page_id) {
+  // [main-thread]
+
+  void clap_quick_controls_select(clap_id page_id) {
   }
 
-  clap_id clap_quick_controls_get_selected(const clap_plugin *plugin) {
+  // [main-thread]
+
+  clap_id clap_quick_controls_get_selected() {
     return 0;
   }
 
@@ -1319,8 +1374,10 @@ public: // extensions
   // thread pool
   //------------------------------
 
+  // Called by the thread pool
 
   void clap_thread_pool_exec(uint32_t task_index) {
+    MIP_ClapPrint("task_index %i\n",task_index);
   }
 
   //------------------------------
@@ -1347,28 +1404,48 @@ public: // extensions
   // track info
   //------------------------------
 
+  // [main-thread]
 
   void clap_track_info_changed() {
+    MIP_ClapPrint("\n");
   }
 
   //------------------------------
   // vst2 convert
   //------------------------------
 
+  // Copies the name and VST2 plugin id that we can convert from.
+  // Returns the lenght of the name.
+  // [thread-safe]
 
   int32_t clap_vst2_convert_get_vst2_plugin_id(uint32_t* vst2_plugin_id, char* name, uint32_t name_size) {
+    MIP_ClapPrint("\n");
     return 0;
   }
 
+  // Loads the plugin state from stream using the VST2 chunk.
+  // [main-thread]
+
   bool clap_vst2_convert_restore_vst2_state(clap_istream *stream) {
+    MIP_ClapPrint("\n");
     return false;
   }
+
+  // converts the vst2 param id and normalized value to clap param id and
+  // plain value.
+  // [thread-safe]
 
   bool clap_vst2_convert_convert_normalized_value(uint32_t vst2_param_id, double vst2_normalized_value, clap_id* clap_param_id, double* clap_plain_value) {
+    MIP_ClapPrint("\n");
     return false;
   }
 
+  // converts the vst2 param id and plain value to clap param id and
+  // plain value.
+  // [thread-safe]
+
   bool clap_vst2_convert_convert_plain_value(uint32_t vst2_param_id, double vst2_plain_value, clap_id* clap_param_id, double* clap_plain_value) {
+    MIP_ClapPrint("\n");
     return false;
   }
 
@@ -1377,19 +1454,36 @@ public: // extensions
   // vst3 convert
   //------------------------------
 
+  // Copies the name and VST3 plugin id that we can convert from.
+  // [thread-safe]
 
   void clap_vst3_convert_get_vst3_plugin_id(const clap_plugin *plugin, uint8_t *vst3_plugin_uuid) {
+    MIP_ClapPrint("\n");
   }
+
+  // Loads the plugin state from stream using the vst3 chunk.
+  // [main-thread]
 
   bool clap_vst3_convert_restore_vst3_state(const clap_plugin *plugin, clap_istream *stream) {
+    MIP_ClapPrint("\n");
     return false;
   }
+
+  // converts the VST3 param id and normalized value to clap param id and
+  // normalized value.
+  // [thread-safe]
 
   bool clap_vst3_convert_convert_normalized_value(const clap_plugin *plugin, uint32_t vst3_param_id, double vst3_normalized_value, clap_id* clap_param_id, double* clap_plain_value) {
+    MIP_ClapPrint("\n");
     return false;
   }
 
+  // converts the vst3 param id and plain value to clap param id and
+  // plain value.
+  // [thread-safe]
+
   bool clap_vst3_convert_convert_plain_value(const clap_plugin *plugin, uint32_t vst3_param_id, double vst3_plain_value, clap_id* clap_param_id, double* clap_plain_value) {
+    MIP_ClapPrint("\n");
     return false;
   }
 
@@ -1429,12 +1523,15 @@ public: // extension callbacks
 
   // clap.check-for-updates
 
+  //TODO: wait for 'official' fix..
 
-//  static void clap_check_for_update_check_callback(const clap_host *host, bool include_beta) {
-//  }
-//
-//  static void clap_check_for_update_on_new_version_callback(const clap_host *host, bool include_beta) {
-//  }
+  //static void clap_check_for_update_check_callback(const clap_plugin *plugin, bool include_beta) {
+  //  MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+  //  instance->clap_check_for_update(include_beta);
+  //}
+
+  static void clap_check_for_update_check_callback(const clap_host *host, bool include_beta) {
+  }
 
   // clap.event-filter
 
@@ -1453,23 +1550,28 @@ public: // extension callbacks
   // clap.file-reference
 
   static uint32_t clap_file_reference_count_callback(const clap_plugin *plugin) {
-    return 0;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_file_reference_count();
   }
 
   static bool clap_file_reference_get_callback(const clap_plugin *plugin, uint32_t index, clap_file_reference *file_reference) {
-    return false;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_file_reference_get(index,file_reference);
   }
 
   static bool clap_file_reference_get_hash_callback(const clap_plugin *plugin, clap_id resource_id, clap_hash hash, uint8_t* digest, uint32_t digest_size) {
-    return false;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_file_reference_get_hash(resource_id,hash,digest,digest_size);
   }
 
   static bool clap_file_reference_update_path_callback(const clap_plugin *plugin,  clap_id resource_id, const char *path) {
-    return false;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_file_reference_update_path(resource_id,path);
   }
 
   static bool clap_file_reference_save_resources_callback(const clap_plugin *plugin) {
-    return false;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_file_reference_save_resources();
   }
 
   // clap.gui
@@ -1535,8 +1637,15 @@ public: // extension callbacks
 
   // clap.midi-mappings
 
-  static uint32_t clap_midi_mappings_count_callback(const clap_plugin *plugin) { return 0; }
-  static bool clap_midi_mappings_get_callback(const clap_plugin *plugin, uint32_t index, clap_midi_mapping *mapping) { return false; }
+  static uint32_t clap_midi_mappings_count_callback(const clap_plugin *plugin) {
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_midi_mappings_count();
+  }
+
+  static bool clap_midi_mappings_get_callback(const clap_plugin *plugin, uint32_t index, clap_midi_mapping *mapping) {
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_midi_mappings_get(index,mapping);
+  }
 
   // clap.note-name
 
@@ -1554,11 +1663,13 @@ public: // extension callbacks
 
 
   static uint32_t clap_note_ports_count_callback(const clap_plugin *plugin, bool is_input) {
-    return 0;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_note_ports_count(is_input);
   }
 
   static bool clap_note_ports_get_callback(const clap_plugin* plugin, uint32_t index, bool is_input, clap_note_port_info *info) {
-    return false;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_note_ports_get(index,is_input,info);
   }
 
   // clap.params
@@ -1595,26 +1706,31 @@ public: // extension callbacks
 
   // clap.preset-load
 
-
   static bool clap_preset_load_from_file_callback(const clap_plugin *plugin, const char *path) {
-    return false;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_preset_load_from_file(path);
   }
 
   // clap.quick-controls
 
   static uint32_t clap_quick_controls_count_callback(const clap_plugin *plugin) {
-    return 0;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_quick_controls_count();
   }
 
   static bool clap_quick_controls_get_callback(const clap_plugin *plugin, uint32_t page_index, clap_quick_controls_page *page) {
-    return false;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_quick_controls_get(page_index,page);
   }
 
   static void clap_quick_controls_select_callback(const clap_plugin *plugin, clap_id page_id) {
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_quick_controls_select(page_id);
   }
 
   static clap_id clap_quick_controls_get_selected_callback(const clap_plugin *plugin) {
-    return 0;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_quick_controls_get_selected();
   }
 
   // clap.render
@@ -1639,6 +1755,8 @@ public: // extension callbacks
   // clap.thread-pool
 
   static void clap_thread_pool_exec_callback(const clap_plugin *plugin, uint32_t task_index) {
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_thread_pool_exec(task_index);
   }
 
   // clap.timer-support
@@ -1650,26 +1768,31 @@ public: // extension callbacks
 
   // clap.track-info
 
-
   static void clap_track_info_changed_callback(const clap_plugin *plugin) {
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    instance->clap_track_info_changed();
   }
 
   // clap.vst2-convert
 
   static int32_t clap_vst2_convert_get_vst2_plugin_id_callback(const clap_plugin *plugin, uint32_t* vst2_plugin_id, char* name, uint32_t name_size) {
-    return 0;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_vst2_convert_get_vst2_plugin_id(vst2_plugin_id,name,name_size);
   }
 
   static bool clap_vst2_convert_restore_vst2_state_callback(const clap_plugin *plugin, clap_istream *stream) {
-    return false;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_vst2_convert_restore_vst2_state(stream);
   }
 
   static bool clap_vst2_convert_convert_normalized_value_callback(const clap_plugin *plugin, uint32_t vst2_param_id, double vst2_normalized_value, clap_id* clap_param_id, double* clap_plain_value) {
-    return false;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_vst2_convert_convert_normalized_value(vst2_param_id,vst2_normalized_value,clap_param_id,clap_plain_value);
   }
 
   static bool clap_vst2_convert_convert_plain_value_callback(const clap_plugin *plugin, uint32_t vst2_param_id, double vst2_plain_value, clap_id* clap_param_id, double* clap_plain_value) {
-    return false;
+    MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
+    return instance->clap_vst2_convert_convert_plain_value(vst2_param_id,vst2_plain_value,clap_param_id,clap_plain_value);
   }
 
   // clap.vst3-convert
@@ -1704,9 +1827,9 @@ private: // extension structs
     clap_audio_ports_get_callback
   };
 
-//  struct clap_plugin_check_for_update MClapCheckForUpdate = {
-//    clap_check_for_update_check_callback
-//  };
+  struct clap_plugin_check_for_update MClapCheckForUpdate = {
+    clap_check_for_update_check_callback
+  };
 
   struct clap_plugin_event_filter MClapEventFilter = {
     clap_event_filter_accepts_callback

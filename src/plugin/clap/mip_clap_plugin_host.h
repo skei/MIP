@@ -22,18 +22,26 @@ private:
   const char*       MHostVersion  = "";
 
   // extensions
-  clap_host_audio_ports_config* MHostAudioPortsConfig = nullptr;
   clap_host_audio_ports*        MHostAudioPorts       = nullptr;
+  clap_host_audio_ports_config* MHostAudioPortsConfig = nullptr;
+  clap_host_check_for_update*   MHostCheckForUpdate   = nullptr;  // draft
   clap_host_event_filter*       MHostEventFilter      = nullptr;
   clap_host_fd_support*         MHostFdSupport        = nullptr;
+  clap_host_file_reference*     MHostFileReference    = nullptr;  // draft
   clap_host_gui*                MHostGui              = nullptr;
   clap_host_latency*            MHostLatency          = nullptr;
   clap_host_log*                MHostLog              = nullptr;
+  clap_host_midi_mappings*      MHostMidiMappings     = nullptr;  // draft
   clap_host_note_name*          MHostNoteName         = nullptr;
+  clap_host_note_ports*         MHostNotePorts        = nullptr;  //
   clap_host_params*             MHostParams           = nullptr;
+  clap_host_quick_controls*     MHostQuickControls    = nullptr;  // draft
   clap_host_state*              MHostState            = nullptr;
   clap_host_thread_check*       MHostThreadCheck      = nullptr;
+  clap_host_thread_pool*        MHostThreadPool       = nullptr;  // draft
   clap_host_timer_support*      MHostTimerSupport     = nullptr;
+  clap_host_track_info*         MHostTrackInfo        = nullptr;  // draft
+  clap_host_tuning*             MHostTuning           = nullptr;  // draft
 
 //------------------------------
 public:
@@ -63,18 +71,26 @@ public:
 //------------------------------
 
   void init_extensions() {
-    MHostAudioPortsConfig = (clap_host_audio_ports_config*)get_extension(CLAP_EXT_AUDIO_PORTS_CONFIG);
     MHostAudioPorts       = (clap_host_audio_ports*)get_extension(CLAP_EXT_AUDIO_PORTS);
+    MHostAudioPortsConfig = (clap_host_audio_ports_config*)get_extension(CLAP_EXT_AUDIO_PORTS_CONFIG);
+    MHostCheckForUpdate   = (clap_host_check_for_update*)get_extension(CLAP_EXT_CHECK_FOR_UPDATE);
     MHostEventFilter      = (clap_host_event_filter*)get_extension(CLAP_EXT_EVENT_FILTER);
     MHostFdSupport        = (clap_host_fd_support*)get_extension(CLAP_EXT_FD_SUPPORT);
+    MHostFileReference    = (clap_host_file_reference*)get_extension(CLAP_EXT_FILE_REFERENCE);
     MHostGui              = (clap_host_gui*)get_extension(CLAP_EXT_GUI);
     MHostLatency          = (clap_host_latency*)get_extension(CLAP_EXT_LATENCY);
     MHostLog              = (clap_host_log*)get_extension(CLAP_EXT_LOG);
+    MHostMidiMappings     = (clap_host_midi_mappings*)get_extension(CLAP_EXT_MIDI_MAPPINGS);
     MHostNoteName         = (clap_host_note_name*)get_extension(CLAP_EXT_NOTE_NAME);
+    MHostNotePorts        = (clap_host_note_ports*)get_extension(CLAP_EXT_NOTE_PORTS);
     MHostParams           = (clap_host_params*)get_extension(CLAP_EXT_PARAMS);
+    MHostQuickControls    = (clap_host_quick_controls*)get_extension(CLAP_EXT_QUICK_CONTROLS);
     MHostState            = (clap_host_state*)get_extension(CLAP_EXT_STATE);
     MHostThreadCheck      = (clap_host_thread_check*)get_extension(CLAP_EXT_THREAD_CHECK);
+    MHostThreadPool       = (clap_host_thread_pool*)get_extension(CLAP_EXT_THREAD_POOL);
     MHostTimerSupport     = (clap_host_timer_support*)get_extension(CLAP_EXT_TIMER_SUPPORT);
+    MHostTrackInfo        = (clap_host_track_info*)get_extension(CLAP_EXT_TRACK_INFO);
+    MHostTuning           = (clap_host_tuning*)get_extension(CLAP_EXT_TUNING);
   }
 
 //------------------------------
@@ -146,6 +162,48 @@ public: // extensions
 //------------------------------
 
   //------------------------------
+  // audio ports
+  //------------------------------
+
+
+  /*
+    This extension provides a way for the plugin to describe its current audio
+    ports.
+    The plugin is only allowed to change its ports configuration while it is
+    deactivated.
+  */
+
+  //----------
+
+  /*
+    [main-thread]
+  */
+
+  uint32_t audio_ports_get_preferred_sample_size() {
+    if (MHostAudioPorts) return  MHostAudioPorts->get_preferred_sample_size(MClapHost);
+    return 0;
+  }
+
+  //----------
+
+  /*
+    Rescan the full list of audio ports according to the flags.
+    [main-thread]
+
+    CLAP_AUDIO_PORTS_RESCAN_ALL
+    CLAP_AUDIO_PORTS_RESCAN_NAMES
+
+   The ports have changed, the host shall perform a full scan of the ports.
+   This flag can only be used if the plugin is not active.
+   If the plugin active, call host->request_restart() and then call rescan()
+   when the host calls deactivate()
+  */
+
+  void audio_ports_rescan(uint32_t flags) {
+    if (MHostAudioPorts) MHostAudioPorts->rescan(MClapHost,flags);
+  }
+
+  //------------------------------
   // audio ports config
   //------------------------------
 
@@ -167,58 +225,15 @@ public: // extensions
   */
 
   void audio_ports_config_rescan() {
-    if (MHostAudioPortsConfig) {
-      //MIP_ClapPrint("\n");
-      MHostAudioPortsConfig->rescan(MClapHost);
-    }
+    if (MHostAudioPortsConfig) MHostAudioPortsConfig->rescan(MClapHost);
   }
 
   //------------------------------
-  // audio ports
+  // check-for-update.draft/0
   //------------------------------
 
-  /*
-    This extension provides a way for the plugin to describe its current audio
-    ports.
-    The plugin is only allowed to change its ports configuration while it is
-    deactivated.
-  */
-
-  //----------
-
-  /*
-    [main-thread]
-  */
-
-  uint32_t audio_ports_get_preferred_sample_size() {
-    if (MHostAudioPorts) {
-      uint32_t i = MHostAudioPorts->get_preferred_sample_size(MClapHost);
-      //MIP_ClapPrint("-> %i\n",i);
-      return i;
-    }
-    return 0;
-  }
-
-  //----------
-
-  /*
-    Rescan the full list of audio ports according to the flags.
-    [main-thread]
-
-    CLAP_AUDIO_PORTS_RESCAN_ALL
-    CLAP_AUDIO_PORTS_RESCAN_NAMES
-
-   The ports have changed, the host shall perform a full scan of the ports.
-   This flag can only be used if the plugin is not active.
-   If the plugin active, call host->request_restart() and then call rescan()
-   when the host calls deactivate()
-  */
-
-  void audio_ports_rescan(uint32_t flags) {
-    if (MHostAudioPorts) {
-      //MIP_ClapPrint("flags %i\n",flags);
-      MHostAudioPorts->rescan(MClapHost,flags);
-    }
+  void check_for_updates_on_new_version(const clap_check_for_update_info *update_info) {
+    if (MHostCheckForUpdate) MHostCheckForUpdate->on_new_version(MClapHost,update_info);
   }
 
   //------------------------------
@@ -237,10 +252,7 @@ public: // extensions
   */
 
   void event_filter_changed() {
-    if (MHostEventFilter) {
-      //MIP_ClapPrint("\n");
-      MHostEventFilter->changed(MClapHost);
-    }
+    if (MHostEventFilter) MHostEventFilter->changed(MClapHost);
   }
 
   //------------------------------
@@ -256,12 +268,8 @@ public: // extensions
   */
 
   bool fd_support_register_fd(clap_fd fd, clap_fd_flags flags) {
-    bool result = false;
-    if (MHostFdSupport) {
-      result = MHostFdSupport->register_fd(MClapHost,fd,flags);
-      //MIP_ClapPrint("fd %i flags %i -> %s\n",fd,flags, result ? "true" : "false" );
-    }
-    return result;
+    if (MHostFdSupport) return MHostFdSupport->register_fd(MClapHost,fd,flags);
+    return false;
   }
 
   //----------
@@ -271,12 +279,8 @@ public: // extensions
   */
 
   bool fd_support_modify_fd(clap_fd fd, clap_fd_flags flags) {
-    bool result = false;
-    if (MHostFdSupport) {
-      result = MHostFdSupport->modify_fd(MClapHost,fd,flags);
-      //MIP_ClapPrint("fd %i flags %i -> %s\n",fd,flags, result ? "true" : "false" );
-    }
-    return result;
+    if (MHostFdSupport) return MHostFdSupport->modify_fd(MClapHost,fd,flags);
+    return false;
   }
 
   //----------
@@ -286,12 +290,28 @@ public: // extensions
   */
 
   bool fd_support_unregister_fd(clap_fd fd) {
-    bool result = false;
-    if (MHostFdSupport) {
-      result = MHostFdSupport->unregister_fd(MClapHost,fd);
-      //MIP_ClapPrint("fd %i -> %s\n",fd, result ? "true" : "false" );
-    }
-    return result;
+    if (MHostFdSupport) return MHostFdSupport->unregister_fd(MClapHost,fd);
+    return false;
+  }
+
+  //------------------------------
+  // file-reference
+  //------------------------------
+
+  // informs the host that the file references have changed, the host should
+  // schedule a full rescan
+  // [main-thread]
+
+  void file_reference_changed() {
+    if (MHostFileReference) MHostFileReference->changed(MClapHost);
+  }
+
+  //----------
+
+  // [main-thread]
+
+  void file_reference_set_dirty(clap_id resource_id) {
+    if (MHostFileReference) MHostFileReference->set_dirty(MClapHost,resource_id);
   }
 
   //------------------------------
@@ -305,12 +325,8 @@ public: // extensions
   */
 
   bool gui_resize(uint32_t width, uint32_t height) {
-    bool result = false;
-    if (MHostGui) {
-      result = MHostGui->resize(MClapHost,width,height);
-      //MIP_ClapPrint("width %i height %i -> %s\n",width,height, result ? "true" : "false" );
-    }
-    return result;
+    if (MHostGui) return MHostGui->resize(MClapHost,width,height);
+    return false;
   }
 
   //------------------------------
@@ -325,10 +341,7 @@ public: // extensions
   */
 
   void latency_changed() {
-    if (MHostLatency) {
-      //MIP_ClapPrint("\n");
-      MHostLatency->changed(MClapHost);
-    }
+    if (MHostLatency) MHostLatency->changed(MClapHost);
   }
 
   //------------------------------
@@ -348,10 +361,17 @@ public: // extensions
   */
 
   void log(clap_log_severity severity, const char *msg) {
-    if (MHostLog) {
-      //MIP_ClapPrint("severity %i msg %s\n",severity,msg);
-      MHostLog->log(MClapHost,severity,msg);
-    }
+    if (MHostLog) MHostLog->log(MClapHost,severity,msg);
+  }
+
+  //------------------------------
+  // midi-mapping
+  //------------------------------
+
+  // [main-thread]
+
+  void midi_mappings_changed() {
+    if (MHostMidiMappings) MHostMidiMappings->changed(MClapHost);
   }
 
   //------------------------------
@@ -364,10 +384,18 @@ public: // extensions
   */
 
   void note_name_changed() {
-    if (MHostNoteName) {
-      //MIP_ClapPrint("\n");
-      MHostNoteName->changed(MClapHost);
-    }
+    if (MHostNoteName) MHostNoteName->changed(MClapHost);
+  }
+
+  //------------------------------
+  // note-ports
+  //------------------------------
+
+  // Rescan the full list of audio ports according to the flags.
+  // [main-thread]
+
+  void note_ports_rescan(uint32_t flags) {
+    if (MHostNotePorts) MHostNotePorts->rescan(MClapHost,flags);
   }
 
   //------------------------------
@@ -385,10 +413,7 @@ public: // extensions
   */
 
   void params_rescan(clap_param_rescan_flags flags) {
-    if (MHostParams) {
-      //MIP_ClapPrint("flags %i\n",flags);
-      MHostParams->rescan(MClapHost,flags);
-    }
+    if (MHostParams) MHostParams->rescan(MClapHost,flags);
   }
 
   //----------
@@ -403,10 +428,7 @@ public: // extensions
   */
 
   void params_clear(clap_id param_id, clap_param_clear_flags flags) {
-    if (MHostParams) {
-      //MIP_ClapPrint("param_id %i flags %i\n",param_id,flags);
-      MHostParams->clear(MClapHost,param_id,flags);
-    }
+    if (MHostParams) MHostParams->clear(MClapHost,param_id,flags);
   }
 
   //----------
@@ -422,10 +444,18 @@ public: // extensions
   */
 
   void params_request_flush() {
-    if (MHostParams) {
-      //MIP_ClapPrint("\n");
-      MHostParams->request_flush(MClapHost);
-    }
+    if (MHostParams) MHostParams->request_flush(MClapHost);
+  }
+
+  //------------------------------
+  // quick-controls
+  //------------------------------
+
+  // Informs the host that the quick controls have changed.
+  // [main-thread]
+
+  void quick_controls_changed(clap_quick_controls_changed_flags flags) {
+    if (MHostQuickControls) MHostQuickControls->changed(MClapHost,flags);
   }
 
   //------------------------------
@@ -439,10 +469,7 @@ public: // extensions
   */
 
   void state_mark_dirty() {
-    if (MHostState) {
-      //MIP_ClapPrint("\n");
-      MHostState->mark_dirty(MClapHost);
-    }
+    if (MHostState) MHostState->mark_dirty(MClapHost);
   }
 
   //------------------------------
@@ -463,12 +490,8 @@ public: // extensions
   */
 
   bool thread_check_is_main_thread() {
-    bool result = false;
-    if (MHostThreadCheck) {
-      result = MHostThreadCheck->is_main_thread(MClapHost);
-      //MIP_ClapPrint("-> %s\n", result ? "true" : "false" );
-    }
-    return result;
+    if (MHostThreadCheck) return MHostThreadCheck->is_main_thread(MClapHost);
+    return true;
   }
 
   //----------
@@ -479,12 +502,26 @@ public: // extensions
   */
 
   bool thread_check_is_audio_thread() {
-    bool result = false;
-    if (MHostThreadCheck) {
-      result = MHostThreadCheck->is_audio_thread(MClapHost);
-      //MIP_ClapPrint("-> %s\n", result ? "true" : "false" );
-    }
-    return result;
+    if (MHostThreadCheck) return MHostThreadCheck->is_audio_thread(MClapHost);
+    return true;
+  }
+
+  //------------------------------
+  // thread-pool
+  //------------------------------
+
+   // Schedule num_tasks jobs in the host thread pool.
+   // It can't be called concurrently or from the thread pool.
+   // Will block until all the tasks are processed.
+   // This must be used exclusively for realtime processing within the process call.
+   // Returns true if the host did execute all the tasks, false if it rejected the request.
+   // The host should check that the plugin is within the process call, and if not, reject the exec
+   // request.
+   // [audio-thread]
+
+  bool thread_pool_request_exec(uint32_t num_tasks) {
+    if (MHostThreadPool) return MHostThreadPool->request_exec(MClapHost,num_tasks);
+    return false;
   }
 
   //------------------------------
@@ -499,13 +536,8 @@ public: // extensions
   */
 
   bool timer_support_register_timer(uint32_t period_ms, clap_id *timer_id) {
-    bool result = false;
-    if (MHostTimerSupport) {
-      result = MHostTimerSupport->register_timer(MClapHost,period_ms,timer_id);
-      *timer_id = 0;
-      //MIP_Print("period_ms %i -> %s (*timer_id %i\n",period_ms, result ? "true" : "false", *timer_id );
-    }
-    return result;
+    if (MHostTimerSupport) return MHostTimerSupport->register_timer(MClapHost,period_ms,timer_id);
+    return false;
   }
 
   //----------
@@ -515,12 +547,20 @@ public: // extensions
   */
 
   bool timer_support_unregister_timer(clap_id timer_id) {
-    bool result = false;
-    if (MHostTimerSupport) {
-      result = MHostTimerSupport->unregister_timer(MClapHost,timer_id);
-      //MIP_Print("timer_id %i -> %s \n",timer_id, result ? "true" : "false" );
-    }
-    return result;
+    if (MHostTimerSupport) return MHostTimerSupport->unregister_timer(MClapHost,timer_id);
+    return false;
+  }
+
+  //------------------------------
+  // track-info
+  //------------------------------
+
+  // Get info about the track the plugin belongs to.
+  // [main-thread]
+
+  bool track_info_get(clap_track_info *info) {
+    if (MHostTrackInfo) return MHostTrackInfo->get(MClapHost,info);
+    return false;
   }
 
 };
