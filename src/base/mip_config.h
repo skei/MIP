@@ -3,13 +3,19 @@
 //----------------------------------------------------------------------
 
 /*
+
 #define MIP_LINUX
 #define MIP_WIN32
 #define MIP_32BIT
 #define MIP_64BIT
 #define MIP_LITTLE_ENDIAN
 #define MIP_BIG_ENDIAN
+
 #define MIP_CPP11
+
+#define MIP_LIB
+#define MIP_EXE
+
 */
 
 //----------------------------------------------------------------------
@@ -51,9 +57,9 @@
 //#define MIP_NO_STDLIB
 //#define MIP_NO_WINDOW_BUFFERING
 
-//#define MIP_PLUGIN_DSSI
+
+//#define MIP_PLUGIN_CLAP
 //#define MIP_PLUGIN_EXE
-//#define MIP_PLUGIN_LADSPA
 //#define MIP_PLUGIN_LV2
 //#define MIP_PLUGIN_VST2
 //#define MIP_PLUGIN_VST3
@@ -62,6 +68,8 @@
 //#define MIP_PLUGIN_VST2_VESTIGE
 //#define MIP_PLUGIN_VST2_FST
 //#define MIP_PLUGIN_VST3_SDK
+
+  #define MIP_PLUGIN_REGISTER_PLUGINS
 
 //#define MIP_USE_CAIRO
 //#define MIP_USE_CTX

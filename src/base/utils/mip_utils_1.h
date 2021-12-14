@@ -51,7 +51,7 @@ pid_t MIP_GetThreadId() {
 
 // usleep is deprecated
 
-//void KODE_Sleep(KODE_ui32 ms) {
+//void MIP_Sleep(uint32_t ms) {
 //  usleep(ms*1000); // ms*1000;
 //}
 

@@ -6,6 +6,9 @@
 //#define MIP_DEBUG_PRINT_THREAD
 //#define MIP_DEBUG_PRINT_TIME
 
+//#define MIP_LIB
+//#define MIP_EXE
+
 #define MIP_GUI_XCB
 #define MIP_PLUGIN_ALL
 

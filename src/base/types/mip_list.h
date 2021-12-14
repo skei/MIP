@@ -297,13 +297,13 @@ public:
   //void findNode() {
   //}
 
-  //void swapNodes(Kode_ListNode* ANode1, Kode_ListNode* ANode2) {
+  //void swapNodes(MIP_ListNode* ANode1, MIP_ListNode* ANode2) {
   //}
 
-  //void moveNodeToHead(Kode_ListNode* ANode) {
+  //void moveNodeToHead(MIP_ListNode* ANode) {
   //}
 
-  //void moveNodeToTail(Kode_ListNode* ANode) {
+  //void moveNodeToTail(MIP_ListNode* ANode) {
   //}
 
   //----------
