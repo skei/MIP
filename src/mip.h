@@ -10,12 +10,12 @@
 #include <math.h>
 #include <vector>
 
+#include "base/debug/mip_debug.h"
 #include "base/mip_config.h"
 #include "base/mip_defines.h"
 #include "base/mip_const.h"
 #include "base/mip_enums.h"
 #include "base/mip_attributes.h"
-#include "debug/mip_debug.h"
 #include "plugin/mip_plugin.h"
 
 //----------------------------------------------------------------------

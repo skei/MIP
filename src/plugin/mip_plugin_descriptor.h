@@ -3,9 +3,9 @@
 //----------------------------------------------------------------------
 
 #include "mip.h"
+#include "base/types/mip_rect.h"
+#include "base/utils/mip_strutils.h"
 #include "plugin/mip_plugin_parameter.h"
-#include "base/mip_rect.h"
-#include "base/mip_utils.h"
 
 //----------------------------------------------------------------------
 
@@ -113,7 +113,7 @@ public:
 
   uint8_t* getLongId() {
     uint32_t* ptr = (uint32_t*)MLongId;
-    ptr[0] = MIP_MAGIC_K_PL;
+    ptr[0] = MIP_MAGIC_M_PL;
     ptr[1] = MIP_HashString(MName);
     ptr[2] = MIP_HashString(MAuthor);
     ptr[3] = MVersion;
@@ -124,7 +124,7 @@ public:
 
   uint8_t* getLongEditorId() {
     uint32_t* ptr = (uint32_t*)MLongEditorId;
-    ptr[0] = MIP_MAGIC_K_ED;
+    ptr[0] = MIP_MAGIC_M_ED;
     ptr[1] = MIP_HashString(MName);
     ptr[2] = MIP_HashString(MAuthor);
     ptr[3] = MVersion;

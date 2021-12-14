@@ -24,11 +24,10 @@
 
 //----------------------------------------------------------------------
 
-#include "debug/mip_debug_print.h"
-
-#include "debug/mip_debug_assert.h"
-#include "debug/mip_debug_callstack.h"
-#include "debug/mip_debug_crash_handler.h"
+#include "base/debug/mip_debug_print.h"
+#include "base/debug/mip_debug_assert.h"
+#include "base/debug/mip_debug_callstack.h"
+#include "base/debug/mip_debug_crash_handler.h"
 
 //----------------------------------------------------------------------
 

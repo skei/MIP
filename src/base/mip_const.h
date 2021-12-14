@@ -17,16 +17,16 @@ const char    MIP_NULL_STRING[]  = "";
 // abcdefghijklmnopqrstuvwxyz
 // 5f = _
 
-#define MIP_MAGIC        0x4b5f0000    // 'K_'   // + 0x0000
-#define MIP_MAGIC_USER   0x6b5f0000    // 'k_'   // + 0x0000
-#define MIP_MAGIC_K_PL   0x4b5f504c    // K_PL   // plugin
-#define MIP_MAGIC_K_ED   0x4b5f4544    // K_ED   // editor
+#define MIP_MAGIC        0x4d5f0000    // 'M_'   // + 0x0000
+#define MIP_MAGIC_USER   0x6d5f0000    // 'm_'   // + 0x0000
+#define MIP_MAGIC_M_PL   0x4d5f504c    // M_PL   // plugin
+#define MIP_MAGIC_M_ED   0x4d5f4544    // M_ED   // editor
 
-#ifdef MIP_CPP11
-  #define MIP_NULL nullptr
-#else
-  #define MIP_NULL 0
-#endif
+//#ifdef MIP_CPP11
+//  #define MIP_NULL nullptr
+//#else
+//  #define MIP_NULL 0
+//#endif
 
 //----------------------------------------------------------------------
 //

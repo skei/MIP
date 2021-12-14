@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 
 #include "mip.h"
-#include "base/mip_rect.h"
+#include "base/types/mip_rect.h"
 
 //----------------------------------------------------------------------
 
@@ -66,16 +66,16 @@ public:
     from the parent to the childdren..
   */
 
-  virtual void on_move() {}
-  virtual void on_resize() {}
-  virtual void on_paint() {}
-  virtual void on_mouseClick() {}
-  virtual void on_mouseMove() {}
-  virtual void on_mouseRelease() {}
-  virtual void on_keyPress() {}
-  virtual void on_keyRelease() {}
-  virtual void on_connect(int32_t AParameterIndex) {}
-  //virtual void on_timer() {}
+  virtual void on_widget_move() {}
+  virtual void on_widget_resize() {}
+  virtual void on_widget_paint() {}
+  virtual void on_widget_mouseClick() {}
+  virtual void on_widget_mouseMove() {}
+  virtual void on_widget_mouseRelease() {}
+  virtual void on_widget_keyPress() {}
+  virtual void on_widget_keyRelease() {}
+  virtual void on_widget_connect(int32_t AParameterIndex) {}
+  //virtual void on_widget_timer() {}
 
 //------------------------------
 public:

@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 
 #include "mip.h"
-#include "base/mip_rect.h"
+#include "base/types/mip_rect.h"
 #include "gui/mip_widget.h"
 #include "gui/base/mip_base_window.h"
 
@@ -30,8 +30,8 @@ class MIP_Window
 public:
 //------------------------------
 
-  MIP_Window(int32_t AWidth, int32_t AHeight, void* AParentPtr=nullptr)
-  : MIP_ImplementedWindow(AWidth,AHeight,AParentPtr) {
+  MIP_Window(int32_t AWidth, int32_t AHeight, const char* ATitle="", void* AParentPtr=nullptr)
+  : MIP_ImplementedWindow(AWidth,AHeight,ATitle,AParentPtr) {
     MIP_PRINT;
   }
 

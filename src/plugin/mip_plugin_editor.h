@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 
 #include "mip.h"
-#include "base/mip_rect.h"
+#include "base/types/mip_rect.h"
 #include "plugin/mip_plugin_descriptor.h"
 
 #include "gui/mip_widget.h"
@@ -41,8 +41,8 @@ private:
 public:
 //------------------------------
 
-  MIP_EditorWindow(MIP_PluginDescriptor* ADescriptor, MIP_EditorListener* AListener, int32_t AWidth, int32_t AHeight, void* AParent)
-  : MIP_Window(AWidth,AHeight,AParent) {
+  MIP_EditorWindow(MIP_PluginDescriptor* ADescriptor, MIP_EditorListener* AListener, int32_t AWidth, int32_t AHeight, const char* ATitle, void* AParent)
+  : MIP_Window(AWidth,AHeight,ATitle,AParent) {
     MIP_PRINT;
     MDescriptor = ADescriptor;
     MListener = AListener;
@@ -134,9 +134,9 @@ public:
   bool attach(const char* AName, void* AParent) {
     MAttachedName = AName;
     MAttachedParent = AParent;
-    on_editor_attach();
     MIP_FRect rect = MDescriptor->getEditorRect();
-    MWindow = new MIP_EditorWindow(MDescriptor,this,rect.w,rect.h,MAttachedParent);
+    MWindow = new MIP_EditorWindow(MDescriptor,this,rect.w,rect.h,AName,MAttachedParent);
+    on_editor_attach();
     return true;
   }
 
@@ -186,7 +186,7 @@ public:
   void connectParameter(MIP_Widget* AWidget, int32_t AParameterIndex) {
     MParameterToWidget[AParameterIndex] = AWidget;
     AWidget->setParameterIndex(AParameterIndex);
-    AWidget->on_connect(AParameterIndex);
+    AWidget->on_widget_connect(AParameterIndex);
   }
 
 //------------------------------

@@ -8,8 +8,8 @@ nc -U -l -k /tmp/mip.socket
 */
 
 #include <stdarg.h>   // va_
-//#include "mip.h"
-#include "base/mip_utils.h"
+#include "mip.h"
+#include "base/utils/mip_utils.h"
 
 //----------
 

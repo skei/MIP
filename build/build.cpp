@@ -1,8 +1,8 @@
 
 // nc -U -l -k /tmp/mip.socket
 
-#define MIP_DEBUG_CLAP
-#define MIP_DEBUG_PRINT_SOCKET
+//#define MIP_DEBUG_CLAP
+//#define MIP_DEBUG_PRINT_SOCKET
 //#define MIP_DEBUG_PRINT_THREAD
 //#define MIP_DEBUG_PRINT_TIME
 
@@ -13,7 +13,6 @@
 
 
 #include "mip.h"
-#include "plugin/clap/mip_clap_hosted_instance_host.h"
 
 //----------------------------------------------------------------------
 //
@@ -37,8 +36,8 @@ public:
     appendOutputPort( "output");
     appendParameter(  new MIP_PluginParameter("param1") );
     appendParameter(  "param4", 0, -1, MIP_PI );
-    //MHasEditor = true;
-    //setEditorSize(640,480);
+    MHasEditor = true;
+    setEditorSize(640,480);
   }
 
   //----------
@@ -69,12 +68,15 @@ public:
   }
 
   void on_editor_attach() final {
+    MIP_PRINT;
   }
 
   void on_editor_open() final {
+    MIP_PRINT;
   }
 
   void on_editor_close() final {
+    MIP_PRINT;
   }
 
 };
@@ -133,7 +135,7 @@ public:
   //----------
 
   uint32_t on_plugin_process(MIP_ProcessContext* AContext) final {
-    return CLAP_PROCESS_CONTINUE;
+    return 1; //CLAP_PROCESS_CONTINUE;
   }
 
   void on_plugin_parameter(uint32_t AIndex, float AValue) final {
