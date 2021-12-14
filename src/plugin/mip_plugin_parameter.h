@@ -1,5 +1,5 @@
-#ifndef mip_parameter_included
-#define mip_parameter_included
+#ifndef mip_plugin_parameter_included
+#define mip_plugin_parameter_included
 //----------------------------------------------------------------------
 
 #include "mip.h"

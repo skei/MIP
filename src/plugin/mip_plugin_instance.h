@@ -1,5 +1,5 @@
-#ifndef mip_instance_included
-#define mip_instance_included
+#ifndef mip_plugin_instance_included
+#define mip_plugin_instance_included
 //----------------------------------------------------------------------
 
 #include "mip.h"
@@ -17,7 +17,7 @@ protected:
 
   MIP_PluginDescriptor* MDescriptor   = nullptr;
   MIP_PluginEditor*     MEditor       = nullptr;
-  uint32_t        MPluginFormat = MIP_PLUGIN_FORMAT_NONE;
+  uint32_t              MPluginFormat = MIP_PLUGIN_FORMAT_NONE;
 
 //------------------------------
 public:
@@ -36,7 +36,7 @@ public:
 public:
 //------------------------------
 
-  void            setPluginFormat(uint32_t AFormat) { MPluginFormat = AFormat; }
+  void                  setPluginFormat(uint32_t AFormat) { MPluginFormat = AFormat; }
   MIP_PluginDescriptor* getDescriptor()                   { return MDescriptor; }
 
 //------------------------------

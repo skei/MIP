@@ -13,7 +13,7 @@ extern void MIP_RegisterPlugins();
 
 struct MIP_PluginInfo {
   MIP_PluginDescriptor* desc      = nullptr;
-  void*           clap_desc = nullptr; // clap_plugin_descriptor* / ...
+  void*                 clap_desc = nullptr; // clap_plugin_descriptor* / ...
   // vst3, vst2, lv2
   MIP_PluginInfo(MIP_PluginDescriptor* d) {
     desc = d;
@@ -43,7 +43,9 @@ public:
 //------------------------------
 
   MIP_PluginList() {
-    MIP_RegisterPlugins();
+    #ifdef MIP_PLUGIN_REGISTER_PLUGINS
+      MIP_RegisterPlugins();
+    #endif
   }
 
   //----------
@@ -64,7 +66,7 @@ public:
   void deletePlugins() {
     for (uint32_t i=0; i<MPlugins.size(); i++) {
       if (MPlugins[i]->desc) delete MPlugins[i]->desc;
-      // each format should have deleted its own data
+      // each format should have deleted their own data
       delete MPlugins[i];
     }
     MPlugins.clear();

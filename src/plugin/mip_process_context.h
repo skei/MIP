@@ -1,5 +1,5 @@
-#ifndef mip_process_context_included
-#define mip_process_context_included
+#ifndef mip_plugin_context_included
+#define mip_plugin_context_included
 //----------------------------------------------------------------------
 
 #include "mip.h"

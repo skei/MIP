@@ -28,11 +28,11 @@ class MIP_ClapPluginInstance
 private:
 //------------------------------
 
-  MIP_PluginDescriptor*         MDescriptor           = nullptr;
-  MIP_PluginInstance*           MInstance             = nullptr;
+  MIP_PluginDescriptor*   MDescriptor           = nullptr;
+  MIP_PluginInstance*     MInstance             = nullptr;
   MIP_ProcessContext      MProcessContext       = {};
   MIP_ClapPluginHost*     MHost                 = nullptr;
-  MIP_PluginEditor*             MEditor               = nullptr;
+  MIP_PluginEditor*       MEditor               = nullptr;
   bool                    MEditorIsOpen         = false;
   MIP_HostParameterQueue  MHostParameterQueue   = {};
 
@@ -462,8 +462,10 @@ public:
     if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)         { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapAudioPorts);        return &MClapAudioPorts;        }
     if (strcmp(id,CLAP_EXT_EVENT_FILTER) == 0)        { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapEventFilter);       return &MClapEventFilter;       }
     if (strcmp(id,CLAP_EXT_FD_SUPPORT) == 0)          { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapFdSupport);         return &MClapFdSupport;         }
-    if (strcmp(id,CLAP_EXT_GUI) == 0)                 { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGui);               return &MClapGui;               }
-    if (strcmp(id,CLAP_EXT_GUI_X11) == 0)             { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGuiX11);            return &MClapGuiX11;            }
+    if (MDescriptor->hasEditor()) {
+      if (strcmp(id,CLAP_EXT_GUI) == 0)               { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGui);               return &MClapGui;               }
+      if (strcmp(id,CLAP_EXT_GUI_X11) == 0)           { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapGuiX11);            return &MClapGuiX11;            }
+    }
     if (strcmp(id,CLAP_EXT_LATENCY) == 0)             { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapLatency);           return &MClapLatency;           }
     if (strcmp(id,CLAP_EXT_NOTE_NAME) == 0)           { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapNoteName);          return &MClapNoteName;          }
     if (strcmp(id,CLAP_EXT_PARAMS) == 0)              { MIP_ClapPrint("id '%s' -> %p\n",id,&MClapParams);            return &MClapParams;            }

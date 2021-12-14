@@ -1,5 +1,5 @@
-#ifndef mip_editor_included
-#define mip_editor_included
+#ifndef mip_plugin_editor_included
+#define mip_plugin_editor_included
 //----------------------------------------------------------------------
 
 #include "mip.h"

@@ -1,5 +1,5 @@
-#ifndef mip_descriptor_included
-#define mip_descriptor_included
+#ifndef mip_plugin_descriptor_included
+#define mip_plugin_descriptor_included
 //----------------------------------------------------------------------
 
 #include "mip.h"

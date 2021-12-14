@@ -1,5 +1,5 @@
-#ifndef mip_clap_hosted_plugin_host_included
-#define mip_clap_hosted_plugin_host_included
+#ifndef mip_clap_hosted_instance_host_included
+#define mip_clap_hosted_instance_host_included
 //----------------------------------------------------------------------
 
 // we _are_ the host, give MClapHost to hosted plugins
