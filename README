@@ -14,19 +14,15 @@ in progress, prototype, proof of concept, pre-, ..
 
 # plugin
 
-- clap
-- dssi
 - exe
-- ladspa
-- lv2
-- vst2
+- clap
 - vst3
+- vst2
+- lv2
 
 # host
 
 - clap
-- dssi
-- ladspa
 
 # gui
 
