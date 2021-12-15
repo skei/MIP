@@ -3,11 +3,14 @@
 //----------------------------------------------------------------------
 
 #include "mip.h"
+#include "base/types/mip_queue.h"
 #include "base/types/mip_rect.h"
 #include "plugin/mip_plugin_descriptor.h"
 
 #include "gui/mip_widget.h"
 #include "gui/mip_window.h"
+
+typedef MIP_Queue<uint32_t,1024>  MIP_IntQueue;
 
 //----------------------------------------------------------------------
 //
@@ -79,14 +82,16 @@ class MIP_PluginEditor
 protected:
 //------------------------------
 
-  MIP_EditorListener* MListener           = nullptr; // instance
-  MIP_PluginDescriptor*     MDescriptor         = nullptr;
-  MIP_Widget**        MParameterToWidget  = nullptr;
-  const char*         MAttachedName       = nullptr;
-  void*               MAttachedParent     = nullptr;
-  MIP_EditorWindow*   MWindow             = nullptr;
-  bool                MIsOpen             = false;
-  float               MScale              = 1.0;
+  MIP_EditorListener*   MListener           = nullptr; // instance
+  MIP_PluginDescriptor* MDescriptor         = nullptr;
+  MIP_Widget**          MParameterToWidget  = nullptr;
+  const char*           MAttachedName       = nullptr;
+  void*                 MAttachedParent     = nullptr;
+  MIP_EditorWindow*     MWindow             = nullptr;
+  bool                  MIsOpen             = false;
+  float                 MScale              = 1.0;
+  MIP_IntQueue          MUpdateQueue        = {};
+
 
 //------------------------------
 public:
@@ -179,6 +184,21 @@ public:
   void redrawParameter(uint32_t AIndex) {
     MIP_Widget* widget = MParameterToWidget[AIndex];
     if (widget) widget->redraw();
+  }
+
+  //----------
+
+  void queueRedrawParameter(uint32_t AIndex) {
+    MUpdateQueue.write(AIndex);
+  }
+
+  //----------
+
+  void flushRedrawParameters(bool ARedraw=false) {
+    uint32_t index;
+    while (MUpdateQueue.read(&index)) {
+      redrawParameter(index);
+    }
   }
 
   //----------
