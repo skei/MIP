@@ -180,6 +180,7 @@
 		<Unit filename="../src/base/types/mip_tree.h" />
 		<Unit filename="../src/base/types/mip_types.h" />
 		<Unit filename="../src/base/types/mip_vector.h" />
+		<Unit filename="../src/base/utils/mip_arguments.h" />
 		<Unit filename="../src/base/utils/mip_bgra.h" />
 		<Unit filename="../src/base/utils/mip_convert.h" />
 		<Unit filename="../src/base/utils/mip_dmc.h" />
