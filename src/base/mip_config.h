@@ -44,10 +44,6 @@
 //#define MIP_GUI_SDL
 //#define MIP_GUI_XCB
 
-//#define MIP_LICENSE_BSD
-//#define MIP_LICENSE_GPL3
-//#define MIP_LICENSE_PROPRIETARY
-
 //#define MIP_NO_AUTODELETE
 //#define MIP_NO_BITMAP_DRAW
 //#define MIP_NO_BITMAP_FONT
