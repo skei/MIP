@@ -446,6 +446,8 @@ public:
 
   clap_process_status clap_instance_process(const clap_process *process) {
     //MIP_ClapPrint("\n");
+    uint32_t i;
+
     handleInputEvents(process->in_events);
 
     MProcessContext.mode          = 0;
@@ -454,12 +456,14 @@ public:
     MProcessContext.samplerate    = MSampleRate;
     MProcessContext.samplepos     = process->steady_time;
     MProcessContext.blocksize     = process->frames_count;
-    MProcessContext.numinputs     = process->audio_inputs_count;
-    MProcessContext.numoutputs    = process->audio_outputs_count;
-    MProcessContext.inputs[0]     = process->audio_inputs[0].data32[0];
-    MProcessContext.inputs[1]     = process->audio_inputs[0].data32[1];
-    MProcessContext.outputs[0]    = process->audio_outputs[0].data32[0];
-    MProcessContext.outputs[1]    = process->audio_outputs[0].data32[1];
+    MProcessContext.numinputs     = process->audio_inputs[0].channel_count;
+    MProcessContext.numoutputs    = process->audio_outputs[0].channel_count;
+    for (i=0; i<MProcessContext.numinputs; i++) {
+      MProcessContext.inputs[i] = process->audio_inputs[0].data32[i];
+    }
+    for (i=0; i<MProcessContext.numoutputs; i++) {
+      MProcessContext.outputs[i] = process->audio_outputs[0].data32[i];
+    }
     MProcessContext.tempo         = process->transport->tempo;
     MProcessContext.timesignum    = process->transport->tsig_num;
     MProcessContext.timesigdenom  = process->transport->tsig_denom;

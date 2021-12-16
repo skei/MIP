@@ -23,9 +23,9 @@ const char    MIP_NULL_STRING[]  = "";
 #define MIP_MAGIC_M_ED   0x4d5f4544    // M_ED   // editor
 
 //#ifdef MIP_CPP11
-//  #define MIP_NULL nullptr
+//  #define nullptr nullptr
 //#else
-//  #define MIP_NULL 0
+//  #define nullptr 0
 //#endif
 
 //----------------------------------------------------------------------

@@ -21,35 +21,40 @@ extern MIP_PluginEditor*    MIP_CreateEditor(uint32_t AIndex, MIP_EditorListener
   include entry points (and code) for selected plugin formats
 */
 
-#define MIP_EXE_MAIN
-#define MIP_CLAP_MAIN
-#define MIP_VST2_MAIN
-#define MIP_VST3_MAIN
-#define MIP_LV2_MAIN
 
 #ifdef MIP_PLUGIN_CLAP
-  #undef MIP_CLAP_MAIN
+  //#undef MIP_CLAP_MAIN
   #include "plugin/clap/mip_clap.h"
+#else
+  #define MIP_CLAP_MAIN
 #endif
 
 #ifdef MIP_PLUGIN_EXE
-  #undef MIP_EXE_MAIN
+  //#undef MIP_EXE_MAIN
   #include "plugin/exe/mip_exe.h"
+#else
+  #define MIP_EXE_MAIN
 #endif
 
 #ifdef MIP_PLUGIN_LV2
-  #undef MIP_LV2_MAIN
+  //#undef MIP_LV2_MAIN
   #include "plugin/lv2/mip_lv2.h"
+#else
+  #define MIP_LV2_MAIN
 #endif
 
 #ifdef MIP_PLUGIN_VST2
-  #undef MIP_VST2_MAIN
+  //#undef MIP_VST2_MAIN
   #include "plugin/vst2/mip_vst2.h"
+#else
+  #define MIP_VST2_MAIN
 #endif
 
 #ifdef MIP_PLUGIN_VST3
-  #undef MIP_VST3_MAIN
+  //#undef MIP_VST3_MAIN
   #include "plugin/vst3/mip_vst3.h"
+#else
+  #define MIP_VST3_MAIN
 #endif
 
 /*
