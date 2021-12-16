@@ -16,33 +16,32 @@ in progress, prototype, proof of concept, pre-, ..
 
 - exe
 - clap
-- vst3
 - vst2
-- lv2
+- vst3
+- (lv2)
 
 # host
 
 - clap
+- (vst2)
+- (vst3)
 
 # gui
 
 - xcb
 - cairo
-- ctx
+- (ctx)
 - (gdi)
 
 # other
 
-- header-only (except your plugin)
+- header-only
 - low level, un-modern c++
 - no weird/ugly build system
 - few/no external dependencies
 - 'fat' plugins (multiple plugin formats in one .so)
-- multiple (indexed) sub-plugins
-- no vst2 or vst3 sdk needed
-- parameters w/auto-conversion
-- midi input, mpe
-- hierarchial widget system
+- sub-plugins
+- etc, etc..
 
 # plans, roadmap
 
