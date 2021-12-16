@@ -32,6 +32,7 @@ class MIP_ClapPluginInstance
 private:
 //------------------------------
 
+  const clap_plugin*      MClapPlugin           = nullptr;
   MIP_PluginDescriptor*   MDescriptor           = nullptr;
   MIP_PluginInstance*     MInstance             = nullptr;
   MIP_ProcessContext      MProcessContext       = {};
@@ -80,6 +81,18 @@ public:
     free(MProcessContext.outputs);
     if (MInstance) delete MInstance;
     delete MHost;
+  }
+
+//------------------------------
+public: // editor listener
+//------------------------------
+
+  const clap_plugin* getClapPlugin() {
+    return MClapPlugin;
+  }
+
+  const clap_plugin* getClapHost() {
+    return MHost->qwe
   }
 
 //------------------------------
@@ -341,7 +354,8 @@ public:
     If init returns false, the host must destroy the plugin instance.
   */
 
-  bool clap_instance_init() {
+  bool clap_instance_init(const clap_plugin *plugin) {
+    MClapPlugin = plugin;
     bool result = MInstance->on_plugin_init();
     if (result) {
       MInstance->setDefaultParameterValues();

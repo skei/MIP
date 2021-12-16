@@ -7,7 +7,7 @@
 class MIP_Arguments {
 
 //------------------------------
-public:
+protected:
 //------------------------------
 
   int     MArgc = 0;
@@ -42,14 +42,22 @@ public:
 
   //----------
 
-  const char* getArgStr(int i) {
-    if ((i < 0) || (i >= MArgc)) return "";
+  uint32_t count() {
+    return MArgc;
+  }
+
+  const char* self() {
+    return MArgv[0];
+  }
+
+  const char* getStr(int i) {
+    if ((i < 0) || (i >= MArgc)) return nullptr; //"";
     return MArgv[i];
   }
 
   //----------
 
-  int getArgInt(int i) {
+  int getInt(int i) {
     if ((i < 0) || (i >= MArgc)) return 0;
     char* e;
     int result = strtol( MArgv[i], &e, 10 ); // base 10
@@ -62,7 +70,7 @@ public:
 
   //----------
 
-  float getArgFloat(int i) {
+  float getFloat(int i) {
     if ((i < 0) || (i >= MArgc)) return 0.0;
     char* e;
     float result = strtof(MArgv[i],&e);
@@ -84,6 +92,13 @@ public:
 
   //----------
 
+  bool hasOption(const char* arg, const char* arg2=nullptr) {
+    if (findArg(arg,arg2) >= 0) return true;
+    return false;
+  }
+
+  //----------
+
   int findArg(const char* arg, const char* arg2=nullptr) {
     for (int i=0; i<MArgc; i++) {
       if (strcmp(arg,MArgv[i]) == 0) return i;
@@ -98,29 +113,29 @@ public:
 
   // "-i ./test"
 
-  const char* getValStr(const char* arg, const char* arg2=nullptr) {
+  const char* getArgStr(const char* arg, const char* arg2=nullptr) {
     int i = findArg(arg);
     if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
       i += 1;
       if (i < MArgc) {
-        return getArgStr(i);
+        return getStr(i);
       }
     }
-    return "";
+    return nullptr;//"";
   }
 
   //----------
 
   // "-b 128"
 
-  int getValInt(const char* arg, const char* arg2=nullptr) {
+  int getArgInt(const char* arg, const char* arg2=nullptr) {
     int i = findArg(arg);
     if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
       i += 1;
       if (i < MArgc) {
-        return getArgInt(i);
+        return getInt(i);
       }
     }
     return 0.0;
@@ -130,13 +145,13 @@ public:
 
   // "-r 1.5"
 
-  float getValFloat(const char* arg, const char* arg2=nullptr) {
+  float getArgFloat(const char* arg, const char* arg2=nullptr) {
     int i = findArg(arg);
     if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
       i += 1;
       if (i < MArgc) {
-        return getArgFloat(i);
+        return getFloat(i);
       }
     }
     return 0.0;
@@ -148,30 +163,30 @@ public:
 
   // "-i test:abc"
 
-  const char* getValAfterStr(const char* arg, char divider, const char* arg2=nullptr) {
+  const char* getArgStrAfterSymbol(char symbol, const char* arg, const char* arg2=nullptr) {
     int i = findArg(arg);
     if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
-      const char* text = getArgStr(i+1);
-      const char* text2 = strchr(text,divider);
+      const char* text = getStr(i+1);
+      const char* text2 = strchr(text,symbol);
       if (text2) {
         text2 += 1;
         return text2;
       }
     }
-    return "";
+    return nullptr;//"";
   }
 
   //----------
 
   // "-i test:1"
 
-  int getValAfterInt(const char* arg, char divider, const char* arg2=nullptr) {
+  int getArgIntAfterSymbol(char symbol, const char* arg, const char* arg2=nullptr) {
     int i = findArg(arg);
     if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
-      const char* text = getArgStr(i+1);
-      const char* text2 = strchr(text,divider);
+      const char* text = getStr(i+1);
+      const char* text2 = strchr(text,symbol);
       if (text2) {
         text2 += 1;
         char* e;
@@ -190,12 +205,12 @@ public:
 
   // "-i test:0.75"
 
-  float getValAfterFloat(const char* arg, char divider, const char* arg2=nullptr) {
+  float getArgFloatAfterSymbol(char symbol, const char* arg, const char* arg2=nullptr) {
     int i = findArg(arg);
     if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
-      const char* text = getArgStr(i+1);
-      const char* text2 = strchr(text,divider);
+      const char* text = getStr(i+1);
+      const char* text2 = strchr(text,symbol);
       if (text2) {
         text2 += 1;
         char* e;
@@ -209,7 +224,6 @@ public:
     }
     return 0.0;
   }
-
 
 };
 

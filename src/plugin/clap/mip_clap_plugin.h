@@ -154,8 +154,8 @@ public:
     MIP_ClapDPrint("  clap_version: %i.%i.%i\n",host->clap_version.major,host->clap_version.minor,host->clap_version.revision);
     MIP_ClapDPrint("  host_data:    %p\n",host->host_data);
 
-    uint32_t          index         = MIP_PLUGIN_LIST.findPluginByIdString(plugin_id);//)  0;
-    MIP_PluginInfo*   info          = MIP_PLUGIN_LIST.getPluginInfo(index);
+    uint32_t                index         = MIP_PLUGIN_LIST.findPluginByIdString(plugin_id);//)  0;
+    MIP_PluginInfo*         info          = MIP_PLUGIN_LIST.getPluginInfo(index);
     MIP_PluginDescriptor*   descriptor    = info->desc;
     MIP_PluginInstance*     instance      = MIP_CreateInstance(index,descriptor);           // deleted by MIP_ClapPluginInstance destructor
     MIP_ClapPluginInstance* clapinstance  = new MIP_ClapPluginInstance(index,instance,host);
@@ -227,7 +227,7 @@ public:
   static
   bool clap_instance_init_callback(const struct clap_plugin *plugin) {
     MIP_ClapPluginInstance* instance = (MIP_ClapPluginInstance*)plugin->plugin_data;
-    return instance->clap_instance_init();
+    return instance->clap_instance_init(plugin);
   }
 
   static

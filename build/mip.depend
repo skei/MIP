@@ -527,8 +527,8 @@
 1639255375 /DISKS/sda2/code/git/mip/src/base/mip_utils.h
 	"mip.h"
 
-1639605902 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../plugins/test/build.h"
+1639664611 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../apps/claphost.h"
 
 1639492494 /DISKS/sda2/code/git/MIP/src/mip.h
 	<stdlib.h>
@@ -875,7 +875,7 @@
 1639326045 /DISKS/sda2/code/git/MIP/src/plugin/lv2/mip_lv2.h
 	"mip.h"
 
-1639438893 /DISKS/sda2/code/git/MIP/src/plugin/mip_plugin_list.h
+1639664559 /DISKS/sda2/code/git/MIP/src/plugin/mip_plugin_list.h
 
 1639494148 /DISKS/sda2/code/git/MIP/src/plugin/mip_plugin_descriptor.h
 	"mip.h"
@@ -1046,9 +1046,17 @@
 1639492923 /DISKS/sda2/code/git/MIP/src/base/types/mip_queue.h
 	"mip.h"
 
-1639525262 /DISKS/sda2/code/git/MIP/src/base/utils/mip_arguments.h
+1639670257 /DISKS/sda2/code/git/MIP/src/base/utils/mip_arguments.h
 	"mip.h"
 
 1639663974 /DISKS/sda2/code/git/MIP/plugins/test/build.h
 	"mip.h"
+
+1639671110 /DISKS/sda2/code/git/MIP/apps/claphost.h
+	"mip.h"
+	"base/utils/mip_arguments.h"
+
+1639665745 /DISKS/sda2/code/git/MIP/apps/claphost/arguments.h
+	"mip.h"
+	"base/utils/mip_arguments.h"
 

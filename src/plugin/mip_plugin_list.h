@@ -2,6 +2,8 @@
 #define mip_plugin_list_included
 //----------------------------------------------------------------------
 
+#ifndef MIP_NO_PLUGIN
+
 /*
   your plugin must implement this function..
   call MIP_PLUGIN_LIST.appendPlugin() for each of your (sub-) plugins
@@ -103,6 +105,8 @@ public:
 //----------------------------------------------------------------------
 
 MIP_PluginList MIP_PLUGIN_LIST = {};
+
+#endif // NIP_NO_PLUGIN
 
 //----------------------------------------------------------------------
 #endif

@@ -1,3 +1,6 @@
 
 
-#include "../plugins/test/build.h"
+#include "../apps/claphost.h"
+
+//#include "../plugins/test/build.h"
+

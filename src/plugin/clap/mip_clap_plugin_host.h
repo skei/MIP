@@ -98,6 +98,10 @@ public:
     MHostTuning           = (clap_host_tuning*)get_extension(CLAP_EXT_TUNING);
   }
 
+  const clap_host* getHost() {
+    return MClapHost;
+  }
+
 //------------------------------
 public:
 //------------------------------
