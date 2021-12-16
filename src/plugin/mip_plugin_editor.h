@@ -2,6 +2,13 @@
 #define mip_plugin_editor_included
 //----------------------------------------------------------------------
 
+/*
+  different from previous versions of framework:
+  new editor has-a window, not is-a window..
+  the window is created/deleted whenever we need it,
+  and we can have a no-gui editor..
+*/
+
 #include "mip.h"
 #include "base/types/mip_queue.h"
 #include "base/types/mip_rect.h"

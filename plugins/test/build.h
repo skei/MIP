@@ -12,8 +12,8 @@
 #define MIP_GUI_XCB
 #define MIP_USE_CAIRO
 
-//#define MIP_PLUGIN_ALL
-#define MIP_PLUGIN_EXE
+#define MIP_PLUGIN_ALL
+//#define MIP_PLUGIN_EXE
 //#define MIP_PLUGIN_REGISTER_PLUGINS
 
 #include "mip.h"

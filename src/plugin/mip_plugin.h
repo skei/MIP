@@ -9,8 +9,17 @@
 #include "plugin/mip_plugin_editor.h"
 #include "plugin/mip_plugin_list.h"
 
+/*
+  These are implemented by you (your plugin), but called from
+  the global/staatic plugin-list constructor
+*/
+
 extern MIP_PluginInstance*  MIP_CreateInstance(uint32_t AIndex, MIP_PluginDescriptor* ADescriptor);
 extern MIP_PluginEditor*    MIP_CreateEditor(uint32_t AIndex, MIP_EditorListener* AListener, MIP_PluginDescriptor* ADescriptor);
+
+/*
+  include entry points (and code) for selected plugin formats
+*/
 
 #define MIP_EXE_MAIN
 #define MIP_CLAP_MAIN
@@ -43,7 +52,9 @@ extern MIP_PluginEditor*    MIP_CreateEditor(uint32_t AIndex, MIP_EditorListener
   #include "plugin/vst3/mip_vst3.h"
 #endif
 
-//----------------------------------------------------------------------
+/*
+  put this (MIP_MAIN at the bottom of your plugin main .cpp file
+*/
 
 #define MIP_MAIN    \
                     \
