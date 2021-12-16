@@ -4,7 +4,6 @@
 
 #define MIP_NO_PLUGIN
 #define MIP_NO_GUI
-
 //#define MIP_GUI_XCB
 //#define MIP_USE_CAIRO
 
@@ -67,19 +66,24 @@ int main(int argc, char** argv) {
   }
 
   else {
+
     plugin_path       = arg.getStr(1);
     plugin_index      = arg.getInt(2);
+
     midi_input_file   = arg.getArgStr(                  "-m",   "--midi-input");
     audio_input_file  = arg.getArgStr(                  "-a",   "--audio-input");
     audio_output_file = arg.getArgStr(                  "-o",   "--audio-output");
+
     sample_rate       = arg.getArgFloat(                "-s",   "--sample_rate");
     block_size        = arg.getArgInt(                  "-b",   "--block_size");
     num_audio_inputs  = arg.getArgInt(                  "-c",   "--channels");
     num_audio_outputs = arg.getArgIntAfterSymbol( ':',  "-c",   "--channels");
     decay_seconds     = arg.getArgFloat(                "-d",   "--decay-seconds");
+
     list_plugins      = arg.hasOption(                  "-l",   "--list-plugins");
     print_descriptor  = arg.hasOption(                  "-p",   "--print-descriptor");
     fuzz_block_size   = arg.hasOption(                  "-f",   "--fuzz-block-size");
+
     if (arg.hasOption("-r","--remap")) {
       remap_cc        = arg.getArgInt(                  "-r",   "--remap");
       remap_param     = arg.getArgIntAfterSymbol( ':',  "-r",   "--remap");
@@ -100,22 +104,16 @@ int main(int argc, char** argv) {
   printf("fuzz block size   %s\n",fuzz_block_size?"yes":"no");
   printf("remap (cc:param)  %i:%i\n",remap_cc,remap_param);
 
-//  if (list_plugins) {
-//    MIP_Print("list plugins\n");
-//  }
-//  else if (print_descriptor) {
-//    MIP_Print("print descriptor\n");
-//  }
-//  else {
-//    // process
-//    if (midi_input_file) {
-//    }
-//    if (audio_input_file) {
-//    }
-//    if (audio_output_file) {
-//    }
-//
-//  }
+  if (list_plugins) {
+    MIP_Print("list plugins\n");
+  }
+  else if (print_descriptor) {
+    MIP_Print("print descriptor\n");
+  }
+  else {
+    // process
+    MIP_Print("process\n");
+  }
 
   return 0;
 }
