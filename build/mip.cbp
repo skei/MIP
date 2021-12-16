@@ -136,6 +136,7 @@
 		</Linker>
 		<Unit filename="../LICENSE" />
 		<Unit filename="../README" />
+		<Unit filename="../apps/claphost.h" />
 		<Unit filename="../docs/about.txt" />
 		<Unit filename="../docs/todo.txt" />
 		<Unit filename="../plugins/compile.sh" />
