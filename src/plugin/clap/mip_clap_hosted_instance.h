@@ -2,6 +2,11 @@
 #define mip_clap_hosted_instance_included
 //----------------------------------------------------------------------
 
+/*
+  (external) plugin instance
+  see also: MIP_ClapHostedInstanceHost
+*/
+
 #include "mip.h"
 #include "base/mip_library.h"
 #include "plugin/clap/mip_clap.h"

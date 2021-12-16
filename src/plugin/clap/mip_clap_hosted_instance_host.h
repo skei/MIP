@@ -2,9 +2,14 @@
 #define mip_clap_hosted_instance_host_included
 //----------------------------------------------------------------------
 
-// we _are_ the host, give MClapHost to hosted plugins
+/*
+  a host
+  given to a plugin instance, as a way for it to communicate
+  with the host..
 
-// should be MIP_ClapHostedPluginHost
+  (external) plugin -> (your) host
+  see also: MIP_ClapHostedInstance
+*/
 
 #include "mip.h"
 #include "plugin/clap/mip_clap.h"
@@ -24,8 +29,8 @@ private:
     CLAP_VERSION,
     this,
     "MIP_ClapHost",
-    "Tor-Helge Skei",
-    "https://torhelgeskei.com",
+    "MIP",
+    "https://github.com/skei/MIP",
     "0.0.1",
     clap_host_get_extension_callback,
     clap_host_request_restart_callback,

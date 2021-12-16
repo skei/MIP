@@ -2,6 +2,11 @@
 #define mip_clap_plugin_host_cinluded
 //----------------------------------------------------------------------
 
+/*
+  host, as seen from a plugin..
+  (your) plugin -> (external) host
+*/
+
 #include "mip.h"
 #include "extern/clap/all.h"
 #include "plugin/clap/mip_clap.h"

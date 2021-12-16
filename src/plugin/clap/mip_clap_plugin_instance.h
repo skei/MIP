@@ -2,6 +2,10 @@
 #define mip_clap_instance_included
 //----------------------------------------------------------------------
 
+/*
+  a (your) plugin instance
+*/
+
 #include "mip.h"
 #include "base/types/mip_queue.h"
 #include "plugin/mip_plugin_descriptor.h"

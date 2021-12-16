@@ -1,10 +1,10 @@
 MIP
-multum in parvo
+multum in parvo,
 "much in little"
 
-plugin wrappers, abstractions, simplifications, helpers, ..
-
 v0.0.0
+
+plugin wrappers, abstractions, simplifications, helpers, ..
 in progress, prototype, proof of concept, pre-, ..
 
 # os
@@ -32,6 +32,7 @@ in progress, prototype, proof of concept, pre-, ..
 - cairo
 - (ctx)
 - (gdi)
+- (opengl)
 
 # other
 
@@ -39,9 +40,8 @@ in progress, prototype, proof of concept, pre-, ..
 - low level, un-modern c++
 - no weird/ugly build system
 - few/no external dependencies
-- 'fat' plugins (multiple plugin formats in one .so)
-- sub-plugins
-- etc, etc..
+- 'fat' plugins
+- ...
 
 # plans, roadmap
 
