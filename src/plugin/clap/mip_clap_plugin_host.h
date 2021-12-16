@@ -76,7 +76,7 @@ public:
 //------------------------------
 
   void init_extensions() {
-    MHostAudioPorts       = (clap_host_audio_ports*)get_extension(CLAP_EXT_AUDIO_PORTS);https:
+    MHostAudioPorts       = (clap_host_audio_ports*)get_extension(CLAP_EXT_AUDIO_PORTS);
     MHostAudioPortsConfig = (clap_host_audio_ports_config*)get_extension(CLAP_EXT_AUDIO_PORTS_CONFIG);
     MHostCheckForUpdate   = (clap_host_check_for_update*)get_extension(CLAP_EXT_CHECK_FOR_UPDATE);
     MHostEventFilter      = (clap_host_event_filter*)get_extension(CLAP_EXT_EVENT_FILTER);
@@ -98,7 +98,7 @@ public:
     MHostTuning           = (clap_host_tuning*)get_extension(CLAP_EXT_TUNING);
   }
 
-  const clap_host* getHost() {
+  const clap_host* getClapHost() {
     return MClapHost;
   }
 

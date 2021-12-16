@@ -91,8 +91,8 @@ public: // editor listener
     return MClapPlugin;
   }
 
-  const clap_plugin* getClapHost() {
-    return MHost->qwe
+  const clap_host* getClapHost() {
+    return MHost->getClapHost();
   }
 
 //------------------------------
@@ -577,7 +577,10 @@ public: // extensions
       //  case 0:
           MIP_PluginPort* port = MDescriptor->getInputPort(index);
           info->id            = 0;
+
+          // warning: ‘char* __builtin_strncpy(char*, const char*, long unsigned int)’ specified bound 64 equals destination size [-Wstringop-truncation]
           strncpy(info->name,port->name,CLAP_NAME_SIZE);
+
           info->channel_count = port->channels;
           //info->channel_map   = CLAP_CHMAP_STEREO;
           if (port->channels==1) info->channel_map = CLAP_CHMAP_MONO;
@@ -596,7 +599,10 @@ public: // extensions
       //  case 0:
           MIP_PluginPort* port = MDescriptor->getInputPort(index);
           info->id            = 0;
+
+          // warning: ‘char* __builtin_strncpy(char*, const char*, long unsigned int)’ specified bound 64 equals destination size [-Wstringop-truncation]
           strncpy(info->name,port->name,CLAP_NAME_SIZE);
+
           info->channel_count = port->channels;
           //info->channel_map   = CLAP_CHMAP_STEREO;
           if (port->channels==1) info->channel_map = CLAP_CHMAP_MONO;
@@ -1202,7 +1208,10 @@ public: // extensions
     if (parameter->isReadOnly())      param_info->flags |= CLAP_PARAM_IS_READONLY;
     if (parameter->canModulate())     param_info->flags |= CLAP_PARAM_IS_MODULATABLE;
     if (parameter->getNumSteps() > 1) param_info->flags |= CLAP_PARAM_IS_STEPPED;
+
+    // warning: ‘char* __builtin_strncpy(char*, const char*, long unsigned int)’ specified bound 64 equals destination size [-Wstringop-truncation]
     strncpy(param_info->name,parameter->getName(),CLAP_NAME_SIZE);
+
     strncpy(param_info->module,"",CLAP_MODULE_SIZE);
     param_info->flags         = flags;
     param_info->id            = param_index;
@@ -1212,6 +1221,8 @@ public: // extensions
     param_info->default_value = parameter->getDefaultValue();
     return true;
   }
+
+
 
   //----------
 
