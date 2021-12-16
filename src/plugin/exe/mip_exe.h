@@ -80,25 +80,30 @@ public:
     instance->on_plugin_startProcessing();
     MIP_Print("Plugin initialized\n");
 
-    if (descriptor->hasEditor()) {
+    #ifndef MIP_NO_GUI
 
-      MIP_Print("Opening editor\n");
-      MIP_PluginEditor* editor = MIP_CreateEditor(0,instance,descriptor);
-      editor->attach("",nullptr);
-      MIP_Window* window = editor->getWindow();
-      instance->on_plugin_openEditor(window);
-      editor->open();
-      MIP_Print("Editor opened\n");
+      if (descriptor->hasEditor()) {
 
-      window->eventLoop();
+        MIP_Print("Opening editor\n");
+        MIP_PluginEditor* editor = MIP_CreateEditor(0,instance,descriptor);
+        editor->attach("",nullptr);
+        MIP_Window* window = editor->getWindow();
+        instance->on_plugin_openEditor(window);
+        editor->open();
+        MIP_Print("Editor opened\n");
 
-      MIP_Print("Closing editor\n");
-      instance->on_plugin_closeEditor();
-      editor->close();
-      delete editor;
-      MIP_Print("Editor closed\n");
+        window->eventLoop();
 
-    }
+        MIP_Print("Closing editor\n");
+        instance->on_plugin_closeEditor();
+        editor->close();
+        delete editor;
+        MIP_Print("Editor closed\n");
+
+      }
+
+    #endif // MIP_NO_GUI
+
     MIP_Print("Shutting down plugin\n");
     instance->on_plugin_stopProcessing();
     instance->on_plugin_deactivate();

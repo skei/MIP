@@ -94,37 +94,45 @@
 #undef MIP_PLUGIN_DEFINED
 
   #ifdef MIP_NO_PLUGIN
+    //#define MIP_EXE
     #define MIP_PLUGIN_DEFINED
   #endif
 
   #ifdef MIP_PLUGIN_CLAP
+    #define MIP_LIB
     #define MIP_PLUGIN_DEFINED
     //#define MIP_CLAP
   #endif
 
   #ifdef MIP_PLUGIN_EXE
+    #define MIP_EXE
     #define MIP_PLUGIN_DEFINED
     //#define MIP_EXE
   #endif
 
   #ifdef MIP_PLUGIN_LV2
+    #define MIP_LIB
     #define MIP_PLUGIN_DEFINED
     //#define MIP_LV2
   #endif
 
   #ifdef MIP_PLUGIN_VST2
+    #define MIP_LIB
     #define MIP_PLUGIN_DEFINED
     //#define MIP_VST2
   #endif
 
   #ifdef MIP_PLUGIN_VST3
+    #define MIP_LIB
     #define MIP_PLUGIN_DEFINED
     //#define MIP_VST3
   #endif
 
 #ifndef MIP_PLUGIN_DEFINED
   #warning No plugin format defined!
-  #define MIP_NO_PLUGIN
+  //#define MIP_NO_PLUGIN
+  #define MIP_EXE
+  #define MIP_PLUGIN_EXE
 #endif
 
 //----------------------------------------------------------------------

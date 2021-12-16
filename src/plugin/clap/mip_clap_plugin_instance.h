@@ -855,12 +855,16 @@ public: // extensions
   // note: the editor doesn't have a window yet!
 
   bool clap_gui_create() {
-    MEditor = MIP_CreateEditor(MPluginIndex,this,MDescriptor);
-    //MEditor = _mip_create_editor(this,MDescriptor);
-    //bool result = MInstance->on_plugin_createEditor(MEditor);
-    //return result;
-    MIP_ClapPrint("-> true\n");
-    return true;
+    #ifndef MIP_NO_GUI
+      MEditor = MIP_CreateEditor(MPluginIndex,this,MDescriptor);
+      //MEditor = _mip_create_editor(this,MDescriptor);
+      //bool result = MInstance->on_plugin_createEditor(MEditor);
+      //return result;
+      MIP_ClapPrint("-> true\n");
+      return true;
+    #else
+      return false;
+    #endif
   }
 
   //----------
@@ -871,12 +875,14 @@ public: // extensions
   */
 
   void clap_gui_destroy() {
+    #ifndef MIP_NO_GUI
     MIP_ClapPrint("\n");
     if (MEditor) {
       //MInstance->on_plugin_destroyEditor(MEditor);
       delete MEditor;
       MEditor = nullptr;
     }
+    #endif
   }
 
   //----------
@@ -887,10 +893,12 @@ public: // extensions
   */
 
   void clap_gui_set_scale(double scale) {
+    #ifndef MIP_NO_GUI
     MIP_ClapPrint("scale %f\n",scale);
     if (MEditor) {
       MEditor->setScale(scale);
     }
+    #endif
   }
 
   //----------
@@ -902,11 +910,15 @@ public: // extensions
   */
 
   bool clap_gui_get_size(uint32_t *width, uint32_t *height) {
+    #ifndef MIP_NO_GUI
     MIP_ClapPrint("-> true\n");
     // todo: if editor open, read from editor, else:
     *width  = MDescriptor->getEditorRect().w;
     *height = MDescriptor->getEditorRect().h;
     return true;
+    #else
+      return false;
+    #endif
   }
 
   //----------
@@ -916,9 +928,13 @@ public: // extensions
   */
 
   bool clap_gui_can_resize() {
+    #ifndef MIP_NO_GUI
     MIP_ClapPrint("-> true\n");
     if (MDescriptor->canResizeEditor()) return true;
     return false;
+    #else
+      return false;
+    #endif
   }
 
   //----------
@@ -932,11 +948,13 @@ public: // extensions
   */
 
   void clap_gui_round_size(uint32_t *width, uint32_t *height) {
+    #ifndef MIP_NO_GUI
     MIP_ClapPrint("\n");
     //MIP_ClapPrint("width %i height %i\n",*width,*height);
     // todo: if editor open, read from editor, else:
     *width  = MDescriptor->getEditorRect().w;
     *height = MDescriptor->getEditorRect().h;
+    #endif
   }
 
   //----------
@@ -948,11 +966,15 @@ public: // extensions
   */
 
   bool clap_gui_set_size(uint32_t width, uint32_t height) {
+    #ifndef MIP_NO_GUI
     MIP_ClapPrint("width %i height %i -> true\n",width,height);
     if (MEditor) {
       MEditor->resize(width,height);
     }
     return true;
+    #else
+      return false;
+    #endif
   }
 
   //----------
@@ -963,6 +985,7 @@ public: // extensions
   */
 
   void clap_gui_show() {
+    #ifndef MIP_NO_GUI
     MIP_ClapPrint("\n");
     if (MEditor && !MEditorIsOpen) {
       /*MEditorIsOpen =*/ MInstance->on_plugin_openEditor(MEditor->getWindow());
@@ -970,6 +993,7 @@ public: // extensions
       MEditorIsOpen = true;
       MEditor->open();
     }
+    #endif
   }
 
   //----------
@@ -981,11 +1005,13 @@ public: // extensions
   */
 
   void clap_gui_hide() {
+    #ifndef MIP_NO_GUI
     MIP_ClapPrint("\n");
     if (MEditor && MEditorIsOpen) {
       MEditor->close();
       MEditorIsOpen = false;
     }
+    #endif
   }
 
   //------------------------------
@@ -1003,10 +1029,14 @@ public: // extensions
   */
 
   bool clap_gui_x11_attach(const char* display_name, unsigned long window) {
+    #ifndef MIP_NO_GUI
     MIP_ClapPrint("display_name '%s' window %i -> true\n",display_name,window);
     MEditor->attach(display_name,(void*)window);
     MEditorIsOpen = false;
     return true;
+    #else
+      return false;
+    #endif
   }
 
   //------------------------------

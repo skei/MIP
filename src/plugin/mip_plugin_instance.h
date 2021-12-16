@@ -15,9 +15,10 @@ class MIP_PluginInstance
 protected:
 //------------------------------
 
-  MIP_PluginDescriptor* MDescriptor   = nullptr;
-  MIP_PluginEditor*     MEditor       = nullptr;
-  uint32_t              MPluginFormat = MIP_PLUGIN_FORMAT_NONE;
+  MIP_PluginDescriptor* MDescriptor       = nullptr;
+  MIP_PluginEditor*     MEditor           = nullptr;
+  uint32_t              MPluginFormat     = MIP_PLUGIN_FORMAT_NONE;
+  float*                MParameterValues  = nullptr;
 
 //------------------------------
 public:
@@ -25,11 +26,14 @@ public:
 
   MIP_PluginInstance(MIP_PluginDescriptor* ADescriptor) {
     MDescriptor = ADescriptor;
+    uint32_t num = MDescriptor->getNumParameters();
+    MParameterValues = (float*)malloc(num * sizeof(float));
   }
 
   //----------
 
   virtual ~MIP_PluginInstance() {
+    free(MParameterValues);
   }
 
 //------------------------------
@@ -44,32 +48,58 @@ public:
 //------------------------------
 
   void setParameterValue(uint32_t AIndex, float AValue) {
+    MParameterValues[AIndex] = AValue;
   }
 
   float getParameterValue(uint32_t AIndex) {
-    return 0.0;
+    return MParameterValues[AIndex];
   }
 
   void setDefaultParameterValues() {
+    uint32_t num = MDescriptor->getNumParameters();
+    for (uint32_t i=0; i<num; i++) {
+      MIP_PluginParameter* param = MDescriptor->getParameter(i);
+      float value = param->getDefaultValue();
+      setParameterValue(i,value);
+    }
   }
 
   void updateAllParameters() {
+    uint32_t num = MDescriptor->getNumParameters();
+    for (uint32_t i=0; i<num; i++) {
+      MIP_PluginParameter* parameter = MDescriptor->getParameter(i);
+      //float value = param->getDefaultValue();
+      float value = parameter->getDefaultValue();
+      //setParameterValue(i,value);
+      on_plugin_parameter(i,value);
+    }
   }
 
   void updateAllEditorParameters(MIP_PluginEditor* AEditor, bool ARedraw) {
+    if (MEditor) {
+      uint32_t num = MDescriptor->getNumParameters();
+      for (uint32_t i=0; i<num; i++) {
+        MIP_PluginParameter* parameter = MDescriptor->getParameter(i);
+        //float value = param->getDefaultValue();
+        float value = parameter->getDefaultValue();
+        //setParameterValue(i,value);
+        //on_plugin_parameter(i,value);
+        MEditor->updateParameter(i,value,ARedraw);
+      }
+    }
   }
 
 //------------------------------
 public:
 //------------------------------
 
-  virtual bool      on_plugin_init() { return false; }
+  virtual bool      on_plugin_init() { return true; }
   virtual void      on_plugin_deinit() {}
   virtual bool      on_plugin_activate(float ASampleRate, uint32_t AMinFrames, uint32_t AMaxFrames) { return false; }
   virtual void      on_plugin_deactivate() {}
-  virtual bool      on_plugin_startProcessing() { return false; }
+  virtual bool      on_plugin_startProcessing() { return true; }
   virtual void      on_plugin_stopProcessing() {}
-  virtual uint32_t  on_plugin_process(MIP_ProcessContext* AContext) { return 0; }
+  virtual uint32_t  on_plugin_process(MIP_ProcessContext* AContext) { return 1; }
   virtual void      on_plugin_parameter(uint32_t AIndex, float AValue) {}
   virtual void      on_plugin_midi(uint8_t AMsg1, uint8_t AMsg2, uint8_t AMsg3) {}
   virtual void      on_plugin_expression(uint32_t AKey, uint32_t AExpression, float AValue) {}

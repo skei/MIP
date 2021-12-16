@@ -44,7 +44,7 @@ protected:
   const char*           MName             = "";
   const char*           MAuthor           = "";
   uint32_t              MVersion          = 0;
-  const char*           MVersionText      = "";
+//const char*           MVersionText      = "";
   const char*           MDescription      = "";
   const char*           MLicense          = "";
   const char*           MUrl              = "";
@@ -78,7 +78,7 @@ public:
   const char*           getName()                 { return MName; }
   const char*           getAuthor()               { return MAuthor; }
   uint32_t              getVersion()              { return MVersion; }
-  const char*           getVersionText()          { return MVersionText; }
+//const char*           getVersionText()          { return MVersionText; }
   const char*           getDescription()          { return MDescription; }
   const char*           getLicense()              { return MLicense; }
   const char*           getUrl()                  { return MUrl; }
@@ -101,6 +101,17 @@ public:
 //bool                  canReceiveMidi()          { return MCanReceiveMidi; }
 
   //----------
+
+  void setName(const char* t)                               { MName = t; }
+  void setAuthor(const char* t)                             { MAuthor = t; }
+  void setVersion(uint32_t v)                               { MVersion = v; }
+  void setDescription(const char* t)                        { MDescription = t; }
+  void setLicense(const char* t)                            { MLicense = t; }
+  void setUrl(const char* u,const char* um,const char* us)  { MUrl = u; MManualUrl = um; MSupportUrl = us; }
+
+  void setIsSynth(bool b=true)                                   { MIsSynth = b; }
+  void setHasEditor(bool b=true)                                 { MHasEditor = b; }
+  void setCanResizeEditor(bool b=true)                           { MCanResizeEditor = b; }
 
   void setEditorSize(int32_t AWidth, int32_t AHeight) {
     MEditorRect.w = AWidth;
