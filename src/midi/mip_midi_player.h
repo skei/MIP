@@ -75,6 +75,10 @@ public:
   /*
     appends within AFrom..(AFrom + ALength) are appended to blockevents
     (no malloc/copy)
+
+    todo:
+      keep track of last/previous event (index), and start looking from there.
+      also keep track of next event time, and wait until it's time
   */
 
   void GetEventsForBlock(float AFrom, float ALength, MIP_MidiEvents* blockevents) {
