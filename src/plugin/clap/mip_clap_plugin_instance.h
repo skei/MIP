@@ -441,7 +441,8 @@ public:
   /*
     process audio, events, ...
     [audio-thread]
-    TODO: handle ports/channels
+    TODO: sample accurate events
+    TODO: handle ports/channels (see
   */
 
   clap_process_status clap_instance_process(const clap_process *process) {

@@ -31,7 +31,7 @@ class MIP_Library {
   public:
 
     virtual
-    bool load(const char* AFilename) {
+    bool loadLib(const char* AFilename) {
       MLibHandle = dlopen(AFilename,RTLD_LAZY | RTLD_LOCAL ); // RTLD_NOW, RTLD_LAZY
       if (!MLibHandle) return false;
       MLibLoaded = true;
@@ -39,7 +39,7 @@ class MIP_Library {
     }
 
     virtual
-    void unload(void) {
+    void unloadLib(void) {
       if (MLibLoaded && MLibHandle) {
         dlclose(MLibHandle);
         MLibLoaded = false;
@@ -48,7 +48,7 @@ class MIP_Library {
     }
 
     virtual
-    void* getSymbol(const char* ASymbol) {
+    void* getLibSymbol(const char* ASymbol) {
       void* result = dlsym(MLibHandle,ASymbol);
       return result;
     }

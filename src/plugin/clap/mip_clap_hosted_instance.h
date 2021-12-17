@@ -8,31 +8,34 @@
 */
 
 #include "mip.h"
-#include "base/mip_library.h"
+#include "base/system/mip_library.h"
 #include "plugin/clap/mip_clap.h"
 
 class MIP_ClapHostedInstance
-: public MIP_Library {
+/*: public MIP_Library*/ {
 
 //------------------------------
 private:
 //------------------------------
 
-  const char*         MFilename = nullptr;;
-  const clap_plugin*  MPlugin   = nullptr;
+  const char*               MFilename     = nullptr;;
+  const clap_plugin*        MPlugin       = nullptr;
+  const clap_plugin_entry*  MPluginEntry  = nullptr;
 
 //------------------------------
 public:
 //------------------------------
 
   MIP_ClapHostedInstance(const char* AFilename)
-  : MIP_Library() {
+  /*: MIP_Library()*/ {
     MFilename = AFilename;
+    //loadLib(AFilename);
   }
 
   //----------
 
   virtual ~MIP_ClapHostedInstance() {
+    //unloadLib();
   }
 
 //------------------------------

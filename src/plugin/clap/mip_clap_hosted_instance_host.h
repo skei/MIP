@@ -12,6 +12,7 @@
 */
 
 #include "mip.h"
+#include "base/system/mip_library.h"
 #include "plugin/clap/mip_clap.h"
 
 #include "extern/clap/ext/draft/check-for-update.h"
@@ -38,6 +39,8 @@ private:
     clap_host_request_callback_callback
   };
 
+  MIP_Library   MLibrary;
+
 //------------------------------
 public:
 //------------------------------
@@ -54,11 +57,17 @@ public:
 public:
 //------------------------------
 
-
-
   clap_host* getClapHost() {
     return &MClapHost;
   }
+
+//  bool load(const char* AFilename) {
+//    if (MLibrary.load(AFilename)) {
+//      MClapPluginEntry = MLibrary.getSymbol("clap_plugin_entry");
+//      return true;
+//    }
+//    return false,
+//  }
 
 //------------------------------------------------------------
 private: // extensions
