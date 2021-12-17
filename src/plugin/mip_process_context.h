@@ -26,6 +26,8 @@ struct MIP_ProcessContext {
   float**   inputs        = nullptr;
   float**   outputs       = nullptr;
 
+  void*     userptr       = nullptr;
+
 
 
 };

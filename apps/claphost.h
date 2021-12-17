@@ -1,11 +1,12 @@
 
 // nc -U -l -k /tmp/mip.socket
 //#define MIP_DEBUG_PRINT_SOCKET
-
 #define MIP_NO_PLUGIN
 #define MIP_NO_GUI
 //#define MIP_GUI_XCB
 //#define MIP_USE_CAIRO
+
+//----------------------------------------------------------------------
 
 #include "mip.h"
 #include "base/utils/mip_arguments.h"
@@ -81,6 +82,8 @@ int main(int argc, char** argv) {
 
   else {
 
+    // -> arg struct ?
+
     GPluginPath = arg.getStr(1);
     GPluginIndex = arg.getInt(2);
 
@@ -124,16 +127,16 @@ int main(int argc, char** argv) {
   entry.load(GPluginPath);
 
   if (GListPlugins) {
-    MIP_Print("list plugins\n");
+    MIP_Print("list plugins:\n");
     entry.listPlugins();
   }
   else if (GPrintDescriptor) {
-    MIP_Print("print descriptor\n");
+    MIP_Print("print descriptor:\n");
     entry.printDescriptor(GPluginIndex);
   }
   else {
     // process
-    MIP_Print("process\n");
+    MIP_Print("process:\n");
 
     MIP_ClapPlugin* plugin = entry.createPlugin(GPluginPath,GPluginIndex);
     plugin->activate(GSampleRate,1,GBlockSize);

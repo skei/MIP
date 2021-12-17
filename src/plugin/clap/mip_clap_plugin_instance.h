@@ -62,6 +62,9 @@ public:
     //MHost = AHost;
     MHost = new MIP_ClapPluginHost(host);
 
+    //MInstance->setFormatSpecificInstance(this);
+    //MInstance->setFormatSpecificHost(MHost);
+
     MDescriptor = MInstance->getDescriptor();
 
     // TODO, for now, assume stereo
@@ -446,6 +449,8 @@ public:
   */
 
   clap_process_status clap_instance_process(const clap_process *process) {
+    MProcessContext.userptr = (void*)process;
+
     //MIP_ClapPrint("\n");
     uint32_t i;
 

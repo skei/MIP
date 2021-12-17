@@ -18,8 +18,8 @@
 #include "extern/clap/ext/draft/check-for-update.h"
 #include "extern/clap/ext/draft/midi-mappings.h"
 
-//#include "plugin/clap/mip_clap_plugin.h"
-//#include "plugin/clap/mip_clap_utils.h"
+#include "plugin/clap/mip_clap_plugin.h"
+#include "plugin/clap/mip_clap_utils.h"
 
 //----------
 

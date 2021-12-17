@@ -21,7 +21,6 @@ extern MIP_PluginEditor*    MIP_CreateEditor(uint32_t AIndex, MIP_EditorListener
   include entry points (and code) for selected plugin formats
 */
 
-
 #ifdef MIP_PLUGIN_CLAP
   //#undef MIP_CLAP_MAIN
   #include "plugin/clap/mip_clap.h"

@@ -1,12 +1,33 @@
+/*
+  CLAP_EVENT_NOTE_END hack!
+
+  clap_instance_process(const clap_process *process)
+    MProcessContext.userptr = (void*)process;
+
+  on_plugin_process()
+    MVoices.setUserPtr(AContext->userptr)
+
+  send_note_end()
+
+
+*/
+
+
 
 // nc -U -l -k /tmp/mip.socket
 #define MIP_DEBUG_PRINT_SOCKET
 //#define MIP_DEBUG_PRINT_THREAD
 //#define MIP_DEBUG_PRINT_TIME
+//#define MIP_LIB
+
 #define MIP_NO_GUI
 #define MIP_PLUGIN_CLAP
 
 #include "mip.h"
+#include "plugin/mip_plugin_descriptor.h"
+#include "plugin/mip_plugin_instance.h"
+#include "plugin/clap/mip_clap_plugin_host.h"
+//#include "plugin/mip_plugin.h"
 #include "audio/mip_voice_manager.h"
 
 //----------------------------------------------------------------------
@@ -50,34 +71,64 @@ class myVoice {
 
 private:
 
-  float               MNote         = 0.0f;
-  float               MBend         = 0.0f;
-  float               MMasterBend   = 0.0f;
-  float               MMasterPress  = 0.0f;
+  float     MNote         = 0.0f;
+  float     MBend         = 0.0f;
+  float     MMasterBend   = 0.0f;
+  float     MMasterPress  = 0.0f;
+  uint32_t  MChan         = 0;
 
   float srate = 0.0f; // sample rate
   float ph    = 0.0f; // phase
   float phadd = 0.0f; // phase add
 
+  void* userptr = nullptr;
+
 public:
+
+  void setUserPtr(void* ptr) {
+    userptr = ptr;
+  }
 
   void prepare(float ASampleRate) {
     srate = ASampleRate;
   }
 
+  // hack warning!
 
-  uint32_t strike(float note, float vel) {
+
+  void send_note_end(float vel, uint32_t chan) {
+    MIP_Print("Sending event\n");
+    const clap_process* process = (const clap_process*)userptr;
+    clap_event event;
+    event.type            = CLAP_EVENT_NOTE_END;
+    event.time            = 0;
+    event.note.port_index = 0;
+    event.note.key        = MNote;
+    event.note.channel    = MChan;
+    event.note.velocity   = vel;
+    process->out_events->push_back(process->out_events,&event);
+  }
+
+
+public:
+
+  uint32_t strike(float note, float vel, uint32_t chan) {
     MNote = note;
     MBend = 0.0f;
+    MChan = chan;
     float hz = MIP_NoteToHz(MNote + (MMasterBend * 2.0f) + (MBend*48.0f));
     ph = 0.0f;
     phadd = hz / srate;
     return MIP_VOICE_PLAYING;
   }
 
-  uint32_t lift(float vel) {
+  uint32_t lift(float vel, uint32_t chan) {
+// !!!!!!!!!!
+send_note_end(vel,chan);
+// !!!!!!!!!!
     return MIP_VOICE_FINISHED;
   }
+
 
   void bend(float v) {
     MBend = v;
@@ -111,6 +162,9 @@ public:
   }
 
   uint32_t process(MIP_VoiceContext* AContext, uint32_t AMode) {
+
+    //MHost = AContext->processContext->userptr;
+
     uint32_t num = AContext->processContext->blocksize;
     float* out0 = AContext->processContext->outputs[0];
     float* out1 = AContext->processContext->outputs[1];
@@ -149,6 +203,7 @@ public:
 
   myInstance(MIP_PluginDescriptor* ADescriptor)
   : MIP_PluginInstance(ADescriptor) {
+    MVoices.init(this);
   }
 
 //------------------------------
@@ -156,6 +211,7 @@ public:
 //------------------------------
 
   bool on_plugin_init() final {
+    //MVoices.setUserPtr(MFormatSpecificHost);
     return true;
   }
 
@@ -180,6 +236,7 @@ public:
   //----------
 
   uint32_t on_plugin_process(MIP_ProcessContext* AContext) final {
+    MVoices.setUserPtr(AContext->userptr);
     MVoices.processBlock(AContext);
     MIP_ScaleStereoBuffer(AContext->outputs, MGain, MGain, AContext->blocksize);
     return 1;

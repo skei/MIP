@@ -11,6 +11,7 @@
 #include "audio/mip_audio_math.h"
 #include "audio/mip_audio_utils.h"
 #include "plugin/mip_process_context.h"
+#include "plugin/mip_plugin_instance.h"
 
 //----------------------------------------------------------------------
 
@@ -59,12 +60,14 @@ class MIP_VoiceManager {
 private:
 //------------------------------
 
-  MIP_VoiceContext  MVoiceContext;
-  VOICE             MVoices[NUM];
-  uint32_t          MVoiceState[NUM];
-  int32_t           MVoiceNote[NUM];
-  int32_t           MVoiceChannel[NUM];
-  int32_t           MNoteToVoice[16*128];
+  MIP_VoiceContext    MVoiceContext;
+  VOICE               MVoices[NUM];
+  uint32_t            MVoiceState[NUM];
+  int32_t             MVoiceNote[NUM];
+  int32_t             MVoiceChannel[NUM];
+  int32_t             MNoteToVoice[16*128];
+
+  MIP_PluginInstance* MInstance;
 
 //------------------------------
 public:
@@ -87,6 +90,16 @@ public:
 //------------------------------
 public:
 //------------------------------
+
+  void init(MIP_PluginInstance* AInstance) {
+    MInstance = AInstance;
+  }
+
+  void setUserPtr(void* ptr) {
+    for (uint32_t i=0; i<NUM; i++) {
+      MVoices[i].setUserPtr(ptr);
+    }
+  }
 
   void prepare(float ASampleRate/*, uint32_t ABlockSize*/) {
     for (uint32_t i=0; i<NUM; i++) {
@@ -144,16 +157,7 @@ public:
   void processBlock(MIP_ProcessContext* AContext) {
     preProcess();
     MVoiceContext.processContext = AContext;
-
-    //MIP_ClearMonoBuffer(AContext->outputs[0], AContext->blocksize);
-    //MIP_ClearMonoBuffer(AContext->outputs[1], AContext->blocksize);
     MIP_ClearStereoBuffer(AContext->outputs, AContext->blocksize);
-
-    //uint32_t num_out = AContext->numoutputs;
-    //for (uint32_t i=0; i<num_out; i++) {
-    //  memset(AContext->outputs[i],0,AContext->blocksize * sizeof(float));
-    //}
-
     processPlayingVoices();
     processReleasedVoices();
     postProcess();
@@ -174,6 +178,11 @@ private:
   void postProcess() {
     for (uint32_t i=0; i<NUM; i++) {
       if (MVoiceState[i] == MIP_VOICE_FINISHED) {
+        // notify host
+
+//        MIP_ClapPluginHost* host = (MIP_ClapPluginHost*)MInstance->getFormatSpecificHostPtr();
+//        host->
+
         clear_voice(i);
       }
     }
@@ -246,7 +255,7 @@ private:
       float n = (float)ANote;
       MVoiceNote[voice]     = ANote;
       MVoiceChannel[voice]  = AChannel;
-      MVoiceState[voice]    = MVoices[voice].strike(n,v);
+      MVoiceState[voice]    = MVoices[voice].strike(n,v,AChannel);
     }
   }
 
@@ -257,7 +266,7 @@ private:
     int32_t voice = MNoteToVoice[note];
     if (voice >= 0) {
       float v = (float)AVelocity * MIP_INV127F;
-      MVoiceState[voice] = MVoices[voice].lift(v);
+      MVoiceState[voice] = MVoices[voice].lift(v,AChannel);
       MNoteToVoice[note] = -1;
       //clear_voice(voice);
     }

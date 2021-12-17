@@ -20,6 +20,9 @@ protected:
   uint32_t              MPluginFormat     = MIP_PLUGIN_FORMAT_NONE;
   float*                MParameterValues  = nullptr;
 
+  //void*                 MFormatSpecificInstance = nullptr;
+  //void*                 MFormatSpecificHost     = nullptr;
+
 //------------------------------
 public:
 //------------------------------
@@ -42,6 +45,12 @@ public:
 
   void                  setPluginFormat(uint32_t AFormat) { MPluginFormat = AFormat; }
   MIP_PluginDescriptor* getDescriptor()                   { return MDescriptor; }
+
+  //void  setFormatSpecificInstance(void* ptr) { MFormatSpecificInstance = ptr; }
+  //void* getFormatSpecificInstance() { return MFormatSpecificInstance; }
+
+  //void  setFormatSpecificHost(void* ptr) { MFormatSpecificHost = ptr; }
+  //void* getFormatSpecificHost() { return MFormatSpecificHost; }
 
 //------------------------------
 public:

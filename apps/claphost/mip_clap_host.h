@@ -260,23 +260,23 @@ private: // clap host
 //------------------------------------------------------------
 
   static const void* get_extension_callback(const struct clap_host* host, const char* extension_id) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->get_extension(extension_id);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->get_extension(extension_id);
   }
 
   static void request_restart_callback(const struct clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->request_restart();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->request_restart();
   }
 
   static void request_process_callback(const struct clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->request_process();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->request_process();
   }
 
   static void request_callback_callback(const struct clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->request_callback();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->request_callback();
   }
 
   //----------
@@ -301,13 +301,13 @@ private: // extensions
   // clap.audio-ports
 
   static uint32_t audio_ports_get_preferred_sample_size_callback(const clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->audio_ports_get_preferred_sample_size();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->audio_ports_get_preferred_sample_size();
   }
 
   static void audio_ports_rescan_callback(const clap_host* host, uint32_t flags) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->audio_ports_rescan(flags);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->audio_ports_rescan(flags);
   }
 
   struct clap_host_audio_ports MClapHostAudioPorts = {
@@ -318,8 +318,8 @@ private: // extensions
   // clap.event_filter
 
   static void event_filter_changed_callback(const clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->event_filter_changed();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->event_filter_changed();
   }
 
   struct clap_host_event_filter MClapHostEventFilter = {
@@ -329,18 +329,18 @@ private: // extensions
   // clap.fd-support
 
   static bool fd_support_register_fd_callback(const clap_host* host, clap_fd fd, clap_fd_flags flags) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->fd_support_register_fd(fd,flags);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->fd_support_register_fd(fd,flags);
   }
 
   static bool fd_support_modify_fd_callback(const clap_host* host, clap_fd fd, clap_fd_flags flags) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->fd_support_modify_fd(fd,flags);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->fd_support_modify_fd(fd,flags);
   }
 
   static bool fd_support_unregister_fd_callback(const clap_host* host, clap_fd fd) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->fd_support_unregister_fd(fd);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->fd_support_unregister_fd(fd);
   }
 
   struct clap_host_fd_support MClapHostFdSupport = {
@@ -352,13 +352,13 @@ private: // extensions
   // clap.file-reference.draft/0
 
   static void file_reference_changed_callback(const clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->file_reference_changed();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->file_reference_changed();
   }
 
   static void file_reference_set_dirty_callback(const clap_host* host, clap_id resource_id) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->file_reference_set_dirty(resource_id);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->file_reference_set_dirty(resource_id);
   }
 
   struct clap_host_file_reference MClapHostFileReference = {
@@ -369,8 +369,8 @@ private: // extensions
   // clap.gui
 
   static bool gui_resize_callback(const clap_host* host, uint32_t width, uint32_t height) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->gui_resize(width,height);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->gui_resize(width,height);
   }
 
   struct clap_host_gui MClapHostGui = {
@@ -380,8 +380,8 @@ private: // extensions
   // clap.latency
 
   static void latency_changed_callback(const clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->latency_changed();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->latency_changed();
   }
 
   struct clap_host_latency MClapHostLatency = {
@@ -391,8 +391,8 @@ private: // extensions
   // clap.log
 
   static void log_log_callback(const clap_host* host, clap_log_severity severity, const char *msg) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->log_log(severity,msg);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->log_log(severity,msg);
   }
 
   struct clap_host_log MClapHostLog = {
@@ -402,8 +402,8 @@ private: // extensions
   // clap.note-name
 
   static void note_name_changed_callback(const clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->note_name_changed();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->note_name_changed();
   }
 
   struct clap_host_note_name MClapHostNoteName = {
@@ -413,18 +413,18 @@ private: // extensions
   // clap.params
 
   static void params_rescan_callback(const clap_host* host, clap_param_rescan_flags flags) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->params_rescan(flags);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->params_rescan(flags);
   }
 
   static void params_clear_callback(const clap_host* host, clap_id param_id, clap_param_clear_flags flags) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->params_clear(param_id,flags);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->params_clear(param_id,flags);
   }
 
   static void params_request_flush_callback(const clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->params_request_flush();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->params_request_flush();
   }
 
   struct clap_host_params MClapHostParams = {
@@ -436,8 +436,8 @@ private: // extensions
   // clap.quick-controls.draft/0
 
   static void quick_controls_changed_callback(const clap_host* host, clap_quick_controls_changed_flags flags) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->quick_controls_changed(flags);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->quick_controls_changed(flags);
   }
 
   struct clap_host_quick_controls MClapHostQuickControls = {
@@ -447,8 +447,8 @@ private: // extensions
   // clap.state
 
   static void state_mark_dirty_callback(const clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    testhost->state_mark_dirty();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    claphost->state_mark_dirty();
   }
 
   struct clap_host_state MClapHostState = {
@@ -458,13 +458,13 @@ private: // extensions
   // clap.thread-check
 
   static bool thread_check_is_main_thread_callback(const clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->thread_check_is_main_thread();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->thread_check_is_main_thread();
   }
 
   static bool thread_check_is_audio_thread_callback(const clap_host* host) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->thread_check_is_audio_thread();
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->thread_check_is_audio_thread();
   }
 
   struct clap_host_thread_check MClapHostThreadCheck = {
@@ -475,8 +475,8 @@ private: // extensions
   // clap.thread-pool.draft/0
 
   static bool thread_pool_request_exec_callback(const clap_host* host, uint32_t num_tasks) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->thread_pool_request_exec(num_tasks);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->thread_pool_request_exec(num_tasks);
   }
 
   struct clap_host_thread_pool MClapHostThreadPool = {
@@ -486,13 +486,13 @@ private: // extensions
   // clap.timer-support
 
   static bool timer_support_register_timer_callback(const clap_host* host, uint32_t period_ms, clap_id* timer_id) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->timer_support_register_timer(period_ms,timer_id);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->timer_support_register_timer(period_ms,timer_id);
   }
 
   static bool timer_support_unregister_timer_callback(const clap_host* host, clap_id timer_id) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->timer_support_unregister_timer(timer_id);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->timer_support_unregister_timer(timer_id);
   }
 
   struct clap_host_timer_support MClapHostTimerSupport = {
@@ -503,8 +503,8 @@ private: // extensions
   // clap.track-info.draft/0
 
   static bool track_info_get_callback(const clap_host* host, clap_track_info* info) {
-    MIP_ClapHost* testhost = (MIP_ClapHost*)host->host_data;
-    return testhost->track_info_get(info);
+    MIP_ClapHost* claphost = (MIP_ClapHost*)host->host_data;
+    return claphost->track_info_get(info);
   }
 
   struct clap_host_track_info MClapHostTrackInfo = {
