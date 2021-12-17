@@ -18,8 +18,6 @@
   typedef MIP_XcbWindow MIP_ImplementedWindow;
 #endif
 
-
-
 //----------------------------------------------------------------------
 
 class MIP_Window

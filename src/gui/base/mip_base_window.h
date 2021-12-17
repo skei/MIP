@@ -94,7 +94,6 @@ public:
   virtual void on_window_clientMessage(uint32_t AData, void* APtr) {}
   virtual void on_window_paint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) {}
 
-
 //------------------------------
 public: // MIP_Widget
 //------------------------------

@@ -12,13 +12,17 @@ class MIP_BasePainter {
 public:
 //------------------------------
 
-  MIP_BasePainter() {
+  MIP_BasePainter(MIP_Surface* ATarget) {
   }
 
   //----------
 
   virtual ~MIP_BasePainter() {
   }
+
+//------------------------------
+public:
+//------------------------------
 
 };
 

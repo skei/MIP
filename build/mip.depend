@@ -527,8 +527,8 @@
 1639255375 /DISKS/sda2/code/git/mip/src/base/mip_utils.h
 	"mip.h"
 
-1639682952 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../plugins/templates/simple.h"
+1639689091 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../plugins/templates/simple_synth.h"
 
 1639492494 /DISKS/sda2/code/git/MIP/src/mip.h
 	<stdlib.h>
@@ -550,7 +550,7 @@
 
 1639683120 /DISKS/sda2/code/git/MIP/src/base/mip_defines.h
 
-1639494139 /DISKS/sda2/code/git/MIP/src/base/mip_const.h
+1639689055 /DISKS/sda2/code/git/MIP/src/base/mip_const.h
 
 1639266090 /DISKS/sda2/code/git/MIP/src/base/mip_enums.h
 
@@ -582,7 +582,7 @@
 1639419217 /DISKS/sda2/code/git/MIP/src/debug/mip_debug_crash_handler.h
 	<signal.h>
 
-1639663861 /DISKS/sda2/code/git/MIP/src/plugin/mip_plugin.h
+1639689718 /DISKS/sda2/code/git/MIP/src/plugin/mip_plugin.h
 	"mip.h"
 	"plugin/mip_plugin_descriptor.h"
 	"plugin/mip_plugin_instance.h"
@@ -629,7 +629,7 @@
 	"mip.h"
 	"base/types/mip_rect.h"
 
-1639492380 /DISKS/sda2/code/git/MIP/src/gui/mip_window.h
+1639708906 /DISKS/sda2/code/git/MIP/src/gui/mip_window.h
 	"mip.h"
 	"base/types/mip_rect.h"
 	"gui/mip_widget.h"
@@ -899,7 +899,7 @@
 	"gui/mip_widget.h"
 	"gui/mip_window.h"
 
-1639687350 /DISKS/sda2/code/git/MIP/src/plugin/clap/mip_clap_plugin_instance.h
+1639707121 /DISKS/sda2/code/git/MIP/src/plugin/clap/mip_clap_plugin_instance.h
 	"mip.h"
 	"base/types/mip_queue.h"
 	"plugin/mip_plugin_descriptor.h"
@@ -1061,5 +1061,21 @@
 	"base/utils/mip_arguments.h"
 
 1639687740 /DISKS/sda2/code/git/MIP/plugins/templates/simple.h
+	"mip.h"
+
+1639692931 /DISKS/sda2/code/git/MIP/plugins/templates/simple_synth.h
+	"mip.h"
+	"audio/mip_voice_manager.h"
+
+1639692652 /DISKS/sda2/code/git/MIP/src/audio/mip_voice_manager.h
+	"mip.h"
+	"audio/mip_audio_math.h"
+	"audio/mip_audio_utils.h"
+	"plugin/mip_process_context.h"
+
+1639688931 /DISKS/sda2/code/git/MIP/src/audio/mip_audio_math.h
+	<math.h>
+
+1639688989 /DISKS/sda2/code/git/MIP/src/audio/mip_audio_utils.h
 	"mip.h"
 
