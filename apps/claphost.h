@@ -9,8 +9,28 @@
 
 #include "mip.h"
 #include "base/utils/mip_arguments.h"
+#include "claphost/mip_clap_plugin_entry.h"
+#include "claphost/mip_clap_host.h"
 
-//#include "claphost/arguments.h"
+  bool                GPrintHelp        = false;
+  const char*         GPluginPath       = "";
+  uint32_t            GPluginIndex      = 0;
+  const char*         GMidiInputFile    = "";
+  const char*         GAudioInputFile   = "";
+  const char*         GAudioOutputFile  = "";
+  float               GSampleRate       = 0.0;
+  uint32_t            GBlockSize        = 0;
+  uint32_t            GNumAudioInputs   = 0;
+  uint32_t            GNumAudioOutputs  = 0;
+  bool                GListPlugins      = false;
+  bool                GPrintDescriptor  = false;
+  bool                GFuzzBlockSize    = false;
+  float               GDecaySeconds     = 0.0;
+  int32_t             GRemapCC          = -1;
+  int32_t             GRemapParam       = -1;
+
+#include "claphost/claphost_process.h"
+
 
 //----------------------------------------------------------------------
 
@@ -19,6 +39,7 @@
 void print_help() {
   printf("usage: claphost plugin-path index [options]\n");
   printf("options:\n");
+  printf("  -h  --help\n");
   printf("  -m  --midi-input    <path>\n");
   printf("  -a  --audio-input   <path>\n");
   printf("  -o  --audio-output  <path>\n");
@@ -34,86 +55,92 @@ void print_help() {
 //----------------------------------------------------------------------
 
 int main(int argc, char** argv) {
-  MIP_Arguments arg;
+
+  MIP_Arguments       arg     = {};
+  MIP_ClapPluginEntry entry   = {};
+  ClapHost_Process    process = {};
+
+
   arg.init(argc,argv);
   uint32_t num_args = arg.count();
 
-  const char* plugin_path       = "";
-  uint32_t    plugin_index      = 0;
-  const char* midi_input_file   = "";
-  const char* audio_input_file  = "";
-  const char* audio_output_file = "";
-  float       sample_rate       = 0.0;
-  uint32_t    block_size        = 0;
-  uint32_t    num_audio_inputs  = 0;
-  uint32_t    num_audio_outputs = 0;
-  bool        list_plugins      = false;
-  bool        print_descriptor  = false;
-  bool        fuzz_block_size   = false;
-  float       decay_seconds     = 0.0;
-  int32_t     remap_cc          = -1;
-  int32_t     remap_param       = -1;
-
-
-  if ((num_args == 1) || (arg.hasOption("-h","--help"))) {
+  if ((num_args == 1) || arg.hasOption("-h","--help") || arg.hasOption("-?","--?")) {
     print_help();
     exit(0);
   }
 
   else if (num_args == 2) {
-    plugin_path = arg.getStr(1);
-    plugin_index = 0;
+    GPluginPath = arg.getStr(1);
+    GPluginIndex = 0;
   }
 
   else {
 
-    plugin_path       = arg.getStr(1);
-    plugin_index      = arg.getInt(2);
+    GPluginPath = arg.getStr(1);
+    GPluginIndex = arg.getInt(2);
 
-    midi_input_file   = arg.getArgStr(                  "-m",   "--midi-input");
-    audio_input_file  = arg.getArgStr(                  "-a",   "--audio-input");
-    audio_output_file = arg.getArgStr(                  "-o",   "--audio-output");
+    GPrintHelp        = arg.hasOption(                  "-h",   "--help");
+    GPrintHelp       |= arg.hasOption(                  "-?",   "--?");
 
-    sample_rate       = arg.getArgFloat(                "-s",   "--sample_rate");
-    block_size        = arg.getArgInt(                  "-b",   "--block_size");
-    num_audio_inputs  = arg.getArgInt(                  "-c",   "--channels");
-    num_audio_outputs = arg.getArgIntAfterSymbol( ':',  "-c",   "--channels");
-    decay_seconds     = arg.getArgFloat(                "-d",   "--decay-seconds");
+    GMidiInputFile    = arg.getArgStr(                  "-m",   "--midi-input");
+    GAudioInputFile   = arg.getArgStr(                  "-a",   "--audio-input");
+    GAudioOutputFile  = arg.getArgStr(                  "-o",   "--audio-output");
 
-    list_plugins      = arg.hasOption(                  "-l",   "--list-plugins");
-    print_descriptor  = arg.hasOption(                  "-p",   "--print-descriptor");
-    fuzz_block_size   = arg.hasOption(                  "-f",   "--fuzz-block-size");
+    GSampleRate       = arg.getArgFloat(                "-s",   "--sample_rate");
+    GBlockSize        = arg.getArgInt(                  "-b",   "--block_size");
+    GNumAudioInputs   = arg.getArgInt(                  "-c",   "--channels");
+    GNumAudioOutputs  = arg.getArgIntAfterSymbol( ':',  "-c",   "--channels");
+    GDecaySeconds     = arg.getArgFloat(                "-d",   "--decay-seconds");
+
+    GListPlugins      = arg.hasOption(                  "-l",   "--list-plugins");
+    GPrintDescriptor  = arg.hasOption(                  "-p",   "--print-descriptor");
+    GFuzzBlockSize    = arg.hasOption(                  "-f",   "--fuzz-block-size");
 
     if (arg.hasOption("-r","--remap")) {
-      remap_cc        = arg.getArgInt(                  "-r",   "--remap");
-      remap_param     = arg.getArgIntAfterSymbol( ':',  "-r",   "--remap");
+      GRemapCC        = arg.getArgInt(                  "-r",   "--remap");
+      GRemapParam     = arg.getArgIntAfterSymbol( ':',  "-r",   "--remap");
     }
   }
 
-  printf("plugin_path       %s\n",plugin_path);
-  printf("plugin_index      %i\n",plugin_index);
-  printf("midi_input file   %s\n",midi_input_file);
-  printf("audio_input file  %s\n",audio_input_file);
-  printf("audio_output file %s\n",audio_output_file);
-  printf("sample_rate       %.2f\n",sample_rate);
-  printf("block_size        %i\n",block_size);
-  printf("channels (in:out) %i:%i\n",num_audio_inputs,num_audio_outputs);
-  printf("decay seconds     %.2f\n",decay_seconds);
-  printf("list_plugins      %s\n",list_plugins?"yes":"no");
-  printf("print_descriptor  %s\n",print_descriptor?"yes":"no");
-  printf("fuzz block size   %s\n",fuzz_block_size?"yes":"no");
-  printf("remap (cc:param)  %i:%i\n",remap_cc,remap_param);
+  printf("plugin_path       %s\n",GPluginPath);
+  printf("plugin_index      %i\n",GPluginIndex);
+  printf("midi_input file   %s\n",GMidiInputFile);
+  printf("audio_input file  %s\n",GAudioInputFile);
+  printf("audio_output file %s\n",GAudioOutputFile);
+  printf("sample_rate       %.2f\n",GSampleRate);
+  printf("block_size        %i\n",GBlockSize);
+  printf("channels (in:out) %i:%i\n",GNumAudioInputs,GNumAudioOutputs);
+  printf("decay seconds     %.2f\n",GDecaySeconds);
+  printf("list_plugins      %s\n",GListPlugins?"yes":"no");
+  printf("print_descriptor  %s\n",GPrintDescriptor?"yes":"no");
+  printf("fuzz block size   %s\n",GFuzzBlockSize?"yes":"no");
+  printf("remap (cc:param)  %i:%i\n",GRemapCC,GRemapParam);
 
-  if (list_plugins) {
+  entry.load(GPluginPath);
+
+  if (GListPlugins) {
     MIP_Print("list plugins\n");
+    entry.listPlugins();
   }
-  else if (print_descriptor) {
+  else if (GPrintDescriptor) {
     MIP_Print("print descriptor\n");
+    entry.printDescriptor(GPluginIndex);
   }
   else {
     // process
     MIP_Print("process\n");
+
+    MIP_ClapPlugin* plugin = entry.createPlugin(GPluginPath,GPluginIndex);
+    plugin->activate(GSampleRate,1,GBlockSize);
+    plugin->start_processing();
+    process.process(plugin);
+    plugin->stop_processing();
+    plugin->deactivate();
+    entry.destroyPlugin(plugin);
+
   }
+
+  entry.unload();
 
   return 0;
 }

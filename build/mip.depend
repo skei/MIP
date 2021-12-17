@@ -527,10 +527,10 @@
 1639255375 /DISKS/sda2/code/git/mip/src/base/mip_utils.h
 	"mip.h"
 
-1639689091 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../plugins/templates/simple_synth.h"
+1639770863 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../apps/claphost.h"
 
-1639492494 /DISKS/sda2/code/git/MIP/src/mip.h
+1639772010 /DISKS/sda2/code/git/MIP/src/mip.h
 	<stdlib.h>
 	<stdint.h>
 	<stdio.h>
@@ -544,7 +544,6 @@
 	"base/mip_const.h"
 	"base/mip_enums.h"
 	"base/mip_attributes.h"
-	"plugin/mip_plugin.h"
 
 1639678304 /DISKS/sda2/code/git/MIP/src/base/mip_config.h
 
@@ -643,13 +642,11 @@
 	"mip.h"
 	"gui/mip_window.h"
 
-1639485022 /DISKS/sda2/code/git/MIP/src/plugin/clap/mip_clap.h
+1639772064 /DISKS/sda2/code/git/MIP/src/plugin/clap/mip_clap.h
 	"mip.h"
 	"extern/clap/all.h"
 	"extern/clap/ext/draft/check-for-update.h"
 	"extern/clap/ext/draft/midi-mappings.h"
-	"plugin/clap/mip_clap_plugin.h"
-	"plugin/clap/mip_clap_utils.h"
 
 1639682037 /DISKS/sda2/code/git/MIP/src/extern/clap/all.h
 	"clap.h"
@@ -1052,9 +1049,12 @@
 1639663974 /DISKS/sda2/code/git/MIP/plugins/test/build.h
 	"mip.h"
 
-1639671110 /DISKS/sda2/code/git/MIP/apps/claphost.h
+1639774309 /DISKS/sda2/code/git/MIP/apps/claphost.h
 	"mip.h"
 	"base/utils/mip_arguments.h"
+	"claphost/mip_clap_plugin_entry.h"
+	"claphost/mip_clap_host.h"
+	"claphost/claphost_process.h"
 
 1639665745 /DISKS/sda2/code/git/MIP/apps/claphost/arguments.h
 	"mip.h"
@@ -1078,4 +1078,31 @@
 
 1639688989 /DISKS/sda2/code/git/MIP/src/audio/mip_audio_utils.h
 	"mip.h"
+
+1639774181 /DISKS/sda2/code/git/MIP/apps/claphost/mip_clap_plugin_entry.h
+	<dlfcn.h>
+	"plugin/clap/mip_clap.h"
+	"mip_clap_host.h"
+	"mip_clap_plugin.h"
+
+1639772126 /DISKS/sda2/code/git/MIP/apps/claphost/mip_clap_host.h
+	"plugin/clap/mip_clap.h"
+
+1639772645 /DISKS/sda2/code/git/MIP/apps/claphost/mip_clap_plugin.h
+	"plugin/clap/mip_clap.h"
+
+1639773860 /DISKS/sda2/code/git/MIP/apps/claphost/claphost_process.h
+	"audio/mip_audio_file.h"
+	"midi/mip_midi_file.h"
+	"midi/mip_midi_player.h"
+	"plugin/clap/mip_clap.h"
+
+1639567561 /DISKS/sda2/code/git/MIP/src/audio/mip_audio_file.h
+	<sndfile.h>
+
+1639567342 /DISKS/sda2/code/git/MIP/src/midi/mip_midi_file.h
+	<vector>
+
+1639708608 /DISKS/sda2/code/git/MIP/src/midi/mip_midi_player.h
+	"midi/mip_midi_file.h"
 

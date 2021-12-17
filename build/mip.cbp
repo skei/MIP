@@ -252,6 +252,7 @@
 		<Unit filename="../src/gui/base/mip_base_window.h" />
 		<Unit filename="../src/gui/cairo/mip_cairo.h" />
 		<Unit filename="../src/gui/cairo/mip_cairo_painter.h" />
+		<Unit filename="../src/gui/cairo/mip_cairo_utils.h" />
 		<Unit filename="../src/gui/gdi/mip_gdi.h" />
 		<Unit filename="../src/gui/gdi/mip_gdi_painter.h" />
 		<Unit filename="../src/gui/mip_bitmap.h" />
@@ -260,6 +261,9 @@
 		<Unit filename="../src/gui/mip_surface.h" />
 		<Unit filename="../src/gui/mip_widget.h" />
 		<Unit filename="../src/gui/mip_window.h" />
+		<Unit filename="../src/gui/nogui/mip_nogui.h" />
+		<Unit filename="../src/gui/nogui/mip_nogui_painter.h" />
+		<Unit filename="../src/gui/nogui/mip_nogui_surface.h" />
 		<Unit filename="../src/gui/nogui/mip_nogui_window.h" />
 		<Unit filename="../src/gui/win32/mip_win32.h" />
 		<Unit filename="../src/gui/win32/mip_win32_surface.h" />
