@@ -2,6 +2,8 @@
 #define mip_clap_host_included
 //----------------------------------------------------------------------
 
+// this is what the plugin sees
+
 #include "plugin/clap/mip_clap.h"
 
 #define HOST_NAME     "clap-test"

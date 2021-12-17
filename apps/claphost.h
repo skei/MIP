@@ -12,6 +12,10 @@
 #include "claphost/mip_clap_plugin_entry.h"
 #include "claphost/mip_clap_host.h"
 
+//----------------------------------------------------------------------
+
+  // -> arg.h ??
+
   bool                GPrintHelp        = false;
   const char*         GPluginPath       = "";
   uint32_t            GPluginIndex      = 0;
@@ -29,8 +33,9 @@
   int32_t             GRemapCC          = -1;
   int32_t             GRemapParam       = -1;
 
-#include "claphost/claphost_process.h"
+//----------------------------------------------------------------------
 
+#include "claphost/claphost_process.h"
 
 //----------------------------------------------------------------------
 

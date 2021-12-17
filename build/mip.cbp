@@ -127,10 +127,15 @@
 			<Add library="xcb-cursor" />
 			<Add library="xcb-keysyms" />
 			<Add library="cairo" />
+			<Add library="sndfile" />
 		</Linker>
 		<Unit filename="../LICENSE" />
 		<Unit filename="../README" />
 		<Unit filename="../apps/claphost.h" />
+		<Unit filename="../apps/claphost/claphost_process.h" />
+		<Unit filename="../apps/claphost/mip_clap_host.h" />
+		<Unit filename="../apps/claphost/mip_clap_plugin.h" />
+		<Unit filename="../apps/claphost/mip_clap_plugin_entry.h" />
 		<Unit filename="../docs/about.txt" />
 		<Unit filename="../docs/todo.txt" />
 		<Unit filename="../plugins/compile.sh" />
