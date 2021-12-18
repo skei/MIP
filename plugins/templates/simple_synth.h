@@ -95,7 +95,6 @@ public:
 
   // hack warning!
 
-
   void send_note_end(float vel, uint32_t chan) {
     MIP_Print("Sending event\n");
     const clap_process* process = (const clap_process*)userptr;
