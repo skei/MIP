@@ -3,6 +3,7 @@
 //----------------------------------------------------------------------
 
 #include "mip.h"
+#include "plugin/mip_plugin_host.h"
 #include "plugin/mip_plugin_editor.h"
 #include "plugin/mip_process_context.h"
 
@@ -17,11 +18,8 @@ protected:
 
   MIP_PluginDescriptor* MDescriptor       = nullptr;
   MIP_PluginEditor*     MEditor           = nullptr;
-  uint32_t              MPluginFormat     = MIP_PLUGIN_FORMAT_NONE;
   float*                MParameterValues  = nullptr;
-
-  //void*                 MFormatSpecificInstance = nullptr;
-  //void*                 MFormatSpecificHost     = nullptr;
+  uint32_t              MPluginFormat     = MIP_PLUGIN_FORMAT_NONE;
 
 //------------------------------
 public:
@@ -43,14 +41,13 @@ public:
 public:
 //------------------------------
 
-  void                  setPluginFormat(uint32_t AFormat) { MPluginFormat = AFormat; }
-  MIP_PluginDescriptor* getDescriptor()                   { return MDescriptor; }
+  void setPluginFormat(uint32_t AFormat) {
+    MPluginFormat = AFormat;
+  }
 
-  //void  setFormatSpecificInstance(void* ptr) { MFormatSpecificInstance = ptr; }
-  //void* getFormatSpecificInstance() { return MFormatSpecificInstance; }
-
-  //void  setFormatSpecificHost(void* ptr) { MFormatSpecificHost = ptr; }
-  //void* getFormatSpecificHost() { return MFormatSpecificHost; }
+  MIP_PluginDescriptor* getDescriptor() {
+    return MDescriptor;
+  }
 
 //------------------------------
 public:
@@ -120,7 +117,7 @@ public:
   virtual void      on_plugin_updateEditor() {}
 
 //------------------------------
-private: // editor listener
+private:
 //------------------------------
 
   void on_editor_parameter(uint32_t AIndex, float AValue) final {

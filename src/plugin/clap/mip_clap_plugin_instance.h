@@ -7,6 +7,7 @@
 */
 
 #include "mip.h"
+#include "audio/mip_voice_manager.h"
 #include "base/types/mip_queue.h"
 #include "plugin/mip_plugin_descriptor.h"
 #include "plugin/mip_plugin_instance.h"
@@ -26,7 +27,8 @@ typedef MIP_Queue<uint32_t,1024> MIP_HostParameterQueue;
 
 
 class MIP_ClapPluginInstance
-: public MIP_EditorListener {
+: public MIP_EditorListener
+/*, public MIP_VoiceListener*/ {
 
 //------------------------------
 private:
@@ -58,22 +60,15 @@ public:
     MIP_ClapPrint("index %i instance %p\n",AIndex,AInstance);
     MPluginIndex = AIndex;
     MInstance = AInstance;
-
+    //MInstance->setFormatSpecificInstance(this);
     //MHost = AHost;
     MHost = new MIP_ClapPluginHost(host);
-
-    //MInstance->setFormatSpecificInstance(this);
-    //MInstance->setFormatSpecificHost(MHost);
-
     MDescriptor = MInstance->getDescriptor();
 
     // TODO, for now, assume stereo
-
-    //MProcessContext.inputs  = (float**)malloc(sizeof(float*) * MDescriptor->getNumInputPorts());
-    //MProcessContext.outputs = (float**)malloc(sizeof(float*) * MDescriptor->getNumOutputPorts());
-
     MProcessContext.inputs  = (float**)malloc(sizeof(float*) * 2);
     MProcessContext.outputs = (float**)malloc(sizeof(float*) * 2);
+
   }
 
   //----------
@@ -97,6 +92,24 @@ public: // editor listener
   const clap_host* getClapHost() {
     return MHost->getClapHost();
   }
+
+//------------------------------
+public: // voice listener
+//------------------------------
+
+//  void on_voice_end(MIP_ProcessContext* AContext, uint32_t time, uint32_t port, uint32_t key, uint32_t chan) final {
+//    MIP_PRINT;
+//    //MIP_Print("Sending event\n");
+//    //const clap_process* process = (const clap_process*)userptr;
+//    //clap_event event;
+//    //event.type            = CLAP_EVENT_NOTE_END;
+//    //event.time            = 0;
+//    //event.note.port_index = 0;
+//    //event.note.key        = MNote;
+//    //event.note.channel    = MChan;
+//    //event.note.velocity   = vel;
+//    //process->out_events->push_back(process->out_events,&event);
+//  }
 
 //------------------------------
 public: // editor listener
@@ -449,13 +462,9 @@ public:
   */
 
   clap_process_status clap_instance_process(const clap_process *process) {
-    MProcessContext.userptr = (void*)process;
-
     //MIP_ClapPrint("\n");
-    uint32_t i;
-
+    MProcessContext.formatptr = (void*)process;
     handleInputEvents(process->in_events);
-
     MProcessContext.mode          = 0;
     //MProcessContext.offset        = 0;
     MProcessContext.playstate     = MIP_PLUGIN_PLAYSTATE_NONE;
@@ -464,6 +473,7 @@ public:
     MProcessContext.blocksize     = process->frames_count;
     MProcessContext.numinputs     = process->audio_inputs[0].channel_count;
     MProcessContext.numoutputs    = process->audio_outputs[0].channel_count;
+    uint32_t i;
     for (i=0; i<MProcessContext.numinputs; i++) {
       MProcessContext.inputs[i] = process->audio_inputs[0].data32[i];
     }
@@ -474,11 +484,9 @@ public:
     MProcessContext.timesignum    = process->transport->tsig_num;
     MProcessContext.timesigdenom  = process->transport->tsig_denom;
     MProcessContext.beatpos       = process->transport->song_pos_beats;
-
     if (process->transport->flags & CLAP_TRANSPORT_IS_PLAYING)      MProcessContext.playstate |= MIP_PLUGIN_PLAYSTATE_PLAYING;
     if (process->transport->flags & CLAP_TRANSPORT_IS_RECORDING)    MProcessContext.playstate |= MIP_PLUGIN_PLAYSTATE_RECORDING;
     if (process->transport->flags & CLAP_TRANSPORT_IS_LOOP_ACTIVE)  MProcessContext.playstate |= MIP_PLUGIN_PLAYSTATE_LOOPING;
-
     MInstance->on_plugin_process(&MProcessContext);
     handleOutputEvents(process->out_events);
     return CLAP_PROCESS_CONTINUE;

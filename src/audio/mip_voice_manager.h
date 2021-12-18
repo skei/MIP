@@ -11,6 +11,7 @@
 #include "audio/mip_audio_math.h"
 #include "audio/mip_audio_utils.h"
 #include "plugin/mip_process_context.h"
+#include "plugin/mip_plugin_host.h"
 #include "plugin/mip_plugin_instance.h"
 
 //----------------------------------------------------------------------
@@ -26,6 +27,13 @@ enum MIP_EVoiceStates {
 
 struct MIP_VoiceContext {
   MIP_ProcessContext*  processContext  = nullptr;
+};
+
+//----------------------------------------------------------------------
+
+class MIP_VoiceListener {
+public:
+  virtual void on_voice_end(MIP_ProcessContext* AContext, uint32_t time, uint32_t port, uint32_t key, uint32_t chan) {}
 };
 
 //----------------------------------------------------------------------
@@ -60,14 +68,15 @@ class MIP_VoiceManager {
 private:
 //------------------------------
 
-  MIP_VoiceContext    MVoiceContext;
-  VOICE               MVoices[NUM];
-  uint32_t            MVoiceState[NUM];
-  int32_t             MVoiceNote[NUM];
-  int32_t             MVoiceChannel[NUM];
-  int32_t             MNoteToVoice[16*128];
-
-  MIP_PluginInstance* MInstance;
+  MIP_ProcessContext* MProcessContext       = nullptr;
+  MIP_VoiceContext    MVoiceContext         = {};
+  VOICE               MVoices[NUM]          = {};
+  uint32_t            MVoiceState[NUM]      = {0};
+  int32_t             MVoiceNote[NUM]       = {0};
+  int32_t             MVoiceChannel[NUM]    = {0};
+  int32_t             MNoteToVoice[16*128]  = {0};
+//MIP_PluginInstance* MInstance             = nullptr;
+  MIP_VoiceListener*  MListener             = nullptr;
 
 //------------------------------
 public:
@@ -91,14 +100,15 @@ public:
 public:
 //------------------------------
 
-  void init(MIP_PluginInstance* AInstance) {
-    MInstance = AInstance;
-  }
+  //void init(MIP_PluginInstance* AInstance) {
+  //  //MInstance = AInstance;
+  //}
 
-  void setUserPtr(void* ptr) {
-    for (uint32_t i=0; i<NUM; i++) {
-      MVoices[i].setUserPtr(ptr);
-    }
+  void setListener(MIP_VoiceListener* AListener) {
+    MListener = AListener;
+    //for (uint32_t i=0; i<NUM; i++) {
+    //  MVoices[i].setListener(AListener);
+    //}
   }
 
   void prepare(float ASampleRate/*, uint32_t ABlockSize*/) {
@@ -155,15 +165,13 @@ public:
   //----------
 
   void processBlock(MIP_ProcessContext* AContext) {
+    MProcessContext = AContext;
     preProcess();
     MVoiceContext.processContext = AContext;
     MIP_ClearStereoBuffer(AContext->outputs, AContext->blocksize);
     processPlayingVoices();
     processReleasedVoices();
     postProcess();
-
-
-
   }
 
 //------------------------------
@@ -178,11 +186,7 @@ private:
   void postProcess() {
     for (uint32_t i=0; i<NUM; i++) {
       if (MVoiceState[i] == MIP_VOICE_FINISHED) {
-        // notify host
-
-//        MIP_ClapPluginHost* host = (MIP_ClapPluginHost*)MInstance->getFormatSpecificHostPtr();
-//        host->
-
+        if (MListener) MListener->on_voice_end(MProcessContext,0,0,MVoices[i].MChan,0);
         clear_voice(i);
       }
     }

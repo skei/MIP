@@ -8,6 +8,8 @@
 
 struct MIP_ProcessContext {
 
+  void*     formatptr     = nullptr;
+
   uint32_t  mode          = 0;
   //uint32_t  offset        = 0;
 
@@ -26,7 +28,6 @@ struct MIP_ProcessContext {
   float**   inputs        = nullptr;
   float**   outputs       = nullptr;
 
-  void*     userptr       = nullptr;
 
 
 
