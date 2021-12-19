@@ -27,10 +27,10 @@
 //------------------------------
 
 #ifdef MIP_LINUX
-  #define __MIP_LPUBLIC __attribute__ ((visibility ("default")))
-  #define __MIP_LLOCAL  __attribute__ ((visibility ("hidden")))
-  #undef  __MIP_LEXPORT
-  #define __MIP_LEXPORT __MIP_PUBLIC
+  #define __MIP_PUBLIC __attribute__ ((visibility ("default")))
+  #define __MIP_LOCAL  __attribute__ ((visibility ("hidden")))
+  #undef  __MIP_EXPORT
+  #define __MIP_EXPORT __MIP_PUBLIC
 #endif
 
 //#ifdef MIP_WIN32

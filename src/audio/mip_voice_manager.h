@@ -16,15 +16,6 @@
 
 //----------------------------------------------------------------------
 
-enum MIP_EVoiceStates {
-  MIP_VOICE_OFF      = 0,
-  MIP_VOICE_PLAYING  = 1,
-  MIP_VOICE_RELEASED = 2,
-  MIP_VOICE_FINISHED = 3
-};
-
-//----------------------------------------------------------------------
-
 struct MIP_VoiceContext {
   MIP_ProcessContext*  processContext  = nullptr;
 };

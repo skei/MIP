@@ -290,6 +290,14 @@ enum MIP_EPluginPortDirection {
   MIP_PLUGIN_PORT_OUTPUT  = 1,
 };
 
+enum MIP_EVoiceState {
+  MIP_VOICE_OFF      = 0,
+  MIP_VOICE_PLAYING  = 1,
+  MIP_VOICE_RELEASED = 2,
+  MIP_VOICE_FINISHED = 3
+};
+
+
 
 //----------------------------------------------------------------------
 #endif

@@ -167,8 +167,6 @@ public:
 
   myInstance(MIP_PluginDescriptor* ADescriptor)
   : MIP_PluginInstance(ADescriptor) {
-    //MVoices.init(this);
-    MVoices.setListener(this);
   }
 
 //------------------------------
@@ -193,7 +191,7 @@ public:
 //------------------------------
 
   bool on_plugin_init() final {
-    //MVoices.setUserPtr(MFormatSpecificHost);
+    MVoices.setListener(this);
     return true;
   }
 

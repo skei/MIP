@@ -13,13 +13,14 @@
 #endif
 
 #include "mip.h"
-
 #include "extern/clap/all.h"
 #include "extern/clap/ext/draft/check-for-update.h"
 #include "extern/clap/ext/draft/midi-mappings.h"
 
-#include "plugin/clap/mip_clap_plugin.h"
-#include "plugin/clap/mip_clap_utils.h"
+#ifndef MIP_NO_PLUGIN
+  #include "plugin/clap/mip_clap_plugin.h"
+  #include "plugin/clap/mip_clap_utils.h"
+#endif
 
 //----------
 

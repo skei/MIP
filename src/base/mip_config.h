@@ -67,7 +67,9 @@
 //#define MIP_PLUGIN_VST2_FST
 //#define MIP_PLUGIN_VST3_SDK
 
-  #define MIP_PLUGIN_REGISTER_PLUGINS
+//#ifndef MIP_NO_PLUGIN
+//  #define MIP_PLUGIN_REGISTER_PLUGINS
+//#endif
 
 //#define MIP_USE_CAIRO
 //#define MIP_USE_CTX

@@ -19,7 +19,9 @@
 #include "base/mip_enums.h"
 #include "base/mip_attributes.h"
 
-#include "plugin/mip_plugin.h"
+#ifndef MIP_NO_PLUGIN
+  #include "plugin/mip_plugin.h"
+#endif
 
 //----------------------------------------------------------------------
 #endif
