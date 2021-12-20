@@ -44,6 +44,8 @@ private:
   MIP_MidiEvents        MMidiInputEvents;
   clap_events           MClapInputEvents;
 
+  clap_param_info       MRemapParamInfo = {0};
+
   alignas(32) float MAudioInputBuffer1[MAX_BLOCK_SIZE];
   alignas(32) float MAudioInputBuffer2[MAX_BLOCK_SIZE];
   alignas(32) float MAudioOutputBuffer1[MAX_BLOCK_SIZE];
@@ -327,36 +329,32 @@ private:
           break;
         */
 
-        /*
-          we need to know more about the parameter
-        */
-
-//        case 0xB0: // control change
-//          if (arg->do_animate && (msg2 == arg->animated_parameter)) {
-//            event = (clap_event*)malloc(sizeof(clap_event));  // deleted in deleteInputEvents()
-//            memset(event,0,sizeof(clap_event));
-//            event->time               = offset;
-//            event->type               = CLAP_EVENT_PARAM_VALUE;
-//            event->param_value.cookie = NULL; // !!!
-//            event->param_id           = msg2;
-//            event->port_index         = 0;
-//            event->key                = 0;
-//            event->channel            = msg1 & 15;
-//            event->flags              = 0; // CLAP_EVENT_PARAM_BEGIN_ADJUST | CLAP_EVENT_PARAM_END_ADJUST | CLAP_EVENT_PARAM_SHOULD_RECORD
-//            event->value              = (float)msg3 / 127.0;
-//            MClapInputEvents.push_back(event)
-//          }
-//          else {
-//            event = (clap_event*)malloc(sizeof(clap_event));  // deleted in deleteInputEvents()
-//            memset(event,0,sizeof(clap_event));
-//            event->time         = offset;
-//            event->type         = CLAP_EVENT_MIDI;
-//            event->midi.data[0] = msg1;
-//            event->midi.data[1] = msg2;
-//            event->midi.data[2] = msg3;
-//            MClapInputEvents.push_back(event);
-//          }
-//          break;
+        case 0xB0: // control change
+          if (GRemapCC == msg2) {
+            event = (clap_event*)malloc(sizeof(clap_event));  // deleted in deleteInputEvents()
+            memset(event,0,sizeof(clap_event));
+            event->type                   = CLAP_EVENT_PARAM_VALUE;
+            event->time                   = offset;
+            event->param_value.cookie     = MRemapParamInfo.cookie; //NULL; // !!!
+            event->param_value.param_id   = MRemapParamInfo.id;
+            event->param_value.port_index = -1;
+            event->param_value.key        = -1;
+            event->param_value.channel    = -1;//msg1 & 15;
+            event->param_value.flags      = 0; // CLAP_EVENT_PARAM_BEGIN_ADJUST | CLAP_EVENT_PARAM_END_ADJUST | CLAP_EVENT_PARAM_SHOULD_RECORD
+            event->param_value.value      = (float)msg3 / 127.0;
+            MClapInputEvents.push_back(event);
+          }
+          else {
+            event = (clap_event*)malloc(sizeof(clap_event));  // deleted in deleteInputEvents()
+            memset(event,0,sizeof(clap_event));
+            event->time         = offset;
+            event->type         = CLAP_EVENT_MIDI;
+            event->midi.data[0] = msg1;
+            event->midi.data[1] = msg2;
+            event->midi.data[2] = msg3;
+            MClapInputEvents.push_back(event);
+          }
+          break;
 
         /*
         case 0xC0: // program change
@@ -454,7 +452,7 @@ public:
       return;
     }
 
-    //-----
+    // length
 
     printf("> length = %f seconds\n",num_samples / GSampleRate);
 
@@ -467,6 +465,12 @@ public:
     if (num_samples >= (GSampleRate * 180.0)) {
       printf("> Truncating to 3 minute\n" );
       num_samples = 180.0 * GSampleRate;
+    }
+
+    // remapping
+
+    if ((GRemapCC >= 0) && (GRemapParam >= 0)) {
+      MInstance->getParam(GRemapParam,&MRemapParamInfo);
     }
 
 //    uint32_t num_blocks = num_samples / arg->block_size;

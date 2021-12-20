@@ -62,6 +62,10 @@ public:
     return MClapPlugin;
   }
 
+  bool getParam(uint32_t index, clap_param_info* info) {
+    return MClapExtParams->get_info(MClapPlugin,index,info);
+  }
+
 //------------------------------
 public:
 //------------------------------
