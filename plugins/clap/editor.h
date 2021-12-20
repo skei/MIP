@@ -1,8 +1,8 @@
-#ifndef x11_window_incuded
-#define x11_window_incuded
+#ifndef editor_incuded
+#define editor_incuded
 //----------------------------------------------------------------------
 
-class X11_Window {
+class Editor {
 
 //------------------------------
 private:
@@ -12,10 +12,10 @@ private:
 public:
 //------------------------------
 
-  X11_Window() {
+  Editor() {
   }
 
-  virtual ~X11_Window() {
+  virtual ~Editor() {
   }
 
 //------------------------------

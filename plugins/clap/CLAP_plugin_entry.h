@@ -12,7 +12,7 @@
 #include "extern/clap/ext/draft/check-for-update.h"
 #include "extern/clap/ext/draft/midi-mappings.h"
 
-#include "x11_window.h"
+#include "editor.h"
 
 //----------------------------------------------------------------------
 

@@ -12,7 +12,7 @@
 #include "extern/clap/ext/draft/check-for-update.h"
 #include "extern/clap/ext/draft/midi-mappings.h"
 
-#include "x11_window.h"
+#include "editor.h"
 
 //----------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ protected:
   const clap_host*              MHost                 = nullptr;
   clap_plugin*                  MPlugin               = nullptr;
   bool                          MAllocatedPlugin      = false;
-  X11_Window*                   MWindow               = nullptr;
+  Editor*                       MEditor               = nullptr;
 
   // extensions
 

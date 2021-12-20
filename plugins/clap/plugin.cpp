@@ -325,7 +325,7 @@ public: // extensions
 
   bool gui_create() override {
     MIP_PRINT;
-    MWindow = new X11_Window();
+    MEditor = new Editor();
     return true;
   }
 
@@ -333,22 +333,22 @@ public: // extensions
 
   void gui_destroy() override {
     MIP_PRINT;
-    delete MWindow;
+    delete MEditor;
   }
 
   //----------
 
   void gui_set_scale(double scale) override {
     MIP_PRINT;
-    MWindow->set_scale(scale);
+    MEditor->set_scale(scale);
   }
 
   //----------
 
   bool gui_get_size(uint32_t* width, uint32_t* height) override {
     MIP_PRINT;
-    *width = MWindow->get_width();
-    *width = MWindow->get_height();
+    *width = MEditor->get_width();
+    *width = MEditor->get_height();
     return true;
   }
 
@@ -363,16 +363,16 @@ public: // extensions
 
   void gui_round_size(uint32_t* width, uint32_t* height) override {
     MIP_PRINT;
-    *width = MWindow->get_width();
-    *width = MWindow->get_height();
+    *width = MEditor->get_width();
+    *width = MEditor->get_height();
   }
 
   //----------
 
   bool gui_set_size(uint32_t width, uint32_t height) override {
     MIP_PRINT;
-    MWindow->set_width(width);
-    MWindow->set_height(height);
+    MEditor->set_width(width);
+    MEditor->set_height(height);
     return true;
   }
 
@@ -380,14 +380,14 @@ public: // extensions
 
   void gui_show() override {
     MIP_PRINT;
-    MWindow->show();
+    MEditor->show();
   }
 
   //----------
 
   void gui_hide() override {
     MIP_PRINT;
-    MWindow->hide();
+    MEditor->hide();
   }
 
   //------------------------------
@@ -396,7 +396,7 @@ public: // extensions
 
   bool gui_x11_attach(const char* display_name, unsigned long window) override {
     MIP_PRINT;
-    return MWindow->attach(display_name,window);
+    return MEditor->attach(display_name,window);
   }
 
   //------------------------------
