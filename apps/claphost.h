@@ -66,7 +66,6 @@ int main(int argc, char** argv) {
   MIP_ClapPluginEntry entry   = {};
   ClapHost_Process    process = {};
 
-
   arg.init(argc,argv);
   uint32_t num_args = arg.count();
 
@@ -137,7 +136,6 @@ int main(int argc, char** argv) {
   else {
     // process
     MIP_Print("process:\n");
-
     MIP_ClapPlugin* plugin = entry.createPlugin(GPluginPath,GPluginIndex);
     plugin->activate(GSampleRate,1,GBlockSize);
     plugin->start_processing();

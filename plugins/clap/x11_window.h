@@ -32,7 +32,7 @@ public:
   void hide() {
   }
 
-   void set_width(uint32_t w) {
+  void set_width(uint32_t w) {
   }
 
   void set_height(uint32_t h) {
@@ -41,10 +41,6 @@ public:
   void set_scale(double scale) {
   }
 
-//------------------------------
-public:
-//------------------------------
-
   uint32_t get_width() {
     return 0;
   }
@@ -52,6 +48,8 @@ public:
   uint32_t get_height() {
     return 0;
   }
+
+
 
 };
 

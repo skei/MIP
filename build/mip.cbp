@@ -138,18 +138,23 @@
 		<Unit filename="../apps/claphost/mip_clap_plugin_entry.h" />
 		<Unit filename="../docs/about.txt" />
 		<Unit filename="../docs/todo.txt" />
-		<Unit filename="../plugins/clap/clap_host.cpp">
+		<Unit filename="../plugins/clap/CLAP_host_proxy.h" />
+		<Unit filename="../plugins/clap/CLAP_plugin.h" />
+		<Unit filename="../plugins/clap/CLAP_plugin_entry.h" />
+		<Unit filename="../plugins/clap/host.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="../plugins/clap/clap_plugin.cpp">
+		<Unit filename="../plugins/clap/plugin.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="../plugins/clap/clap_synth.cpp">
+		<Unit filename="../plugins/clap/synth.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="../plugins/clap/voices.h" />
+		<Unit filename="../plugins/clap/x11_window.h" />
 		<Unit filename="../plugins/compile.sh" />
 		<Unit filename="../plugins/templates/simple.h" />
 		<Unit filename="../plugins/templates/simple_synth.h" />

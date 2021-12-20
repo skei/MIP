@@ -1,10 +1,12 @@
+#ifndef CLAP_plugin_included
+#define CLAP_plugin_included
+//----------------------------------------------------------------------
 
-
-// nc -U -l -k /tmp/mip.socket
-//#define MIP_DEBUG_PRINT_SOCKET
-#define MIP_NO_PLUGIN
-#define MIP_NO_GUI
-#include "mip.h"
+//// nc -U -l -k /tmp/mip.socket
+////#define MIP_DEBUG_PRINT_SOCKET
+//#define MIP_NO_PLUGIN
+//#define MIP_NO_GUI
+//#include "mip.h"
 
 #include "extern/clap/all.h"
 #include "extern/clap/ext/draft/check-for-update.h"
@@ -13,17 +15,14 @@
 #include "x11_window.h"
 
 //----------------------------------------------------------------------
-//
-// clap_plugin
-//
-//----------------------------------------------------------------------
 
 class CLAP_Plugin {
 
 //------------------------------
-private:
+protected:
 //------------------------------
 
+  const clap_host*              MHost                 = nullptr;
   clap_plugin*                  MPlugin               = nullptr;
   bool                          MAllocatedPlugin      = false;
   X11_Window*                   MWindow               = nullptr;
@@ -71,6 +70,7 @@ public:
 
   CLAP_Plugin(const clap_plugin_descriptor* desc, const clap_host *host) {
 
+    MHost = host;
     MPlugin           = (clap_plugin*)malloc(sizeof(clap_plugin));
     MAllocatedPlugin  = true;
 
@@ -126,657 +126,118 @@ public:
 public: // plugin
 //------------------------------
 
-  bool init() {
-    MIP_PRINT;
-    return true;
-  }
-
-  //----------
-
-  void destroy() {
-    MIP_PRINT;
-  }
-
-  //----------
-
-  bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) {
-    MIP_PRINT;
-    return true;
-  }
-
-  //----------
-
-  void deactivate() {
-    MIP_PRINT;
-  }
-
-  //----------
-
-  bool start_processing() {
-    MIP_PRINT;
-    return true;
-  }
-
-  //----------
-
-  void stop_processing() {
-    MIP_PRINT;
-  }
-
-  //----------
-
-  clap_process_status process(const clap_process *process) {
-    //MIP_PRINT;
-
-    // events
-
-    if (process->in_events) {
-      uint32_t num_events = process->in_events->size(process->in_events);
-      for (uint32_t i=0; i<num_events; i++) {
-        const clap_event* event = process->in_events->get(process->in_events,i);
-        if (event) {
-          switch (event->type) {
-
-            case CLAP_EVENT_PARAM_VALUE:
-              //handleParamValue(event);
-              {
-                uint32_t i = event->param_value.param_id;
-                float v = event->param_value.value;
-                if (i == 0) MParameterValue = (v*v);
-              }
-              break;
-
-            //case CLAP_EVENT_NOTE_ON:          handleNoteOn(event);          break;
-            //case CLAP_EVENT_NOTE_OFF:         handleNoteOff(event);         break;
-            //case CLAP_EVENT_NOTE_END:         handleNoteEnd(event);         break;
-            //case CLAP_EVENT_NOTE_CHOKE:       handleNoteChoke(event);       break;
-            //case CLAP_EVENT_NOTE_EXPRESSION:  handleNoteExpression(event);  break;
-            //case CLAP_EVENT_NOTE_MASK:        handleNoteMask(event);        break;
-            //case CLAP_EVENT_PARAM_MOD:        handleParamMod(event);        break;
-            //case CLAP_EVENT_TRANSPORT:        handleTransport(event);       break;
-            //case CLAP_EVENT_MIDI:             handleMidi(event);            break;
-            //case CLAP_EVENT_MIDI_SYSEX:       handleMidiSysex(event);       break;
-          }
-        }
-      }
-    }
-
-    // process
-
-    float* in0 = process->audio_inputs[0].data32[0];
-    float* in1 = process->audio_inputs[0].data32[1];
-    float* out0 = process->audio_outputs[0].data32[0];
-    float* out1 = process->audio_outputs[0].data32[1];
-    for (uint32_t i=0; i<process->frames_count; i++) {
-      *out0++ = *in0++ * MParameterValue;
-      *out1++ = *in1++ * MParameterValue;
-    }
-
-    return CLAP_PROCESS_CONTINUE;
-  }
-
-  //----------
-
-  // return NULL for extensions you don't suooprt/want
-
-  const void* get_extension(const char *id) {
-    MIP_Print("id: %s\n",id);
-
-    if (strcmp(id, CLAP_EXT_AUDIO_PORTS         ) == 0) return &MClapAudioPorts;
-    if (strcmp(id, CLAP_EXT_AUDIO_PORTS_CONFIG  ) == 0) return &MClapAudioPortsConfig;
-  //if (strcmp(id, CLAP_EXT_CHECK_FOR_UPDATE    ) == 0) return &MClapCheckForUpdate;
-    if (strcmp(id, CLAP_EXT_EVENT_FILTER        ) == 0) return &MClapEventFilter;
-    if (strcmp(id, CLAP_EXT_FD_SUPPORT          ) == 0) return &MClapFdSupport;
-    if (strcmp(id, CLAP_EXT_FILE_REFERENCE      ) == 0) return &MClapFileReference;
-    if (strcmp(id, CLAP_EXT_GUI                 ) == 0) return &MClapGui;
-    if (strcmp(id, CLAP_EXT_GUI_X11             ) == 0) return &MClapGuiX11;
-    if (strcmp(id, CLAP_EXT_LATENCY             ) == 0) return &MClapLatency;
-    if (strcmp(id, CLAP_EXT_MIDI_MAPPINGS       ) == 0) return &MClapMidiMappings;
-    if (strcmp(id, CLAP_EXT_NOTE_NAME           ) == 0) return &MClapNoteName;
-    if (strcmp(id, CLAP_EXT_NOTE_PORTS          ) == 0) return &MClapNotePorts;
-    if (strcmp(id, CLAP_EXT_PARAMS              ) == 0) return &MClapParams;
-    if (strcmp(id, CLAP_EXT_PRESET_LOAD         ) == 0) return &MClapPresetLoad;
-    if (strcmp(id, CLAP_EXT_QUICK_CONTROLS      ) == 0) return &MClapQuickControls;
-    if (strcmp(id, CLAP_EXT_RENDER              ) == 0) return &MClapRender;
-    if (strcmp(id, CLAP_EXT_STATE               ) == 0) return &MClapState;
-    if (strcmp(id, CLAP_EXT_TIMER_SUPPORT       ) == 0) return &MClapTimerSupport;
-    if (strcmp(id, CLAP_EXT_THREAD_POOL         ) == 0) return &MClapThreadPool;
-    if (strcmp(id, CLAP_EXT_TRACK_INFO          ) == 0) return &MClapTrackInfo;
-    if (strcmp(id, CLAP_EXT_VST2_CONVERT        ) == 0) return &MClapVst2Convert;
-    if (strcmp(id, CLAP_EXT_VST3_CONVERT        ) == 0) return &MClapVst3Convert;
-    return nullptr;
-  }
-
-  //----------
-
-  void on_main_thread() {
-    MIP_PRINT;
-  }
+  virtual bool init() { return true; }
+  virtual void destroy() {}
+  virtual bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) { return false; }
+  virtual void deactivate() {}
+  virtual bool start_processing() { return false; }
+  virtual void stop_processing() {}
+  virtual clap_process_status process(const clap_process *process) { return 0; }
+  virtual const void* get_extension(const char *id) { return nullptr; }
+  virtual void on_main_thread() {}
 
 //------------------------------
 public: // extensions
 //------------------------------
 
-  //------------------------------
   // audio ports
-  //------------------------------
+  virtual uint32_t audio_ports_count(bool is_input) { return 0; }
+  virtual bool audio_ports_get(uint32_t index, bool is_input, clap_audio_port_info *info) { return false; }
 
-  uint32_t audio_ports_count(bool is_input) {
-    MIP_PRINT;
-    if (is_input) return 1;
-    else return 1;
-  }
-
-  //----------
-
-  bool audio_ports_get(uint32_t index, bool is_input, clap_audio_port_info *info) {
-    MIP_PRINT;
-    if (is_input) {
-      info->id            = 0;
-      strncpy(info->name,"input",CLAP_NAME_SIZE-1);
-      info->channel_count = 2;
-      info->channel_map   = CLAP_CHMAP_STEREO;
-      info->sample_size   = 32;
-      info->is_main       = true;
-      info->is_cv         = false;
-      info->in_place      = true;
-      return true;
-    }
-    else { // output
-      info->id            = 0;
-      strncpy(info->name,"output",CLAP_NAME_SIZE-1);
-      info->channel_count = 2;
-      info->channel_map   = CLAP_CHMAP_STEREO;
-      info->sample_size   = 32;
-      info->is_main       = true;
-      info->is_cv         = false;
-      info->in_place      = true;
-      return true;
-    }
-    return false;
-  }
-
-  //------------------------------
   // audio ports config
-  //------------------------------
+  virtual uint32_t audio_ports_config_count() { return 0; }
+  virtual bool audio_ports_config_get(uint32_t index, clap_audio_ports_config *config) { return false; }
+  virtual bool audio_ports_config_select(clap_id config_id) { return false; }
 
-  uint32_t audio_ports_config_count() {
-    MIP_PRINT;
-    return 1;
-  }
-
-  //----------
-
-  bool audio_ports_config_get(uint32_t index, clap_audio_ports_config *config) {
-    MIP_PRINT;
-    switch(index) {
-      case 0:
-        config->id                    = 0;
-        strncpy(config->name,"port config 1",CLAP_NAME_SIZE-1);
-        config->input_channel_count   = 2;
-        config->input_channel_map     = CLAP_CHMAP_STEREO;
-        config->output_channel_count  = 2;
-        config->output_channel_map    = CLAP_CHMAP_STEREO;
-        return true;
-    }
-    return false;
-  }
-
-  //----------
-
-  bool audio_ports_config_select(clap_id config_id) {
-    MIP_PRINT;
-    if (config_id == 0) {
-      MSelectedPortConfig = config_id;
-    }
-    return true;
-  }
-
-  //------------------------------
   // check for update
-  //------------------------------
+  virtual void check_for_update_check(bool include_beta) {}
 
-  void check_for_update_check(bool include_beta) {
-    MIP_PRINT;
-  }
-
-  //------------------------------
   // event filter
-  //------------------------------
+  virtual bool event_filter_accepts(clap_event_type event_type) { return false; }
 
-  // return false for events you don't want
-
-  bool event_filter_accepts(clap_event_type event_type) {
-    MIP_PRINT;
-    switch (event_type) {
-      case CLAP_EVENT_NOTE_ON:          return true;
-      case CLAP_EVENT_NOTE_OFF:         return true;
-      case CLAP_EVENT_NOTE_END:         return true;
-      case CLAP_EVENT_NOTE_CHOKE:       return true;
-      case CLAP_EVENT_NOTE_EXPRESSION:  return true;
-      case CLAP_EVENT_NOTE_MASK:        return true;
-      case CLAP_EVENT_PARAM_VALUE:      return true;
-      case CLAP_EVENT_PARAM_MOD:        return true;
-      case CLAP_EVENT_TRANSPORT:        return true;
-      case CLAP_EVENT_MIDI:             return true;
-      case CLAP_EVENT_MIDI_SYSEX:       return true;
-    }
-    return false;
-  }
-
-  //------------------------------
   // fd support
-  //------------------------------
+  virtual void fd_support_on_fd(clap_fd fd, clap_fd_flags flags) {}
 
-  void fd_support_on_fd(clap_fd fd, clap_fd_flags flags) {
-    MIP_PRINT;
-  }
-
-  //------------------------------
   // file reference
-  //------------------------------
+  virtual uint32_t file_reference_count() { return 0; }
+  virtual bool file_reference_get(uint32_t index, clap_file_reference *file_reference) { return false; }
+  virtual bool file_reference_get_hash(clap_id resource_id, clap_hash hash, uint8_t* digest, uint32_t digest_size) { return false; }
+  virtual bool file_reference_update_path(clap_id resource_id, const char *path) { return false; }
+  virtual bool file_reference_save_resources() { return false; }
 
-  uint32_t file_reference_count() {
-    MIP_PRINT;
-    return 0;
-  }
-
-  //----------
-
-  bool file_reference_get(uint32_t index, clap_file_reference *file_reference) {
-    MIP_PRINT;
-    return false;
-  }
-
-  //----------
-
-  bool file_reference_get_hash(clap_id resource_id, clap_hash hash, uint8_t* digest, uint32_t digest_size) {
-    MIP_PRINT;
-    return false;
-  }
-
-  //----------
-
-  bool file_reference_update_path(clap_id resource_id, const char *path) {
-    MIP_PRINT;
-    return false;
-  }
-
-  //----------
-
-  bool file_reference_save_resources() {
-    MIP_PRINT;
-    return false;
-  }
-
-  //------------------------------
   // gui
-  //------------------------------
+  virtual bool gui_create() { return true; }
+  virtual void gui_destroy() {}
+  virtual void gui_set_scale(double scale) {}
+  virtual bool gui_get_size(uint32_t* width, uint32_t* height) { return false; }
+  virtual bool gui_can_resize() { return false; }
+  virtual void gui_round_size(uint32_t* width, uint32_t* height) {}
+  virtual bool gui_set_size(uint32_t width, uint32_t height) { return false; }
+  virtual void gui_show() {}
+  virtual void gui_hide() {}
 
-  bool gui_create() {
-    MIP_PRINT;
-    MWindow = new X11_Window();
-    return true;
-  }
-
-  //----------
-
-  void gui_destroy() {
-    MIP_PRINT;
-    delete MWindow;
-  }
-
-  //----------
-
-  void gui_set_scale(double scale) {
-    MIP_PRINT;
-    MWindow->set_scale(scale);
-  }
-
-  //----------
-
-  bool gui_get_size(uint32_t* width, uint32_t* height) {
-    MIP_PRINT;
-    *width = MWindow->get_width();
-    *width = MWindow->get_height();
-    return true;
-  }
-
-  //----------
-
-  bool gui_can_resize() {
-    MIP_PRINT;
-    return false;
-  }
-
-  //----------
-
-  void gui_round_size(uint32_t* width, uint32_t* height) {
-    MIP_PRINT;
-    *width = MWindow->get_width();
-    *width = MWindow->get_height();
-  }
-
-  //----------
-
-  bool gui_set_size(uint32_t width, uint32_t height) {
-    MIP_PRINT;
-    MWindow->set_width(width);
-    MWindow->set_height(height);
-    return true;
-  }
-
-  //----------
-
-  void gui_show() {
-    MIP_PRINT;
-    MWindow->show();
-  }
-
-  //----------
-
-  void gui_hide() {
-    MIP_PRINT;
-    MWindow->hide();
-  }
-
-  //------------------------------
   // gui x11
-  //------------------------------
+  virtual bool gui_x11_attach(const char* display_name, unsigned long window) { return false; }
 
-  bool gui_x11_attach(const char* display_name, unsigned long window) {
-    MIP_PRINT;
-    return MWindow->attach(display_name,window);
-  }
-
-  //------------------------------
   // latency
-  //------------------------------
+  virtual uint32_t latency_get() { return 0; }
 
-  uint32_t latency_get() {
-    MIP_PRINT;
-    return 0;
-  }
-
-  //------------------------------
   // midi mappings
-  //------------------------------
+  virtual uint32_t midi_mappings_count() { return 0; }
+  virtual bool midi_mappings_get(uint32_t index, clap_midi_mapping* mapping) { return false; }
 
-  uint32_t midi_mappings_count() {
-    MIP_PRINT;
-    return 0;
-  }
-
-  //----------
-
-  bool midi_mappings_get(uint32_t index, clap_midi_mapping* mapping) {
-    MIP_PRINT;
-    //mapping->channel  =
-    //mapping->number   =
-    //mapping->param_id =
-    return false;
-  }
-
-  //------------------------------
   // note name
-  //------------------------------
+  virtual uint32_t note_name_count() { return 0; }
+  virtual bool note_name_get(uint32_t index, clap_note_name* note_name) { return false; }
 
-  uint32_t note_name_count() {
-    MIP_PRINT;
-    return 0;
-  }
-
-  //----------
-
-  bool note_name_get(uint32_t index, clap_note_name* note_name) {
-    MIP_PRINT;
-    //strncpy(note_name->name,"note",CLAP_NAME_SIZE-1);
-    //note_name->port     =
-    //ote_name->key      =
-    //note_name->channel  =
-    return false;
-  }
-
-  //------------------------------
   // note-ports
-  //------------------------------
+  virtual uint32_t note_ports_count(bool is_input) { return 0; }
+  virtual bool note_ports_get(uint32_t index, bool is_input, clap_note_port_info* info) { return false; }
 
-  uint32_t note_ports_count(bool is_input) {
-    MIP_PRINT;
-    return 0;
-  }
-
-  //----------
-
-  bool note_ports_get(uint32_t index, bool is_input, clap_note_port_info* info) {
-    MIP_PRINT;
-    //info->id = 0;
-    //strncpy(info->name,"port",CLAP_NAME_SIZE-1);
-    return false;
-  }
-
-  //------------------------------
   // params
-  //------------------------------
+  virtual uint32_t params_count() { return 1; }
+  virtual bool params_get_info(int32_t param_index, clap_param_info *param_info) { return false; }
+  virtual bool params_get_value(clap_id param_id, double* value) { return false; }
+  virtual bool params_value_to_text(clap_id param_id, double value, char* display, uint32_t size) { return false; }
+  virtual bool params_text_to_value(clap_id param_id, const char* display, double* value) { return false; }
+  virtual void params_flush(const clap_event_list *input_parameter_changes, const clap_event_list *output_parameter_changes) {}
 
-  uint32_t params_count() {
-    MIP_PRINT;
-    return 1;
-  }
-
-  //----------
-
-  bool params_get_info(int32_t param_index, clap_param_info *param_info) {
-    MIP_PRINT;
-    if (param_index == 0) {
-      param_info->id            = param_index;
-      param_info->flags         = 0; // CLAP_PARAM_IS_HIDDEN, CLAP_PARAM_IS_READONLY, CLAP_PARAM_IS_MODULATABLE, CLAP_PARAM_IS_STEPPED, ..
-      param_info->cookie        = nullptr;
-      strncpy(param_info->name,"parameter",CLAP_NAME_SIZE-1);
-      strncpy(param_info->module,"",CLAP_MODULE_SIZE-1);
-      param_info->min_value     = 0.0;
-      param_info->max_value     = 1.0;
-      param_info->default_value = 0.5;
-      return true;
-    }
-    return false;
-  }
-
-  //----------
-
-  bool params_get_value(clap_id param_id, double* value) {
-    MIP_PRINT;
-    *value = MParameterValue;;
-    return true;
-  }
-
-  //----------
-
-  bool params_value_to_text(clap_id param_id, double value, char* display, uint32_t size) {
-    MIP_PRINT;
-    strncpy(display,"0.0 %",CLAP_NAME_SIZE-1);
-    return false;
-  }
-
-  //----------
-
-  bool params_text_to_value(clap_id param_id, const char* display, double* value) {
-    MIP_PRINT;
-    float f = atof(display);
-    *value = f;
-    return true;
-  }
-
-  //----------
-
-  void params_flush(const clap_event_list *input_parameter_changes, const clap_event_list *output_parameter_changes) {
-    MIP_PRINT;
-  }
-
-  //------------------------------
   // preset load
-  //------------------------------
+  virtual bool preset_load_from_file(const char *path) { return false; }
 
-  bool preset_load_from_file(const char *path) {
-    MIP_PRINT;
-    return false;
-  }
-
-  //------------------------------
   // quick controls
-  //------------------------------
+  virtual uint32_t quick_controls_count() { return 0; }
+  virtual bool quick_controls_get(uint32_t page_index, clap_quick_controls_page *page) { return false; }
+  virtual void quick_controls_select(clap_id page_id) {}
+  virtual clap_id quick_controls_get_selected() { return 0; }
 
-  uint32_t quick_controls_count() {
-    MIP_PRINT;
-    return 0;
-  }
-
-  //----------
-
-//typedef struct clap_quick_controls_page {
-//   clap_id id;
-//   char    name[CLAP_NAME_SIZE];
-//   char    keywords[CLAP_KEYWORDS_SIZE];
-//   clap_id param_ids[CLAP_QUICK_CONTROLS_COUNT];
-//} clap_quick_controls_page;
-
-  bool quick_controls_get(uint32_t page_index, clap_quick_controls_page *page) {
-    MIP_PRINT;
-    return false;
-  }
-
-  //----------
-
-  void quick_controls_select(clap_id page_id) {
-    MIP_PRINT;
-  }
-
-  //----------
-
-  clap_id quick_controls_get_selected() {
-    MIP_PRINT;
-    return 0;
-  }
-
-  //------------------------------
   // render
-  //------------------------------
+  virtual void render_set(clap_plugin_render_mode mode) {}
 
-  //CLAP_RENDER_REALTIME
-  //CLAP_RENDER_OFFLINE
-
-  void render_set(clap_plugin_render_mode mode) {
-    MIP_PRINT;
-  }
-
-  //------------------------------
   // state
-  //------------------------------
+  virtual bool state_save(clap_ostream *stream) { return true; }
+  virtual bool state_load(clap_istream *stream) { return true; }
 
-  //typedef struct clap_ostream {
-  //   void *ctx;
-  //   int64_t (*write)(struct clap_ostream *stream, const void *buffer, uint64_t size);
-  //} clap_ostream
-
-  bool state_save(clap_ostream *stream) {
-    MIP_PRINT;
-    return true;
-  }
-
-  //----------
-
-  //typedef struct clap_istream {
-  //  void *ctx;
-  //  int64_t (*read)(struct clap_istream *stream, void *buffer, uint64_t size);
-  //} clap_istream;
-
-  bool state_load(clap_istream *stream) {
-    MIP_PRINT;
-    return true;
-  }
-
-  //------------------------------
   // thread pool
-  //------------------------------
+  virtual void thread_pool_exec(uint32_t task_index) {}
 
-  void thread_pool_exec(uint32_t task_index) {
-    MIP_PRINT;
-  }
-
-  //------------------------------
   // timer support
-  //------------------------------
+  virtual void timer_support_on_timer(clap_id timer_id) {}
 
-  void timer_support_on_timer(clap_id timer_id) {
-    MIP_PRINT;
-  }
-
-  //------------------------------
   // track info
-  //------------------------------
+  virtual void track_info_changed() {}
 
-  void track_info_changed() {
-    MIP_PRINT;
-  }
-
-  //------------------------------
   // vst2 convert
-  //------------------------------
+  virtual int32_t vst2_convert_get_vst2_plugin_id(uint32_t* vst2_plugin_id, char* name, uint32_t name_size) { return 0; }
+  virtual bool vst2_convert_restore_vst2_state(clap_istream *stream) { return false; }
+  virtual bool vst2_convert_convert_normalized_value(uint32_t vst2_param_id, double vst2_normalized_value, clap_id* clap_param_id, double* clap_plain_value) { return false; }
+  virtual bool vst2_convert_convert_plain_value(uint32_t vst2_param_id, double vst2_plain_value, clap_id* clap_param_id, double* clap_plain_value) { return false; }
 
-  int32_t vst2_convert_get_vst2_plugin_id(uint32_t* vst2_plugin_id, char* name, uint32_t name_size) {
-    MIP_PRINT;
-    return 0;
-  }
-
-  //----------
-
-  bool vst2_convert_restore_vst2_state(clap_istream *stream) {
-    MIP_PRINT;
-    return false;
-  }
-
-  //----------
-
-  bool vst2_convert_convert_normalized_value(uint32_t vst2_param_id, double vst2_normalized_value, clap_id* clap_param_id, double* clap_plain_value) {
-    MIP_PRINT;
-    return false;
-  }
-
-  //----------
-
-  bool vst2_convert_convert_plain_value(uint32_t vst2_param_id, double vst2_plain_value, clap_id* clap_param_id, double* clap_plain_value) {
-    MIP_PRINT;
-    return false;
-  }
-
-  //------------------------------
   // vst3 convert
-  //------------------------------
-
-  void vst3_convert_get_vst3_plugin_id(const clap_plugin *plugin, uint8_t *vst3_plugin_uuid) {
-    MIP_PRINT;
-  }
-
-  //----------
-
-  bool vst3_convert_restore_vst3_state(const clap_plugin *plugin, clap_istream *stream) {
-    MIP_PRINT;
-    return false;
-  }
-
-  //----------
-
-  bool vst3_convert_convert_normalized_value(const clap_plugin *plugin, uint32_t vst3_param_id, double vst3_normalized_value, clap_id* clap_param_id, double* clap_plain_value) {
-    MIP_PRINT;
-    return false;
-  }
-
-  //----------
-
-  bool vst3_convert_convert_plain_value(const clap_plugin *plugin, uint32_t vst3_param_id, double vst3_plain_value, clap_id* clap_param_id, double* clap_plain_value) {
-    MIP_PRINT;
-    return false;
-  }
+  virtual void vst3_convert_get_vst3_plugin_id(const clap_plugin *plugin, uint8_t *vst3_plugin_uuid) {}
+  virtual bool vst3_convert_restore_vst3_state(const clap_plugin *plugin, clap_istream *stream) { return false; }
+  virtual bool vst3_convert_convert_normalized_value(const clap_plugin *plugin, uint32_t vst3_param_id, double vst3_normalized_value, clap_id* clap_param_id, double* clap_plain_value) { return false; }
+  virtual bool vst3_convert_convert_plain_value(const clap_plugin *plugin, uint32_t vst3_param_id, double vst3_plain_value, clap_id* clap_param_id, double* clap_plain_value) { return false; }
 
 //------------------------------
 private: // callbacks
@@ -828,7 +289,7 @@ private: // callbacks
   }
 
 //------------------------------
-private: // extension callbacks
+protected: // extension callbacks
 //------------------------------
 
   // clap.audio-ports-config
@@ -1277,160 +738,4 @@ private: // extension callbacks
 };
 
 //----------------------------------------------------------------------
-//
-// clap_host
-//
-//----------------------------------------------------------------------
-
-//...
-
-
-//----------------------------------------------------------------------
-//
-// clap_plugin_entry
-//
-//----------------------------------------------------------------------
-
-class CLAP_PluginEntry {
-
-//------------------------------
-private:
-//------------------------------
-
-  clap_plugin_descriptor  MDescriptor = {
-    CLAP_VERSION,
-    "CLAP_Plugin",              // id
-    "CLAP_Plugin",              // name
-    "Tor-Helge Skei",           // vendor
-    "https://torhelgeskei.com", // url
-    "manual_url",               // manual url
-    "support_url",              // support url
-    "0.0.1",                    // version
-    "clap test plugin",         // description
-    "clap;test;plugin",         // keywords
-    CLAP_PLUGIN_AUDIO_EFFECT
-  };
-
-//------------------------------
-public:
-//------------------------------
-
-  CLAP_PluginEntry() {
-  }
-
-  virtual ~CLAP_PluginEntry() {
-  }
-
-//------------------------------
-public: // your plugin
-//------------------------------
-
-  bool init(const char *plugin_path) {
-    MIP_PRINT;
-    return true;
-  }
-
-  void deinit(void) {
-    MIP_PRINT;
-  }
-
-  uint32_t get_plugin_count(void) {
-    MIP_PRINT;
-    return 1;
-  }
-
-  const clap_plugin_descriptor* get_plugin_descriptor(uint32_t index) {
-    MIP_PRINT;
-    return &MDescriptor;
-  }
-
-  const clap_plugin* create_plugin(const clap_host *host, const char *plugin_id) {
-    MIP_PRINT;
-    CLAP_Plugin* plugin = new CLAP_Plugin(&MDescriptor,host);
-    return plugin->getClapPlugin();
-  }
-
-  uint32_t get_invalidation_source_count(void) {
-    MIP_PRINT;
-    return 0;
-  }
-
-  const clap_plugin_invalidation_source* get_invalidation_source(uint32_t index) {
-    MIP_PRINT;
-    return nullptr;
-  }
-
-  void refresh(void) {
-    MIP_PRINT;
-  }
-
-};
-
-//----------------------------------------------------------------------
-
-// our plugin entry
-
-CLAP_PluginEntry GLOBAL_CLAP_PLUGIN_ENTRY_STRUCT;
-
-//----------------------------------------------------------------------
-
-// clap callbacks
-// trampoline into our entry class
-
-static
-bool clap_plugin_entry_init_callback(const char *plugin_path) {
-  return GLOBAL_CLAP_PLUGIN_ENTRY_STRUCT.init(plugin_path);
-}
-
-static
-void clap_plugin_entry_deinit_callback(void) {
-  GLOBAL_CLAP_PLUGIN_ENTRY_STRUCT.deinit();
-}
-
-static
-uint32_t clap_plugin_entry_get_plugin_count_callback(void) {
-  return GLOBAL_CLAP_PLUGIN_ENTRY_STRUCT.get_plugin_count();
-}
-
-static
-const clap_plugin_descriptor *clap_plugin_entry_get_plugin_descriptor_callback(uint32_t index) {
-  return GLOBAL_CLAP_PLUGIN_ENTRY_STRUCT.get_plugin_descriptor(index);
-}
-
-static
-const clap_plugin *clap_plugin_entry_create_plugin_callback(const clap_host *host, const char *plugin_id) {
-  return GLOBAL_CLAP_PLUGIN_ENTRY_STRUCT.create_plugin(host,plugin_id);
-}
-
-static
-uint32_t clap_plugin_entry_get_invalidation_source_count_callback(void) {
-  return GLOBAL_CLAP_PLUGIN_ENTRY_STRUCT.get_invalidation_source_count();
-}
-
-static
-const clap_plugin_invalidation_source *clap_plugin_entry_get_invalidation_source_callback(uint32_t index) {
-  return GLOBAL_CLAP_PLUGIN_ENTRY_STRUCT.get_invalidation_source(index);
-}
-
-static
-void clap_plugin_entry_refresh_callback(void) {
-  GLOBAL_CLAP_PLUGIN_ENTRY_STRUCT.refresh();
-}
-
-//----------------------------------------------------------------------
-
-// exported struct
-
-//__MIP_EXPORT
-__attribute__((visibility("default")))
-struct clap_plugin_entry ENTRY_STRUCT asm("clap_plugin_entry") = {
-  CLAP_VERSION,
-  clap_plugin_entry_init_callback,
-  clap_plugin_entry_deinit_callback,
-  clap_plugin_entry_get_plugin_count_callback,
-  clap_plugin_entry_get_plugin_descriptor_callback,
-  clap_plugin_entry_create_plugin_callback,
-  clap_plugin_entry_get_invalidation_source_count_callback,
-  clap_plugin_entry_get_invalidation_source_callback,
-  clap_plugin_entry_refresh_callback
-};
+#endif

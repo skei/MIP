@@ -527,8 +527,8 @@
 1639255375 /DISKS/sda2/code/git/mip/src/base/mip_utils.h
 	"mip.h"
 
-1639932905 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../plugins/clap/clap_host.cpp"
+1639937615 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../plugins/clap/clap_plugin.cpp"
 
 1639854816 /DISKS/sda2/code/git/MIP/src/mip.h
 	<stdlib.h>
@@ -1148,4 +1148,21 @@
 	"x11_window.h"
 
 1639876713 /DISKS/sda2/code/git/MIP/plugins/clap/x11_window.h
+
+1639937572 /DISKS/sda2/code/git/MIP/plugins/clap/clap_plugin.cpp
+	"mip.h"
+	"CLAP_plugin_entry.h"
+	"CLAP_plugin.h"
+
+1639937503 /DISKS/sda2/code/git/MIP/plugins/clap/CLAP_plugin_entry.h
+	"extern/clap/all.h"
+	"extern/clap/ext/draft/check-for-update.h"
+	"extern/clap/ext/draft/midi-mappings.h"
+	"x11_window.h"
+
+1639936970 /DISKS/sda2/code/git/MIP/plugins/clap/CLAP_plugin.h
+	"extern/clap/all.h"
+	"extern/clap/ext/draft/check-for-update.h"
+	"extern/clap/ext/draft/midi-mappings.h"
+	"x11_window.h"
 
