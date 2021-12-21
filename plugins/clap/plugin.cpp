@@ -3,6 +3,7 @@
 #define MIP_DEBUG_PRINT_SOCKET
 #define MIP_NO_PLUGIN
 #define MIP_NO_GUI
+#define MIP_USE_XCB
 #include "mip.h"
 
 #include "CLAP_plugin_entry.h"

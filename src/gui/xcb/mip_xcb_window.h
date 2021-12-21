@@ -25,8 +25,8 @@
 #endif
 
 
-//#include "gui/mip_drawable.h"
-//#include "gui/base/mip_base_window.h"
+#include "gui/mip_drawable.h"
+#include "gui/base/mip_base_window.h"
 //#include "gui/xcb/mip_xcb.h"
 //#include "gui/xcb/mip_xcb_utils.h"
 

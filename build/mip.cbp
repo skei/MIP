@@ -141,6 +141,7 @@
 		<Unit filename="../plugins/clap/CLAP_host_proxy.h" />
 		<Unit filename="../plugins/clap/CLAP_plugin.h" />
 		<Unit filename="../plugins/clap/CLAP_plugin_entry.h" />
+		<Unit filename="../plugins/clap/editor.h" />
 		<Unit filename="../plugins/clap/host.cpp">
 			<Option compile="0" />
 			<Option link="0" />
@@ -154,7 +155,6 @@
 			<Option link="0" />
 		</Unit>
 		<Unit filename="../plugins/clap/voices.h" />
-		<Unit filename="../plugins/clap/x11_window.h" />
 		<Unit filename="../plugins/compile.sh" />
 		<Unit filename="../plugins/templates/simple.h" />
 		<Unit filename="../plugins/templates/simple_synth.h" />
