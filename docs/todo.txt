@@ -1,0 +1,77 @@
+
+
+----------------------------------------------------------------------
+GUI
+----------------------------------------------------------------------
+
+* single widget, multiple parameters
+
+  - at the same time
+    (xy pad, slider bank, range slider)
+  - switchable
+    modes, different painting,
+
+* single parameter, multiple widgets ??
+
+* restrict/control redrawing while resizing (?)
+
+* draggable widgets (reorder effects, processes)
+* resizable widgets
+* container widget
+* layout widget
+* scale widget
+* multiple snap points
+* stepped drawing
+* modulation
+
+--------------------
+opengl (glx/wgl)
+--------------------
+
+* meshes (screen-facing quads)
+* textures (bitmaps)
+* shaders
+* (sdf)
+* investigate compute shaders
+
+--------------------
+wgl
+--------------------
+
+* error checking (version, etc)
+* disable vsync
+
+--------------------
+win32
+--------------------
+
+* paint to buffer/bitmap (dib?)
+
+--------------------
+xcb
+--------------------
+
+* xrender
+  antialiasing, blending, stretching
+  (path rasterization?)
+  (parallellograms vs triangles)
+
+* xft
+  (+xrender)
+  fonts, freetype
+
+----------------------------------------------------------------------
+PLUGIN
+----------------------------------------------------------------------
+
+* abstractions (simplifications, streamlining, house-keeping, ..)
+  - state, (editor state)
+  - thread-pool ? (layers, voices, parts, ..)
+
+--------------------
+clap
+--------------------
+
+- proportional gui scaling, aspect ratio
+- spacebar
+
