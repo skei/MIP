@@ -613,6 +613,7 @@
 		<Unit filename="../../include/gui/widgets/mip_button_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_color_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_drag_value_widget.h" />
+		<Unit filename="../../include/gui/widgets/mip_knob_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_panel_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_slider_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_test_widget.h" />
@@ -627,7 +628,10 @@
 		<Unit filename="../../include/gui/xcb/mip_xcb_window.h" />
 		<Unit filename="../../include/gui/xlib/mip_xlib.h" />
 		<Unit filename="../../include/gui/xlib/mip_xlib_utils.h" />
+		<Unit filename="../../include/midi/mip_midi.h" />
+		<Unit filename="../../include/midi/mip_midi_file.h" />
 		<Unit filename="../../include/midi/mip_midi_io.h" />
+		<Unit filename="../../include/midi/mip_midi_player.h" />
 		<Unit filename="../../include/midi/mip_midi_utils.h" />
 		<Unit filename="../../include/plugin/clap/mip_clap.h" />
 		<Unit filename="../../include/plugin/clap/mip_clap_entry.h" />

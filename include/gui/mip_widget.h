@@ -25,6 +25,8 @@
 #include "gui/base/mip_base_window.h"
 #include "gui/mip_paint_context.h"
 
+#include "plugin/mip_parameter.h"
+
 //----------------------------------------------------------------------
 //
 //
@@ -44,7 +46,7 @@ public:
   virtual void do_widget_set_key_capture(MIP_Widget* AWidget, uint32_t AMode) {}
   virtual void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode) {}
   virtual void do_widget_set_hint(MIP_Widget* AWidget, const char* AHint) {}
-  virtual void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) {}
+  //virtual void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) {}
 };
 
 //----------------------------------------------------------------------
@@ -68,6 +70,15 @@ private:
   MIP_DRect           MRect         = {};
   MIP_DRect           MBaseRect     = {};
 
+  MIP_Parameter*      MParameter    = nullptr;
+
+//------------------------------
+protected:
+//------------------------------
+
+  double              MValue        = 0.0;
+  double              MModulation   = 0.0;
+
 //------------------------------
 public:
 //------------------------------
@@ -89,7 +100,8 @@ public:
 public:
 //------------------------------
 
-  //virtual MIP_Widget*     getParent()           { return MParent; }
+//virtual MIP_Widget*     getParent()           { return MParent; }
+
   virtual MIP_BaseWindow* getOwnerWindow()      { return MOwnerWindow; }
   virtual int32_t         getIndex()            { return MIndex; }
   virtual MIP_DRect       getRect()             { return MRect; }
@@ -97,6 +109,15 @@ public:
   virtual double          getHeight()           { return MRect.h; }
 
   virtual void setListener(MIP_WidgetListener* AListener) { MListener = AListener; }
+
+  virtual void            setParameter(MIP_Parameter* AParameter) { MParameter = AParameter; }
+  virtual MIP_Parameter*  getParameter()                          { return MParameter; }
+
+  virtual void            setValue(double AValue) { MValue = AValue; }
+  virtual double          getValue()              { return MValue; }
+
+  virtual void            setModulation(double AValue) { MModulation = AValue; }
+  virtual double          getModulation()              { return MModulation; }
 
 //------------------------------
 public:
@@ -142,6 +163,12 @@ public:
         MChildren[i]->close(AOwnerWindow,ARecursive);
       }
     }
+  }
+
+  //----------
+
+  virtual void redraw() {
+    if (MListener) MListener->do_widget_redraw(this);
   }
 
 //------------------------------
@@ -318,9 +345,9 @@ public:
     if (MListener) MListener->do_widget_set_hint(AWidget,AHint);
   }
 
-  void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) override {
-    if (MListener) MListener->do_widget_set_timer(AWidget,ATime);
-  }
+//  void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) override {
+//    if (MListener) MListener->do_widget_set_timer(AWidget,ATime);
+//  }
 
 };
 

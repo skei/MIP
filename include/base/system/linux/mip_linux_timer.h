@@ -21,7 +21,7 @@ class MIP_Timer;
 
 class MIP_TimerListener {
   public:
-    virtual void on_timerCallback(MIP_Timer* ATimer) {}
+    virtual void on_timer_callback(MIP_Timer* ATimer) {}
 };
 
 //----------------------------------------------------------------------
@@ -169,7 +169,7 @@ public:
   //----------
 
   void on_timer() {
-    if (MListener) MListener->on_timerCallback(this);
+    if (MListener) MListener->on_timer_callback(this);
   }
 
 };

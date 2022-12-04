@@ -61,6 +61,12 @@ public:
 public:
 //------------------------------
 
+  _T& getItem(const uint32_t AIndex) {
+    return MBuffer[AIndex];
+  }
+
+  //----------
+
   _T& operator [] (const uint32_t AIndex) {
     return MBuffer[AIndex];
   }

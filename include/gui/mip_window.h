@@ -142,9 +142,7 @@ public:
 
   void open() override {
     MIP_ImplementedWindow::open();
-    #ifdef MIP_GUI_IDLE_TIMER
-      startTimer(MIP_GUI_IDLE_TIMER_MS,MIP_GUI_IDLE_TIMER_ID);
-    #endif
+    //startTimer(MIP_GUI_TIMER_MS,MIP_GUI_TIMER_ID);
     if (MRootWidget) MRootWidget->open(this);
   }
 
@@ -152,9 +150,7 @@ public:
 
   void close() override {
     if (MRootWidget) MRootWidget->close(this);  // crash...
-    #ifdef MIP_GUI_IDLE_TIMER
-      stopTimer(MIP_GUI_IDLE_TIMER_ID);
-    #endif
+    //stopTimer(MIP_GUI_TIMER_ID);
     MIP_ImplementedWindow::close();
   }
 
@@ -308,8 +304,8 @@ public: // widget listener
   void do_widget_set_hint(MIP_Widget* AWidget, const char* AHint) override {
   }
 
-  void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) override {
-  }
+  //void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) override {
+  //}
 
 //------------------------------
 private:

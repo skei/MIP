@@ -21,7 +21,7 @@ protected:
   bool        MDrawValue      = true;
   double      MValueSize      = 14.0;
   MIP_Color   MValueColor     = MIP_COLOR_RED;//LIGHT_GRAY;
-  double      MValue          = 0.0;
+  //double      MValue          = 0.0;
   uint32_t    MValueAlignment = MIP_TEXT_ALIGN_RIGHT;
   MIP_DRect   MValueOffset    = MIP_DRect(0,0,5,0);
 
@@ -50,7 +50,7 @@ public:
   virtual void setDrawValue(bool ADraw=true)           { MDrawValue = ADraw; }
   virtual void setValueSize(double ASize)              { MValueSize = ASize; }
   virtual void setValueColor(MIP_Color AColor)         { MValueColor = AColor; }
-  virtual void setValue(double AValue)                 { MValue = AValue; }
+  //virtual void setValue(double AValue)                 { MValue = AValue; }
   virtual void setValueAlignment(uint32_t AAlignment)  { MValueAlignment = AAlignment; }
   virtual void setValueOffset(MIP_DRect AOffset)       { MValueOffset = AOffset; }
 

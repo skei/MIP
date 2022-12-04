@@ -3,6 +3,7 @@
 //----------------------------------------------------------------------
 
 #include "base/mip.h"
+#include "base/system/mip_timer.h"
 #include "plugin/mip_parameter.h"
 #include "plugin/mip_audio_port.h"
 #include "plugin/mip_note_port.h"
@@ -24,7 +25,7 @@
 
 class MIP_Plugin
 : public MIP_ClapPlugin
-//, public MIP_TimerListener
+, public MIP_TimerListener
 , public MIP_EditorListener {
 
   //friend class MIP_ExeWindow;
@@ -46,7 +47,8 @@ protected:
   MIP_NotePortArray     MNoteInputPorts           = {};
   MIP_NotePortArray     MNoteOutputPorts          = {};
   MIP_Editor            MEditor                   = {};
-//MIP_Timer             MGuiTimer                 = MIP_Timer(this);
+
+  MIP_Timer             MGuiTimer                 = MIP_Timer(this);
 
   // write values before indexes
   // read indexes before values
@@ -345,12 +347,16 @@ public: // ext gui
   //----------
 
   bool gui_create(const char *api, bool is_floating) override {
+    MIsEditorOpen = false;
+    MEditor.setListener(this);
+    MEditor.setParameters(&MParameters);
     return MEditor.create(api,is_floating);
   }
 
   //----------
 
   void gui_destroy() override {
+    MIsEditorOpen = false;
     MEditor.destroy();
   }
 
@@ -411,12 +417,27 @@ public: // ext gui
   //----------
 
   bool gui_show() override {
-    return MEditor.show();
+    updateEditorParameterValues();
+    bool result = MEditor.show();
+    if (result) {
+      #ifdef MIP_LINUX
+        MGuiTimer.start(MIP_GUI_TIMER_MS);
+      #endif
+      #ifdef MIP_WIN32
+        MIP_Win32Window* window = MEditor.getWindow();
+        HWND hwnd = window->getHandle();
+        MGuiTimer.start(MIP_GUI_TIMER_MS,hwnd);
+      #endif
+      MIsEditorOpen = true;
+    }
+    return result;
   }
 
   //----------
 
   bool gui_hide() override {
+    MGuiTimer.stop();
+    MIsEditorOpen = false;
     return MEditor.hide();
   }
 
@@ -732,6 +753,7 @@ private: // editor listener
 //------------------------------
 
   void on_editor_parameter_change(uint32_t AIndex, double AValue) override {
+    //MIP_Print("%i = %f\n",AIndex,AValue);
     queueHostParam(AIndex,AValue);
     queueProcessParam(AIndex,AValue);
   }
@@ -777,6 +799,16 @@ public: // timer listener
 //      }
 //    }
 //  }
+
+  void on_timer_callback(MIP_Timer* ATimer) {
+    //MIP_PRINT;
+    if (ATimer == &MGuiTimer) {
+      flushGuiParams();
+      flushGuiMods();
+    }
+    //MIP_PRINT;
+  }
+
 
   #endif
 
@@ -1143,7 +1175,7 @@ public: // queues
     while (MGuiParamQueue.read(&index)) {
       MQueuedGuiParamValues.read(&value);
       //double value = MParameters[index]->getValue();
-      //MIP_Print("%i = %.3f\n",index,value);
+//      MIP_Print("%i = %.3f\n",index,value);
       MEditor.updateParameter(index,value);
     }
   }
@@ -1168,7 +1200,7 @@ public: // queues
     while (MGuiModQueue.read(&index)) {
       MQueuedGuiModValues.read(&value);
       //double value = MParameters[index]->getValue();
-      //MIP_Print("%i = %.3f\n",index,value);
+      MIP_Print("%i = %.3f\n",index,value);
       //MEditor->updateParameter(index,value);
     //  double current_value = MParameters[index]->getModulation();
     //  if (value != current_value) {
@@ -1294,7 +1326,7 @@ public: // process events
     double value = event->value;
     setParameterValue(index,value);
     #ifndef MIP_NO_GUI
-    queueGuiParam(index,value);
+    if (MIsEditorOpen) queueGuiParam(index,value);
     #endif
     processParamValue(event);
   }
@@ -1307,7 +1339,7 @@ public: // process events
     double value = event->amount;
     setParameterModulation(index,value);
     #ifndef MIP_NO_GUI
-    queueGuiMod(index,value);
+    if (MIsEditorOpen) queueGuiMod(index,value);
     #endif
     processParamMod(event);
   }

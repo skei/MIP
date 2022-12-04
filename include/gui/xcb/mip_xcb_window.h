@@ -392,7 +392,7 @@ private:
 public:
 //------------------------------
 
-  void on_timerCallback(MIP_Timer* ATimer) override {
+  void on_timer_callback(MIP_Timer* ATimer) override {
     if (ATimer == MGuiTimer) {
       //MIP_PRINT;
       on_window_timer();

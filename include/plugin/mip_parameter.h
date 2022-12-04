@@ -5,6 +5,9 @@
 #include "base/mip.h"
 #include "plugin/clap/mip_clap.h"
 
+//----------
+
+class MIP_Widget;
 class MIP_Parameter;
 typedef MIP_Array<MIP_Parameter*> MIP_ParameterArray;
 
@@ -31,6 +34,7 @@ protected:
     /*.default_value  =*/ 0.0
   };
 
+  MIP_Widget*       MWidget           = nullptr;
   int32_t           MIndex            = -1;
   double            MValue            = 0.0;
   double            MModulation       = 0.0;
@@ -44,6 +48,7 @@ protected:
   double            MModulationFactor = 0.0;
 
   char              MValueText[256]   = {0};
+
 
 //------------------------------
 public:
@@ -64,6 +69,7 @@ public:
 public:
 //------------------------------
 
+  virtual void        setWidget(MIP_Widget* AWidget)      { MWidget = AWidget; }
   virtual void        setIndex(int32_t AIndex)            { MIndex = AIndex; }
 
   virtual void        setValue(double AValue)             { MValue = AValue; }
@@ -88,6 +94,7 @@ public:
 public:
 //------------------------------
 
+  virtual MIP_Widget* getWidget()           { return MWidget; }
   virtual int32_t     getIndex()            { return MIndex; }
   virtual double      getValue()            { return MValue; }
   virtual double      getValueSmoothed()    { return MValueSmoothed; }

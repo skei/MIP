@@ -52,6 +52,7 @@
 //----------------------------------------------------------------------
 
 class MIP_EditorListener {
+public:
   virtual void on_editor_parameter_change(uint32_t AIndex, double AValue) {}
   virtual void on_editor_editor_resize() {}
   //virtual void on_editor_gesture_begin() {}
@@ -86,6 +87,9 @@ private:
   uint32_t            MInitialWidth   = 0;
   uint32_t            MInitialHeight  = 0;
   double              MAspectRatio    = 0.0;
+
+  MIP_ParameterArray* MParameters     = nullptr;
+
 
 
 //------------------------------
@@ -161,21 +165,48 @@ public:
     }
   }
 
+  //----------
+
+  virtual void connect(MIP_Widget* AWidget, MIP_Parameter* AParameter) {
+    AWidget->setParameter(AParameter);
+    AParameter->setWidget(AWidget);
+  }
+
+  virtual void setParameters(MIP_ParameterArray* AParameters) {
+    MParameters = AParameters;
+  }
+
 
 //------------------------------
 public:
 //------------------------------
 
+  // called by plugin
+
   virtual void updateParameter(uint32_t AIndex, double AValue, bool ARedraw=true) {
-    // update connected widget value
-    // redraw connected widget (param)
+    MIP_Parameter* parameter = MParameters->getItem(AIndex);
+    if (parameter) {
+      MIP_Widget* widget = parameter->getWidget();
+      if (widget) {
+        // [de-]normalize value
+        widget->setValue(AValue);
+        if (ARedraw) widget->redraw(/*MIP_WIDGET_REDRAW_VALUE*/);
+      }
+    }
   }
 
   //----------
 
   virtual void updateModulation(uint32_t AIndex, double AValue, bool ARedraw=true) {
-    // update connected widget mod
-    // redraw connected widget (mod)
+    MIP_Parameter* parameter = MParameters->getItem(AIndex);
+    if (parameter) {
+      MIP_Widget* widget = parameter->getWidget();
+      if (widget) {
+        // [de-]normalize value
+        widget->setModulation(AValue);
+        if (ARedraw) widget->redraw(/*MIP_WIDGET_REDRAW_MODULATION*/);
+      }
+    }
   }
 
 //------------------------------
@@ -396,42 +427,60 @@ public: // widget listener
 //------------------------------
 
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
-    //MIP_Print("mode %i\n",AMode);
-    // widget -> parameter
-    // connected?
-    // notify plugin/host
+    MIP_Parameter* parameter = AWidget->getParameter();
+    if (parameter) {
+      //MIP_PRINT;
+      uint32_t index = parameter->getIndex();
+      //double value = parameter->getValue();
+      double value = AWidget->getValue();
+      //MIP_Print("%i = %f\n",index,value);
+      if (MListener) MListener->on_editor_parameter_change(index,value);
+    }
     if (MWindow) MWindow->do_widget_update(AWidget,AMode);
   }
 
+  //----------
+
   void do_widget_redraw(MIP_Widget* AWidget, uint32_t AMode=0) override {
+    //MIP_PRINT;
     //MIP_Print("mode: %i\n",AMode);
     if (MWindow) MWindow->do_widget_redraw(AWidget,AMode);
   }
+
+  //----------
 
   void do_widget_set_cursor(MIP_Widget* AWidget, int32_t ACursor) override {
     //MIP_Print("cursor: %i\n",ACursor);
     if (MWindow) MWindow->do_widget_set_cursor(AWidget,ACursor);
   }
 
+  //----------
+
   void do_widget_set_key_capture(MIP_Widget* AWidget, uint32_t AMode) override {
     //MIP_Print("mode: %i\n",AMode);
     if (MWindow) MWindow->do_widget_set_key_capture(AWidget,AMode);
   }
+
+  //----------
 
   void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode) override {
     //MIP_Print("mode: %i\n",AMode);
     if (MWindow) MWindow->do_widget_set_modal(AWidget,AMode);
   }
 
+  //----------
+
   void do_widget_set_hint(MIP_Widget* AWidget, const char* AHint) override {
     //MIP_Print("hint: '%s'\n",AHint);
     if (MWindow) MWindow->do_widget_set_hint(AWidget,AHint);
   }
 
-  void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) override {
-    //MIP_Print("time: %i\n",ATime);
-    if (MWindow) MWindow->do_widget_set_timer(AWidget,ATime);
-  }
+  //----------
+
+//  void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) override {
+//    //MIP_Print("time: %i\n",ATime);
+//    if (MWindow) MWindow->do_widget_set_timer(AWidget,ATime);
+//  }
 
 };
 

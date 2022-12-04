@@ -41,8 +41,9 @@
 //#define MIP_AUDIO_NUM_SLICE_BUFFERS   16
 //#define MIP_BITMAP_RASTER_MAX_HEIGHT  2048
 //#define MIP_GUI_DBLCLICK_MS           200
-//  #define MIP_GUI_IDLE_TIMER_MS         20
-//  #define MIP_GUI_IDLE_TIMER_ID         667
+
+  #define MIP_GUI_TIMER_MS              20
+  #define MIP_GUI_TIMER_ID              333
 
 //----------------------------------------------------------------------
 //
