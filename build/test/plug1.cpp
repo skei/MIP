@@ -88,22 +88,33 @@ public:
     if (result) {
       MIP_Window* window = MEditor.getWindow();
       MIP_Assert(window);
+
       MRootWidget = new MIP_PanelWidget(MIP_DRect(0,0,640,480));
       MEditor.setRootWidget(MRootWidget);//,window);
-      MIP_TextWidget* text = new MIP_TextWidget( MIP_DRect(100,50,200,50), "Hello world!" );
-      text->setTextSize(30);
-      MRootWidget->appendChildWidget(text);
-      MIP_ValueWidget* value = new MIP_ValueWidget( MIP_DRect(100,110,200,20), "Value", 0.5 );
-      MRootWidget->appendChildWidget(value);
-      MIP_ButtonWidget* button = new MIP_ButtonWidget( MIP_DRect(100,140,200,20), "Button", 0.0 );
-      MRootWidget->appendChildWidget(button);
-      MIP_DragValueWidget* dragvalue = new MIP_DragValueWidget( MIP_DRect(100,170,200,20), "DragValue", 0.5 );
-      MRootWidget->appendChildWidget(dragvalue);
-      MIP_SliderWidget* slider = new MIP_SliderWidget( MIP_DRect(100,200,200,20), "Slider", 0.5 );
-      MRootWidget->appendChildWidget(slider);
-      MIP_KnobWidget* knob = new MIP_KnobWidget( MIP_DRect(100,230,50,50), "Knob", 0.5 );
-      MRootWidget->appendChildWidget(knob);
-      MEditor.connect(knob,getParameter(0));
+
+        MIP_TextWidget* text = new MIP_TextWidget( MIP_DRect(100,50,200,50), "Hello world!" );
+        text->setTextSize(30);
+        MRootWidget->appendChildWidget(text);
+
+        MIP_ValueWidget* value = new MIP_ValueWidget( MIP_DRect(100,110,200,20), "Value", 0.5 );
+        MRootWidget->appendChildWidget(value);
+
+        MIP_ButtonWidget* button = new MIP_ButtonWidget( MIP_DRect(100,140,200,20), "Button", 0.0 );
+        MRootWidget->appendChildWidget(button);
+
+        MIP_DragValueWidget* dragvalue = new MIP_DragValueWidget( MIP_DRect(100,170,200,20), "DragValue", 0.5 );
+        MRootWidget->appendChildWidget(dragvalue);
+
+        MIP_SliderWidget* slider = new MIP_SliderWidget( MIP_DRect(100,200,200,20), "Slider", 0.5 );
+        MRootWidget->appendChildWidget(slider);
+
+        MIP_KnobWidget* knob = new MIP_KnobWidget( MIP_DRect(100,230,50,50), "Knob", 0.5 );
+        MRootWidget->appendChildWidget(knob);
+
+      MEditor.connect( knob,      getParameter(0) );
+      MEditor.connect( slider,    getParameter(1) );
+      MEditor.connect( dragvalue, getParameter(2) );
+
     }
     return result;
   }
