@@ -179,7 +179,7 @@ public: // window
   */
 
   void on_window_resize(int32_t AWidth, int32_t AHeight) override {
-    MIP_Print("%i,%i\n",AWidth,AHeight);
+    //MIP_Print("%i,%i\n",AWidth,AHeight);
     MWindowPainter->setClipRect(MIP_DRect(0,0,AWidth,AHeight));
     if (MInitialWidth > 0) {
       double s = (double)AWidth / (double)MInitialWidth;

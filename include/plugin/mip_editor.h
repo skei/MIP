@@ -344,43 +344,33 @@ public: // clap.gui
   */
 
   virtual bool setSize(uint32_t width, uint32_t height) {
-    MIP_Print("%i,%i\n",width,height);
-
-//    MEditorWidth = width;
-//    MEditorHeight = height;
-
+    //MIP_Print("%i,%i\n",width,height);
+    //MEditorWidth = width;
+    //MEditorHeight = height;
     if (MWindow) {
-
       if (MIsEditorOpen) {
         MWindow->setSize(width,height);
       }
-
       MIP_Widget* root_widget = MWindow->getRootWidget();
       if (root_widget) {
         //root_widget->setPos(0,0);
         root_widget->setSize(width,height);
         //MWindow->invalidate(0,0,width,height);
       }
-
       if (MInitialWidth > 0) {
         double s = (double)width / (double)MInitialWidth;
         MWindow->setWindowScale(s);
       }
-
       MIP_Painter* painter = MWindow->getWindowPainter();
       painter->setClipRect(MIP_DRect(0,0,width,height));
       //MWindow->on_window_resize(width,height);
-
       //MIP_Painter* painter = MWindow->getWindowPainter();
       //painter->resetClip();
-
       MEditorWidth = width;
       MEditorHeight = height;
-
       if (MIsEditorOpen) {
         MWindow->invalidate(0,0,width,height);
       }
-
     }
     return true;
   }

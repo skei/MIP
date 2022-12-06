@@ -1035,7 +1035,7 @@ private: // remap
       // showWindow sends WM_SIZE,
 
       case WM_SIZE: {
-        MIP_Print("WM_SIZE\n");
+        //MIP_Print("WM_SIZE\n");
         int32_t w = short(LOWORD(lParam));
         int32_t h = short(HIWORD(lParam));
         //MIP_Print("WM_SIZE w %i h %i (type %i)\n",w,h,wParam);
@@ -1081,7 +1081,7 @@ private: // remap
       */
 
       case WM_PAINT: {
-        MIP_Print("WM_PAINT\n");
+        //MIP_Print("WM_PAINT\n");
         beginPaint();
         //MWinPaintDC = BeginPaint(MHandle,&MWinPaintStruct);
         int32_t x = MWinPaintStruct.rcPaint.left;
