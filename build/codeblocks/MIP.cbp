@@ -600,6 +600,7 @@
 		<Unit filename="../../include/gui/mip_painter.h" />
 		<Unit filename="../../include/gui/mip_surface.h" />
 		<Unit filename="../../include/gui/mip_widget.h" />
+		<Unit filename="../../include/gui/mip_widgets.h" />
 		<Unit filename="../../include/gui/mip_window.h" />
 		<Unit filename="../../include/gui/nvg/mip_nvg.h" />
 		<Unit filename="../../include/gui/nvg/mip_nvg_painter.h" />
@@ -610,11 +611,16 @@
 		<Unit filename="../../include/gui/wgl/mip_wgl_painter.h" />
 		<Unit filename="../../include/gui/wgl/mip_wgl_surface.h" />
 		<Unit filename="../../include/gui/wgl/mip_wgl_utils.h" />
+		<Unit filename="../../include/gui/widgets/mip_button_row_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_button_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_color_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_drag_value_widget.h" />
+		<Unit filename="../../include/gui/widgets/mip_grid_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_knob_widget.h" />
+		<Unit filename="../../include/gui/widgets/mip_menu_item_widget.h" />
+		<Unit filename="../../include/gui/widgets/mip_menu_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_panel_widget.h" />
+		<Unit filename="../../include/gui/widgets/mip_selector_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_slider_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_test_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_text_widget.h" />

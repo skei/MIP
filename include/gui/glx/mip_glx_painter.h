@@ -177,12 +177,14 @@ public:
   void beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
     makeCurrent();
     glViewport(0,0,AWidth,AHeight);
+    //setClip(MIP_DRect(AXpos,AYpos,AWidth,AHeight));
   }
 
   //----------
 
   void endPaint() override {
     swapBuffers();
+    //resetClip();
     resetCurrent();
   }
 

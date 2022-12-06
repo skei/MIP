@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 
 #include "base/mip.h"
-#include "gui/mip_widget.h"
+#include "gui/widgets/mip_drag_value_widget.h"
 
 //----------------------------------------------------------------------
 //
@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------
 
 class MIP_KnobWidget
-: public MIP_SliderWidget {
+: public MIP_DragValueWidget {
 
 //------------------------------
 private:
@@ -35,9 +35,8 @@ public:
 //------------------------------
 
   MIP_KnobWidget(MIP_DRect ARect, const char* AText="", double AValue=0.0)
-  : MIP_SliderWidget(ARect,AText,AValue) {
+  : MIP_DragValueWidget(ARect,AText,AValue) {
 
-    MDrawSlider = false;
     MDrawBorder = false;
 
   }

@@ -283,8 +283,25 @@ public: // draw
   // 0..PI2, starts art 3 o'clock, counterclockwise
 
   void drawArc(double cx, double cy, double r, double a1, double a2) override {
-    //a1 = MIP_PI2 - a1;
-    //a2 = - a2;
+
+    MIP_Print("a1 %f a2 %f (a1-a2 %f)\n",a1,a2,a1-a2);
+
+//    a1 = (MIP_PI * 0.35) - a1;
+//    a2 = - a2 - a1;//MIP_PI05;
+
+    //a2 += a1;
+    //a2 = a1 - a2;
+
+
+    //a2 -= a1;
+
+    a1 = -a1;
+    //a2 = - MIP_PI05;
+    a2 = /*MIP_PI2*/ - a2 - a1;
+
+    //a2 = -a2;
+
+
     float x  = cx - r;  // MPath[i].data[0] - MPath[i].data[2];
     float y  = cy - r;  // MPath[i].data[1] - MPath[i].data[2];
     float w  = r * 2.0; // MPath[i].data[2] * 2.0;

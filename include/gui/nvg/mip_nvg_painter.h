@@ -165,12 +165,14 @@ public:
   // is pixel coordinate 0,0 center, or upper left of pixel?
 
   void setClip(MIP_DRect ARect) override {
+    //MIP_Print("%.2f,%.2f - %.2f,%.2f\n",ARect.x,ARect.y,ARect.w,ARect.h);
     nvgScissor(MContext,ARect.x - 0.5,ARect.y - 0.5,ARect.w + 1,ARect.h + 1);
   }
 
   //----------
 
   void resetClip() override {
+    //MIP_Print("\n");
     nvgResetScissor(MContext);
   }
 

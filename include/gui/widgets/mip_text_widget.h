@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 
 #include "base/mip.h"
-#include "gui/mip_widget.h"
+#include "gui/widgets/mip_panel_widget.h"
 
 //----------------------------------------------------------------------
 //
@@ -50,6 +50,8 @@ public:
   virtual void setTextAlignment(uint32_t AAlignment)  { MTextAlignment = AAlignment; }
   virtual void setTextOffset(MIP_DRect AOffset)       { MTextOffset = AOffset; }
 
+  virtual const char* getText() { return MText; }
+
 //------------------------------
 public:
 //------------------------------
@@ -64,19 +66,8 @@ public:
     mrect.shrink(to);
     painter->setTextColor(MTextColor);
     painter->setTextSize(MTextSize * S);
-    double bounds[4] = {0};
-    painter->getTextBounds(MText,bounds);
-    double x = mrect.x - bounds[0];
-    double y = mrect.y - bounds[1];
-    double w = bounds[2] - bounds[0];
-    double h = bounds[3] - bounds[1];
-    if      (MTextAlignment & MIP_TEXT_ALIGN_LEFT)        { }
-    else if (MTextAlignment & MIP_TEXT_ALIGN_RIGHT)       { x = mrect.w - w + x; }
-    else /*if (MTextAlignment & MIP_TEXT_ALIGN_CENTER)*/  { x += ((mrect.w - w) * 0.5); }
-    if      (MTextAlignment & MIP_TEXT_ALIGN_TOP)         { }
-    else if (MTextAlignment & MIP_TEXT_ALIGN_BOTTOM)      { y = mrect.h - h + y; }
-    else /*if (MTextAlignment & MIP_TEXT_ALIGN_CENTER)*/  { y += ((mrect.h - h) * 0.5); }
-    painter->drawText(x,y,MText);
+
+    painter->drawTextBox(mrect,MText,MTextAlignment);
 
   }
 

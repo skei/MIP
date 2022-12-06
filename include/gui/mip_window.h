@@ -179,6 +179,8 @@ public: // window
   */
 
   void on_window_resize(int32_t AWidth, int32_t AHeight) override {
+    MIP_Print("%i,%i\n",AWidth,AHeight);
+    MWindowPainter->setClipRect(MIP_DRect(0,0,AWidth,AHeight));
     if (MInitialWidth > 0) {
       double s = (double)AWidth / (double)MInitialWidth;
       setWindowScale(s);
@@ -191,16 +193,33 @@ public: // window
   //----------
 
   void on_window_paint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
+
+//    MIP_Print("%i,%i,%i,%i\n",AXpos,AYpos,AWidth,AHeight);
+
+    MIP_DRect updaterect = MIP_DRect(AXpos,AYpos,AWidth,AHeight);
+
     if (MRootWidget) {
       MPaintContext.painter = MWindowPainter;
-      MPaintContext.updateRect = MIP_DRect(AXpos,AYpos,AWidth,AHeight);
+      MPaintContext.updateRect = updaterect;
+
       MWindowPainter->beginPaint(0,0,MWindowWidth,MWindowHeight);
+
+      MWindowPainter->resetClip();
+      MWindowPainter->setClipRect(MIP_DRect(0,0,MWindowWidth,MWindowHeight));
+      MWindowPainter->setClip(updaterect);
+
       if (MFillBackground) {
         MWindowPainter->setFillColor(MBackgroundColor);
         MWindowPainter->fillRect(AXpos,AYpos,AWidth,AHeight);
       }
+
+      //MRootWidget->paintChildWidgets(&MPaintContext);
       MRootWidget->on_widget_paint(&MPaintContext);
+
+      //MWindowPainter->resetClip();
+
       MWindowPainter->endPaint();
+
     }
   }
 
@@ -245,6 +264,7 @@ public: // window
 
   void on_window_mouse_move(uint32_t AState, int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
     if (MCapturedMouseWidget) MCapturedMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
+    //else if (MModalMouseWidget) MModalMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
     else {
       updateHoverWidget(AXpos,AYpos);
     }
@@ -254,19 +274,19 @@ public: // window
 
   void on_window_enter(int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
     //MIP_PRINT;
-//    if (!MCapturedMouseWidget) {
-//      updateHoverWidget(AXpos,AYpos);
-//    }
+    //if (!MCapturedMouseWidget) {
+    //  updateHoverWidget(AXpos,AYpos);
+    //}
   }
 
   //----------
 
   void on_window_leave(int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
     //MIP_PRINT;
-//    if (!MCapturedMouseWidget) {
-//      if (MHoverWidget) MHoverWidget->on_widget_leave(AXpos,AYpos);
-//    }
-//    MHoverWidget = nullptr;
+    //if (!MCapturedMouseWidget) {
+    //  if (MHoverWidget) MHoverWidget->on_widget_leave(AXpos,AYpos);
+    //}
+    //MHoverWidget = nullptr;
   }
 
   //----------
@@ -306,6 +326,9 @@ public: // widget listener
 
   //void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) override {
   //}
+
+  void do_widget_notify(MIP_Widget* AWidget, int32_t AValue) override {
+  }
 
 //------------------------------
 private:

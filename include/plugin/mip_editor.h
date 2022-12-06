@@ -345,24 +345,36 @@ public: // clap.gui
   */
 
   virtual bool setSize(uint32_t width, uint32_t height) {
-    //MIP_Print("%i,%i\n",width,height);
+//    MIP_Print("%i,%i\n",width,height);
     MEditorWidth = width;
     MEditorHeight = height;
     if (MWindow) {
+
       //MWindow->on_window_resize(width,height);
+
       if (MIsEditorOpen) {
         MWindow->setSize(width,height);
       }
+
       if (MInitialWidth > 0) {
         double s = (double)width / (double)MInitialWidth;
         MWindow->setWindowScale(s);
       }
+
       MIP_Widget* root_widget = MWindow->getRootWidget();
       if (root_widget) {
         //root_widget->setPos(0,0);
         root_widget->setSize(width,height);
         //MWindow->invalidate(0,0,width,height);
       }
+
+      //MIP_Painter* painter = MWindow->getWindowPainter();
+      //painter->resetClip();
+
+      //if (MIsEditorOpen) {
+      //  MWindow->invalidate(0,0,width,height);
+      //}
+
     }
     return true;
   }
@@ -481,6 +493,10 @@ public: // widget listener
 //    //MIP_Print("time: %i\n",ATime);
 //    if (MWindow) MWindow->do_widget_set_timer(AWidget,ATime);
 //  }
+
+  void do_widget_notify(MIP_Widget* AWidget, int32_t AValue) override {
+    if (MWindow) MWindow->do_widget_notify(AWidget,AValue);
+  }
 
 };
 

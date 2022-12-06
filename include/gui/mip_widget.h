@@ -47,6 +47,7 @@ public:
   virtual void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode) {}
   virtual void do_widget_set_hint(MIP_Widget* AWidget, const char* AHint) {}
   //virtual void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) {}
+  virtual void do_widget_notify(MIP_Widget* AWidget, int32_t AValue) {}
 };
 
 //----------------------------------------------------------------------
@@ -79,6 +80,9 @@ protected:
   double              MValue        = 0.0;
   double              MModulation   = 0.0;
 
+  bool                MIsActive     = true;
+  bool                MIsVisible    = true;
+
 //------------------------------
 public:
 //------------------------------
@@ -108,20 +112,39 @@ public:
   virtual double          getWidth()            { return MRect.w; }
   virtual double          getHeight()           { return MRect.h; }
 
+  virtual MIP_Parameter*  getParameter()        { return MParameter; }
+  virtual double          getValue()            { return MValue; }
+  virtual double          getModulation()       { return MModulation; }
+
+  virtual bool isActive()   { return MIsActive; }
+  virtual bool isVisible()  { return MIsVisible; }
+
+  virtual void setActive(bool AActive=true)               { MIsActive = AActive; }
+  virtual void setVisible(bool AVisible=true)             { MIsVisible = AVisible; }
+
   virtual void setListener(MIP_WidgetListener* AListener) { MListener = AListener; }
+  virtual void setParameter(MIP_Parameter* AParameter)    { MParameter = AParameter; }
+  virtual void setValue(double AValue)                    { MValue = AValue; }
+  virtual void setModulation(double AValue)               { MModulation = AValue; }
 
-  virtual void            setParameter(MIP_Parameter* AParameter) { MParameter = AParameter; }
-  virtual MIP_Parameter*  getParameter()                          { return MParameter; }
-
-  virtual void            setValue(double AValue) { MValue = AValue; }
-  virtual double          getValue()              { return MValue; }
-
-  virtual void            setModulation(double AValue) { MModulation = AValue; }
-  virtual double          getModulation()              { return MModulation; }
 
 //------------------------------
 public:
 //------------------------------
+
+  virtual void setBasePos(double AXpos, double AYpos) {
+    MBaseRect.x = AXpos;
+    MBaseRect.y = AYpos;
+  }
+
+  //----------
+
+  virtual void setBaseSize(double AWidth, double AHeight) {
+    MBaseRect.w = AWidth;
+    MBaseRect.h = AHeight;
+  }
+
+  //----------
 
   virtual void setPos(double AXpos, double AYpos) {
     MRect.x = AXpos;
@@ -201,13 +224,15 @@ public:
   virtual MIP_Widget* findChildWidget(double AXpos, double AYpos, bool ARecursive=true) {
     for (uint32_t i=0; i<MChildren.size(); i++) {
       MIP_Widget* widget = MChildren[i];
-      MIP_DRect rect = widget->getRect();
-      if (rect.contains(AXpos,AYpos)) {
-        MIP_Widget* child = widget;
-        if (ARecursive) {
-          child = widget->findChildWidget(AXpos,AYpos,ARecursive);
+      if (widget->isVisible()) {
+        MIP_DRect rect = widget->getRect();
+        if (rect.contains(AXpos,AYpos)) {
+          MIP_Widget* child = widget;
+          if (ARecursive) {
+            child = widget->findChildWidget(AXpos,AYpos,ARecursive);
+          }
+          return child;
         }
-        return child;
       }
     }
     return this;
@@ -258,11 +283,44 @@ public:
   //----------
 
   virtual void paintChildWidgets(MIP_PaintContext* AContext, bool ARecursive=true) {
-    for (uint32_t i=0; i<MChildren.size(); i++) {
-      MIP_Widget* widget = MChildren[i];
-      widget->on_widget_paint(AContext);
-      if (ARecursive) widget->paintChildWidgets(AContext,ARecursive);
-    }
+    MIP_DRect updaterect = AContext->updateRect;
+    MIP_Painter* painter = AContext->painter;
+    MIP_DRect mrect = getRect();
+
+    uint32_t num = MChildren.size();
+    if (num > 0) {
+
+      MIP_DRect cliprect = mrect;
+      cliprect.overlap(updaterect);
+
+//      for (uint32_t i=0; i<num; i++) {
+//        MIP_Widget* widget = MChildren[i];
+//        if (widget->isVisible()) {
+//          MIP_DRect widgetrect = widget->getRect();
+//          if (widgetrect.intersects(updaterect)) {
+//            //painter->pushClip(widgetrect);
+//            widget->on_widget_paint(AContext);
+//            //painter->popClip();
+//            if (ARecursive) widget->paintChildWidgets(AContext,ARecursive);
+//          } // intersect
+//        } // visible
+//      } // for
+
+      for (uint32_t i=0; i<num; i++) {
+        MIP_Widget* widget = MChildren[i];
+        if (widget->isVisible()) {
+          MIP_DRect widgetrect = widget->getRect();
+          widgetrect.overlap(cliprect);
+          if (widgetrect.isNotEmpty()) {
+            painter->pushOverlapClip(widgetrect);
+            widget->on_widget_paint(AContext);
+            painter->popClip();
+          } // intersect
+        } // visible
+      } // for
+
+    } // num > 0
+
   }
 
   //----------
@@ -274,6 +332,20 @@ public:
     //  widget->MRect.y = widget->MBaseRect.y + MRect.y;
     //  if (ARecursive) widget->realignChildWidgets();
     //}
+  }
+
+  //----------
+
+  virtual void moveChildWidgets(double ADeltaX, double ADeltaY, bool ARecursive=true) {
+   for (uint32_t i=0; i<getNumChildWidgets(); i++) {
+      MIP_Widget* widget = getChildWidget(i);
+      MIP_DRect rect = widget->getRect();
+      double x = rect.x + ADeltaX;
+      double y = rect.y + ADeltaY;
+      widget->setPos(x,y);
+      //widget->setBasePos(x,y);
+      if (ARecursive) widget->moveChildWidgets(ADeltaX,ADeltaY,ARecursive);
+    }
   }
 
   //----------
@@ -348,6 +420,10 @@ public:
 //  void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) override {
 //    if (MListener) MListener->do_widget_set_timer(AWidget,ATime);
 //  }
+
+  void do_widget_notify(MIP_Widget* AWidget, int32_t AValue) override {
+    if (MListener) MListener->do_widget_notify(AWidget,AValue);
+  }
 
 };
 

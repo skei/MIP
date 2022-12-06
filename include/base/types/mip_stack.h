@@ -17,8 +17,8 @@ class MIP_Stack
 private:
 //------------------------------
 
-  _T  MBuffer[SIZE];
-  int MIndex;
+  _T  MBuffer[SIZE] = {0};
+  int MIndex        = 0;
 
 //------------------------------
 public:
@@ -72,6 +72,7 @@ public:
   void push(_T AItem) {
     MBuffer[MIndex] = AItem;
     MIndex++;
+    //if (MIndex > SIZE) printf("stack overrun!\n");
   }
 
   //----------
@@ -79,6 +80,7 @@ public:
   // a b -  ->  b - -  -> [a]
 
   _T pop(void) {
+    if (MIndex == 0) printf("empty stack!\n");
     MIndex--;
     return MBuffer[MIndex];
   }

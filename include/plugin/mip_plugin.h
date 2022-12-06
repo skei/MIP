@@ -356,6 +356,7 @@ public: // ext gui
   //----------
 
   void gui_destroy() override {
+    if (MIsEditorOpen) gui_hide();
     MIsEditorOpen = false;
     MEditor.destroy();
   }
@@ -438,7 +439,8 @@ public: // ext gui
   bool gui_hide() override {
     MGuiTimer.stop();
     MIsEditorOpen = false;
-    return MEditor.hide();
+    bool result = MEditor.hide();
+    return result;
   }
 
 //------------------------------
@@ -789,26 +791,16 @@ public: // timer listener
 
   #ifndef MIP_NO_GUI
 
-//  void on_timerCallback(MIP_Timer* ATimer) override {
-//    if (ATimer == &MGuiTimer) {
-//      if (MEditor) { // && editor is open
-//        flushGuiParams();
-//        flushGuiMods();
-//    //MEditor->on_gui_timer();
-//        // redraw?
-//      }
-//    }
-//  }
-
   void on_timer_callback(MIP_Timer* ATimer) {
-    //MIP_PRINT;
+    //MIP_Print("1\n");
     if (ATimer == &MGuiTimer) {
-      flushGuiParams();
-      flushGuiMods();
+      if (MIsEditorOpen) {
+        flushGuiParams();
+        flushGuiMods();
+      }
     }
     //MIP_PRINT;
   }
-
 
   #endif
 
