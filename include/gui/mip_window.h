@@ -204,8 +204,8 @@ public: // window
 
       MWindowPainter->beginPaint(0,0,MWindowWidth,MWindowHeight);
 
-      MWindowPainter->resetClip();
-      MWindowPainter->setClipRect(MIP_DRect(0,0,MWindowWidth,MWindowHeight));
+      //MWindowPainter->resetClip();
+      //MWindowPainter->setClipRect(MIP_DRect(0,0,MWindowWidth,MWindowHeight));
       MWindowPainter->setClip(updaterect);
 
       if (MFillBackground) {

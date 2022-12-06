@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1670323951 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+1670334567 source:/DISKS/sda2/code/git/MIP/build/build.cpp
 	"../build/test/test1.cpp"
 
 1670256285 /DISKS/sda2/code/git/MIP/build/test/test1.cpp
 	"gui/mip_window.h"
 	"gui/mip_widgets.h"
 
-1670323556 /DISKS/sda2/code/git/MIP/include/gui/mip_window.h
+1670334273 /DISKS/sda2/code/git/MIP/include/gui/mip_window.h
 	"base/mip.h"
 	"gui/mip_paint_context.h"
 	"gui/mip_widget.h"
@@ -116,7 +116,7 @@
 1668590958 /DISKS/sda2/code/git/MIP/include/base/types/mip_queue.h
 	"base/mip.h"
 
-1670263102 /DISKS/sda2/code/git/MIP/include/base/types/mip_stack.h
+1670326909 /DISKS/sda2/code/git/MIP/include/base/types/mip_stack.h
 
 1644090226 /DISKS/sda2/code/git/MIP/include/base/types/mip_tree.h
 
@@ -456,7 +456,7 @@
 1668731398 /DISKS/sda2/code/git/MIP/include/gui/mip_paint_context.h
 	"gui/mip_painter.h"
 
-1670273339 /DISKS/sda2/code/git/MIP/include/gui/mip_painter.h
+1670327081 /DISKS/sda2/code/git/MIP/include/gui/mip_painter.h
 	"gui/gdi/mip_gdi_painter.h"
 	"gui/glx/mip_glx_painter.h"
 	"gui/nvg/mip_nvg_painter.h"
@@ -531,7 +531,7 @@
 	<X11/Xlib.h>
 	<X11/Xlib-xcb.h>
 
-1670086327 /DISKS/sda2/code/git/MIP/include/gui/nvg/mip_nvg_painter.h
+1670325726 /DISKS/sda2/code/git/MIP/include/gui/nvg/mip_nvg_painter.h
 	"base/mip.h"
 	"gui/glx/mip_glx_painter.h"
 	"gui/wgl/mip_wgl_painter.h"
@@ -644,7 +644,7 @@
 	"gui/mip_paint_source.h"
 	"gui/mip_paint_target.h"
 
-1670273549 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
+1670327064 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
 	"base/mip.h"
 	"gui/base/mip_base_window.h"
 	"gui/mip_paint_context.h"
