@@ -27,6 +27,7 @@ public:
   virtual void    setTextColor(MIP_Color color) {}
   virtual void    setTextSize(double ASize) {}
   virtual void    setLineWidth(double AWidth) {}
+  virtual void    setGlobalAlpha(double AAlpha) {}
 
   virtual void    drawLine(double x1, double y1, double x2, double y2) {}
   virtual void    drawLines(uint32_t num, double* coords) {}
@@ -34,8 +35,17 @@ public:
   virtual void    drawArc(double cx, double cy, double r, double a1, double a2) {}
   virtual void    drawRect(double x, double y, double w, double h) {}
   virtual void    fillRect(double x, double y, double w, double h) {}
+
+  virtual void    drawRoundedRect(double x, double y, double w, double h, double r) {}
+  virtual void    drawRoundedRect(double x, double y, double w, double h, double rtl, double rtr, double rbr, double rbl) {}
+  virtual void    drawCurveQuad(double x1, double y1, double x2, double y2, double c1x, double c1y) {}
+  virtual void    drawCurveBezier(double x1, double y1, double x2, double y2, double c1x, double c1y, double c2x, double c2y) {}
+
+
 //virtual void    fillRectImage(double x, double y, double w, double h, int32_t AImage, double iw, double ih) {}
+
   virtual void    drawText(double x, double y, const char* text) {}
+
   virtual void    blit(double ADstX, double ADstY, MIP_PaintSource* ASource, double ASrcX, double ASrcY, double ASrcW, double ASrcH) {}
   virtual void    stretch(double ADstX, double ADstY, double ADstW, double ADstH, MIP_PaintSource* ASource, double ASrcX, double ASrcY, double ASrcW, double ASrcH) {}
   virtual void    blend(double ADstX, double ADstY, double ADstW, double ADstH, MIP_PaintSource* ASource, double ASrcX, double ASrcY, double ASrcW, double ASrcH) {}

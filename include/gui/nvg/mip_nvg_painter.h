@@ -166,7 +166,8 @@ public:
 
   void setClip(MIP_DRect ARect) override {
     //MIP_Print("%.2f,%.2f - %.2f,%.2f\n",ARect.x,ARect.y,ARect.w,ARect.h);
-    nvgScissor(MContext,ARect.x - 0.5,ARect.y - 0.5,ARect.w + 1,ARect.h + 1);
+    //nvgScissor(MContext,ARect.x - 0.5,ARect.y - 0.5,ARect.w + 1,ARect.h + 1);
+    nvgScissor(MContext,ARect.x,ARect.y,ARect.w,ARect.h);
   }
 
   //----------
@@ -223,6 +224,12 @@ public:
   void setLineWidth(double AWidth) override {
     MLineWidth = AWidth;
     nvgStrokeWidth(MContext,AWidth);
+  }
+
+  //----------
+
+  void setGlobalAlpha(double AAlpha) override {
+    nvgGlobalAlpha(MContext,AAlpha);
   }
 
 //------------------------------
@@ -287,6 +294,44 @@ public:
     nvgRect(MContext,x,y,w,h);
     nvgStroke(MContext);
   }
+
+  //----------
+
+  void drawRoundedRect(double x, double y, double w, double h, double r) override {
+    nvgBeginPath(MContext);
+    nvgRoundedRect(MContext,x,y,w,h,r);
+    nvgStroke(MContext);
+  }
+
+  //----------
+
+  void drawRoundedRect(double x, double y, double w, double h, double rtl, double rtr, double rbr, double rbl) override {
+    nvgBeginPath(MContext);
+    nvgRoundedRectVarying(MContext,x,y,w,h,rtl,rtr,rbr,rbl);
+    nvgStroke(MContext);
+  }
+
+  //----------
+
+  void drawCurveQuad(double x1, double y1, double x2, double y2, double c1x, double c1y) override {
+    nvgBeginPath(MContext);
+    nvgMoveTo(MContext,x1,y1);
+    nvgQuadTo(MContext,c1x,c1y,x2,y2);
+    nvgStroke(MContext);
+  }
+
+  //drawCurveQuads
+
+  //----------
+
+  void drawCurveBezier(double x1, double y1, double x2, double y2, double c1x, double c1y, double c2x, double c2y) override {
+    nvgBeginPath(MContext);
+    nvgMoveTo(MContext,x1,y1);
+    nvgBezierTo(MContext,c1x,c1y,c2x,c2y,x2,y2);
+    nvgStroke(MContext);
+  }
+
+  //drawCurveBeziers
 
 //------------------------------
 public:
@@ -560,9 +605,10 @@ public:
 
 #if 0
 
-//------------------------------
-public:
-//------------------------------
+  //--------------------
+  // color
+  //--------------------
+
 
 //  NVGcolor RGB(unsigned char r, unsigned char g, unsigned char b) {
 //    return nvgRGB(r, g, b);
@@ -600,7 +646,9 @@ public:
 //    return nvgHSLA(h, s, l, a);
 //  }
 
+  //--------------------
   // State Handling
+  //--------------------
 
   void save() override {
     nvgSave(MContext);
@@ -614,7 +662,9 @@ public:
     nvgReset(MContext);
   }
 
+  //--------------------
   // Render styles
+  //--------------------
 
   void shapeAntiAlias(int enabled) override {
     nvgShapeAntiAlias(MContext,enabled);
@@ -647,7 +697,9 @@ public:
     nvgGlobalAlpha(MContext,alpha);
   }
 
+  //--------------------
   // Transforms
+  //--------------------
 
   void resetTransform() override {
     nvgResetTransform(MContext);
@@ -729,7 +781,9 @@ public:
     return nvgRadToDeg(rad);
   }
 
+  //--------------------
   // Images
+  //--------------------
 
   int createImage(const char* filename, int imageFlags) override {
     return nvgCreateImage(MContext,filename,imageFlags);
@@ -755,7 +809,10 @@ public:
     nvgDeleteImage(MContext,image);
   }
 
+  //--------------------
   // Paints
+  //--------------------
+
   //NVGpaint linearGradient(float sx, float sy, float ex, float ey, NVGcolor icol, NVGcolor ocol) override {
   MIP_PaintSource linearGradient(float sx, float sy, float ex, float ey, MIP_Color icol, MIP_Color ocol) override {
     NVGcolor ic = nvg_color(icol);
@@ -793,7 +850,9 @@ public:
     return paint;
   }
 
+  //--------------------
   // Scissoring
+  //--------------------
 
   void scissor(float x, float y, float w, float h) override {
     nvgScissor(MContext,x,y,w,h);
@@ -807,7 +866,9 @@ public:
     nvgResetScissor(MContext);
   }
 
+  //--------------------
   // Paths
+  //--------------------
 
   void beginPath() override {
     nvgBeginPath(MContext);
@@ -874,7 +935,9 @@ public:
     nvgStroke(MContext);
   }
 
+  //--------------------
   // Text
+  //--------------------
 
   int createFont(const char* name, const char* filename) override {
     return nvgCreateFont(MContext,name,filename);

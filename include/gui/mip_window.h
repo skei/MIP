@@ -42,16 +42,27 @@ private:
   MOverlayWidget
   */
 
-  MIP_Widget*       MRootWidget     = nullptr;
-  MIP_Painter*      MWindowPainter  = nullptr;
-  MIP_PaintContext  MPaintContext   = {};
-  uint32_t          MInitialWidth   = 0;
-  uint32_t          MInitialHeight  = 0;
-  double            MWindowScale    = 1.0;
+  MIP_Widget*       MRootWidget           = nullptr;
+  MIP_Painter*      MWindowPainter        = nullptr;
+  MIP_PaintContext  MPaintContext         = {};
+  uint32_t          MInitialWidth         = 0;
+  uint32_t          MInitialHeight        = 0;
+  double            MWindowScale          = 1.0;
 
-  MIP_Widget* MHoverWidget          = nullptr;
-  MIP_Widget* MCapturedMouseWidget  = nullptr;
-  MIP_Widget* MCapturedKeysWidget   = nullptr;
+  MIP_Widget*       MHoverWidget          = nullptr;
+  MIP_Widget*       MCapturedMouseWidget  = nullptr;
+  MIP_Widget*       MCapturedKeysWidget   = nullptr;
+  MIP_Widget*       MMouseLockedWidget    = nullptr;
+
+  int32_t           MMouseClickedX        = 0;
+  int32_t           MMouseClickedY        = 0;
+  int32_t           MMousePreviousX       = 0;
+  int32_t           MMousePreviousY       = 0;
+  int32_t           MMouseDragX           = 0;
+  int32_t           MMouseDragY           = 0;
+
+  int32_t           MCurrentCursor        = MIP_CURSOR_DEFAULT;
+
 
 //------------------------------
 protected:
@@ -205,7 +216,7 @@ public: // window
       MWindowPainter->beginPaint(0,0,MWindowWidth,MWindowHeight);
 
       //MWindowPainter->resetClip();
-      //MWindowPainter->setClipRect(MIP_DRect(0,0,MWindowWidth,MWindowHeight));
+//      MWindowPainter->setClipRect(updaterect);
       MWindowPainter->setClip(updaterect);
 
       if (MFillBackground) {
@@ -238,9 +249,17 @@ public: // window
   //----------
 
   void on_window_mouse_click(uint32_t AButton, uint32_t AState, int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
+    MMouseClickedX = AXpos;
+    MMouseClickedY = AYpos;
+    MMouseDragX = AXpos;
+    MMouseDragY = AYpos;
     if (MHoverWidget) {
+
+//      MMouseLockedWidget = MHoverWidget;
+
       MCapturedMouseWidget = MHoverWidget;
       MHoverWidget->on_widget_mouse_click(AButton,AState,AXpos,AYpos,ATime);
+
     }
   }
 
@@ -248,6 +267,9 @@ public: // window
 
   void on_window_mouse_release(uint32_t AButton, uint32_t AState, int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
     if (MCapturedMouseWidget) {
+
+//      MMouseLockedWidget = nullptr;
+
       MCapturedMouseWidget->on_widget_mouse_release(AButton,AState,AXpos,AYpos,ATime);
       MCapturedMouseWidget = nullptr;
       updateHoverWidget(AXpos,AYpos);
@@ -263,11 +285,45 @@ public: // window
   //----------
 
   void on_window_mouse_move(uint32_t AState, int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
-    if (MCapturedMouseWidget) MCapturedMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
-    //else if (MModalMouseWidget) MModalMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
-    else {
-      updateHoverWidget(AXpos,AYpos);
+
+    if (MMouseLockedWidget) { // todo: also add if mouse_clicked?
+      if ((AXpos == MMouseClickedX) && (AYpos == MMouseClickedY)) {
+        MMousePreviousX = AXpos;
+        MMousePreviousY = AYpos;
+        return;
+      }
+      int32_t deltax = AXpos - MMouseClickedX;
+      int32_t deltay = AYpos - MMouseClickedY;
+      MMouseDragX += deltax;
+      MMouseDragY += deltay;
+      if (MCapturedMouseWidget) {
+        MCapturedMouseWidget->on_widget_mouse_move(AState,MMouseDragX,MMouseDragY,ATime);
+      }
+      setCursorPos(MMouseClickedX,MMouseClickedY);
     }
+    else {
+      //updateHoverWidget(AXpos,AYpos);
+      if (MCapturedMouseWidget) {
+        MCapturedMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
+      }
+      else {
+        updateHoverWidget(AXpos,AYpos);
+        if (MHoverWidget) {
+          //if (MHoverWidget->Options.wantHoverEvents) {
+          MHoverWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
+          //}
+        }
+      }
+    }
+    MMousePreviousX = AXpos;
+    MMousePreviousY = AYpos;
+
+//    if (MCapturedMouseWidget) MCapturedMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
+//    //else if (MModalMouseWidget) MModalMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
+//    else {
+//      updateHoverWidget(AXpos,AYpos);
+//    }
+
   }
 
   //----------
@@ -307,25 +363,60 @@ public: // widget listener
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
   }
 
+  //----------
+
   void do_widget_redraw(MIP_Widget* AWidget, uint32_t AMode=0) override {
     MIP_DRect r = AWidget->getRect();
     invalidate(r.x,r.y,r.w,r.h);
   }
 
+  //----------
+
   void do_widget_set_cursor(MIP_Widget* AWidget, int32_t ACursor) override {
+    switch (ACursor) {
+      case MIP_CURSOR_LOCK:
+        MMouseLockedWidget = AWidget;
+        break;
+      case MIP_CURSOR_UNLOCK:
+        MMouseLockedWidget = nullptr;
+        break;
+      case MIP_CURSOR_SHOW:
+        showCursor();
+        setCursor(MCurrentCursor);
+        break;
+      case MIP_CURSOR_HIDE:
+        hideCursor();
+        break;
+      default:
+        if (ACursor != MCurrentCursor) {
+          setCursor(ACursor);
+          MCurrentCursor = ACursor;
+        }
+        break;
+    }
   }
+
+  //----------
 
   void do_widget_set_key_capture(MIP_Widget* AWidget, uint32_t AMode) override {
   }
 
+  //----------
+
   void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode) override {
   }
+
+  //----------
 
   void do_widget_set_hint(MIP_Widget* AWidget, const char* AHint) override {
   }
 
+  //----------
+
   //void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) override {
   //}
+
+  //----------
 
   void do_widget_notify(MIP_Widget* AWidget, int32_t AValue) override {
   }
@@ -341,14 +432,43 @@ private:
 
   void updateHoverWidget(int32_t AXpos, int32_t AYpos) {
     if (MRootWidget) {
-      MIP_Widget* hover = MRootWidget->findChildWidget(AXpos,AYpos,true);
+      //MIP_Widget* hover = MRootWidget->findChildWidget(AXpos,AYpos,true);
+      MIP_Widget* hover = nullptr;
+      //if (MModalWidget) {
+      //  hover = MModalWidget->findChildWidget(AXpos,AYpos,true);
+      //} else {
+        hover = MRootWidget->findChildWidget(AXpos,AYpos,true);
+      //}
+
+
       if (hover != MHoverWidget) {
-        if (MHoverWidget) MHoverWidget->on_widget_leave(AXpos,AYpos);
-        if (hover) hover->on_widget_enter(AXpos,AYpos);
+        //if (!MClickedWidget) {
+          if (MHoverWidget) MHoverWidget->on_widget_leave(AXpos,AYpos);
+          if (hover) {
+            hover->on_widget_enter(AXpos,AYpos);
+            //if (hover->hasFlag(MIP_WIDGET_AUTO_SET_CURSOR)) {
+            //  int32_t cursor = hover->getCursor();
+            //  setCursor(cursor);
+            //}
+          }
+        //}
       }
       MHoverWidget = hover;
     }
   }
+
+  //----------
+
+  // when releasing mouse cursor after dragging
+  // and entering window
+
+//  void updateHoverWidgetFrom(MIP_Widget* AFrom, int32_t AXpos, int32_t AYpos, uint32_t ATime) {
+//    if (MHoverWidget != AFrom) {
+//      if (AFrom) AFrom->on_widget_leave(MHoverWidget,AXpos,AYpos,ATime);
+//      if (MHoverWidget) MHoverWidget->on_widget_enter(AFrom,AXpos,AYpos,ATime);
+//    }
+//  }
+
 
 
 };

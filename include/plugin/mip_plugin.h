@@ -69,6 +69,7 @@ protected:
   bool                  MIsActivated              = false;
   bool                  MIsProcessing             = false;
   bool                  MIsEditorOpen             = false;
+//bool                  MIsEditorBusy             = false;
 
   uint32_t              MSelectedAudioPortsConfig = 0;
   int32_t               MRenderMode               = CLAP_RENDER_REALTIME;
@@ -394,7 +395,10 @@ public: // ext gui
   //----------
 
   bool gui_set_size(uint32_t width, uint32_t height) override {
-    return MEditor.setSize(width,height);
+    //MIsEditorBusy = true;
+    bool result = MEditor.setSize(width,height);
+    //MIsEditorBusy = false;
+    return result;
   }
 
   //----------
@@ -794,7 +798,7 @@ public: // timer listener
   void on_timer_callback(MIP_Timer* ATimer) {
     //MIP_Print("1\n");
     if (ATimer == &MGuiTimer) {
-      if (MIsEditorOpen) {
+      if (MIsEditorOpen) { //  && !MIsEditorBusy) {
         flushGuiParams();
         flushGuiMods();
       }
@@ -1160,16 +1164,23 @@ public: // queues
 
   //----------
 
+  /*
+    todo: setup list, check for, and remove duplicates..
+    MIP_PLUGIN_MAX_PARAM_EVENTS
+  */
+
   void flushGuiParams() {
-    //MIP_PRINT;
-    uint32_t index;
-    double value;
-    while (MGuiParamQueue.read(&index)) {
-      MQueuedGuiParamValues.read(&value);
-      //double value = MParameters[index]->getValue();
-//      MIP_Print("%i = %.3f\n",index,value);
-      MEditor.updateParameter(index,value);
-    }
+    //if (!MSuppressGuiTimer) {
+      //MIP_PRINT;
+      uint32_t index;
+      double value;
+      while (MGuiParamQueue.read(&index)) {
+        MQueuedGuiParamValues.read(&value);
+        //double value = MParameters[index]->getValue();
+        //MIP_Print("%i = %.3f\n",index,value);
+        MEditor.updateParameter(index,value);
+      }
+    //}
   }
 
   //----------
@@ -1184,6 +1195,15 @@ public: // queues
   }
 
   //----------
+
+  /*
+
+    todo: setup list, check for, and remove duplicates..
+    we can get 750 of these per second = 15 per update tick (20ms)
+    MIP_PLUGIN_MAX_PARAM_EVENTS
+
+
+  */
 
   void flushGuiMods() {
     //MIP_PRINT;

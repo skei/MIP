@@ -33,7 +33,7 @@ public:
   : MIP_TextWidget(ARect,AText) {
     //MName = "MIP_SelectorWidget";
     MMenu = AMenu;
-    //MMouseCursor = MIP_CURSOR_FINGER;
+    setCursor(MIP_CURSOR_FINGER);
     MTextAlignment = MIP_TEXT_ALIGN_LEFT;
   }
 

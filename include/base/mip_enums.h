@@ -146,9 +146,8 @@ enum MIP_EWidgetModalModes {
 };
 
 enum MIP_EMouseCursors {
-
-  //MIP_CURSOR_GRAB                = -4,
-  //MIP_CURSOR_RELEASE             = -3,
+//MIP_CURSOR_GRAB                = -4,
+//MIP_CURSOR_RELEASE             = -3,
   MIP_CURSOR_LOCK                = -4,
   MIP_CURSOR_UNLOCK              = -3,
   MIP_CURSOR_SHOW                = -2,
@@ -218,12 +217,20 @@ enum MIP_EKeyChar {
 };
 
 enum MIP_EWidgetPaintModes {
-  MIP_WIDGET_PAINT_NORMAL        = 0,
-  MIP_WIDGET_PAINT_FULL          = 0,
-  MIP_WIDGET_PAINT_VALUE         = 1,
-  MIP_WIDGET_PAINT_MODULATION    = 2
+  MIP_WIDGET_PAINT_NORMAL       = 0,
+  MIP_WIDGET_PAINT_FULL         = 0,
+  MIP_WIDGET_PAINT_VALUE        = 1,
+  MIP_WIDGET_PAINT_MODULATION   = 2
 };
 
+enum MIP_EWidgetFlags {
+  MIP_WIDGET_FLAG_NONE               = 0x00,
+  MIP_WIDGET_FLAG_AUTO_SET_CURSOR    = 0x01,
+  MIP_WIDGET_FLAG_AUTO_HIDE_CURSOR   = 0x02,
+  MIP_WIDGET_FLAG_AUTO_LOCK_CURSOR   = 0x04
+};
+
+/*
 enum MIP_EWidgetAlignment {
   MIP_WIDGET_ALIGN_NONE               = 0,  // relative to window
   MIP_WIDGET_ALIGN_PARENT             = 1,  // relative to parent
@@ -269,6 +276,7 @@ enum MIP_EWidgetAlignment {
   MIP_WIDGET_ALIGN_STACK_VERT         = 41
 //  MIP_WIDGET_ALIGN_SCALED             = 42
 };
+*/
 
 //enum MIP_EWidgetAnchors {
 //  MIP_WIDGET_ANCHOR_NONE         = 0x00,
@@ -284,13 +292,16 @@ enum MIP_EWidgetAlignment {
 //  MIP_WIDGET_TYPE_WINDOW         = 2
 //};
 
+/*
 enum MIP_EWidgetScaleModes {
   MIP_WIDGET_SCALE_MODE_PIXELS               = 0,  // pixels
   MIP_WIDGET_SCALE_MODE_PARENT_RATIO         = 1,  // parent
   MIP_WIDGET_SCALE_MODE_CLIENT_RATIO         = 2,  // client (current rect)
   MIP_WIDGET_SCALE_MODE_INITIAL_RATIO        = 3
 };
+*/
 
+/*
 enum MIP_EWidgetSizerModes {
   MIP_WIDGET_SIZER_NONE    = 0,
   MIP_WIDGET_SIZER_LEFT    = 1,
@@ -299,6 +310,7 @@ enum MIP_EWidgetSizerModes {
   MIP_WIDGET_SIZER_BOTTOM  = 4,
   MIP_WIDGET_SIZER_WINDOW  = 5
 };
+*/
 
 //----------------------------------------------------------------------
 //

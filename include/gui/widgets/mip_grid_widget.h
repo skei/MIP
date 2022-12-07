@@ -69,7 +69,7 @@ public:
 
   MIP_GridWidget(MIP_DRect ARect, uint32_t AColumns, uint32_t ARows)
   : MIP_PanelWidget(ARect) {
-    //MMouseCursor = MIP_CURSOR_FINGER;
+    setCursor(MIP_CURSOR_FINGER);
     setNumCells(AColumns,ARows);
     //setDrawBorder(true);
   }

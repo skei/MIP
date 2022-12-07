@@ -35,7 +35,7 @@ public:
     //MFillGradient = false;
     MNormalBackgroundColor = MBackgroundColor;
     MNormalTextColor = MTextColor;
-    //MMouseCursor = MIP_CURSOR_FINGER;
+    setCursor(MIP_CURSOR_FINGER);
   }
 
   //----------

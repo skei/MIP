@@ -36,6 +36,9 @@ public:
 
   MIP_DragValueWidget(MIP_DRect ARect, const char* AText="", double AValue=0.0)
   : MIP_ValueWidget(ARect,AText,AValue) {
+    setFlag(MIP_WIDGET_FLAG_AUTO_HIDE_CURSOR);
+    setFlag(MIP_WIDGET_FLAG_AUTO_LOCK_CURSOR);
+    setCursor(MIP_CURSOR_ARROW_UP_DOWN);
   }
 
   //----------
@@ -68,6 +71,8 @@ public:
         MIsDragging = true;
         MPrevXpos = AXpos;
         MPrevYpos = AYpos;
+        if (hasFlag(MIP_WIDGET_FLAG_AUTO_HIDE_CURSOR)) do_widget_set_cursor(this,MIP_CURSOR_HIDE);
+        if (hasFlag(MIP_WIDGET_FLAG_AUTO_LOCK_CURSOR)) do_widget_set_cursor(this,MIP_CURSOR_LOCK);
         break;
       }
     }
@@ -79,6 +84,8 @@ public:
     switch (AButton) {
       case MIP_BUTTON_LEFT: {
         MIsDragging = false;
+        if (hasFlag(MIP_WIDGET_FLAG_AUTO_LOCK_CURSOR)) do_widget_set_cursor(this,MIP_CURSOR_UNLOCK);
+        if (hasFlag(MIP_WIDGET_FLAG_AUTO_HIDE_CURSOR)) do_widget_set_cursor(this,MIP_CURSOR_SHOW);
         break;
       }
     }

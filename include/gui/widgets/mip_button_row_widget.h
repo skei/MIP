@@ -45,7 +45,7 @@ public:
 
     //MName = "MIP_ButtonRowWidget";
     //setHint("buttonrow");
-    //MMouseCursor = MIP_CURSOR_FINGER;
+    setCursor(MIP_CURSOR_FINGER);
     MMode                 = AMode;
     MSelected             = 0;
     MDrawSelectedCells    = false;

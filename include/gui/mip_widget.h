@@ -72,6 +72,9 @@ private:
   MIP_DRect           MBaseRect     = {};
 
   MIP_Parameter*      MParameter    = nullptr;
+  int32_t             MCursor       = MIP_CURSOR_DEFAULT;
+
+  uint32_t            MFlags        = MIP_WIDGET_FLAG_AUTO_SET_CURSOR;
 
 //------------------------------
 protected:
@@ -104,17 +107,23 @@ public:
 public:
 //------------------------------
 
-//virtual MIP_Widget*     getParent()           { return MParent; }
+//virtual MIP_Widget*     getParent()             { return MParent; }
 
-  virtual MIP_BaseWindow* getOwnerWindow()      { return MOwnerWindow; }
-  virtual int32_t         getIndex()            { return MIndex; }
-  virtual MIP_DRect       getRect()             { return MRect; }
-  virtual double          getWidth()            { return MRect.w; }
-  virtual double          getHeight()           { return MRect.h; }
+  virtual MIP_BaseWindow* getOwnerWindow()        { return MOwnerWindow; }
+  virtual int32_t         getIndex()              { return MIndex; }
+  virtual MIP_DRect       getRect()               { return MRect; }
+  virtual double          getWidth()              { return MRect.w; }
+  virtual double          getHeight()             { return MRect.h; }
 
-  virtual MIP_Parameter*  getParameter()        { return MParameter; }
-  virtual double          getValue()            { return MValue; }
-  virtual double          getModulation()       { return MModulation; }
+  virtual MIP_Parameter*  getParameter()          { return MParameter; }
+  virtual double          getValue()              { return MValue; }
+  virtual double          getModulation()         { return MModulation; }
+
+  virtual int32_t         getCursor()             { return MCursor; }
+
+  virtual uint32_t        getFlags()              { return MFlags; }
+  virtual bool            hasFlag(uint32_t AFlag) { return MFlags & AFlag; }
+
 
   virtual bool isActive()   { return MIsActive; }
   virtual bool isVisible()  { return MIsVisible; }
@@ -127,6 +136,11 @@ public:
   virtual void setValue(double AValue)                    { MValue = AValue; }
   virtual void setModulation(double AValue)               { MModulation = AValue; }
 
+  virtual void setCursor(int32_t ACursor)                 { MCursor = ACursor; }
+
+  virtual void setFlags(uint32_t AFlags)                  { MFlags = AFlags; }
+  virtual void setFlag(uint32_t AFlag)                    { MFlags |= AFlag; }
+  virtual void clearFlag(uint32_t AFlag)                  { MFlags &= ~AFlag; }
 
 //------------------------------
 public:
@@ -222,16 +236,22 @@ public:
   // or self/this if no child widgets at that point
 
   virtual MIP_Widget* findChildWidget(double AXpos, double AYpos, bool ARecursive=true) {
-    for (uint32_t i=0; i<MChildren.size(); i++) {
-      MIP_Widget* widget = MChildren[i];
-      if (widget->isVisible()) {
-        MIP_DRect rect = widget->getRect();
-        if (rect.contains(AXpos,AYpos)) {
-          MIP_Widget* child = widget;
-          if (ARecursive) {
-            child = widget->findChildWidget(AXpos,AYpos,ARecursive);
+
+    //for (uint32_t i=0; i<MChildren.size(); i++) {
+    uint32_t num = MChildren.size();
+    if (num > 0) {
+      for (int32_t i=num-1; i>=0; i--) {
+        MIP_Widget* widget = MChildren[i];
+        //if (widget->isVisible()) {
+        if (widget->isActive()) {
+          MIP_DRect rect = widget->getRect();
+          if (rect.contains(AXpos,AYpos)) {
+            MIP_Widget* child = widget;
+            if (ARecursive) {
+              child = widget->findChildWidget(AXpos,AYpos,ARecursive);
+            }
+            return child;
           }
-          return child;
         }
       }
     }
@@ -383,9 +403,15 @@ public:
   }
 
   virtual void on_widget_enter(double AXpos, double AYpos) {
+    if (hasFlag(MIP_WIDGET_FLAG_AUTO_SET_CURSOR)) {
+      do_widget_set_cursor(this,MCursor);
+    }
   }
 
   virtual void on_widget_leave(double AXpos, double AYpos) {
+    if (hasFlag(MIP_WIDGET_FLAG_AUTO_SET_CURSOR)) {
+      do_widget_set_cursor(this,MIP_CURSOR_DEFAULT);
+    }
   }
 
 

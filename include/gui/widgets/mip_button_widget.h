@@ -25,6 +25,7 @@ public:
 
   MIP_ButtonWidget(MIP_DRect ARect, const char* AText="", double AValue=0.0)
   : MIP_ValueWidget(ARect,AText,AValue) {
+    setCursor(MIP_CURSOR_FINGER);
   }
 
   //----------

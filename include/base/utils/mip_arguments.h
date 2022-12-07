@@ -2,7 +2,7 @@
 #define mip_arguments_included
 //----------------------------------------------------------------------
 
-#include "mip.h"
+#include "base/mip.h"
 
 class MIP_Arguments {
 
@@ -92,17 +92,16 @@ public:
 
   //----------
 
-  bool hasOption(const char* arg, const char* arg2=nullptr) {
-    if (findArg(arg,arg2) >= 0) return true;
+  bool hasOption(const char* arg) {
+    if (findArg(arg) >= 0) return true;
     return false;
   }
 
   //----------
 
-  int findArg(const char* arg, const char* arg2=nullptr) {
+  int findArg(const char* arg) {
     for (int i=0; i<MArgc; i++) {
       if (strcmp(arg,MArgv[i]) == 0) return i;
-      if (arg2) if (strcmp(arg2,MArgv[i]) == 0) return i;
     }
     return -1;
   }
@@ -113,9 +112,8 @@ public:
 
   // "-i ./test"
 
-  const char* getArgStr(const char* arg, const char* arg2=nullptr) {
+  const char* getArgStr(const char* arg) {
     int i = findArg(arg);
-    if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
       i += 1;
       if (i < MArgc) {
@@ -129,25 +127,23 @@ public:
 
   // "-b 128"
 
-  int getArgInt(const char* arg, const char* arg2=nullptr) {
+  int getArgInt(const char* arg) {
     int i = findArg(arg);
-    if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
       i += 1;
       if (i < MArgc) {
         return getInt(i);
       }
     }
-    return 0.0;
+    return 0;
   }
 
   //----------
 
   // "-r 1.5"
 
-  float getArgFloat(const char* arg, const char* arg2=nullptr) {
+  float getArgFloat(const char* arg) {
     int i = findArg(arg);
-    if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
       i += 1;
       if (i < MArgc) {
@@ -163,9 +159,8 @@ public:
 
   // "-i test:abc"
 
-  const char* getArgStrAfterSymbol(char symbol, const char* arg, const char* arg2=nullptr) {
+  const char* getArgStrAfterSymbol(char symbol, const char* arg) {
     int i = findArg(arg);
-    if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
       const char* text = getStr(i+1);
       const char* text2 = strchr(text,symbol);
@@ -181,9 +176,8 @@ public:
 
   // "-i test:1"
 
-  int getArgIntAfterSymbol(char symbol, const char* arg, const char* arg2=nullptr) {
+  int getArgIntAfterSymbol(char symbol, const char* arg) {
     int i = findArg(arg);
-    if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
       const char* text = getStr(i+1);
       const char* text2 = strchr(text,symbol);
@@ -205,9 +199,8 @@ public:
 
   // "-i test:0.75"
 
-  float getArgFloatAfterSymbol(char symbol, const char* arg, const char* arg2=nullptr) {
+  float getArgFloatAfterSymbol(char symbol, const char* arg) {
     int i = findArg(arg);
-    if (arg2 && (i < 0)) i = findArg(arg2);
     if (i >= 0) {
       const char* text = getStr(i+1);
       const char* text2 = strchr(text,symbol);

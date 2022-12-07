@@ -172,6 +172,8 @@ public:
     AParameter->setWidget(AWidget);
   }
 
+  //----------
+
   virtual void setParameters(MIP_ParameterArray* AParameters) {
     MParameters = AParameters;
   }
@@ -368,9 +370,13 @@ public: // clap.gui
       //painter->resetClip();
       MEditorWidth = width;
       MEditorHeight = height;
+
+      #ifdef MIP_WIN32
       if (MIsEditorOpen) {
         MWindow->invalidate(0,0,width,height);
       }
+      #endif
+
     }
     return true;
   }
