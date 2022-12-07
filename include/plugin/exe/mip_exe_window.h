@@ -11,7 +11,6 @@
 
 class MIP_ExeWindow
 : public MIP_ImplementedWindow {
-//: public MIP_Window {
 
 //------------------------------
 private:
@@ -26,13 +25,11 @@ public:
 
   MIP_ExeWindow(uint32_t AWidth, uint32_t AHeight, const clap_plugin_t* APlugin, const clap_plugin_gui_t* AGui)
   : MIP_ImplementedWindow(AWidth,AHeight) {
-  //: MIP_Window(AWidth,AHeight,false) {
-    //MWindowType = "MIP_ExeWindow";
     plugin = APlugin;
     gui = AGui;
     setTitle("MIP_ExeWindow");
-    //setWindowBackgroundColor(0.5);
     //setWindowFillBackground(true);
+    //setWindowBackgroundColor(0.5);
   }
 
   //----------
@@ -87,35 +84,34 @@ public:
 
     //#ifdef MIP_WIN32
     //#ifdef MIP_GUI_NANOVG
-    #ifdef MIP_WINDOW_BUFFERED
-      MIP_Plugin* plug = (MIP_Plugin*)plugin->plugin_data;
-      if (plug) {
-        if (plug->MEditor) {
-          MIP_Window* window = plug->MEditor->getWindow();
-          if (window) {
-            window->on_window_resize(AWidth,AHeight);
-          }
-        }
-      }
-    #endif
+
+//    #ifdef MIP_WINDOW_BUFFERED
+//      MIP_Plugin* plug = (MIP_Plugin*)plugin->plugin_data;
+//      if (plug) {
+//        if (plug->MEditor) {
+//          MIP_Window* window = plug->MEditor->getWindow();
+//          if (window) {
+//            window->on_window_resize(AWidth,AHeight);
+//          }
+//        }
+//      }
+//    #endif
 
     // let our plugin know..
+
     gui->set_size(plugin,AWidth,AHeight);
 
-    #ifdef MIP_USE_WIN32
-      MIP_Plugin* plug = (MIP_Plugin*)plugin->plugin_data;
-      if (plug) {
-       if (plug->MEditor) {
-          MIP_Window* window = plug->MEditor->getWindow();
-          if (window) {
-            window->invalidateRegion(0,0,AWidth,AHeight);
-            //HWND hwnd = window->getWinHandle();
-            //UpdateWindow(hwnd);
-            //RedrawWindow
-          }
-        }
-      }
-    #endif
+//    #ifdef MIP_USE_WIN32
+//      MIP_Plugin* plug = (MIP_Plugin*)plugin->plugin_data;
+//      if (plug) {
+//       if (plug->MEditor) {
+//          MIP_Window* window = plug->MEditor->getWindow();
+//          if (window) {
+//            window->invalidateRegion(0,0,AWidth,AHeight);
+//          }
+//        }
+//      }
+//    #endif
 
   }
 

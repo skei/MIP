@@ -72,7 +72,7 @@ void mip_exe_open_editor() {
         #endif
         #ifdef MIP_WIN32
           clap_window.api = CLAP_WINDOW_API_WIN32;
-          clap_window.win32 = window->tgtGetWindow();
+          clap_window.win32 = window->tgtGetHWND();
         #endif
 
         gui->set_parent(clapplugin,&clap_window);
