@@ -12,8 +12,6 @@
   #define MIP_LINUX
 #endif
 
-//----------
-
 #if defined _WIN32 || defined __CYGWIN__
   #define  MIP_WIN32
 #endif
@@ -28,22 +26,11 @@
   #define MIP_ALIGNMENT_CACHE           64
   #define MIP_GUI_TIMER_MS              20
   #define MIP_GUI_TIMER_ID              333
-  #define MIP_LOGFILE_NAME              "MIP.log"
+  #define MIP_LOGFILE_NAME              "MIP.LOG"
   #define MIP_MAX_PATH_LENGTH           512
   #define MIP_MAX_STRING_LENGTH         256
   #define MIP_OPENGL_VERSION_MAJOR      3
   #define MIP_OPENGL_VERSION_MINOR      2
-
-//-----
-
-//#define MIP_AUDIO_MAX_EVENTS          256
-//#define MIP_AUDIO_MAX_MIDI_EVENTS     256
-//#define MIP_AUDIO_MAX_NODES           256
-//#define MIP_AUDIO_SLICESIZE           16
-//#define MIP_AUDIO_NUM_SLICE_BUFFERS   16
-//#define MIP_BITMAP_RASTER_MAX_HEIGHT  2048
-//#define MIP_GUI_DBLCLICK_MS           200
-
 
 //----------------------------------------------------------------------
 //
@@ -51,19 +38,16 @@
 //
 //----------------------------------------------------------------------
 
-  #define MIP_NO_DEFAULT_WARNINGS
-  #define MIP_RANDOM_SYSTEM
-
-//-----
-
 //#define MIP_EXECUTABLE_SHARED_LIBRARY
 //#define MIP_FAST_MATH_EXTRA_PRECISION
 //#define MIP_LOGGING
 //#define MIP_LOG_APPEND
 //#define MIP_NO_AUTODELETE
+  #define MIP_NO_DEFAULT_WARNINGS
 //#define MIP_NO_DMC_COMPRESS
 //#define MIP_NO_ENTRY
 //#define MIP_NO_STDLIB
+  #define MIP_RANDOM_SYSTEM
 //#define MIP_UNIT_TESTING
 //#define MIP_VOICE_ADD_TO_BUFFER
 
@@ -101,15 +85,6 @@
 //
 //----------------------------------------------------------------------
 
-
-//-----
-
-//#define MIP_BITMAP_NO_DRAW
-//#define MIP_BITMAP_NO_FONT
-//#define MIP_BITMAP_NO_GEN
-//#define MIP_BITMAP_NO_PNG
-//#define MIP_BITMAP_NO_PNG_FILE
-//#define MIP_BITMAP_NO_PROC
 //#define MIP_GUI_WIN32
 //#define MIP_GUI_XCB
 //#define MIP_MOUSE_DOUBLECLICK
@@ -133,8 +108,43 @@
 //#define MIP_XCB_USE_STB_TRUETYPE
 //#define MIP_XCB_WAIT_FOR_MAPNOTIFY
 
+//----------------------------------------------------------------------
+//
+// plugin
+//
+//----------------------------------------------------------------------
+
+//#define MIP_NO_ENTRY
+//#define MIP_NO_PLUGIN
+//#define MIP_NO_REGISTRY
+  #define MIP_PLUGIN_CLAP
+  #define MIP_PLUGIN_EXE
+  #define MIP_PLUGIN_VST2
+  #define MIP_PLUGIN_VST3
+//#define MIP_PLUGIN_GENERIC_EDITOR
+//#define MIP_VST2_FST
+//#define MIP_VST2_SDK
+//#define MIP_VST2_VESTIGE
+//#define MIP_VST2_XAYMAR
+//#define MIP_VST3_SDK
+//#define MIP_VST3_TRAVESTY
+
+
+
+
+
+//----------------------------------------------------------------------
+//
+//
+//
+//----------------------------------------------------------------------
+
+
+
+
+
 //------------------------------
-// gui (type)
+// gui type
 //------------------------------
 
 #undef MIP_GUI_DEFINED
@@ -266,35 +276,6 @@
 //----------
 
 #undef MIP_PAINTER_DEFINED
-
-//----------------------------------------------------------------------
-//
-// plugin
-//
-//----------------------------------------------------------------------
-
-  #define MIP_PLUGIN_CLAP
-  #define MIP_PLUGIN_EXE
-  #define MIP_PLUGIN_VST2
-  #define MIP_PLUGIN_VST3
-
-//-----
-
-//#define MIP_EDITOR_CREATE_WINDOW_WHEN_OPENING
-
-//#define MIP_NO_ENTRY
-//#define MIP_NO_PLUGIN
-//#define MIP_NO_REGISTRY
-
-//#define MIP_PLUGIN_GENERIC_EDITOR
-
-//#define MIP_VST2_FST
-//#define MIP_VST2_SDK
-//#define MIP_VST2_VESTIGE
-//#define MIP_VST2_XAYMAR
-
-//#define MIP_VST3_SDK
-//#define MIP_VST3_TRAVESTY
 
 //------------------------------
 // plugin (type)
