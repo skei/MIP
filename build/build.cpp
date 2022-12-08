@@ -8,7 +8,7 @@
 
 
 //#include "../build/test/test1.cpp"
-#include "../build/test/plug1.cpp"
+//#include "../build/test/plug1.cpp"
 
 
 //----------------------------------------------------------------------
@@ -41,7 +41,7 @@
 //----------------------------------------------------------------------
 
 
-//#include "../source/skei.audio/sa_botage.cpp"
+#include "../source/skei.audio/sa_botage.cpp"
 //#include "../source/skei.audio/sa_bulum.cpp"
 //#include "../source/skei.audio/sa_cred.cpp"
 //#include "../source/skei.audio/sa_lad.cpp"

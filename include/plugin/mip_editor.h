@@ -371,6 +371,7 @@ public: // clap.gui
       MEditorWidth = width;
       MEditorHeight = height;
 
+      // will not redraw when resizing without this
       #ifdef MIP_WIN32
       if (MIsEditorOpen) {
         MWindow->invalidate(0,0,width,height);

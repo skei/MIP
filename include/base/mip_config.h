@@ -101,7 +101,6 @@
 //
 //----------------------------------------------------------------------
 
-  #define MIP_WIN32_INVALIDATE_WHEN_RESIZING
 
 //-----
 
@@ -129,6 +128,7 @@
 //#define MIP_USE_WGL
 //#define MIP_USE_XCB
 //#define MIP_WIN32_GDIPLUS
+//#define MIP_WIN32_INVALIDATE_WHEN_RESIZING
 //#define MIP_WINDOW_BUFFERED
 //#define MIP_XCB_USE_STB_TRUETYPE
 //#define MIP_XCB_WAIT_FOR_MAPNOTIFY

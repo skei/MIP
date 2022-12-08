@@ -51,7 +51,11 @@
               changes the width of the client area.
   CS_VREDRAW  Redraws the entire window if a movement or size adjustment
               changes the height of the client area.
+
 */
+
+// h/v redraw doesn't seem to work in wine?
+// i have to manually invalidate the entire window to get repaints..
 
 #define MIP_WIN32_CLASS_STYLE         ( CS_OWNDC | CS_HREDRAW | CS_VREDRAW )
 #define MIP_WIN32_STANDALONE_STYLE    ( WS_OVERLAPPEDWINDOW )
