@@ -26,6 +26,8 @@
 
   #define MIP_ALIGNMENT_SIMD            16
   #define MIP_ALIGNMENT_CACHE           64
+  #define MIP_GUI_TIMER_MS              20
+  #define MIP_GUI_TIMER_ID              333
   #define MIP_LOGFILE_NAME              "MIP.log"
   #define MIP_MAX_PATH_LENGTH           512
   #define MIP_MAX_STRING_LENGTH         256
@@ -42,8 +44,6 @@
 //#define MIP_BITMAP_RASTER_MAX_HEIGHT  2048
 //#define MIP_GUI_DBLCLICK_MS           200
 
-  #define MIP_GUI_TIMER_MS              20
-  #define MIP_GUI_TIMER_ID              333
 
 //----------------------------------------------------------------------
 //
@@ -268,7 +268,9 @@
 #undef MIP_PAINTER_DEFINED
 
 //----------------------------------------------------------------------
+//
 // plugin
+//
 //----------------------------------------------------------------------
 
   #define MIP_PLUGIN_CLAP

@@ -1055,8 +1055,8 @@ public: // queues
   */
 
   void flushProcessParams() {
-    uint32_t index;
-    double value;
+    uint32_t index = 0;
+    double value = 0.0;
     while (MProcessParamQueue.read(&index)) {
       MQueuedProcessParamValues.read(&value);
       //if (value != MFlushedProcessParamValues[index])
@@ -1097,8 +1097,8 @@ public: // queues
   //----------
 
   void flushHostParams(const clap_output_events_t* out_events) {
-    uint32_t index;
-    double value;
+    uint32_t index = 0;
+    double value = 0.0;
     while (MHostParamQueue.read(&index)) {
       MQueuedHostParamValues.read(&value);
       //double value = MParameters[index]->getValue();
@@ -1172,8 +1172,8 @@ public: // queues
   void flushGuiParams() {
     //if (!MSuppressGuiTimer) {
       //MIP_PRINT;
-      uint32_t index;
-      double value;
+      uint32_t index = 0;
+      double value = 0.0;
       while (MGuiParamQueue.read(&index)) {
         MQueuedGuiParamValues.read(&value);
         //double value = MParameters[index]->getValue();
@@ -1207,8 +1207,8 @@ public: // queues
 
   void flushGuiMods() {
     //MIP_PRINT;
-    uint32_t index;
-    double value;
+    uint32_t index = 0;
+    double value = 0.0;
     while (MGuiModQueue.read(&index)) {
       MQueuedGuiModValues.read(&value);
       //double value = MParameters[index]->getValue();

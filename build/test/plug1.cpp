@@ -164,6 +164,5 @@ public:
 //----------------------------------------------------------------------
 
 #include "plugin/mip_entry.h"
-
 MIP_DEFAULT_ENTRY(myDescriptor,myPlugin);
 
