@@ -73,14 +73,12 @@ public:
   virtual void        setIndex(int32_t AIndex)            { MIndex = AIndex; }
 
   virtual void        setValue(double AValue)             { MValue = AValue; }
+  virtual void        setModulation(double AValue)        { MModulation = AValue; }
+
   virtual void        setValueTarget(double AValue)       { MValueTarget = AValue; }
   virtual void        setValueFactor(double AValue)       { MValueFactor = AValue; }
-
-  virtual void        setModulation(double AValue)        { MModulation = AValue; }
   virtual void        setModulationTarget(double AValue)  { MModulationTarget = AValue; }
   virtual void        setModulationFactor(double AValue)  { MModulationFactor = AValue; }
-
-  // expressions?
 
   virtual void        setId(uint32_t AId)                 { MParamInfo.id = AId; }
   virtual void        setFlags(uint32_t AFlags)           { MParamInfo.flags = AFlags; }
@@ -90,6 +88,8 @@ public:
   virtual void        setMinValue(double AValue)          { MParamInfo.min_value = AValue; }
   virtual void        setMaxValue(double AValue)          { MParamInfo.max_value = AValue; }
 
+  // expressions?
+
 //------------------------------
 public:
 //------------------------------
@@ -97,8 +97,9 @@ public:
   virtual MIP_Widget* getWidget()           { return MWidget; }
   virtual int32_t     getIndex()            { return MIndex; }
   virtual double      getValue()            { return MValue; }
-  virtual double      getValueSmoothed()    { return MValueSmoothed; }
   virtual double      getModulation()       { return MModulation; }
+
+  virtual double      getValueSmoothed()    { return MValueSmoothed; }
   virtual double      getModulationSmooth() { return MModulationSmooth; }
 
   virtual uint32_t    getId()               { return MParamInfo.id; }

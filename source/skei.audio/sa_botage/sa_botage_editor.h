@@ -6,80 +6,9 @@
 #include "gui/mip_widgets.h"
 #include "plugin/mip_editor.h"
 
-#include "../img/sa_img.h"
-#include "../img/botage_img.h"
-#include "../img/mip_img.h"
-
-#define SA_BOTAGE_HEADER_HEIGHT 80
-#define SA_BOTAGE_FOOTER_HEIGHT 20
-
-//----------------------------------------------------------------------
-
-class sa_botage_header
-: public MIP_PanelWidget {
-
-private:
-
-  int m_sa      = 0;
-  int m_botage  = 0;
-  int m_mip     = 0;
-
-  MIP_ImageWidget*  MSaImage      = nullptr;
-  MIP_ImageWidget*  MBotageImage  = nullptr;
-  MIP_ImageWidget*  MMipImage     = nullptr;
-
-public:
-
-  sa_botage_header(MIP_DRect ARect)
-  : MIP_PanelWidget(ARect) {
-
-    setFillBackground(true);
-    setBackgroundColor(0.25);
-
-    MSaImage = new MIP_ImageWidget(MIP_DRect(0,0,80,80),(void*)sa_img,sa_img_size);
-    appendChildWidget(MSaImage);
-
-    MBotageImage = new MIP_ImageWidget(MIP_DRect(80,0,160,80),(void*)botage_img,botage_img_size);
-    appendChildWidget(MBotageImage);
-
-    MMipImage = new MIP_ImageWidget(MIP_DRect((ARect.w - 120),0,120,80),(void*)mip_img,mip_img_size);
-    appendChildWidget(MMipImage);
-
-  }
-
-  virtual ~sa_botage_header() {
-  }
-
-//  virtual void open(MIP_BaseWindow* AOwnerWindow, bool ARecursive=true) {
-//    MIP_Widget::open(AOwnerWindow,ARecursive);
-//    //MIP_Window* window = AEditor->getWindow();
-//    MIP_Window* window = (MIP_Window*)AOwnerWindow;
-//    MIP_Painter* painter = window->getWindowPainter();
-//    int m_sa      = painter->loadImage((void*)sa_img,    sa_img_size);
-//    int m_botage  = painter->loadImage((void*)botage_img,botage_img_size);
-//    int m_mip     = painter->loadImage((void*)mip_img,   mip_img_size);
-//  }
-
-};
-
 //----------
 
-//class sa_botage_footer
-//: public MIP_PanelWidget {
-//
-//public:
-//
-//  sa_botage_footer(MIP_DRect ARect)
-//  : MIP_PanelWidget(ARect) {
-//
-//    setFillBackground(true);
-//    setBackgroundColor(0.25);
-//  }
-//
-//  virtual ~sa_botage_footer() {
-//  }
-//
-//};
+#include "sa_botage_widgets.h"
 
 //----------------------------------------------------------------------
 
@@ -119,17 +48,44 @@ public:
       MEditor.connect( dragvalue, getParameter(2) );
 */
 
-//----------
+//----------------------------------------------------------------------
 
 bool sa_botage_setup_editor(MIP_Editor* AEditor, MIP_Widget* ARootWidget) {
+
+  MIP_Window* window = AEditor->getWindow();
+  MIP_Assert(window);
+
+  // header
 
   double width  = ARootWidget->getWidth();
   sa_botage_header* header  = new sa_botage_header(MIP_DRect(0,0,width,SA_BOTAGE_HEADER_HEIGHT));
   ARootWidget->appendChildWidget(header);
 
-//  double height = ARootWidget->getHeight();
-//  sa_botage_footer* footer  = new sa_botage_footer(MIP_DRect(0,(height - SA_BOTAGE_FOOTER_HEIGHT),width,SA_BOTAGE_FOOTER_HEIGHT));
-//  ARootWidget->appendChildWidget(footer);
+  // waveform
+
+  MIP_PanelWidget* waveform = new MIP_PanelWidget( MIP_DRect(10,90,(SA_BOTAGE_EDITOR_WIDTH - 20),60) );
+  ARootWidget->appendChildWidget(waveform);
+
+  // beats, slices
+
+  double __MIP_UNUSED x,y,w,h = 0;
+
+  w = ((SA_BOTAGE_EDITOR_WIDTH - 30) / 2);
+
+  MIP_SliderWidget* beats = new MIP_SliderWidget( MIP_DRect(10,160,w,20),"Beats");
+  ARootWidget->appendChildWidget(beats);
+
+  x = 10 + w + 10;
+
+  MIP_SliderWidget* slices = new MIP_SliderWidget( MIP_DRect(x,160,w,20),"Slices");
+  ARootWidget->appendChildWidget(slices);
+
+
+  // footer
+
+  //double height = ARootWidget->getHeight();
+  //sa_botage_footer* footer  = new sa_botage_footer(MIP_DRect(0,(height - SA_BOTAGE_FOOTER_HEIGHT),width,SA_BOTAGE_FOOTER_HEIGHT));
+  //ARootWidget->appendChildWidget(footer);
 
   return true;
 }

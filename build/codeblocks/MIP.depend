@@ -711,7 +711,7 @@
 	"base/mip.h"
 	"gui/widgets/mip_drag_value_widget.h"
 
-1670169569 /DISKS/sda2/code/git/MIP/include/plugin/mip_parameter.h
+1670539572 /DISKS/sda2/code/git/MIP/include/plugin/mip_parameter.h
 	"base/mip.h"
 	"plugin/clap/mip_clap.h"
 
@@ -793,13 +793,14 @@
 1670346439 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_button_row_widget.h
 	"gui/widgets/mip_grid_widget.h"
 
-1670529748 /DISKS/sda2/code/git/MIP/include/gui/mip_widgets.h
+1670542819 /DISKS/sda2/code/git/MIP/include/gui/mip_widgets.h
 	"base/mip.h"
 	"gui/mip_widget.h"
 	"gui/widgets/mip_button_widget.h"
 	"gui/widgets/mip_button_row_widget.h"
 	"gui/widgets/mip_drag_value_widget.h"
 	"gui/widgets/mip_grid_widget.h"
+	"gui/widgets/mip_group_box_widget.h"
 	"gui/widgets/mip_image_widget.h"
 	"gui/widgets/mip_knob_widget.h"
 	"gui/widgets/mip_menu_widget.h"
@@ -835,20 +836,18 @@
 
 1668352915 /DISKS/sda2/code/git/MIP/include/plugin/exe/mip_exe.h
 
-1670536428 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
+1670550136 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
 	"audio/mip_audio_utils.h"
 	"gui/mip_widgets.h"
 	"plugin/mip_plugin.h"
 	"sa_botage/sa_botage_editor.h"
 	"plugin/mip_entry.h"
 
-1670535638 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
+1670543678 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
 	"base/mip.h"
 	"gui/mip_widgets.h"
 	"plugin/mip_editor.h"
-	"../img/sa_img.h"
-	"../img/botage_img.h"
-	"../img/mip_img.h"
+	"sa_botage_widgets.h"
 
 1670527678 /DISKS/sda2/code/git/MIP/source/skei.audio/img/sa_img.h
 
@@ -859,4 +858,17 @@
 1670531857 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_image_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_panel_widget.h"
+
+1670542718 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_group_box_widget.h
+
+1670543031 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_widgets.h
+	"base/mip.h"
+	"gui/widgets/mip_image_widget.h"
+	"gui/widgets/mip_panel_widget.h"
+	"../img/sa_img.h"
+	"../img/botage_img.h"
+	"../img/mip_img.h"
+
+1670549407 /DISKS/sda2/code/git/MIP/include/base/utils/mip_tcc2.h
+	<dlfcn.h>
 

@@ -75,8 +75,9 @@ class MIP_Tcc {
 private:
 //------------------------------
 
-  void*     MLibHandle  = nullptr;
-  TCCState* MTccState   = nullptr;
+  bool      MInitialized  = false;
+  void*     MLibHandle    = nullptr;
+  TCCState* MTccState     = nullptr;
 
 //------------------------------
 public:
@@ -85,14 +86,14 @@ public:
 // path = path to tcc.so
 
   MIP_Tcc(const char* path) {
-    load_lib(path);
+    //MInitialized = load_lib(path);
 
   }
 
   //----------
 
   ~MIP_Tcc() {
-    unload_lib();
+    //unload_lib();
   }
 
 //------------------------------
@@ -146,6 +147,7 @@ public:
     tcc_relocate            = (tcc_relocate_t)dlsym(MLibHandle,"tcc_relocate");
     tcc_get_symbol          = (tcc_get_symbol_t)dlsym(MLibHandle,"tcc_get_symbol");
     MTccState = tcc_new();
+    MIP_Assert(MTccState);
     return (MTccState);
   }
 

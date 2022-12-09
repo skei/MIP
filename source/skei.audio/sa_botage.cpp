@@ -10,6 +10,11 @@
 #include "gui/mip_widgets.h"
 #include "plugin/mip_plugin.h"
 
+//----------
+
+#define SA_BOTAGE_EDITOR_WIDTH  640
+#define SA_BOTAGE_EDITOR_HEIGHT 480
+
 #include "sa_botage/sa_botage_editor.h"
 
 //----------------------------------------------------------------------
@@ -31,9 +36,6 @@ const clap_plugin_descriptor_t sa_botage_descriptor = {
   .features     = (const char*[]){"audio-effect",nullptr}
 };
 
-#define SA_BOTAGE_EDITOR_WIDTH  640
-#define SA_BOTAGE_EDITOR_HEIGHT 480
-
 //----------------------------------------------------------------------
 //
 // plugin
@@ -47,11 +49,12 @@ class sa_botage_plugin
 private:
 //------------------------------
 
+  MIP_PanelWidget* MRootWidget = nullptr;
+
+  // parameters
   double gain  = 0.0;
   double left  = 0.0;
   double right = 0.0;
-
-  MIP_PanelWidget* MRootWidget = nullptr;
 
   //const char* brtxt[6] = { "one", "2", "3", "IV", "V", "six" };
 
@@ -81,21 +84,15 @@ public:
 
   //----------
 
-  #ifndef MIP_NO_GUI
-
   bool gui_create(const char* api, bool is_floating) final {
     bool result = MIP_Plugin::gui_create(api,is_floating);
     if (result) {
-      MIP_Window* window = MEditor.getWindow();
-      MIP_Assert(window);
       MRootWidget = new MIP_PanelWidget(MIP_DRect(0,0,SA_BOTAGE_EDITOR_WIDTH,SA_BOTAGE_EDITOR_HEIGHT));
       MEditor.setRootWidget(MRootWidget);
       sa_botage_setup_editor(&MEditor,MRootWidget);
     }
     return result;
   }
-
-  #endif
 
   //----------
 
@@ -121,6 +118,11 @@ public:
     uint32_t length = process->frames_count;
     float** inputs  = process->audio_inputs[0].data32;
     float** outputs = process->audio_outputs[0].data32;
+
+    gain   = MParameters[0]->getValue();
+    left   = MParameters[1]->getValue();
+    right  = MParameters[2]->getValue();
+
     MIP_CopyStereoBuffer(outputs,inputs,length);
     MIP_ScaleStereoBuffer(outputs,left*gain,right*gain,length);
   }
