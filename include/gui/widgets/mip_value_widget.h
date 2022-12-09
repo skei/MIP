@@ -19,8 +19,13 @@ protected:
 //------------------------------
 
   bool        MDrawValue      = true;
+
   double      MValueSize      = 14.0;
-  MIP_Color   MValueColor     = MIP_COLOR_RED;//LIGHT_GRAY;
+  double      MIValueSize     = 16.0;
+
+  MIP_Color   MValueColor     = MIP_COLOR_DARK_GRAY;
+  MIP_Color   MIValueColor    = MIP_COLOR_BLACK;
+
   //double      MValue          = 0.0;
   uint32_t    MValueAlignment = MIP_TEXT_ALIGN_RIGHT;
   MIP_DRect   MValueOffset    = MIP_DRect(0,0,5,0);
@@ -66,8 +71,16 @@ public:
     MIP_DRect vo = MValueOffset;
     vo.scale(S);
     mrect.shrink(vo);
-    painter->setTextColor(MValueColor);
-    painter->setTextSize(MValueSize * S);
+
+    //if (MIsInteracting) {
+    //  painter->setTextColor(MIValueColor);
+    //  painter->setTextSize(MIValueSize * S);
+    //}
+    //else {
+      painter->setTextColor(MValueColor);
+      painter->setTextSize(MValueSize * S);
+    //}
+
     char temp[16] = {0};
     sprintf(temp,"%.3f",MValue);
     double bounds[4] = {0};

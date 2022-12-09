@@ -75,7 +75,6 @@ public:
 //  }
 
   void close(MIP_BaseWindow* AOwnerWindow, bool ARecursive=true) override {
-    MIP_PRINT;
     if (MInitialized) {
       MIP_Window* window = (MIP_Window*)AOwnerWindow;
       MIP_Painter* painter = window->getWindowPainter();

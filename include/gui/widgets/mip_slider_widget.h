@@ -25,7 +25,8 @@ protected:
 
 
   bool      MDrawSlider   = true;
-  MIP_Color MSliderColor  = MIP_COLOR_LIGHT_GREEN2;
+  MIP_Color MSliderColor  = MIP_COLOR_LIGHT_GRAY;
+  MIP_Color MISliderColor = MIP_COLOR_WHITE;
 
 
 //------------------------------
@@ -57,7 +58,15 @@ public:
     //double S = window->getWindowScale();
     MIP_DRect mrect = getRect();
     MIP_Painter* painter = AContext->painter;
-    painter->setFillColor(MSliderColor);
+
+    if (MIsInteracting) {
+      painter->setFillColor(MISliderColor);
+    }
+    else {
+      painter->setFillColor(MSliderColor);
+    }
+
+
     double x = mrect.x;
     double y = mrect.y;
     double w = mrect.w * MValue;

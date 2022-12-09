@@ -12,6 +12,7 @@
 #include "gui/widgets/mip_group_box_widget.h"
 #include "gui/widgets/mip_image_widget.h"
 #include "gui/widgets/mip_knob_widget.h"
+#include "gui/widgets/mip_knob2_widget.h"
 #include "gui/widgets/mip_menu_widget.h"
 #include "gui/widgets/mip_menu_item_widget.h"
 #include "gui/widgets/mip_panel_widget.h"

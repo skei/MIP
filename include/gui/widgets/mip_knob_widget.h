@@ -27,8 +27,8 @@ protected:
   bool      MDrawArc        = true;
   MIP_Color MArcBackColor   = MIP_COLOR_DARK_GRAY;
   MIP_Color MArcValueColor  = MIP_COLOR_LIGHT_GRAY;
-  double    MArcThickness   = 10.0;;
-
+  MIP_Color MIArcValueColor = MIP_COLOR_WHITE;
+  double    MArcThickness   = 10.0;
 
 //------------------------------
 public:
@@ -66,23 +66,32 @@ public:
     MIP_DRect mrect = getRect();
     MIP_Painter* painter = AContext->painter;
 
-    double thick = MArcThickness * S;
+    double thick  = MArcThickness * S;
+    //double bthick = MArcThickness * S * 0.5;
 
     double cx = mrect.x + (mrect.w * 0.5);
     double cy = mrect.y + (mrect.h * 0.5);
-    double r  = (mrect.w - thick) * 0.5;
+    double r  = (mrect.w - thick)  * 0.5;
+    //double br = (mrect.w - bthick) * 0.5;
+
+    double a1 = 0.35 + (MValue * 0.8);
+    double a2 =        (MValue * 0.8);
+    a1 *= MIP_PI2;
+    a2 *= MIP_PI2;
 
     painter->setDrawColor(MArcBackColor);
     painter->setLineWidth(thick);
     painter->drawArc(cx,cy,r,0.15*MIP_PI2,0.8*MIP_PI2);
 
-    double a1 = 0.35 + (MValue * 0.8);
-    double a2 = MValue * 0.8;
-    a1 *= MIP_PI2;
-    a2 *= MIP_PI2;
-
-    painter->setDrawColor(MArcValueColor);
     painter->setLineWidth(thick);
+
+    if (MIsInteracting) {
+      painter->setDrawColor(MIArcValueColor);
+    }
+    else {
+      painter->setDrawColor(MArcValueColor);
+    }
+
     painter->drawArc(cx,cy,r,a1,a2);
 
 //    double x = mrect.x;

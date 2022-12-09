@@ -63,28 +63,30 @@ class MIP_Widget
 private:
 //------------------------------
 
-//  MIP_Widget*       MParent       = nullptr;
-  MIP_WidgetListener* MListener     = nullptr;
-  MIP_Widgets         MChildren     = {};
-  MIP_BaseWindow*     MOwnerWindow  = nullptr;
-  int32_t             MIndex        = -1;
-  MIP_DRect           MRect         = {};
-  MIP_DRect           MBaseRect     = {};
-
-  MIP_Parameter*      MParameter    = nullptr;
-  int32_t             MCursor       = MIP_CURSOR_DEFAULT;
-
-  uint32_t            MFlags        = MIP_WIDGET_FLAG_AUTO_SET_CURSOR;
+//  MIP_Widget*       MParent         = nullptr;
+  MIP_WidgetListener* MListener       = nullptr;
+  MIP_Widgets         MChildren       = {};
+  MIP_BaseWindow*     MOwnerWindow    = nullptr;
+  int32_t             MIndex          = -1;
+  MIP_DRect           MRect           = {};
+  MIP_DRect           MBaseRect       = {};
+  MIP_Parameter*      MParameter      = nullptr;
+  int32_t             MCursor         = MIP_CURSOR_DEFAULT;
 
 //------------------------------
 protected:
 //------------------------------
 
-  double              MValue        = 0.0;
-  double              MModulation   = 0.0;
+  double              MValue          = 0.0;
+  double              MModulation     = 0.0;
 
-  bool                MIsActive     = true;
-  bool                MIsVisible    = true;
+  bool                MIsVisible      = true;
+  bool                MIsActive       = true;
+  bool                MIsInteracting  = false;
+
+  bool                MAutoSetCursor  = true;
+  bool                MAutoHideCursor = false;
+  bool                MAutoLockCursor = false;
 
 //------------------------------
 public:
@@ -121,15 +123,22 @@ public:
 
   virtual int32_t         getCursor()             { return MCursor; }
 
-  virtual uint32_t        getFlags()              { return MFlags; }
-  virtual bool            hasFlag(uint32_t AFlag) { return MFlags & AFlag; }
+  //virtual uint32_t        getFlags()              { return MFlags; }
+  //virtual bool            hasFlag(uint32_t AFlag) { return MFlags & AFlag; }
 
-
-  virtual bool isActive()   { return MIsActive; }
-  virtual bool isVisible()  { return MIsVisible; }
+  virtual bool isActive()       { return MIsActive; }
+  virtual bool isVisible()      { return MIsVisible; }
+  virtual bool isInteracting()  { return MIsInteracting; }
+  virtual bool autoSetCursor()  { return MAutoSetCursor; }
+  virtual bool autoHideCursor() { return MAutoHideCursor; }
+  virtual bool autoLockCursor() { return MAutoLockCursor; }
 
   virtual void setActive(bool AActive=true)               { MIsActive = AActive; }
+  virtual void setIsInteracting(bool AInteracting=true)   { MIsInteracting = AInteracting; }
   virtual void setVisible(bool AVisible=true)             { MIsVisible = AVisible; }
+  virtual void setAutoSetCursor(bool AAuto=true)          { MAutoSetCursor = AAuto; }
+  virtual void setAutoHideCursor(bool AAuto=true)         { MAutoHideCursor = AAuto; }
+  virtual void setAutoLockCursor(bool AAuto=true)         { MAutoLockCursor = AAuto; }
 
   virtual void setListener(MIP_WidgetListener* AListener) { MListener = AListener; }
   virtual void setParameter(MIP_Parameter* AParameter)    { MParameter = AParameter; }
@@ -138,9 +147,9 @@ public:
 
   virtual void setCursor(int32_t ACursor)                 { MCursor = ACursor; }
 
-  virtual void setFlags(uint32_t AFlags)                  { MFlags = AFlags; }
-  virtual void setFlag(uint32_t AFlag)                    { MFlags |= AFlag; }
-  virtual void clearFlag(uint32_t AFlag)                  { MFlags &= ~AFlag; }
+  //virtual void setFlags(uint32_t AFlags)                  { MFlags = AFlags; }
+  //virtual void setFlag(uint32_t AFlag)                    { MFlags |= AFlag; }
+  //virtual void clearFlag(uint32_t AFlag)                  { MFlags &= ~AFlag; }
 
 //------------------------------
 public:
@@ -403,13 +412,14 @@ public:
   }
 
   virtual void on_widget_enter(double AXpos, double AYpos) {
-    if (hasFlag(MIP_WIDGET_FLAG_AUTO_SET_CURSOR)) {
+    //if (hasFlag(MIP_WIDGET_FLAG_AUTO_SET_CURSOR)) {
+    if (MAutoSetCursor) {
       do_widget_set_cursor(this,MCursor);
     }
   }
 
   virtual void on_widget_leave(double AXpos, double AYpos) {
-    if (hasFlag(MIP_WIDGET_FLAG_AUTO_SET_CURSOR)) {
+    if (MAutoSetCursor) {
       do_widget_set_cursor(this,MIP_CURSOR_DEFAULT);
     }
   }

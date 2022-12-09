@@ -69,16 +69,20 @@ bool sa_botage_setup_editor(MIP_Editor* AEditor, MIP_Widget* ARootWidget) {
   // beats, slices
 
   double __MIP_UNUSED x,y,w,h = 0;
-
   w = ((SA_BOTAGE_EDITOR_WIDTH - 30) / 2);
-
   MIP_SliderWidget* beats = new MIP_SliderWidget( MIP_DRect(10,160,w,20),"Beats");
   ARootWidget->appendChildWidget(beats);
-
   x = 10 + w + 10;
-
   MIP_SliderWidget* slices = new MIP_SliderWidget( MIP_DRect(x,160,w,20),"Slices");
   ARootWidget->appendChildWidget(slices);
+
+// ::::::::::
+// TEST
+
+  MIP_Knob2Widget* knob2 = new MIP_Knob2Widget( MIP_DRect(10,200,60,100), "Knob2", 0.25);
+  ARootWidget->appendChildWidget(knob2);
+
+// ::::::::::
 
 
   // footer
