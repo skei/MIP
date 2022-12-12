@@ -16,6 +16,9 @@
 #define SA_BOTAGE_EDITOR_HEIGHT 480
 
 #include "sa_botage/sa_botage_editor.h"
+#include "sa_botage/sa_botage_parameters.h"
+#include "sa_botage/sa_botage_processor.h"
+#include "sa_botage/sa_botage_widgets.h"
 
 //----------------------------------------------------------------------
 //
@@ -75,9 +78,7 @@ public:
     bool result = MIP_Plugin::init();
     appendStereoInput();
     appendStereoOutput();
-    appendParameter( new MIP_Parameter("Gain", 1.0) );
-    appendParameter( new MIP_Parameter("Left", 1.0) );
-    appendParameter( new MIP_Parameter("Right",1.0) );
+    sa_botage_init_parameters(this);
     setDefaultParameterValues();
     return result;
   }
@@ -85,13 +86,9 @@ public:
   //----------
 
   bool gui_create(const char* api, bool is_floating) final {
-    bool result = MIP_Plugin::gui_create(api,is_floating);
-    if (result) {
-      MRootWidget = new MIP_PanelWidget(MIP_DRect(0,0,SA_BOTAGE_EDITOR_WIDTH,SA_BOTAGE_EDITOR_HEIGHT));
-      MEditor.setRootWidget(MRootWidget);
-      sa_botage_setup_editor(&MEditor,MRootWidget);
-    }
-    return result;
+    MIsEditorOpen = false;
+    MEditor = new sa_botage_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
+    return (MEditor);
   }
 
   //----------
@@ -103,13 +100,26 @@ public:
 
   //----------
 
-  //void processParamValue(const clap_event_param_value_t* event) final {
-  //  switch (event->param_id) {
-  //    case 0: gain  = event->value; break;
-  //    case 1: left  = event->value; break;
-  //    case 2: right = event->value; break;
-  //  }
-  //}
+  void processParamValue(const clap_event_param_value_t* event) final {
+    switch (event->param_id) {
+      case 0: {
+        uint32_t beats = (uint32_t)event->value;
+        MIP_Print("beats %i\n",beats);
+        sa_botage_editor* editor = (sa_botage_editor*)MEditor;
+        if (editor) {
+          MIP_WaveformWidget* waveform = editor->MWaveformWidget;
+          if (waveform) {
+            waveform->setNumGrid(beats);
+            //waveform->redraw(); // crashes if editor is closed !!?
+          }
+        }
+        break;
+      }
+      case 1: {
+        break;
+      }
+    }
+  }
 
   //----------
 
@@ -119,9 +129,9 @@ public:
     float** inputs  = process->audio_inputs[0].data32;
     float** outputs = process->audio_outputs[0].data32;
 
-    gain   = MParameters[0]->getValue();
-    left   = MParameters[1]->getValue();
-    right  = MParameters[2]->getValue();
+    gain   = 1.0;//MParameters[0]->getValue();
+    left   = 1.0;//MParameters[1]->getValue();
+    right  = 1.0;//MParameters[2]->getValue();
 
     MIP_CopyStereoBuffer(outputs,inputs,length);
     MIP_ScaleStereoBuffer(outputs,left*gain,right*gain,length);

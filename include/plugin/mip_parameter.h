@@ -54,10 +54,14 @@ protected:
 public:
 //------------------------------
 
-  MIP_Parameter(const char* AName, double AValue=0.0) {
+  MIP_Parameter(const char* AName="", double AValue=0.0, double AMin=0.0, double AMax=1.0) {
     setName(AName);
+    //setValue(AValue);
+//    AValue = normalizeValue(AValue);
+//    MIP_Print("v %f\n",v);
     setValue(AValue);
     setDefValue(AValue);
+    setValueRange(AMin,AMax);
   }
 
   //----------
@@ -69,26 +73,39 @@ public:
 public:
 //------------------------------
 
-  virtual void        setWidget(MIP_Widget* AWidget)      { MWidget = AWidget; }
-  virtual void        setIndex(int32_t AIndex)            { MIndex = AIndex; }
+  virtual void        setWidget(MIP_Widget* AWidget)          { MWidget = AWidget; }
+  virtual void        setIndex(int32_t AIndex)                { MIndex = AIndex; }
 
-  virtual void        setValue(double AValue)             { MValue = AValue; }
-  virtual void        setModulation(double AValue)        { MModulation = AValue; }
+  virtual void        setValue(double AValue)                 { MValue = AValue; }
+  virtual void        setModulation(double AValue)            { MModulation = AValue; }
 
-  virtual void        setValueTarget(double AValue)       { MValueTarget = AValue; }
-  virtual void        setValueFactor(double AValue)       { MValueFactor = AValue; }
-  virtual void        setModulationTarget(double AValue)  { MModulationTarget = AValue; }
-  virtual void        setModulationFactor(double AValue)  { MModulationFactor = AValue; }
+  virtual void        setValueTarget(double AValue)           { MValueTarget = AValue; }
+  virtual void        setValueFactor(double AValue)           { MValueFactor = AValue; }
+  virtual void        setModulationTarget(double AValue)      { MModulationTarget = AValue; }
+  virtual void        setModulationFactor(double AValue)      { MModulationFactor = AValue; }
 
-  virtual void        setId(uint32_t AId)                 { MParamInfo.id = AId; }
-  virtual void        setFlags(uint32_t AFlags)           { MParamInfo.flags = AFlags; }
-  virtual void        setName(const char* AName)          { strncpy(MParamInfo.name,AName,CLAP_NAME_SIZE-1); }
-  virtual void        setModule(const char* AModule)      { strncpy(MParamInfo.module,AModule,CLAP_PATH_SIZE-1); }
-  virtual void        setDefValue(double AValue)          { MParamInfo.default_value = AValue; }
-  virtual void        setMinValue(double AValue)          { MParamInfo.min_value = AValue; }
-  virtual void        setMaxValue(double AValue)          { MParamInfo.max_value = AValue; }
+  virtual void        setId(uint32_t AId)                     { MParamInfo.id = AId; }
+  virtual void        setFlags(uint32_t AFlags)               { MParamInfo.flags = AFlags; }
+  virtual void        setName(const char* AName)              { strncpy(MParamInfo.name,AName,CLAP_NAME_SIZE-1); }
+  virtual void        setModule(const char* AModule)          { strncpy(MParamInfo.module,AModule,CLAP_PATH_SIZE-1); }
+  virtual void        setDefValue(double AValue)              { MParamInfo.default_value = AValue; }
+  virtual void        setMinValue(double AValue)              { MParamInfo.min_value = AValue; }
+  virtual void        setMaxValue(double AValue)              { MParamInfo.max_value = AValue; }
 
   // expressions?
+
+  virtual void setValueRange(double AMin, double AMax) {
+    MParamInfo.min_value = AMin;
+    MParamInfo.max_value = AMax;
+  }
+
+  virtual void setFlag(uint32_t AFlag) {
+    MParamInfo.flags |= AFlag;
+  }
+
+  virtual void clearFlag(uint32_t AFlag) {
+    MParamInfo.flags &= ~AFlag;
+  }
 
 //------------------------------
 public:
@@ -130,7 +147,7 @@ public:
 
   //----------
 
-  virtual double normalizeValue(double AValue) {
+  double normalizeValue(double AValue) {
     double range = MParamInfo.max_value - MParamInfo.min_value;
     if (range > 0.0) {
       return (AValue - MParamInfo.min_value) / range;
@@ -140,9 +157,21 @@ public:
 
   //----------
 
-  virtual double denormalizeValue(double AValue) {
+  double denormalizeValue(double AValue) {
     double range = MParamInfo.max_value - MParamInfo.min_value;
     return MParamInfo.min_value + (AValue * range);
+  }
+
+  //----------
+
+  double getNormalizedValue() {
+    return normalizeValue(MValue);
+  }
+
+  //----------
+
+  double getDenormalizedValue() {
+    return denormalizeValue(MValue);
   }
 
 };
@@ -160,8 +189,9 @@ class MIP_IntParameter
 public:
 //------------------------------
 
-  MIP_IntParameter(const char* AName, double AValue=0.0)
-  : MIP_Parameter(AName,AValue) {
+  MIP_IntParameter(const char* AName, double AValue=0.0, double AMin=0.0, double AMax=1.0)
+  : MIP_Parameter(AName,AValue,AMin,AMax) {
+    setFlag(CLAP_PARAM_IS_STEPPED);
   }
 
   //----------

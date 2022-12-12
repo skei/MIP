@@ -8,6 +8,7 @@
 #include "gui/widgets/mip_button_widget.h"
 #include "gui/widgets/mip_button_row_widget.h"
 #include "gui/widgets/mip_drag_value_widget.h"
+#include "gui/widgets/mip_dual_slider_widget.h"
 #include "gui/widgets/mip_grid_widget.h"
 #include "gui/widgets/mip_group_box_widget.h"
 #include "gui/widgets/mip_image_widget.h"
@@ -20,6 +21,7 @@
 #include "gui/widgets/mip_slider_widget.h"
 #include "gui/widgets/mip_text_widget.h"
 #include "gui/widgets/mip_value_widget.h"
+#include "gui/widgets/mip_waveform_widget.h"
 
 //----------------------------------------------------------------------
 #endif

@@ -27,14 +27,16 @@ protected:
 
   double      MTextSize               = 12.0;
 
-  MIP_Color   MBackgroundCellColor    = MIP_Color(0.75);//MIP_COLOR_LIGHT_GRAY;
-  MIP_Color   MActiveCellColor        = MIP_Color(0.5);//MIP_COLOR_GRAY;
+  MIP_Color   MBackgroundCellColor    = MIP_Color(0.50);//MIP_COLOR_LIGHT_GRAY;
+  MIP_Color   MActiveCellColor        = MIP_Color(0.75);//MIP_COLOR_GRAY;
 
   bool        MValueIsBits            = true;
   uint32_t    MNumBits                = 8;
 
   bool        MDrawRoundedBottom      = true;
   float       MRounded                = 8;
+
+  bool MAllowZeroBits = true;
 
 //------------------------------
 public:
@@ -88,6 +90,8 @@ public:
 
   void setTextSize(double ASize) { MTextSize = ASize; }
 
+  void setAllowZeroBits(bool AAllow=true) { MAllowZeroBits = AAllow; }
+
 //------------------------------
 public:
 //------------------------------
@@ -117,6 +121,18 @@ public:
     return bits;
   }
 
+  //----------
+
+  uint32_t getNumActiveBits() {
+    uint32_t bits = 0;
+    for (uint32_t i=0; i<MNumBits; i++) {
+      if (MStates[i] == true) bits += 1;
+    }
+    return bits;
+  }
+
+  //----------
+
   void setButtonBits(uint32_t ABits) {
     for (uint32_t i=0; i<MNumBits; i++) {
       bool b = ( ABits & (1 << i) );
@@ -136,7 +152,7 @@ public:
 
   //----------
 
-  double getValue() override {
+  double getValue(uint32_t AIndex=0) override {
     if (MValueIsBits) {
       return getButtonBits();
       //uint32_t bits = getButtonBits();
@@ -148,6 +164,8 @@ public:
       return MIP_GridWidget::getValue();
     }
   }
+
+  //----------
 
   void setValue(double AValue) override {
     if (MValueIsBits) {
@@ -169,6 +187,10 @@ public:
 
   void selectButton(int32_t index) {
     MSelected = index;
+
+    //if (MMustHaveOne) {
+    //}
+
     if (MMode == MIP_BUTTON_ROW_SINGLE) {
       for (int32_t i=0; i<MNumColumns; i++) {
         if (i==MSelected) MStates[i] = true;
@@ -179,6 +201,9 @@ public:
     }
     else {
       MStates[MSelected] = MStates[MSelected] ? false : true;
+      if ( !MAllowZeroBits && (getNumActiveBits() == 0) ) {
+        MStates[MSelected] = true;
+      }
     }
   }
 

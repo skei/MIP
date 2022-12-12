@@ -32,6 +32,9 @@ protected:
   void*     MBuffer     = nullptr;
   uint32_t  MBufferSize = 0;
 
+  double    MAlpha      = 1.0;
+  double    MAngle      = 0.0;
+
 //------------------------------
 public:
 //------------------------------
@@ -58,6 +61,8 @@ public:
   virtual void setDrawImage(bool ADraw=true)            { MDrawImage = ADraw; }
   virtual void setImage(char* ABuffer, uint32_t ASize)  { MBuffer = ABuffer; MBufferSize = ASize; }
   virtual void setImageOffset(MIP_DRect AOffset)        { MImageOffset = AOffset; }
+  virtual void setAlpha(double AAlpha)                  { MAlpha = AAlpha; }
+  virtual void setAngle(double AAngle)                  { MAlpha = AAngle; }
 
 //------------------------------
 public:
@@ -101,7 +106,7 @@ public:
       MInitialized = true;
     }
 
-    painter->setFillImage(MImage,mrect.x,mrect.y,S,S);
+    painter->setFillImage(MImage,mrect.x,mrect.y,S,S,MAlpha,MAngle);
     painter->fillRect(mrect.x,mrect.y,mrect.w,mrect.h);
   }
 

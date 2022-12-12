@@ -46,8 +46,8 @@ protected:
   MIP_AudioPortArray    MAudioOutputPorts         = {};
   MIP_NotePortArray     MNoteInputPorts           = {};
   MIP_NotePortArray     MNoteOutputPorts          = {};
-  MIP_Editor            MEditor                   = {};
 
+  MIP_Editor*           MEditor                   = nullptr;
   MIP_Timer             MGuiTimer                 = MIP_Timer(this);
 
   // write values before indexes
@@ -105,7 +105,7 @@ public:
   virtual void setInitialEditorSize(uint32_t AWidth, uint32_t AHeight) {
     MInitialEditorWidth  = AWidth;
     MInitialEditorHeight = AHeight;
-    MEditor.setInitialSize(AWidth,AHeight);
+    //MEditor.setInitialSize(AWidth,AHeight); // ->gui_create
   }
 
 //------------------------------
@@ -336,67 +336,91 @@ public: // ext gui
 //------------------------------
 
   bool gui_is_api_supported(const char *api, bool is_floating) override {
-    return MEditor.isApiSupported(api,is_floating);
+    #ifdef MIP_LINUX
+      if (!is_floating && (strcmp(api,CLAP_WINDOW_API_X11) == 0)) return true;
+    #endif
+    #ifdef MIP_WIN32
+      if (!is_floating && (strcmp(api,CLAP_WINDOW_API_WIN32) == 0)) return true;
+    #endif
+    return false;
   }
 
   //----------
 
   bool gui_get_preferred_api(const char **api, bool *is_floating) override {
-    return MEditor.getPreferredApi(api,is_floating);
+    #ifdef MIP_LINUX
+      *api = CLAP_WINDOW_API_X11;
+      *is_floating = false;
+    #endif
+    #ifdef MIP_WIN32
+      *api = CLAP_WINDOW_API_WIN32;
+      *is_floating = false;
+    #endif
+    return true;
   }
 
   //----------
 
   bool gui_create(const char *api, bool is_floating) override {
     MIsEditorOpen = false;
-    MEditor.setListener(this);
-    MEditor.setParameters(&MParameters);
-    return MEditor.create(api,is_floating);
+    MEditor = new MIP_Editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
+    //MIP_Assert(MEditor);
+    return true;
   }
 
   //----------
 
   void gui_destroy() override {
+    MIP_Assert(MEditor);
     if (MIsEditorOpen) gui_hide();
     MIsEditorOpen = false;
-    MEditor.destroy();
+    if (MIsEditorOpen) {
+      MEditor->hide();
+    }
+    delete MEditor;
   }
 
   //----------
 
   bool gui_set_scale(double scale) override {
-    return MEditor.setScale(scale);
+    MIP_Assert(MEditor);
+    return MEditor->setScale(scale);
   }
 
   //----------
 
   bool gui_get_size(uint32_t *width, uint32_t *height) override {
-    return MEditor.getSize(width,height);
+    MIP_Assert(MEditor);
+    return MEditor->getSize(width,height);
   }
 
   //----------
 
   bool gui_can_resize() override {
-    return MEditor.canResize();
+    MIP_Assert(MEditor);
+    return MEditor->canResize();
   }
 
   //----------
 
   bool gui_get_resize_hints(clap_gui_resize_hints_t *hints) override {
-    return MEditor.getResizeHints(hints);
+    MIP_Assert(MEditor);
+    return MEditor->getResizeHints(hints);
   }
 
   //----------
 
   bool gui_adjust_size(uint32_t *width, uint32_t *height) override {
-    return MEditor.adjustSize(width,height);
+    MIP_Assert(MEditor);
+    return MEditor->adjustSize(width,height);
   }
 
   //----------
 
   bool gui_set_size(uint32_t width, uint32_t height) override {
+    MIP_Assert(MEditor);
     //MIsEditorBusy = true;
-    bool result = MEditor.setSize(width,height);
+    bool result = MEditor->setSize(width,height);
     //MIsEditorBusy = false;
     return result;
   }
@@ -404,32 +428,36 @@ public: // ext gui
   //----------
 
   bool gui_set_parent(const clap_window_t *window) override {
-    return MEditor.setParent(window);
+    MIP_Assert(MEditor);
+    return MEditor->setParent(window);
   }
 
   //----------
 
   bool gui_set_transient(const clap_window_t *window) override {
-    return MEditor.setTransient(window);
+    MIP_Assert(MEditor);
+    return MEditor->setTransient(window);
   }
 
   //----------
 
   void gui_suggest_title(const char *title) override {
-    MEditor.suggestTitle(title);
+    MIP_Assert(MEditor);
+    MEditor->suggestTitle(title);
   }
 
   //----------
 
   bool gui_show() override {
+    MIP_Assert(MEditor);
     updateEditorParameterValues();
-    bool result = MEditor.show();
+    bool result = MEditor->show();
     if (result) {
       #ifdef MIP_LINUX
         MGuiTimer.start(MIP_GUI_TIMER_MS);
       #endif
       #ifdef MIP_WIN32
-        MIP_Win32Window* window = MEditor.getWindow();
+        MIP_Win32Window* window = MEditor->getWindow();
         HWND hwnd = window->getHandle();
         MGuiTimer.start(MIP_GUI_TIMER_MS,hwnd);
       #endif
@@ -441,9 +469,10 @@ public: // ext gui
   //----------
 
   bool gui_hide() override {
+    MIP_Assert(MEditor);
     MGuiTimer.stop();
     MIsEditorOpen = false;
-    bool result = MEditor.hide();
+    bool result = MEditor->hide();
     return result;
   }
 
@@ -565,6 +594,7 @@ public: // ext params
     preProcessEvents(in,out);
     processEvents(in,out);
     postProcessEvents(in,out);
+    flushHostParams(out);
   }
 
 //------------------------------
@@ -879,7 +909,7 @@ public: // parameters
   void updateEditorParameterValues() {
     for (uint32_t i=0; i<MParameters.size(); i++) {
       double v = MParameters[i]->getValue();
-      MEditor.updateParameter(i,v,false);
+      MEditor->updateParameter(i,v,false);
     }
   }
 
@@ -1090,6 +1120,7 @@ public: // queues
   */
 
   void queueHostParam(uint32_t AIndex, double AValue) {
+    //MIP_Print("%i = %f\n",AIndex,AValue);
     MQueuedHostParamValues.write(AValue);
     MHostParamQueue.write(AIndex);
   }
@@ -1103,7 +1134,6 @@ public: // queues
       MQueuedHostParamValues.read(&value);
       //double value = MParameters[index]->getValue();
       //MIP_Print("%i = %.3f\n",index,value);
-
       clap_event_param_gesture_t begin_gesture;
       begin_gesture.header.size     = sizeof(clap_event_param_gesture_t);
       begin_gesture.header.time     = 0;
@@ -1178,7 +1208,7 @@ public: // queues
         MQueuedGuiParamValues.read(&value);
         //double value = MParameters[index]->getValue();
         //MIP_Print("%i = %.3f\n",index,value);
-        MEditor.updateParameter(index,value);
+        MEditor->updateParameter(index,value);
       }
     //}
   }
@@ -1212,11 +1242,11 @@ public: // queues
     while (MGuiModQueue.read(&index)) {
       MQueuedGuiModValues.read(&value);
       //double value = MParameters[index]->getValue();
-      MIP_Print("%i = %.3f\n",index,value);
+      //MIP_Print("%i = %.3f\n",index,value);
       //MEditor->updateParameter(index,value);
     //  double current_value = MParameters[index]->getModulation();
     //  if (value != current_value) {
-        MEditor.updateModulation(index,value);
+        MEditor->updateModulation(index,value);
     //  }
     }
   }

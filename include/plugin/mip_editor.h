@@ -74,6 +74,10 @@ class MIP_Editor
 private:
 //------------------------------
 
+//------------------------------
+protected:
+//------------------------------
+
   MIP_Window*         MWindow         = nullptr;
   MIP_EditorListener* MListener       = nullptr;
 
@@ -90,24 +94,31 @@ private:
 
   MIP_ParameterArray* MParameters     = nullptr;
 
-
-
 //------------------------------
 public:
 //------------------------------
 
-  MIP_Editor() { //MIP_EditorListener* AListener,uint32_t AWidth, uint32_t AHeight) {
-    //MListener = AListener;
-    //MWidth = AWidth;
-    //MHeight = AHeight;
-    //MIP_Assert(MWidth > 0);
-    //MIP_Assert(MHeight > 0);
-    //MAspectRatio = (double)MWidth / (double)MHeight;
+  MIP_Editor(MIP_EditorListener* AListener, uint32_t AWidth, uint32_t AHeight, MIP_ParameterArray* AParameters) {
+    //MIP_Print("%i,%i\n",AWidth,AHeight);
+    MListener       = AListener;
+    MInitialWidth   = AWidth;
+    MInitialHeight  = AHeight;
+    MEditorWidth    = AWidth;
+    MEditorHeight   = AHeight;
+    MParameters     = AParameters;
+    MAspectRatio    = (double)AWidth / (double)AHeight;
+    MWindow         = new MIP_Window(AWidth,AHeight);
+
+    // setup parameters & widgets
+
   }
 
   //----------
 
   virtual ~MIP_Editor() {
+    if (MWindow) {
+      delete MWindow;
+    }
   }
 
 //------------------------------
@@ -144,18 +155,6 @@ public:
 
   //----------
 
-  virtual void setInitialSize(uint32_t AWidth, uint32_t AHeight) {
-    MIP_Assert(AWidth > 0);
-    MIP_Assert(AHeight > 0);
-    MEditorWidth    = AWidth;
-    MEditorHeight   = AHeight;
-    MInitialWidth   = AWidth;
-    MInitialHeight  = AHeight;
-    MAspectRatio    = (double)AWidth / (double)AHeight;
-  }
-
-  //----------
-
   // setEditorWidget?
 
   virtual void setRootWidget(MIP_Widget* AWidget, MIP_WidgetListener* AListener=nullptr) {
@@ -168,14 +167,28 @@ public:
   //----------
 
   virtual void connect(MIP_Widget* AWidget, MIP_Parameter* AParameter) {
+    //MIP_Print("AWidget %p AParameter %p\n",AWidget,AParameter);
     AWidget->setParameter(AParameter);
     AParameter->setWidget(AWidget);
+    double value = AParameter->getValue();
+    AWidget->setValue(value);
+    AWidget->on_widget_connect(AParameter);
+    //double nv = AParameter->normalizeValue(v);
+    //AWidget->setValue(nv);
   }
 
   //----------
 
   virtual void setParameters(MIP_ParameterArray* AParameters) {
     MParameters = AParameters;
+  }
+
+//------------------------------
+public:
+//------------------------------
+
+  virtual MIP_ParameterArray* getParameters() {
+    return MParameters;
   }
 
 
@@ -191,6 +204,7 @@ public:
       MIP_Widget* widget = parameter->getWidget();
       if (widget) {
         // [de-]normalize value
+        //double v = parameter->normalizeValue(AValue);
         widget->setValue(AValue);
         if (ARedraw) widget->redraw(/*MIP_WIDGET_REDRAW_VALUE*/);
       }
@@ -214,68 +228,6 @@ public:
 //------------------------------
 public: // clap.gui
 //------------------------------
-
-  virtual bool isApiSupported(const char *api, bool is_floating) {
-    //MIP_Print("api '%s' is_floating %i",api,is_floating);
-    #ifdef MIP_LINUX
-      if (!is_floating && (strcmp(api,CLAP_WINDOW_API_X11) == 0)) {
-        //MIP_DPrint(" -> true\n");
-        return true;
-      }
-      //MIP_DPrint(" -> false\n");
-      return false;
-    #endif
-    #ifdef MIP_WIN32
-      if (!is_floating && (strcmp(api,CLAP_WINDOW_API_WIN32) == 0)) {
-        //MIP_DPrint(" -> true\n");
-        return true;
-      }
-      //MIP_DPrint(" -> false\n");
-      return false;
-    #endif
-  }
-
-  //----------
-
-  virtual bool getPreferredApi(const char **api, bool *is_floating) {
-    //MIP_Print("-> (api '%s' is_floating %i) -> true\n",api,is_floating);
-    #ifdef MIP_LINUX
-      *api = CLAP_WINDOW_API_X11;
-      *is_floating = false;
-      return true;
-    #endif
-    #ifdef MIP_WIN32
-      *api = CLAP_WINDOW_API_WIN32;
-      *is_floating = false;
-      return true;
-    #endif
-  }
-
-  //----------
-
-  virtual bool create(const char *api, bool is_floating) {
-    //MIP_Print("editor %i,%i initial %i,%i\n",MEditorWidth,MEditorHeight,MInitialWidth,MInitialHeight);
-    //MWindow = new MIP_EditorWindow(this,MEditorWidth,MEditorHeight);
-    MWindow = new MIP_Window(MEditorWidth,MEditorHeight);
-    MIP_Assert(MWindow);
-    return true;
-  }
-
-  //----------
-
-  virtual void destroy() {
-    //MIP_Print("\n");
-    if (MWindow) {
-      if (MIsEditorOpen) {
-        this->hide();
-      }
-      delete MWindow;
-      MWindow = nullptr;
-    }
-    MIsEditorOpen = false;
-  }
-
-  //----------
 
   virtual bool setScale(double scale) {
     //MIP_Print("scale %.3f -> true\n",scale);
@@ -400,21 +352,21 @@ public: // clap.gui
 
   //----------
 
-  bool setTransient(const clap_window_t *window) {
+  virtual bool setTransient(const clap_window_t *window) {
     //MIP_Print("-> true\n");
     return true;
   }
 
   //----------
 
-  void suggestTitle(const char *title) {
+  virtual void suggestTitle(const char *title) {
     //MIP_Print("title '%s'\n",title);
     if (MWindow) MWindow->setTitle(title);
   }
 
   //----------
 
-  bool show() {
+  virtual bool show() {
     if (MWindow) {
       MWindow->open();
       //MWindow->invalidate(0,0,MWidth,MHeight);
@@ -427,7 +379,7 @@ public: // clap.gui
 
   //----------
 
-  bool hide() {
+  virtual bool hide() {
     if (MWindow) {
       MWindow->stopEventThread();
       MWindow->close();
@@ -442,14 +394,18 @@ public: // widget listener
 //------------------------------
 
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
+    //MIP_PRINT;
     MIP_Parameter* parameter = AWidget->getParameter();
+    //MIP_Print("parameter %p\n",parameter);
     if (parameter) {
       //MIP_PRINT;
       uint32_t index = parameter->getIndex();
       //double value = parameter->getValue();
       double value = AWidget->getValue();
-      //MIP_Print("%i = %f\n",index,value);
-      if (MListener) MListener->on_editor_parameter_change(index,value);
+      if (MListener) {
+        //MIP_Print("%i = %f\n",index,value);
+        MListener->on_editor_parameter_change(index,value);
+      }
     }
     if (MWindow) MWindow->do_widget_update(AWidget,AMode);
   }

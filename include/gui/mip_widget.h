@@ -63,30 +63,33 @@ class MIP_Widget
 private:
 //------------------------------
 
-//  MIP_Widget*       MParent         = nullptr;
-  MIP_WidgetListener* MListener       = nullptr;
-  MIP_Widgets         MChildren       = {};
-  MIP_BaseWindow*     MOwnerWindow    = nullptr;
-  int32_t             MIndex          = -1;
-  MIP_DRect           MRect           = {};
-  MIP_DRect           MBaseRect       = {};
-  MIP_Parameter*      MParameter      = nullptr;
-  int32_t             MCursor         = MIP_CURSOR_DEFAULT;
+//  MIP_Widget*       MParent           = nullptr;
+  MIP_WidgetListener* MListener         = nullptr;
+  MIP_Widgets         MChildren         = {};
+  MIP_BaseWindow*     MOwnerWindow      = nullptr;
+  int32_t             MIndex            = -1;
+  MIP_DRect           MRect             = {};
+  MIP_DRect           MBaseRect         = {};
+  MIP_Parameter*      MParameter        = nullptr;
+  int32_t             MCursor           = MIP_CURSOR_DEFAULT;
 
 //------------------------------
 protected:
 //------------------------------
 
-  double              MValue          = 0.0;
-  double              MModulation     = 0.0;
+//  double              MValue            = 0.0;
+//  double              MModulation       = 0.0;
 
-  bool                MIsVisible      = true;
-  bool                MIsActive       = true;
-  bool                MIsInteracting  = false;
+  double              MValues[16]       = {0};
+  double              MModulations[16]  = {0};
 
-  bool                MAutoSetCursor  = true;
-  bool                MAutoHideCursor = false;
-  bool                MAutoLockCursor = false;
+  bool                MIsVisible        = true;
+  bool                MIsActive         = true;
+  bool                MIsInteracting    = false;
+
+  bool                MAutoSetCursor    = true;
+  bool                MAutoHideCursor   = false;
+  bool                MAutoLockCursor   = false;
 
 //------------------------------
 public:
@@ -109,22 +112,26 @@ public:
 public:
 //------------------------------
 
-//virtual MIP_Widget*     getParent()             { return MParent; }
+//virtual MIP_Widget*     getParent()                       { return MParent; }
 
-  virtual MIP_BaseWindow* getOwnerWindow()        { return MOwnerWindow; }
-  virtual int32_t         getIndex()              { return MIndex; }
-  virtual MIP_DRect       getRect()               { return MRect; }
-  virtual double          getWidth()              { return MRect.w; }
-  virtual double          getHeight()             { return MRect.h; }
+  virtual MIP_BaseWindow* getOwnerWindow()                  { return MOwnerWindow; }
+  virtual int32_t         getIndex()                        { return MIndex; }
+  virtual MIP_DRect       getRect()                         { return MRect; }
+  virtual double          getWidth()                        { return MRect.w; }
+  virtual double          getHeight()                       { return MRect.h; }
 
-  virtual MIP_Parameter*  getParameter()          { return MParameter; }
-  virtual double          getValue()              { return MValue; }
-  virtual double          getModulation()         { return MModulation; }
+  virtual MIP_Parameter*  getParameter()                    { return MParameter; }
 
-  virtual int32_t         getCursor()             { return MCursor; }
+//  virtual double          getValue()                        { return MValue; }
+//  virtual double          getModulation()                   { return MModulation; }
 
-  //virtual uint32_t        getFlags()              { return MFlags; }
-  //virtual bool            hasFlag(uint32_t AFlag) { return MFlags & AFlag; }
+  virtual double          getValue(uint32_t AIndex=0)       { return MValues[AIndex]; }
+  virtual double          getModulation(uint32_t AIndex=0)  { return MModulations[AIndex]; }
+
+  virtual int32_t         getCursor()                       { return MCursor; }
+
+  //virtual uint32_t        getFlags()                      { return MFlags; }
+  //virtual bool            hasFlag(uint32_t AFlag)         { return MFlags & AFlag; }
 
   virtual bool isActive()       { return MIsActive; }
   virtual bool isVisible()      { return MIsVisible; }
@@ -142,8 +149,15 @@ public:
 
   virtual void setListener(MIP_WidgetListener* AListener) { MListener = AListener; }
   virtual void setParameter(MIP_Parameter* AParameter)    { MParameter = AParameter; }
-  virtual void setValue(double AValue)                    { MValue = AValue; }
-  virtual void setModulation(double AValue)               { MModulation = AValue; }
+
+//  virtual void setValue(double AValue)                    { MValue = AValue; }
+//  virtual void setModulation(double AValue)               { MModulation = AValue; }
+
+  virtual void setValue(double AValue)                    { MValues[0] = AValue; }
+  virtual void setModulation(double AValue)               { MModulations[0] = AValue; }
+
+  virtual void setValue(uint32_t AIndex,double AValue)      { MValues[AIndex] = AValue; }
+  virtual void setModulation(uint32_t AIndex,double AValue) { MModulations[AIndex] = AValue; }
 
   virtual void setCursor(int32_t ACursor)                 { MCursor = ACursor; }
 
@@ -382,6 +396,13 @@ public:
 //------------------------------
 public:
 //------------------------------
+
+  virtual void on_widget_connect(MIP_Parameter* AParameter) {
+    double value = AParameter->getValue();
+    setValue(value);
+//    const char* name = AParameter->getName();
+//    setText(name);
+  }
 
   virtual void on_widget_move(double AXpos, double AYpos) {
   }

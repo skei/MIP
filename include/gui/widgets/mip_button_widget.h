@@ -50,8 +50,8 @@ public:
   void on_widget_mouse_click(uint32_t AButton, uint32_t AState, double AXpos, double AYpos, uint32_t ATime) override {
     switch (AButton) {
       case MIP_BUTTON_LEFT: {
-        if (MValue >= 0.5) MValue = 0.0;
-        else MValue = 1.0;
+        if (getValue() >= 0.5) setValue(0.0);
+        else setValue(1.0);
         do_widget_update(this);
         do_widget_redraw(this);
         break;

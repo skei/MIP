@@ -18,9 +18,9 @@ class MIP_DragValueWidget
 private:
 //------------------------------
 
-  bool MIsDragging        = false;
-  double MPrevXpos        = 0.0;
-  double MPrevYpos        = 0.0;
+  bool      MIsDragging       = false;
+  double    MPrevXpos         = 0.0;
+  double    MPrevYpos         = 0.0;
 
 //------------------------------
 protected:
@@ -60,6 +60,8 @@ public:
     MDragSensitivity  = s;
     MDragSensitivity2 = s2;
   }
+
+  virtual bool isDragging() { return MIsDragging; }
 
 //------------------------------
 public:
@@ -102,34 +104,57 @@ public:
     if (MIsDragging) {
       double deltax = AXpos - MPrevXpos;
       double deltay = AYpos - MPrevYpos;
-      double sens = MDragSensitivity;
-      if (AState & MIP_KEY_SHIFT) sens *= MDragSensitivity2;
-      deltax *= sens;
-      deltay *= sens;
-      switch (MDragDirection) {
-        case MIP_LEFT: {
-          MValue -= deltax;
-          break;
-        }
-        case MIP_RIGHT: {
-          MValue += deltax;
-          break;
-        }
-        case MIP_DOWN: {
-          MValue += deltay;
-          break;
-        }
-        case MIP_UP: {
-          MValue -= deltay;
-          break;
-        }
+
+      double minval = 0.0;
+      double maxval = 1.0;
+      MIP_Parameter* parameter = getParameter();
+      if (parameter) {
+        minval = parameter->getMinValue();
+        maxval = parameter->getMaxValue();
       }
-      MValue = MIP_Clamp(MValue,0,1);
-      MPrevXpos = AXpos;
-      MPrevYpos = AYpos;
-      do_widget_update(this);
-      do_widget_redraw(this);
-    }
+      double range = maxval - minval;
+      if (range > 0) {
+
+        //MIP_Print("range %f\n",range);
+
+        double sens = MDragSensitivity;
+        if (AState & MIP_KEY_SHIFT) sens *= MDragSensitivity2;
+
+        sens *= range;
+
+        deltax *= sens;
+        deltay *= sens;
+        double value = getValue();
+        switch (MDragDirection) {
+          case MIP_LEFT: {
+            value -= deltax;
+            break;
+          }
+          case MIP_RIGHT: {
+            value += deltax;
+            break;
+          }
+          case MIP_DOWN: {
+            value += deltay;
+            break;
+          }
+          case MIP_UP: {
+            value -= deltay;
+            break;
+          }
+        }
+
+        //MIP_Print("minval %f maxval %f\n",minval,maxval);
+        value = MIP_Clamp(value,minval,maxval);
+
+        setValue(value);
+        MPrevXpos = AXpos;
+        MPrevYpos = AYpos;
+        do_widget_update(this);
+        do_widget_redraw(this);
+      }
+
+    } // range
   }
 
   //----------

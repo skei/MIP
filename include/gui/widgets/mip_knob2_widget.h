@@ -84,6 +84,14 @@ public:
 public:
 //------------------------------
 
+  MIP_TextWidget* getLabelWidget() { return MLabelWidget; }
+  MIP_KnobWidget* getKnobWidget() { return MKnobWidget; }
+  MIP_TextWidget* getValueWidget() { return MValueWidget; }
+
+//------------------------------
+public:
+//------------------------------
+
   void setValue(double AValue) override {
     MIP_PanelWidget::setValue(AValue);
     MKnobWidget->setValue(AValue);

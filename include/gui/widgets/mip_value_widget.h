@@ -36,7 +36,8 @@ public:
 
   MIP_ValueWidget(MIP_DRect ARect, const char* AText="", double AValue=0.0)
   : MIP_TextWidget(ARect,AText) {
-    MValue          = AValue;
+    //MValue          = AValue;
+    MValues[0]      = AValue;
     MTextSize       = 14.0;
     MTextColor      = MIP_COLOR_DARK_GRAY;
     MTextAlignment  = MIP_TEXT_ALIGN_LEFT;
@@ -68,6 +69,16 @@ public:
     double S = window->getWindowScale();
     MIP_Painter* painter = AContext->painter;
     MIP_DRect mrect = getRect();
+
+    double value = getValue();
+    char value_txt[33] = {0};
+
+    MIP_Parameter* parameter = getParameter();
+    if (parameter) {
+      //value = parameter->denormalizeValue(value);
+      parameter->valueToText(value,value_txt,32);
+    }
+
     MIP_DRect vo = MValueOffset;
     vo.scale(S);
     mrect.shrink(vo);
@@ -81,10 +92,11 @@ public:
       painter->setTextSize(MValueSize * S);
     //}
 
-    char temp[16] = {0};
-    sprintf(temp,"%.3f",MValue);
+//    char temp[16] = {0};
+//    sprintf(temp,"%.2f",getValue());
+
     double bounds[4] = {0};
-    painter->getTextBounds(temp,bounds);
+    painter->getTextBounds(value_txt,bounds);
     double x = mrect.x - bounds[0];
     double y = mrect.y - bounds[1];
     double w = bounds[2] - bounds[0];
@@ -95,13 +107,22 @@ public:
     if      (MValueAlignment & MIP_TEXT_ALIGN_TOP)         { }
     else if (MValueAlignment & MIP_TEXT_ALIGN_BOTTOM)      { y = mrect.h - h + y; }
     else /*if (MValueAlignment & MIP_TEXT_ALIGN_CENTER)*/  { y += ((mrect.h - h) * 0.5); }
-    painter->drawText(x,y,temp);
+    painter->drawText(x,y,value_txt);
 
   }
 
 //------------------------------
 public:
 //------------------------------
+
+  virtual void on_widget_connect(MIP_Parameter* AParameter) {
+    MIP_TextWidget::on_widget_connect(AParameter);
+    double value = AParameter->getValue();
+    setValue(value);
+    //const char* name = AParameter->getName();
+    //setText(name);
+  }
+
 
   void on_widget_paint(MIP_PaintContext* AContext) override {
     if (MFillBackground) fillBackground(AContext);

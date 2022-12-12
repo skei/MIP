@@ -58,18 +58,20 @@ public:
     //double S = window->getWindowScale();
     MIP_DRect mrect = getRect();
     MIP_Painter* painter = AContext->painter;
-
+    double value = getValue();
+    //MIP_Parameter* parameter = getParameter();
+    //if (parameter) {
+    //  value = parameter->normalizeValue(value);
+    //}
     if (MIsInteracting) {
       painter->setFillColor(MISliderColor);
     }
     else {
       painter->setFillColor(MSliderColor);
     }
-
-
     double x = mrect.x;
     double y = mrect.y;
-    double w = mrect.w * MValue;
+    double w = mrect.w * value;//getValue();
     double h = mrect.h;
     painter->fillRect(x,y,w,h);
   }

@@ -1,5 +1,5 @@
-#ifndef sa_botage_widget_included
-#define sa_botage_widget_included
+#ifndef sa_botage_widgets_included
+#define sa_botage_widgets_included
 //----------------------------------------------------------------------
 
 #include "base/mip.h"
@@ -45,6 +45,7 @@ public:
     appendChildWidget(MBotageImage);
 
     MMipImage = new MIP_ImageWidget(MIP_DRect((ARect.w - 120),0,120,80),(void*)mip_img,mip_img_size);
+    MMipImage->setAlpha(0.6);
     appendChildWidget(MMipImage);
 
   }

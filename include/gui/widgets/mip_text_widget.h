@@ -61,19 +61,39 @@ public:
     double S = window->getWindowScale();
     MIP_Painter* painter = AContext->painter;
     MIP_DRect mrect = getRect();
+
+    const char* txt = MText;
+    MIP_Parameter* parameter = getParameter();
+    if (parameter) {
+      MText = parameter->getName();
+      //double par_val = parameter->getValue();
+      //char par_txt[17] = {0};
+      //parameter->valueToText(par_val, par_txt, 16);
+      //double value = parameter->normalizeValue(par_val);
+    }
+
     MIP_DRect to = MTextOffset;
     to.scale(S);
     mrect.shrink(to);
+
     painter->setTextColor(MTextColor);
     painter->setTextSize(MTextSize * S);
 
-    painter->drawTextBox(mrect,MText,MTextAlignment);
+    painter->drawTextBox(mrect,txt,MTextAlignment);
 
   }
 
 //------------------------------
 public:
 //------------------------------
+
+  virtual void on_widget_connect(MIP_Parameter* AParameter) {
+    MIP_PanelWidget::on_widget_connect(AParameter);
+    //double value = AParameter->getValue();
+    //setValue(value);
+    const char* name = AParameter->getName();
+    setText(name);
+  }
 
   void on_widget_paint(MIP_PaintContext* AContext) override {
     if (MFillBackground) fillBackground(AContext);

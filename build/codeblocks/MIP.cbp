@@ -615,7 +615,11 @@
 		<Unit filename="../../include/gui/widgets/mip_button_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_color_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_drag_value_widget.h" />
+		<Unit filename="../../include/gui/widgets/mip_dual_slider_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_grid_widget.h" />
+		<Unit filename="../../include/gui/widgets/mip_group_box_widget.h" />
+		<Unit filename="../../include/gui/widgets/mip_image_widget.h" />
+		<Unit filename="../../include/gui/widgets/mip_knob2_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_knob_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_menu_item_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_menu_widget.h" />
@@ -625,6 +629,7 @@
 		<Unit filename="../../include/gui/widgets/mip_test_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_text_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_value_widget.h" />
+		<Unit filename="../../include/gui/widgets/mip_waveform_widget.h" />
 		<Unit filename="../../include/gui/win32/mip_win32_utils.h" />
 		<Unit filename="../../include/gui/win32/mip_win32_window.h" />
 		<Unit filename="../../include/gui/xcb/mip_xcb.h" />
@@ -654,6 +659,7 @@
 		<Unit filename="../../include/plugin/exe/mip_exe_host_implementation.h" />
 		<Unit filename="../../include/plugin/exe/mip_exe_plugin.h" />
 		<Unit filename="../../include/plugin/exe/mip_exe_utils.h" />
+		<Unit filename="../../include/plugin/exe/mip_exe_window.h" />
 		<Unit filename="../../include/plugin/ladspa/mip_ladspa.h" />
 		<Unit filename="../../include/plugin/ladspa/mip_ladspa_entry.h" />
 		<Unit filename="../../include/plugin/ladspa/mip_ladspa_factory.h" />
@@ -697,6 +703,10 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_editor.h" />
+		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_parameters.h" />
+		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_processor.h" />
+		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_widgets.h" />
 		<Unit filename="../../source/skei.audio/sa_bulum.cpp">
 			<Option compile="0" />
 			<Option link="0" />
@@ -741,7 +751,13 @@
 		</Unit>
 		<Unit filename="../../tools/dump_ttl.sh" />
 		<Unit filename="../build.cpp" />
+		<Unit filename="../compile.sh" />
+		<Unit filename="../install.sh" />
 		<Unit filename="../test/plug1.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="../test/plug2.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>

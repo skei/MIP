@@ -286,7 +286,7 @@ public: // window
 
   void on_window_mouse_move(uint32_t AState, int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
 
-    if (MMouseLockedWidget) { // todo: also add if mouse_clicked?
+    if (MMouseLockedWidget) { // todo: also if mouse_clicked?
       if ((AXpos == MMouseClickedX) && (AYpos == MMouseClickedY)) {
         MMousePreviousX = AXpos;
         MMousePreviousY = AYpos;
@@ -361,6 +361,7 @@ public: // widget listener
 //------------------------------
 
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
+    //MIP_PRINT;
   }
 
   //----------

@@ -47,14 +47,14 @@ public:
 //------------------------------
 
   void setValue(double AValue) override {
-    MValue = AValue;
+    setValue(AValue);
     MSelected = AValue;
     //do_widget_update(this);
     //do_widget_redraw(this);
   }
 
-  double getValue() override {
-    double value = MValue;
+  double getValue(uint32_t AIndex=0) override {
+    double value = getValue();
     //MIP_Print("%.3f\n",value);
     return value;
   }
@@ -63,7 +63,7 @@ public:
     //if (AIndex >= MChildren.size()) return;
     //MIP_Print("%i\n",AIndex);
     MSelected = AIndex;
-    MValue = AIndex;
+    setValue(AIndex);
   }
 
   //----------
@@ -71,7 +71,7 @@ public:
   void on_menu_selected(MIP_MenuWidget* AMenu, int32_t AIndex) override {
     if (AIndex >= 0) {
       MSelected = AIndex;
-      MValue = MSelected;
+      setValue(MSelected);
       do_widget_update(this);
       do_widget_redraw(this);
     }

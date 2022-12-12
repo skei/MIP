@@ -37,7 +37,15 @@ public:
   MIP_KnobWidget(MIP_DRect ARect, const char* AText="", double AValue=0.0)
   : MIP_DragValueWidget(ARect,AText,AValue) {
 
-    MDrawBorder = false;
+    setDrawBorder(false);
+
+    setDrawValue(false);
+    setValueAlignment(MIP_TEXT_ALIGN_CENTER);
+    setValueOffset(0);
+
+    setDrawText(false);
+    setTextAlignment(MIP_TEXT_ALIGN_CENTER);
+    setTextOffset(0);
 
   }
 
@@ -66,6 +74,7 @@ public:
     MIP_DRect mrect = getRect();
     MIP_Painter* painter = AContext->painter;
 
+    double value = getValue();
     double thick  = MArcThickness * S;
     //double bthick = MArcThickness * S * 0.5;
 
@@ -74,8 +83,8 @@ public:
     double r  = (mrect.w - thick)  * 0.5;
     //double br = (mrect.w - bthick) * 0.5;
 
-    double a1 = 0.35 + (MValue * 0.8);
-    double a2 =        (MValue * 0.8);
+    double a1 = 0.35 + (value * 0.8);
+    double a2 =        (value * 0.8);
     a1 *= MIP_PI2;
     a2 *= MIP_PI2;
 
@@ -108,8 +117,8 @@ public:
   void on_widget_paint(MIP_PaintContext* AContext) override {
     if (MFillBackground) fillBackground(AContext);
     if (MDrawArc) drawArc(AContext);
-    //if (MDrawText) drawText(AContext);
-    //if (MDrawValue) drawValue(AContext);
+    if (MDrawText) drawText(AContext);
+    if (MDrawValue) drawValue(AContext);
     paintChildWidgets(AContext);
     if (MDrawBorder) drawBorder(AContext);
   }
