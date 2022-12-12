@@ -6,9 +6,8 @@
 
 //----------
 
-#include "audio/mip_audio_utils.h"
-#include "gui/mip_widgets.h"
 #include "plugin/mip_plugin.h"
+#include "audio/mip_audio_utils.h"
 
 //----------
 
@@ -54,12 +53,9 @@ private:
 
   MIP_PanelWidget* MRootWidget = nullptr;
 
-  // parameters
   double gain  = 0.0;
   double left  = 0.0;
   double right = 0.0;
-
-  //const char* brtxt[6] = { "one", "2", "3", "IV", "V", "six" };
 
 //------------------------------
 public:
@@ -101,24 +97,42 @@ public:
   //----------
 
   void processParamValue(const clap_event_param_value_t* event) final {
+
     switch (event->param_id) {
+
       case 0: {
         uint32_t beats = (uint32_t)event->value;
-        MIP_Print("beats %i\n",beats);
-        sa_botage_editor* editor = (sa_botage_editor*)MEditor;
-        if (editor) {
-          MIP_WaveformWidget* waveform = editor->MWaveformWidget;
-          if (waveform) {
-            waveform->setNumGrid(beats);
-            //waveform->redraw(); // crashes if editor is closed !!?
+        if (MIsEditorOpen) {
+          sa_botage_editor* editor = (sa_botage_editor*)MEditor;
+          if (editor) {
+            MIP_WaveformWidget* waveform = editor->MWaveformWidget;
+            if (waveform) {
+              waveform->setNumGrid(beats);
+              //editor->redraw(waveform);
+              waveform->redraw();
+            }
           }
         }
         break;
       }
+
       case 1: {
+        uint32_t slices = (uint32_t)event->value;
+        if (MIsEditorOpen) {
+          sa_botage_editor* editor = (sa_botage_editor*)MEditor;
+          if (editor) {
+            MIP_WaveformWidget* waveform = editor->MWaveformWidget;
+            if (waveform) {
+              waveform->setNumSubGrid(slices);
+              //editor->redraw(waveform);
+              waveform->redraw();
+            }
+          }
+        }
         break;
       }
-    }
+
+    } // switch
   }
 
   //----------
@@ -129,9 +143,9 @@ public:
     float** inputs  = process->audio_inputs[0].data32;
     float** outputs = process->audio_outputs[0].data32;
 
-    gain   = 1.0;//MParameters[0]->getValue();
-    left   = 1.0;//MParameters[1]->getValue();
-    right  = 1.0;//MParameters[2]->getValue();
+    gain   = 1.0; // MParameters[0]->getValue();
+    left   = 1.0; // MParameters[1]->getValue();
+    right  = 1.0; // MParameters[2]->getValue();
 
     MIP_CopyStereoBuffer(outputs,inputs,length);
     MIP_ScaleStereoBuffer(outputs,left*gain,right*gain,length);

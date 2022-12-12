@@ -183,6 +183,14 @@ public:
     MParameters = AParameters;
   }
 
+  //----------
+
+  virtual void redraw(MIP_Widget* AWidget) {
+    if (MWindow && MIsEditorOpen) {
+      MIP_PRINT;
+    }
+  }
+
 //------------------------------
 public:
 //------------------------------
@@ -268,23 +276,25 @@ public: // clap.gui
   // see also: MIP_Window::on_window_resize
 
   virtual bool adjustSize(uint32_t *width, uint32_t *height) {
-    //double w = *width;
-    //double h = *height;
-    //if (MAspectRatio > 0) {
-    //  if (h > 0) {
-    //    double aspect = w / h;
-    //    if (aspect >= MAspectRatio) w = h * MAspectRatio;
-    //    else h = w / MAspectRatio;
-    //  }
-    //}
-    //// avoids a 'resize dance'..
-    //// jiggling down half a pixels a time in width/height,
-    //// until aspect ratio for both with and height agree..
-    //w = ceil(w);
-    //h = ceil(h);
-    //MIP_Print("%i, %i -> %i, %i\n",*width,*height,(int)w,(int)h);
-    //*width = w;
-    //*height = h;
+    /*
+    double w = *width;
+    double h = *height;
+    if (MAspectRatio > 0) {
+      if (h > 0) {
+        double aspect = w / h;
+        if (aspect >= MAspectRatio) w = h * MAspectRatio;
+        else h = w / MAspectRatio;
+      }
+    }
+    // avoids a 'resize dance'..
+    // jiggling down half a pixels a time in width/height,
+    // until aspect ratio for both with and height agree..
+    w = ceil(w);
+    h = ceil(h);
+    MIP_Print("%i, %i -> %i, %i\n",*width,*height,(int)w,(int)h);
+    *width = w;
+    *height = h;
+    */
     return true;
   }
 

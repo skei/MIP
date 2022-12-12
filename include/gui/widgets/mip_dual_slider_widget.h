@@ -39,6 +39,8 @@ public:
   MIP_DualSliderWidget(MIP_DRect ARect, const char* AText="", double AValue=0.0, double AValue2=0.0)
   : MIP_SliderWidget(ARect,AText,AValue) {
     setValue(1,AValue2);
+    setDragDirection(MIP_RIGHT);
+    setValueSize(12);
   }
 
   //----------
@@ -102,6 +104,86 @@ public:
 
   }
 
+  //----------
+
+  virtual void drawDualValues(MIP_PaintContext* AContext) {
+    MIP_Window* window = (MIP_Window*)getOwnerWindow();
+    double S = window->getWindowScale();
+    MIP_Painter* painter = AContext->painter;
+    MIP_DRect mrect = getRect();
+
+    MIP_DRect vo = MValueOffset;
+    vo.scale(S);
+    mrect.shrink(vo);
+    painter->setTextColor(MValueColor);
+    painter->setTextSize(MValueSize * S);
+
+    // value 1
+
+    double value = getValue(0);
+    char value_txt[33] = {0};
+
+    MIP_Parameter* parameter = getParameter(0);
+    if (parameter) {
+      //value = parameter->denormalizeValue(value);
+      parameter->valueToText(value,value_txt,32);
+    }
+    else {
+      sprintf(value_txt,"%.3f",value);
+    }
+
+    double bounds[4] = {0};
+    painter->getTextBounds(value_txt,bounds);
+    double x = mrect.x - bounds[0];
+    double y = mrect.y - bounds[1];
+    double w = bounds[2] - bounds[0];
+    double h = bounds[3] - bounds[1];
+
+//    if      (MValueAlignment & MIP_TEXT_ALIGN_LEFT)       { }
+//    //else if (MValueAlignment & MIP_TEXT_ALIGN_RIGHT)      { x = mrect.w - w + x; }
+//    //else                                                  { x += ((mrect.w - w) * 0.5); }
+//    //if      (MValueAlignment & MIP_TEXT_ALIGN_TOP)        { }
+//    //else if (MValueAlignment & MIP_TEXT_ALIGN_BOTTOM)     { y = mrect.h - h + y; }
+//    else                                                  { y += ((mrect.h - h) * 0.5); }
+
+    y += ((mrect.h - h) * 0.5);
+
+    painter->drawText(x,y,value_txt);
+
+    // value 2
+
+    value = getValue(1);
+
+    parameter = getParameter(1);
+    if (parameter) {
+      //value = parameter->denormalizeValue(value);
+      parameter->valueToText(value,value_txt,32);
+    }
+    else {
+      sprintf(value_txt,"%.3f",value);
+    }
+
+    //double bounds[4] = {0};
+    painter->getTextBounds(value_txt,bounds);
+    x = mrect.x - bounds[0];
+    y = mrect.y - bounds[1];
+    w = bounds[2] - bounds[0];
+    h = bounds[3] - bounds[1];
+
+//    //if      (MValueAlignment & MIP_TEXT_ALIGN_LEFT)       { }
+//    else if (MValueAlignment & MIP_TEXT_ALIGN_RIGHT)      { x = mrect.w - w + x; }
+//    //else                                                  { x += ((mrect.w - w) * 0.5); }
+//    //if      (MValueAlignment & MIP_TEXT_ALIGN_TOP)        { }
+//    //else if (MValueAlignment & MIP_TEXT_ALIGN_BOTTOM)     { y = mrect.h - h + y; }
+//    else                                                  { y += ((mrect.h - h) * 0.5); }
+
+    x = mrect.w - w + x;
+    y += ((mrect.h - h) * 0.5);
+
+    painter->drawText(x,y,value_txt);
+
+  }
+
 //------------------------------
 public:
 //------------------------------
@@ -109,8 +191,8 @@ public:
   void on_widget_paint(MIP_PaintContext* AContext) override {
     if (MFillBackground) fillBackground(AContext);
     if (MDrawSlider) drawDualSlider(AContext);
-    if (MDrawText) drawText(AContext);
-    if (MDrawValue) drawValue(AContext);
+    //if (MDrawText) drawText(AContext);
+    if (MDrawValue) drawDualValues(AContext);
     paintChildWidgets(AContext);
     if (MDrawBorder) drawBorder(AContext);
   }
@@ -120,7 +202,72 @@ public:
   void on_widget_mouse_move(uint32_t AState, double AXpos, double AYpos, uint32_t ATime) override {
     MIP_Window* window = (MIP_Window*)getOwnerWindow();
     double S = window->getWindowScale();
-    if (!isDragging()) {
+    if (isDragging()) {
+
+//---
+
+      // delta
+      double deltax = AXpos - MPrevXpos;
+      double deltay = AYpos - MPrevYpos;
+      double minval = 0.0;
+      double maxval = 1.0;
+      MIP_Parameter* parameter = getParameter();
+      if (parameter) {
+        minval = parameter->getMinValue();
+        maxval = parameter->getMaxValue();
+      }
+      double range = maxval - minval;
+      if (range > 0) {
+        //MIP_Print("range %f\n",range);
+        double sens = MDragSensitivity;
+        if (AState & MIP_KEY_SHIFT) sens *= MDragSensitivity2;
+        sens *= range;
+        deltax *= sens;
+        deltay *= sens;
+        // value
+
+        switch (MSelectedEdge) {
+          case 1: {
+            double value = getValue(0);
+            switch (MDragDirection) {
+              case MIP_LEFT:  value -= deltax;   break;
+              case MIP_RIGHT: value += deltax;   break;
+              case MIP_DOWN:  value += deltay;   break;
+              case MIP_UP:    value -= deltay;   break;
+            }
+            value = MIP_Clamp(value,minval,maxval);
+            setValue(0,value);
+            break;
+          }
+          case 2: {
+            double value = getValue(1);
+            switch (MDragDirection) {
+              case MIP_LEFT:  value -= deltax;   break;
+              case MIP_RIGHT: value += deltax;   break;
+              case MIP_DOWN:  value += deltay;   break;
+              case MIP_UP:    value -= deltay;   break;
+            }
+            value = MIP_Clamp(value,minval,maxval);
+            setValue(1,value);
+            break;
+          }
+        }
+
+        // check if we need to swap?
+        // also swapp MSelectedEdge
+
+        MPrevXpos = AXpos;
+        MPrevYpos = AYpos;
+
+        do_widget_update(this);
+        do_widget_redraw(this);
+
+      } // range
+
+//---
+
+    }
+    else {
       MIP_DRect mrect = getRect();
       double v1 = getValue(0);
       double v2 = getValue(1);
@@ -142,6 +289,8 @@ public:
       if (MSelectedEdge != prevsel) do_widget_redraw(this);
     }
   }
+
+  //----------
 
   void on_widget_leave(double AXpos, double AYpos) override {
     if (MSelectedEdge != 0) {

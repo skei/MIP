@@ -65,6 +65,7 @@ public:
 //------------------------------
 
   virtual void drawValue(MIP_PaintContext* AContext) {
+
     MIP_Window* window = (MIP_Window*)getOwnerWindow();
     double S = window->getWindowScale();
     MIP_Painter* painter = AContext->painter;
@@ -77,6 +78,9 @@ public:
     if (parameter) {
       //value = parameter->denormalizeValue(value);
       parameter->valueToText(value,value_txt,32);
+    }
+    else {
+      sprintf(value_txt,"%.2f",value);
     }
 
     MIP_DRect vo = MValueOffset;

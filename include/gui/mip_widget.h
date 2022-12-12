@@ -70,8 +70,11 @@ private:
   int32_t             MIndex            = -1;
   MIP_DRect           MRect             = {};
   MIP_DRect           MBaseRect         = {};
-  MIP_Parameter*      MParameter        = nullptr;
   int32_t             MCursor           = MIP_CURSOR_DEFAULT;
+
+//  MIP_Parameter*      MParameter        = nullptr;
+
+  MIP_Parameter*      MParameters[16]   = {0};
 
 //------------------------------
 protected:
@@ -90,6 +93,8 @@ protected:
   bool                MAutoSetCursor    = true;
   bool                MAutoHideCursor   = false;
   bool                MAutoLockCursor   = false;
+  bool                MAutoSetHint      = true;
+  const char*         MHint             = "";
 
 //------------------------------
 public:
@@ -120,7 +125,8 @@ public:
   virtual double          getWidth()                        { return MRect.w; }
   virtual double          getHeight()                       { return MRect.h; }
 
-  virtual MIP_Parameter*  getParameter()                    { return MParameter; }
+//  virtual MIP_Parameter*  getParameter()                    { return MParameter; }
+  virtual MIP_Parameter*  getParameter(uint32_t AIndex=0)   { return MParameters[AIndex]; }
 
 //  virtual double          getValue()                        { return MValue; }
 //  virtual double          getModulation()                   { return MModulation; }
@@ -148,7 +154,8 @@ public:
   virtual void setAutoLockCursor(bool AAuto=true)         { MAutoLockCursor = AAuto; }
 
   virtual void setListener(MIP_WidgetListener* AListener) { MListener = AListener; }
-  virtual void setParameter(MIP_Parameter* AParameter)    { MParameter = AParameter; }
+  virtual void setParameter(MIP_Parameter* AParameter)                  { MParameters[0] = AParameter; }
+  virtual void setParameter(uint32_t AIndex, MIP_Parameter* AParameter) { MParameters[AIndex] = AParameter; }
 
 //  virtual void setValue(double AValue)                    { MValue = AValue; }
 //  virtual void setModulation(double AValue)               { MModulation = AValue; }
@@ -159,7 +166,9 @@ public:
   virtual void setValue(uint32_t AIndex,double AValue)      { MValues[AIndex] = AValue; }
   virtual void setModulation(uint32_t AIndex,double AValue) { MModulations[AIndex] = AValue; }
 
-  virtual void setCursor(int32_t ACursor)                 { MCursor = ACursor; }
+  virtual void setCursor(int32_t ACursor)                   { MCursor = ACursor; }
+
+  virtual void setHint(const char* AHint)                   { MHint = AHint; }
 
   //virtual void setFlags(uint32_t AFlags)                  { MFlags = AFlags; }
   //virtual void setFlag(uint32_t AFlag)                    { MFlags |= AFlag; }
@@ -437,11 +446,17 @@ public:
     if (MAutoSetCursor) {
       do_widget_set_cursor(this,MCursor);
     }
+    if (MAutoSetHint) {
+      do_widget_set_hint(this,MHint);
+    }
   }
 
   virtual void on_widget_leave(double AXpos, double AYpos) {
     if (MAutoSetCursor) {
       do_widget_set_cursor(this,MIP_CURSOR_DEFAULT);
+    }
+    if (MAutoSetHint) {
+      do_widget_set_hint(this,"");
     }
   }
 

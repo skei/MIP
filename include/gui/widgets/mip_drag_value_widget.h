@@ -18,13 +18,14 @@ class MIP_DragValueWidget
 private:
 //------------------------------
 
-  bool      MIsDragging       = false;
-  double    MPrevXpos         = 0.0;
-  double    MPrevYpos         = 0.0;
 
 //------------------------------
 protected:
 //------------------------------
+
+  bool      MIsDragging       = false;
+  double    MPrevXpos         = 0.0;
+  double    MPrevYpos         = 0.0;
 
   uint32_t  MDragDirection    = MIP_UP;
   double    MDragSensitivity  = (1.0 / 200.0);
@@ -61,7 +62,34 @@ public:
     MDragSensitivity2 = s2;
   }
 
-  virtual bool isDragging() { return MIsDragging; }
+  virtual bool isDragging() {
+    return MIsDragging;
+  }
+
+  //
+
+  void calcDelta(double AXpos, double AYpos, uint32_t AState, double* AXdelta, double* AYdelta) {
+    double deltax = AXpos - MPrevXpos;
+    double deltay = AYpos - MPrevYpos;
+    double minval = 0.0;
+    double maxval = 1.0;
+    MIP_Parameter* parameter = getParameter();
+    if (parameter) {
+      minval = parameter->getMinValue();
+      maxval = parameter->getMaxValue();
+    }
+    double range = maxval - minval;
+    if (range > 0) {
+      //MIP_Print("range %f\n",range);
+      double sens = MDragSensitivity;
+      if (AState & MIP_KEY_SHIFT) sens *= MDragSensitivity2;
+      sens *= range;
+      deltax *= sens;
+      deltay *= sens;
+    }
+    *AXdelta = deltax;
+    *AYdelta = deltay;
+  }
 
 //------------------------------
 public:
@@ -102,9 +130,11 @@ public:
 
   virtual void on_widget_mouse_move(uint32_t AState, double AXpos, double AYpos, uint32_t ATime) {
     if (MIsDragging) {
+
+      // delta
+
       double deltax = AXpos - MPrevXpos;
       double deltay = AYpos - MPrevYpos;
-
       double minval = 0.0;
       double maxval = 1.0;
       MIP_Parameter* parameter = getParameter();
@@ -114,16 +144,19 @@ public:
       }
       double range = maxval - minval;
       if (range > 0) {
-
         //MIP_Print("range %f\n",range);
-
         double sens = MDragSensitivity;
         if (AState & MIP_KEY_SHIFT) sens *= MDragSensitivity2;
-
         sens *= range;
-
         deltax *= sens;
         deltay *= sens;
+
+//        double deltax = 0.0;
+//        double deltay = 0.0;
+//        calcDelta(AXpos,AYpos,AState,&deltax,&deltay);
+
+        // value
+
         double value = getValue();
         switch (MDragDirection) {
           case MIP_LEFT: {
@@ -146,15 +179,17 @@ public:
 
         //MIP_Print("minval %f maxval %f\n",minval,maxval);
         value = MIP_Clamp(value,minval,maxval);
-
         setValue(value);
+
         MPrevXpos = AXpos;
         MPrevYpos = AYpos;
+
         do_widget_update(this);
         do_widget_redraw(this);
       }
 
     } // range
+
   }
 
   //----------

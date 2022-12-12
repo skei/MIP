@@ -19,10 +19,11 @@ class MIP_PanelWidget
 protected:
 //------------------------------
 
-  bool MFillBackground        = true;
-  bool MDrawBorder            = true;
+  bool      MFillBackground   = true;
+  bool      MDrawBorder       = true;
 
-  double MBorderWidth         = 1.0;
+  double    MBorderWidth      = 1.0;
+  uint32_t  MBorderEdges      = MIP_EDGE_ALL;
 
   MIP_Color MBackgroundColor  = MIP_COLOR_GRAY;
   MIP_Color MBorderColor      = MIP_COLOR_DARK_GRAY;
@@ -49,6 +50,7 @@ public:
   virtual void setBorderWidth(double AWidth)        { MBorderWidth = AWidth; }
   virtual void setBackgroundColor(MIP_Color AColor) { MBackgroundColor = AColor; }
   virtual void setBorderColor(MIP_Color AColor)     { MBorderColor = AColor; }
+  virtual void setBorderEdges(uint32_t AEdges)      { MBorderEdges = AEdges; }
 
 //------------------------------
 public:
@@ -70,7 +72,15 @@ public:
     MIP_DRect mrect = getRect();
     painter->setDrawColor(MBorderColor);
     painter->setLineWidth(MBorderWidth * S);
-    painter->drawRect(mrect.x,mrect.y,mrect.w,mrect.h);
+    if (MBorderEdges == MIP_EDGE_ALL) {
+      painter->drawRect(mrect.x,mrect.y,mrect.w,mrect.h);
+    }
+    else {
+      if (MBorderEdges == MIP_EDGE_TOP)     painter->drawLine( mrect.x,    mrect.y,   mrect.x2(), mrect.y    );
+      if (MBorderEdges == MIP_EDGE_BOTTOM)  painter->drawLine( mrect.x,    mrect.y2(),mrect.x2(), mrect.y2() );
+      if (MBorderEdges == MIP_EDGE_LEFT)    painter->drawLine( mrect.x,    mrect.y,   mrect.x,    mrect.y2() );
+      if (MBorderEdges == MIP_EDGE_RIGHT)   painter->drawLine( mrect.x2(), mrect.y,   mrect.x2(), mrect.y2() );
+    }
   }
 
 //------------------------------

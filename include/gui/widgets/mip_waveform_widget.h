@@ -77,6 +77,9 @@ public:
 public:
 //------------------------------
 
+  //test
+  virtual int getInt() { return 1; };
+
   virtual void setDrawWaveform(bool ADraw=true) { MDrawWaveform = ADraw; }
   virtual void setWaveformWidth(double AWidth) { MWaveformWidth = AWidth; }
   virtual void setWaveformColor(MIP_Color AColor) { MWaveformColor = AColor; }
