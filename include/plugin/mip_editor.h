@@ -276,25 +276,21 @@ public: // clap.gui
   // see also: MIP_Window::on_window_resize
 
   virtual bool adjustSize(uint32_t *width, uint32_t *height) {
-    /*
-    double w = *width;
-    double h = *height;
-    if (MAspectRatio > 0) {
-      if (h > 0) {
-        double aspect = w / h;
-        if (aspect >= MAspectRatio) w = h * MAspectRatio;
-        else h = w / MAspectRatio;
-      }
-    }
-    // avoids a 'resize dance'..
-    // jiggling down half a pixels a time in width/height,
-    // until aspect ratio for both with and height agree..
-    w = ceil(w);
-    h = ceil(h);
-    MIP_Print("%i, %i -> %i, %i\n",*width,*height,(int)w,(int)h);
-    *width = w;
-    *height = h;
-    */
+//    //double s = 1.0;
+//    double w = *width;
+//    double h = *height;
+//    double aspect = w / h;
+//    if (aspect >= MAspectRatio) w = h * MAspectRatio;
+//    else h = w * MAspectRatio;
+//    //MWindow->setWindowScale(scale);
+//    // avoids a bitwig 'resize dance'..
+//    // jiggling down half a pixels a time in width/height,
+//    // until aspect ratio for both with and height agree..
+//    w = ceil(w);
+//    h = ceil(h);
+//    //MIP_Print("%i, %i -> %i, %i\n",*width,*height,(int)w,(int)h);
+//    *width = w;
+//    *height = h;
     return true;
   }
 
@@ -309,33 +305,53 @@ public: // clap.gui
 
   virtual bool setSize(uint32_t width, uint32_t height) {
     //MIP_Print("%i,%i\n",width,height);
+
     //MEditorWidth = width;
     //MEditorHeight = height;
+
     if (MWindow) {
+
       if (MIsEditorOpen) {
         MWindow->setSize(width,height);
+        //MWindow->invalidate(0,0,width,height);
+
+//        MWindow->getWindowPainter()->setClipRect(MIP_DRect(0,0,width,height));
+
       }
+
       MIP_Widget* root_widget = MWindow->getRootWidget();
       if (root_widget) {
         //root_widget->setPos(0,0);
         root_widget->setSize(width,height);
         //MWindow->invalidate(0,0,width,height);
       }
-      if (MInitialWidth > 0) {
-        double s = (double)width / (double)MInitialWidth;
-        MWindow->setWindowScale(s);
-      }
+
+      double scale = 1.0;
+      double aspect = (double)width / (double)height;
+      if (aspect >= MAspectRatio) scale = (double)height / (double)MInitialHeight;
+      else scale = (double)width / (double)MInitialWidth;
+      MWindow->setWindowScale(scale);
+
+//      if (MInitialWidth > 0) {
+//        double s = (double)width / (double)MInitialWidth;
+//        MWindow->setWindowScale(s);
+//      }
+
       MIP_Painter* painter = MWindow->getWindowPainter();
       painter->setClipRect(MIP_DRect(0,0,width,height));
+
       //MWindow->on_window_resize(width,height);
       //MIP_Painter* painter = MWindow->getWindowPainter();
       //painter->resetClip();
+
       MEditorWidth = width;
       MEditorHeight = height;
 
       // will not redraw when resizing without this
+
       #ifdef MIP_WIN32
       if (MIsEditorOpen) {
+        //MIP_Print("%i,%i\n",width,height);
         MWindow->invalidate(0,0,width,height);
       }
       #endif
@@ -377,9 +393,25 @@ public: // clap.gui
   //----------
 
   virtual bool show() {
+
+    //if (MNeedToResize) {
+      MWindow->setSize(MEditorWidth,MEditorHeight);
+    //  MNeedToResize = false;
+    //}
+
     if (MWindow) {
+
+//      double scale = 1.0;
+//      double aspect = (double)width / (double)height;
+//      if (aspect >= MAspectRatio) scale = (double)height / (double)MInitialHeight;
+//      else scale = (double)width / (double)MInitialWidth;
+//      MWindow->setWindowScale(scale);
+
       MWindow->open();
-      //MWindow->invalidate(0,0,MWidth,MHeight);
+
+//      MIP_Print("%i,%i\n",MEditorWidth,MEditorHeight);
+//      MWindow->invalidate(0,0,MEditorWidth,MEditorHeight);
+
       MWindow->startEventThread();
       MIsEditorOpen = true;
       return true;

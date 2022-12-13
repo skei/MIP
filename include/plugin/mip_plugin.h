@@ -336,6 +336,7 @@ public: // ext gui
 //------------------------------
 
   bool gui_is_api_supported(const char *api, bool is_floating) override {
+    //MIP_Print("\n");
     #ifdef MIP_LINUX
       if (!is_floating && (strcmp(api,CLAP_WINDOW_API_X11) == 0)) return true;
     #endif
@@ -348,6 +349,7 @@ public: // ext gui
   //----------
 
   bool gui_get_preferred_api(const char **api, bool *is_floating) override {
+    //MIP_Print("\n");
     #ifdef MIP_LINUX
       *api = CLAP_WINDOW_API_X11;
       *is_floating = false;
@@ -362,6 +364,7 @@ public: // ext gui
   //----------
 
   bool gui_create(const char *api, bool is_floating) override {
+    //MIP_Print("\n");
     MIsEditorOpen = false;
     MEditor = new MIP_Editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
     //MIP_Assert(MEditor);
@@ -371,6 +374,7 @@ public: // ext gui
   //----------
 
   void gui_destroy() override {
+    //MIP_Print("\n");
     MIP_Assert(MEditor);
     if (MIsEditorOpen) gui_hide();
     MIsEditorOpen = false;
@@ -383,6 +387,7 @@ public: // ext gui
   //----------
 
   bool gui_set_scale(double scale) override {
+    //MIP_Print("%f\n",scale);
     MIP_Assert(MEditor);
     return MEditor->setScale(scale);
   }
@@ -391,12 +396,15 @@ public: // ext gui
 
   bool gui_get_size(uint32_t *width, uint32_t *height) override {
     MIP_Assert(MEditor);
-    return MEditor->getSize(width,height);
+    bool result = MEditor->getSize(width,height);
+    //MIP_Print("-> %i,%i\n",*width,*height);
+    return result;
   }
 
   //----------
 
   bool gui_can_resize() override {
+    //MIP_Print("\n");
     MIP_Assert(MEditor);
     return MEditor->canResize();
   }
@@ -404,6 +412,7 @@ public: // ext gui
   //----------
 
   bool gui_get_resize_hints(clap_gui_resize_hints_t *hints) override {
+    //MIP_Print("\n");
     MIP_Assert(MEditor);
     return MEditor->getResizeHints(hints);
   }
@@ -412,12 +421,17 @@ public: // ext gui
 
   bool gui_adjust_size(uint32_t *width, uint32_t *height) override {
     MIP_Assert(MEditor);
-    return MEditor->adjustSize(width,height);
+    //uint32_t w = *width;
+    //uint32_t h = *height;
+    bool result = MEditor->adjustSize(width,height);
+    //MIP_Print("%i,%i -> %i,%i\n",w,h,*width,*height);
+    return result;
   }
 
   //----------
 
   bool gui_set_size(uint32_t width, uint32_t height) override {
+    //MIP_Print("%i,%i\n",width,height);
     MIP_Assert(MEditor);
     //MIsEditorBusy = true;
     bool result = MEditor->setSize(width,height);
@@ -428,6 +442,7 @@ public: // ext gui
   //----------
 
   bool gui_set_parent(const clap_window_t *window) override {
+    //MIP_Print("\n");
     MIP_Assert(MEditor);
     return MEditor->setParent(window);
   }
@@ -435,6 +450,7 @@ public: // ext gui
   //----------
 
   bool gui_set_transient(const clap_window_t *window) override {
+    //MIP_Print("\n");
     MIP_Assert(MEditor);
     return MEditor->setTransient(window);
   }
@@ -442,6 +458,7 @@ public: // ext gui
   //----------
 
   void gui_suggest_title(const char *title) override {
+    //MIP_Print("\n");
     MIP_Assert(MEditor);
     MEditor->suggestTitle(title);
   }
@@ -449,6 +466,7 @@ public: // ext gui
   //----------
 
   bool gui_show() override {
+    //MIP_Print("\n");
     MIP_Assert(MEditor);
     updateEditorParameterValues();
     bool result = MEditor->show();
@@ -469,6 +487,7 @@ public: // ext gui
   //----------
 
   bool gui_hide() override {
+    //MIP_Print("\n");
     MIP_Assert(MEditor);
     MGuiTimer.stop();
     MIsEditorOpen = false;

@@ -82,6 +82,7 @@ public:
   //----------
 
   bool gui_create(const char* api, bool is_floating) final {
+    //MIP_Print("\n");
     MIsEditorOpen = false;
     MEditor = new sa_botage_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
     return (MEditor);
@@ -89,7 +90,33 @@ public:
 
   //----------
 
+  bool gui_show() final {
+    //MIP_Print("\n");
+
+    //    MIP_Window* window = MEditor->getWindow();
+    //    MIP_Painter* painter = MWindow->getWindowPainter();
+    //    painter->setClipRect(MIP_DRect(0,0,width,height));
+
+    bool result = MIP_Plugin::gui_show();
+
+    //    uint32_t width = MEditor->getWidth();
+    //    uint32_t height = MEditor->getHeight();
+    //    MIP_Print("window width %i window height %i\n",width,height);
+
+    //    MIP_Window* window = MEditor->getWindow();
+    //    window->invalidate(0,0,width,height);
+
+    //    MIP_Painter* painter = window->getWindowPainter();
+    //    MIP_DRect cliprect = painter->getClipRect();
+    //    MIP_Print("cliprect %.1f,%.1f,%.1f,%.1f\n",cliprect.x,cliprect.y,cliprect.w,cliprect.h);
+
+    return result;
+  }
+
+  //----------
+
   void gui_destroy() final {
+    //MIP_Print("\n");
     MIP_Plugin::gui_destroy();
     if (MRootWidget) delete MRootWidget;
   }

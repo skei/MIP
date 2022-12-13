@@ -40,6 +40,8 @@ public:
   sa_botage_editor(MIP_EditorListener* AListener, uint32_t AWidth, uint32_t AHeight, MIP_ParameterArray* AParameters)
   : MIP_Editor(AListener,AWidth,AHeight,AParameters) {
 
+    //MIP_Print("%i,%i\n",AWidth,AHeight);
+
     double __MIP_UNUSED x,y,w,h = 0;
     double width  = AWidth;
 
@@ -447,16 +449,14 @@ public:
     uint32_t slices = MParameters->getItem(1)->getValue();
     MWaveformWidget->setNumGrid(beats);
     MWaveformWidget->setNumSubGrid(slices);
+//    double scale = 1.0;
+//    double aspect = (double)MEditorWidth / (double)MEditorHeight;
+//    if (aspect >= MAspectRatio) scale = (double)MEditorHeight / (double)MInitialHeight;
+//    else scale = (double)MEditorWidth / (double)MInitialWidth;
+//    MWindow->setWindowScale(scale);
+    //MIP_Print("%i,%i\n",MEditorWidth,MEditorHeight);
     return MIP_Editor::show();
   }
-
-//  bool hide() override {
-//    MRootWidget       = nullptr;
-//    MWaveformWidget   = nullptr;
-//    MNumBeatsWidget   = nullptr;
-//    MNumSlicesWidget  = nullptr;
-//    MHintWidget       = nullptr;
-//  }
 
   //----------
 

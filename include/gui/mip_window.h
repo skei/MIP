@@ -112,6 +112,7 @@ public:
   //----------
 
   virtual void setRootWidget(MIP_Widget* AWidget, MIP_WidgetListener* AListener=nullptr) {
+    //MIP_Print("%i,%i\n",AWidget->getWidth(),AWidget->getHeight());
     MRootWidget = AWidget;
     if (AListener) AWidget->setListener(AListener);
   }
@@ -131,6 +132,7 @@ public:
   //----------
 
   virtual void setInitialSize(uint32_t AWidth, uint32_t AHeight) {
+    //MIP_Print("%i,%i\n",AWidth,AHeight);
     MInitialWidth = AWidth;
     MInitialHeight = AHeight;
   }
@@ -190,12 +192,19 @@ public: // window
   */
 
   void on_window_resize(int32_t AWidth, int32_t AHeight) override {
-    //MIP_Print("%i,%i\n",AWidth,AHeight);
     MWindowPainter->setClipRect(MIP_DRect(0,0,AWidth,AHeight));
+
+//          double scale = 1.0;
+//          double aspect = (double)AWidth / (double)AHeight;
+//          if (aspect >= MAspectRatio) scale = (double)AHeight / (double)MInitialHeight;
+//          else scale = (double)AWidth / (double)MInitialWidth;
+//          MWindow->setWindowScale(scale);
+
     if (MInitialWidth > 0) {
       double s = (double)AWidth / (double)MInitialWidth;
       setWindowScale(s);
     }
+
     if (MRootWidget) {
       MRootWidget->setSize(AWidth,AHeight);
     }
@@ -204,33 +213,22 @@ public: // window
   //----------
 
   void on_window_paint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
-
-//    MIP_Print("%i,%i,%i,%i\n",AXpos,AYpos,AWidth,AHeight);
-
     MIP_DRect updaterect = MIP_DRect(AXpos,AYpos,AWidth,AHeight);
-
     if (MRootWidget) {
       MPaintContext.painter = MWindowPainter;
       MPaintContext.updateRect = updaterect;
-
       MWindowPainter->beginPaint(0,0,MWindowWidth,MWindowHeight);
-
       //MWindowPainter->resetClip();
-//      MWindowPainter->setClipRect(updaterect);
+      //MWindowPainter->setClipRect(updaterect);
       MWindowPainter->setClip(updaterect);
-
       if (MFillBackground) {
         MWindowPainter->setFillColor(MBackgroundColor);
         MWindowPainter->fillRect(AXpos,AYpos,AWidth,AHeight);
       }
-
       //MRootWidget->paintChildWidgets(&MPaintContext);
       MRootWidget->on_widget_paint(&MPaintContext);
-
       //MWindowPainter->resetClip();
-
       MWindowPainter->endPaint();
-
     }
   }
 
@@ -368,6 +366,7 @@ public: // widget listener
 
   void do_widget_redraw(MIP_Widget* AWidget, uint32_t AMode=0) override {
     MIP_DRect r = AWidget->getRect();
+    //MIP_Print("%.2f,%.2f - %.2f,%.2f\n",r.x,r.y,r.w,r.h);
     invalidate(r.x,r.y,r.w,r.h);
   }
 

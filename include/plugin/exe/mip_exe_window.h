@@ -42,8 +42,15 @@ public:
 //------------------------------
 
   void on_window_resize(int32_t AWidth, int32_t AHeight) override {
+
+    // TODO:
+    // can_resize
+    // adjust_size
+    // etc..
+
     // let our plugin know..
     gui->set_size(plugin,AWidth,AHeight);
+
   }
 
 };

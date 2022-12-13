@@ -41,6 +41,7 @@ public:
     setValue(1,AValue2);
     setDragDirection(MIP_RIGHT);
     setValueSize(12);
+    setValueOffset(MIP_DRect(5,0,5,0));
   }
 
   //----------
@@ -226,35 +227,49 @@ public:
         deltay *= sens;
         // value
 
+        double value1 = getValue(0);
+        double value2 = getValue(1);
+
         switch (MSelectedEdge) {
           case 1: {
-            double value = getValue(0);
             switch (MDragDirection) {
-              case MIP_LEFT:  value -= deltax;   break;
-              case MIP_RIGHT: value += deltax;   break;
-              case MIP_DOWN:  value += deltay;   break;
-              case MIP_UP:    value -= deltay;   break;
+              case MIP_LEFT:  value1 -= deltax;   break;
+              case MIP_RIGHT: value1 += deltax;   break;
+              case MIP_DOWN:  value1 += deltay;   break;
+              case MIP_UP:    value1 -= deltay;   break;
             }
-            value = MIP_Clamp(value,minval,maxval);
-            setValue(0,value);
+            value1 = MIP_Clamp(value1,minval,maxval);
+            if (value1 > value2) {
+              double temp = value1;
+              value1 = value2;
+              value2 = temp;
+              MSelectedEdge = 2;
+            }
+            setValue(0,value1);
             break;
           }
           case 2: {
-            double value = getValue(1);
             switch (MDragDirection) {
-              case MIP_LEFT:  value -= deltax;   break;
-              case MIP_RIGHT: value += deltax;   break;
-              case MIP_DOWN:  value += deltay;   break;
-              case MIP_UP:    value -= deltay;   break;
+              case MIP_LEFT:  value2 -= deltax;   break;
+              case MIP_RIGHT: value2 += deltax;   break;
+              case MIP_DOWN:  value2 += deltay;   break;
+              case MIP_UP:    value2 -= deltay;   break;
             }
-            value = MIP_Clamp(value,minval,maxval);
-            setValue(1,value);
+            value2 = MIP_Clamp(value2,minval,maxval);
+            if (value2 < value1) {
+              double temp = value1;
+              value1 = value2;
+              value2 = temp;
+              MSelectedEdge = 1;
+            }
+            setValue(1,value2);
             break;
           }
         }
 
         // check if we need to swap?
-        // also swapp MSelectedEdge
+        // also swap MSelectedEdge
+
 
         MPrevXpos = AXpos;
         MPrevYpos = AYpos;
