@@ -64,10 +64,14 @@ public:
     //  value = parameter->normalizeValue(value);
     //}
     if (MIsInteracting) {
-      painter->setFillColor(MISliderColor);
+      MIP_Color color = MISliderColor;
+      if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+      painter->setFillColor(color);
     }
     else {
-      painter->setFillColor(MSliderColor);
+      MIP_Color color = MSliderColor;
+      if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+      painter->setFillColor(color);
     }
     double x = mrect.x;
     double y = mrect.y;

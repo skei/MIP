@@ -29,6 +29,10 @@ private:
   MIP_ImageWidget*  MSaImage      = nullptr;
   MIP_ImageWidget*  MBotageImage  = nullptr;
   MIP_ImageWidget*  MMipImage     = nullptr;
+  MIP_TextWidget*   MVersionText  = nullptr;
+  MIP_TextWidget*   MClapText     = nullptr;
+
+  char clap_string[32] = {0};
 
 public:
 
@@ -38,15 +42,55 @@ public:
     setFillBackground(true);
     setBackgroundColor(0.25);
 
+    // sa
+
     MSaImage = new MIP_ImageWidget(MIP_DRect(0,0,80,80),(void*)sa_img,sa_img_size);
     appendChildWidget(MSaImage);
+    MSaImage->setHint("skei.audio");
+
+    // botage
 
     MBotageImage = new MIP_ImageWidget(MIP_DRect(80,0,160,80),(void*)botage_img,botage_img_size);
     appendChildWidget(MBotageImage);
+    MBotageImage->setHint("sa_botage");
+
+    // sa_botage version
+
+    MVersionText = new MIP_TextWidget(MIP_DRect(84,50,60,20),"v0.3.0-a1");
+    appendChildWidget(MVersionText);
+    MVersionText->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+    MVersionText->setTextSize(8);
+    MVersionText->setTextColor(0.4);
+    MVersionText->setFillBackground(false);
+    MVersionText->setDrawBorder(false);
+
+    // mip
 
     MMipImage = new MIP_ImageWidget(MIP_DRect((ARect.w - 120),0,120,80),(void*)mip_img,mip_img_size);
-    MMipImage->setAlpha(0.6);
     appendChildWidget(MMipImage);
+    MMipImage->setAlpha(0.6);
+    MMipImage->setHint("Multum In Parvo");
+
+    // mip version
+
+    MVersionText = new MIP_TextWidget(MIP_DRect((ARect.w - 110),55,60,10),"v0.2.999");
+    appendChildWidget(MVersionText);
+    MVersionText->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+    MVersionText->setTextSize(8);
+    MVersionText->setTextColor(0.4);
+    MVersionText->setFillBackground(false);
+    MVersionText->setDrawBorder(false);
+
+    // clap
+
+//    sprintf(clap_string,"CLAP %i.%i.%i",CLAP_VERSION_MAJOR,CLAP_VERSION_MINOR,CLAP_VERSION_REVISION);
+//    MClapText = new MIP_TextWidget(MIP_DRect((ARect.w - 110),65,60,10),clap_string);
+//    appendChildWidget(MClapText);
+//    MClapText->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+//    MClapText->setTextSize(9);
+//    MClapText->setTextColor(0.4);
+//    MClapText->setFillBackground(false);
+//    MClapText->setDrawBorder(false);
 
   }
 
@@ -84,6 +128,22 @@ public:
 //
 //};
 
+
+//----------------------------------------------------------------------
+
+class sa_botage_dual_slider
+: public MIP_DualSliderWidget {
+
+public:
+
+  sa_botage_dual_slider(MIP_DRect ARect, const char* AText="", double AValue=0.0, double AValue2=0.0)
+  : MIP_DualSliderWidget(ARect,AText,AValue,AValue2) {
+  }
+
+  virtual ~sa_botage_dual_slider() {
+  }
+
+};
 
 //----------------------------------------------------------------------
 #endif

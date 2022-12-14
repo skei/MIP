@@ -88,17 +88,24 @@ public:
     a1 *= MIP_PI2;
     a2 *= MIP_PI2;
 
-    painter->setDrawColor(MArcBackColor);
+    MIP_Color color = MArcBackColor;
+    if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+    painter->setDrawColor(color);
+
     painter->setLineWidth(thick);
     painter->drawArc(cx,cy,r,0.15*MIP_PI2,0.8*MIP_PI2);
 
     painter->setLineWidth(thick);
 
     if (MIsInteracting) {
-      painter->setDrawColor(MIArcValueColor);
+      MIP_Color color = MIArcValueColor;
+      if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+      painter->setDrawColor(color);
     }
     else {
-      painter->setDrawColor(MArcValueColor);
+      MIP_Color color = MArcValueColor;
+      if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+      painter->setDrawColor(color);
     }
 
     painter->drawArc(cx,cy,r,a1,a2);

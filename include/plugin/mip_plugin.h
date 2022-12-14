@@ -2,6 +2,8 @@
 #define mip_plugin_included
 //----------------------------------------------------------------------
 
+// TODO: #ifndef MIP_NO_GUI around editor stuff
+
 #include "base/mip.h"
 #include "base/system/mip_timer.h"
 #include "plugin/mip_parameter.h"
@@ -129,6 +131,7 @@ public: // plugin
 
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) override {
     MIP_Assert(!MIsActivated);
+    setDefaultParameterValues();
     MProcessContext.samplerate = sample_rate;
     MIsActivated = true;
     return true;

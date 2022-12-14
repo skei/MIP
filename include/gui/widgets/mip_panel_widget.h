@@ -59,7 +59,11 @@ public:
   virtual void fillBackground(MIP_PaintContext* AContext) {
     MIP_Painter* painter = AContext->painter;
     MIP_DRect mrect = getRect();
-    painter->setFillColor(MBackgroundColor);
+
+    MIP_Color color = MBackgroundColor;
+    if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+    painter->setFillColor(color);
+
     painter->fillRect(mrect.x,mrect.y,mrect.w,mrect.h);
   }
 
@@ -70,7 +74,11 @@ public:
     double S = window->getWindowScale();
     MIP_Painter* painter = AContext->painter;
     MIP_DRect mrect = getRect();
-    painter->setDrawColor(MBorderColor);
+
+    MIP_Color color = MBorderColor;
+    if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+    painter->setDrawColor(color);
+
     painter->setLineWidth(MBorderWidth * S);
     if (MBorderEdges == MIP_EDGE_ALL) {
       painter->drawRect(mrect.x,mrect.y,mrect.w,mrect.h);

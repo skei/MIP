@@ -6,13 +6,24 @@
 
 //----------
 
+#define SA_BOTAGE_EDITOR_WIDTH  640
+#define SA_BOTAGE_EDITOR_HEIGHT 480
+
+#ifdef MIP_DEBUG
+  #define SA_BOTAGE_NAME        "sa_botage (debug)"
+#else
+  #define SA_BOTAGE_NAME        "sa_botage"
+#endif
+
+#define SA_BOTAGE_VENDOR        "skei.audio"
+#define SA_BOTAGE_VERSION       "0.3.0"
+
+//----------------------------------------------------------------------
+
 #include "plugin/mip_plugin.h"
 #include "audio/mip_audio_utils.h"
 
 //----------
-
-#define SA_BOTAGE_EDITOR_WIDTH  640
-#define SA_BOTAGE_EDITOR_HEIGHT 480
 
 #include "sa_botage/sa_botage_editor.h"
 #include "sa_botage/sa_botage_parameters.h"
@@ -27,13 +38,13 @@
 
 const clap_plugin_descriptor_t sa_botage_descriptor = {
   .clap_version = CLAP_VERSION,
-  .id           = "skei.audio/sa_botage/v0.1.0",
-  .name         = "sa_botage",
-  .vendor       = "skei.audio",
+  .id           = SA_BOTAGE_VENDOR "/" SA_BOTAGE_NAME "/v" SA_BOTAGE_VERSION,
+  .name         = SA_BOTAGE_NAME,
+  .vendor       = SA_BOTAGE_VENDOR,
   .url          = "",
   .manual_url   = "",
   .support_url  = "",
-  .version      = "0.1.0",
+  .version      = SA_BOTAGE_VERSION,
   .description  = "sabotages your audio",
   .features     = (const char*[]){"audio-effect",nullptr}
 };
@@ -51,11 +62,9 @@ class sa_botage_plugin
 private:
 //------------------------------
 
-  MIP_PanelWidget* MRootWidget = nullptr;
-
-  double gain  = 0.0;
-  double left  = 0.0;
-  double right = 0.0;
+  //double gain  = 0.0;
+  //double left  = 0.0;
+  //double right = 0.0;
 
 //------------------------------
 public:
@@ -90,36 +99,9 @@ public:
 
   //----------
 
-  bool gui_show() final {
-    //MIP_Print("\n");
-
-    //    MIP_Window* window = MEditor->getWindow();
-    //    MIP_Painter* painter = MWindow->getWindowPainter();
-    //    painter->setClipRect(MIP_DRect(0,0,width,height));
-
-    bool result = MIP_Plugin::gui_show();
-
-    //    uint32_t width = MEditor->getWidth();
-    //    uint32_t height = MEditor->getHeight();
-    //    MIP_Print("window width %i window height %i\n",width,height);
-
-    //    MIP_Window* window = MEditor->getWindow();
-    //    window->invalidate(0,0,width,height);
-
-    //    MIP_Painter* painter = window->getWindowPainter();
-    //    MIP_DRect cliprect = painter->getClipRect();
-    //    MIP_Print("cliprect %.1f,%.1f,%.1f,%.1f\n",cliprect.x,cliprect.y,cliprect.w,cliprect.h);
-
-    return result;
-  }
-
-  //----------
-
-  void gui_destroy() final {
-    //MIP_Print("\n");
-    MIP_Plugin::gui_destroy();
-    if (MRootWidget) delete MRootWidget;
-  }
+  //void gui_destroy() final {
+  //  MIP_Plugin::gui_destroy();
+  //}
 
   //----------
 
@@ -169,13 +151,11 @@ public:
     uint32_t length = process->frames_count;
     float** inputs  = process->audio_inputs[0].data32;
     float** outputs = process->audio_outputs[0].data32;
-
-    gain   = 1.0; // MParameters[0]->getValue();
-    left   = 1.0; // MParameters[1]->getValue();
-    right  = 1.0; // MParameters[2]->getValue();
-
+    //gain   = 1.0; // MParameters[0]->getValue();
+    //left   = 1.0; // MParameters[1]->getValue();
+    //right  = 1.0; // MParameters[2]->getValue();
     MIP_CopyStereoBuffer(outputs,inputs,length);
-    MIP_ScaleStereoBuffer(outputs,left*gain,right*gain,length);
+    //MIP_ScaleStereoBuffer(outputs,left*gain,right*gain,length);
   }
 
 };

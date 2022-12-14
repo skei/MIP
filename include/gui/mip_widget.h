@@ -2,6 +2,8 @@
 #define mip_widget_included
 //----------------------------------------------------------------------
 
+// widget values are 0..1
+
 /*
 
   ScaledWidget
@@ -75,6 +77,7 @@ private:
 //  MIP_Parameter*      MParameter        = nullptr;
 
   MIP_Parameter*      MParameters[16]   = {0};
+  uint32_t            MNumParameters    = 0;
 
 //------------------------------
 protected:
@@ -90,11 +93,18 @@ protected:
   bool                MIsActive         = true;
   bool                MIsInteracting    = false;
 
+  bool                MIsDisabled       = false;
+  bool                MIsFocused        = false;
+  bool                MIsHovering       = false;
+
   bool                MAutoSetCursor    = true;
   bool                MAutoHideCursor   = false;
   bool                MAutoLockCursor   = false;
   bool                MAutoSetHint      = true;
   const char*         MHint             = "";
+
+  MIP_Color           MDisabledColor    = MIP_Color(0.5);
+  double              MDisabledAlpha    = 0.5;
 
 //------------------------------
 public:
@@ -125,16 +135,21 @@ public:
   virtual double          getWidth()                        { return MRect.w; }
   virtual double          getHeight()                       { return MRect.h; }
 
-//  virtual MIP_Parameter*  getParameter()                    { return MParameter; }
+//virtual MIP_Parameter*  getParameter()                    { return MParameter; }
   virtual MIP_Parameter*  getParameter(uint32_t AIndex=0)   { return MParameters[AIndex]; }
 
-//  virtual double          getValue()                        { return MValue; }
-//  virtual double          getModulation()                   { return MModulation; }
+  virtual uint32_t        getNumParameters()                { return MNumParameters; }
+
+//virtual double          getValue()                        { return MValue; }
+//virtual double          getModulation()                   { return MModulation; }
 
   virtual double          getValue(uint32_t AIndex=0)       { return MValues[AIndex]; }
   virtual double          getModulation(uint32_t AIndex=0)  { return MModulations[AIndex]; }
 
   virtual int32_t         getCursor()                       { return MCursor; }
+
+  virtual MIP_Color   getDisabledColor() { return MDisabledColor; }
+  virtual double      getDisabledAlpha() { return MDisabledAlpha; }
 
   //virtual uint32_t        getFlags()                      { return MFlags; }
   //virtual bool            hasFlag(uint32_t AFlag)         { return MFlags & AFlag; }
@@ -142,13 +157,23 @@ public:
   virtual bool isActive()       { return MIsActive; }
   virtual bool isVisible()      { return MIsVisible; }
   virtual bool isInteracting()  { return MIsInteracting; }
+
+  virtual bool isDisabled()     { return MIsDisabled; }
+  virtual bool isFocused()      { return MIsFocused; }
+  virtual bool isHovering()     { return MIsHovering; }
+
   virtual bool autoSetCursor()  { return MAutoSetCursor; }
   virtual bool autoHideCursor() { return MAutoHideCursor; }
   virtual bool autoLockCursor() { return MAutoLockCursor; }
 
   virtual void setActive(bool AActive=true)               { MIsActive = AActive; }
-  virtual void setIsInteracting(bool AInteracting=true)   { MIsInteracting = AInteracting; }
+  virtual void setInteracting(bool AInteracting=true)     { MIsInteracting = AInteracting; }
   virtual void setVisible(bool AVisible=true)             { MIsVisible = AVisible; }
+
+  virtual void setDisabled(bool ADisabled=true)           { MIsDisabled = ADisabled; }
+  virtual void setFocused(bool AFocused=true)             { MIsFocused = AFocused; }
+  virtual void setHovering(bool AHovering=true)           { MIsHovering = AHovering; }
+
   virtual void setAutoSetCursor(bool AAuto=true)          { MAutoSetCursor = AAuto; }
   virtual void setAutoHideCursor(bool AAuto=true)         { MAutoHideCursor = AAuto; }
   virtual void setAutoLockCursor(bool AAuto=true)         { MAutoLockCursor = AAuto; }
@@ -157,8 +182,10 @@ public:
   virtual void setParameter(MIP_Parameter* AParameter)                  { MParameters[0] = AParameter; }
   virtual void setParameter(uint32_t AIndex, MIP_Parameter* AParameter) { MParameters[AIndex] = AParameter; }
 
-//  virtual void setValue(double AValue)                    { MValue = AValue; }
-//  virtual void setModulation(double AValue)               { MModulation = AValue; }
+  virtual void setNumParameters(uint32_t ANum)            { MNumParameters = ANum; }
+
+//virtual void setValue(double AValue)                    { MValue = AValue; }
+//virtual void setModulation(double AValue)               { MModulation = AValue; }
 
   virtual void setValue(double AValue)                    { MValues[0] = AValue; }
   virtual void setModulation(double AValue)               { MModulations[0] = AValue; }
@@ -173,6 +200,9 @@ public:
   //virtual void setFlags(uint32_t AFlags)                  { MFlags = AFlags; }
   //virtual void setFlag(uint32_t AFlag)                    { MFlags |= AFlag; }
   //virtual void clearFlag(uint32_t AFlag)                  { MFlags &= ~AFlag; }
+
+  virtual void setDisabledColor(MIP_Color AColor) { MDisabledColor = AColor; }
+  virtual void setDisabledAlpha(double AAlpha)      { MDisabledAlpha = AAlpha; }
 
 //------------------------------
 public:
@@ -408,9 +438,11 @@ public:
 
   virtual void on_widget_connect(MIP_Parameter* AParameter) {
     double value = AParameter->getValue();
-    setValue(value);
-//    const char* name = AParameter->getName();
-//    setText(name);
+    for (uint32_t i=0; i<MNumParameters; i++) {
+      setValue(i,value);
+    }
+    //const char* name = AParameter->getName();
+    //setText(name);
   }
 
   virtual void on_widget_move(double AXpos, double AYpos) {

@@ -37,6 +37,7 @@ public:
   MIP_ValueWidget(MIP_DRect ARect, const char* AText="", double AValue=0.0)
   : MIP_TextWidget(ARect,AText) {
     //MValue          = AValue;
+    setNumParameters(1);
     MValues[0]      = AValue;
     MTextSize       = 14.0;
     MTextColor      = MIP_COLOR_DARK_GRAY;
@@ -56,6 +57,7 @@ public:
   virtual void setDrawValue(bool ADraw=true)           { MDrawValue = ADraw; }
   virtual void setValueSize(double ASize)              { MValueSize = ASize; }
   virtual void setValueColor(MIP_Color AColor)         { MValueColor = AColor; }
+  virtual void setIValueColor(MIP_Color AColor)        { MIValueColor = AColor; }
   //virtual void setValue(double AValue)                 { MValue = AValue; }
   virtual void setValueAlignment(uint32_t AAlignment)  { MValueAlignment = AAlignment; }
   virtual void setValueOffset(MIP_DRect AOffset)       { MValueOffset = AOffset; }
@@ -87,17 +89,15 @@ public:
     vo.scale(S);
     mrect.shrink(vo);
 
-    //if (MIsInteracting) {
-    //  painter->setTextColor(MIValueColor);
-    //  painter->setTextSize(MIValueSize * S);
-    //}
-    //else {
-      painter->setTextColor(MValueColor);
-      painter->setTextSize(MValueSize * S);
-    //}
+    MIP_Color color;
+    if (MIsInteracting) color = MIValueColor;
+    else color = MValueColor;
+    if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
 
-//    char temp[16] = {0};
-//    sprintf(temp,"%.2f",getValue());
+    painter->setTextColor(color);
+    painter->setTextSize(MValueSize * S);
+    //char temp[16] = {0};
+    //sprintf(temp,"%.2f",getValue());
 
     double bounds[4] = {0};
     painter->getTextBounds(value_txt,bounds);

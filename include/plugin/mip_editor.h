@@ -179,6 +179,21 @@ public:
 
   //----------
 
+  virtual void connect(MIP_Widget* AWidget, uint32_t AIndex, MIP_Parameter* AParameter) {
+    //MIP_Print("AWidget %p AIndex %i AParameter %p\n",AWidget,AIndex,AParameter);
+
+    //AWidget->setNumParameters(AIndex);
+    AWidget->setParameter(AIndex,AParameter);
+    AParameter->setWidget(AWidget);
+    double value = AParameter->getValue();
+    AWidget->setValue(AIndex,value);
+    AWidget->on_widget_connect(AParameter);
+    //double nv = AParameter->normalizeValue(v);
+    //AWidget->setValue(nv);
+  }
+
+  //----------
+
   virtual void setParameters(MIP_ParameterArray* AParameters) {
     MParameters = AParameters;
   }
@@ -211,9 +226,13 @@ public:
     if (parameter) {
       MIP_Widget* widget = parameter->getWidget();
       if (widget) {
-        // [de-]normalize value
-        //double v = parameter->normalizeValue(AValue);
-        widget->setValue(AValue);
+        uint32_t num = widget->getNumParameters();
+        for (uint32_t i=0; i<num; i++) {
+          if (widget->getParameter(i) == parameter) {
+            widget->setValue(i,AValue);
+          }
+        }
+//        widget->setValue(AValue);
         if (ARedraw) widget->redraw(/*MIP_WIDGET_REDRAW_VALUE*/);
       }
     }
@@ -436,20 +455,20 @@ public: // widget listener
 //------------------------------
 
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
-    //MIP_PRINT;
-    MIP_Parameter* parameter = AWidget->getParameter();
-    //MIP_Print("parameter %p\n",parameter);
-    if (parameter) {
-      //MIP_PRINT;
-      uint32_t index = parameter->getIndex();
-      //double value = parameter->getValue();
-      double value = AWidget->getValue();
-      if (MListener) {
-        //MIP_Print("%i = %f\n",index,value);
-        MListener->on_editor_parameter_change(index,value);
+    uint32_t num = AWidget->getNumParameters();
+    for (uint32_t i=0; i<num; i++) {
+      MIP_Parameter* parameter = AWidget->getParameter(i);
+      if (parameter) {
+        uint32_t index = parameter->getIndex();
+        //double value = parameter->getValue();
+        double value = AWidget->getValue(i);
+        if (MListener) {
+          //MIP_Print("%i = %f\n",index,value);
+          MListener->on_editor_parameter_change(index,value);
+        }
       }
     }
-    if (MWindow) MWindow->do_widget_update(AWidget,AMode);
+    if ((num > 0) && MWindow) MWindow->do_widget_update(AWidget,AMode);
   }
 
   //----------

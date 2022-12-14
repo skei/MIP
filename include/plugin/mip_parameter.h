@@ -263,6 +263,52 @@ public:
 };
 
 //----------------------------------------------------------------------
+//
+// scale
+//
+//----------------------------------------------------------------------
+
+class MIP_ScaleParameter
+: public MIP_Parameter {
+
+//------------------------------
+private:
+//------------------------------
+
+
+
+//------------------------------
+public:
+//------------------------------
+
+  MIP_ScaleParameter(const char* AName="", double AValue=0.0, double AMin=0.0, double AMax=1.0)
+  : MIP_Parameter(AName,AValue,AMin,AMax) {
+  }
+
+  //----------
+
+  virtual ~MIP_ScaleParameter() {
+  }
+
+//------------------------------
+public:
+//------------------------------
+
+  bool valueToText(double value, char *display, uint32_t size) override {
+//    uint32_t index = (int)value;
+//    if (index <= MParamInfo.max_value) {
+//      strcpy(display,MText[index]);
+//    }
+//    else {
+//      strcpy(display,"error");
+//    }
+    return true;
+  }
+
+};
+
+//----------------------------------------------------------------------
+
 
 /*
   db

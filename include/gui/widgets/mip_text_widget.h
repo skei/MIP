@@ -76,7 +76,10 @@ public:
     to.scale(S);
     mrect.shrink(to);
 
-    painter->setTextColor(MTextColor);
+    MIP_Color color = MTextColor;
+    if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+    painter->setTextColor(color);
+
     painter->setTextSize(MTextSize * S);
 
     painter->drawTextBox(mrect,txt,MTextAlignment);

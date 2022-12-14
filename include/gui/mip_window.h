@@ -443,8 +443,12 @@ private:
 
       if (hover != MHoverWidget) {
         //if (!MClickedWidget) {
-          if (MHoverWidget) MHoverWidget->on_widget_leave(AXpos,AYpos);
+          if (MHoverWidget) {
+            MHoverWidget->setHovering(false);
+            MHoverWidget->on_widget_leave(AXpos,AYpos);
+          }
           if (hover) {
+            hover->setHovering(true);
             hover->on_widget_enter(AXpos,AYpos);
             //if (hover->hasFlag(MIP_WIDGET_AUTO_SET_CURSOR)) {
             //  int32_t cursor = hover->getCursor();

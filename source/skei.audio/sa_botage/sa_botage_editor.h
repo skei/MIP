@@ -55,15 +55,37 @@ public:
     sa_botage_header* header  = new sa_botage_header(MIP_DRect(0,0,width,SA_BOTAGE_HEADER_HEIGHT));
     MRootWidget->appendChildWidget(header);
 
+    // icons
+
+    MIP_TextWidget* c_icon = new MIP_TextWidget(MIP_DRect(475,30,15,15),"c");
+    MRootWidget->appendChildWidget(c_icon);
+    c_icon->setCursor(MIP_CURSOR_FINGER);
+    c_icon->setTextSize(12);
+    c_icon->setTextColor(0.5);
+    c_icon->setDrawBorder(true);
+    c_icon->setBorderColor(0.5);
+    c_icon->setFillBackground(false);
+    c_icon->setHint("Config");
+
+    MIP_TextWidget* i_icon = new MIP_TextWidget(MIP_DRect(495,30,15,15),"i");
+    MRootWidget->appendChildWidget(i_icon);
+    i_icon->setCursor(MIP_CURSOR_FINGER);
+    i_icon->setTextSize(12);
+    i_icon->setTextColor(0.5);
+    i_icon->setDrawBorder(true);
+    i_icon->setBorderColor(0.5);
+    i_icon->setFillBackground(false);
+    i_icon->setHint("Info");
+
     // hint
 
-    MHintWidget = new MIP_TextWidget(MIP_DRect(250,50,260,25),"Hello world!");
+    MHintWidget = new MIP_TextWidget(MIP_DRect(250,50,260,20),"Hello world!");
     MRootWidget->appendChildWidget(MHintWidget);
     MHintWidget->setFillBackground(false);
     //MHintWidget->setBackgroundColor(0.3);
     MHintWidget->setDrawBorder(true);
     MHintWidget->setBorderColor(MIP_COLOR_GRAY);
-    MHintWidget->setTextSize(14);
+    MHintWidget->setTextSize(10);
     MHintWidget->setTextColor(MIP_COLOR_LIGHT_GRAY);
     MHintWidget->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     MHintWidget->setTextOffset(MIP_DRect(5,0,0,0));
@@ -91,6 +113,7 @@ public:
     MNumBeatsWidget->setValueColor(MIP_COLOR_BLACK);
     MNumBeatsWidget->setValueSize(14);
     MNumBeatsWidget->setHint("Number of beats in buffer");
+    MNumBeatsWidget->setIValueColor(MIP_COLOR_LIGHT_RED);
 
     connect( MNumBeatsWidget,  AParameters->getItem(0) );
 
@@ -105,6 +128,7 @@ public:
     MNumSlicesWidget->setValueColor(MIP_COLOR_BLACK);
     MNumSlicesWidget->setValueSize(14);
     MNumSlicesWidget->setHint("Number of slices per beat");
+    MNumSlicesWidget->setIValueColor(MIP_COLOR_LIGHT_RED);
 
     connect( MNumSlicesWidget, AParameters->getItem(1) );
 
@@ -227,7 +251,7 @@ public:
     x = 10 + 250 + 10 /*+ 175 + 10 + 10 + 175 + 10 */;
     y = 200;
 
-    MIP_TextWidget* c1_header = new MIP_TextWidget(MIP_DRect(x,y,175,20),"Range");
+    MIP_TextWidget* c1_header = new MIP_TextWidget(MIP_DRect(x,y,175,20),"Start");
     MRootWidget->appendChildWidget(c1_header);
     c1_header->setFillBackground(true);
     c1_header->setBackgroundColor(0.35);
@@ -240,16 +264,22 @@ public:
     range_length_knob->setArcThickness(7);
     range_length_knob->setHint("Loop length");
 
+    range_length_knob->setAutoHideCursor(false);
+//    range_length_knob->setAutoLockCursor(false);
+
     MIP_TextWidget* range_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Length");
     MRootWidget->appendChildWidget(range_length_text);
     range_length_text->setDrawBorder(false);
     range_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "range", 0.2, 0.7 );
+    //MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "range", 0.5, 0.5 );
+    sa_botage_dual_slider* range_length_range_slider = new sa_botage_dual_slider( MIP_DRect(x+45,y+45,130,20), "range", 0.5, 0.5 );
     MRootWidget->appendChildWidget(range_length_range_slider);
-    //range_length_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     range_length_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     range_length_range_slider->setHint("Loop min/max");
+
+    connect( range_length_range_slider, 0, AParameters->getItem(2) );
+    connect( range_length_range_slider, 1, AParameters->getItem(3) );
 
     // loop speed
 
@@ -264,7 +294,7 @@ public:
     range_speed_text->setDrawBorder(false);
     range_speed_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* range_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.2, 0.7 );
+    MIP_DualSliderWidget* range_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
     MRootWidget->appendChildWidget(range_speed_range_slider);
     range_speed_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     range_speed_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
@@ -282,7 +312,7 @@ public:
     range_offset_text->setDrawBorder(false);
     range_offset_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* range_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.2, 0.7 );
+    MIP_DualSliderWidget* range_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
     MRootWidget->appendChildWidget(range_offset_range_slider);
     range_offset_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     range_offset_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
@@ -300,7 +330,7 @@ public:
     range_reverse_text->setDrawBorder(false);
     range_reverse_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    //MIP_DualSliderWidget* range_reverse_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.2, 0.7 );
+    //MIP_DualSliderWidget* range_reverse_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
     //MRootWidget->appendChildWidget(range_reverse_range_slider);
     //range_reverse_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     //range_reverse_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
@@ -312,17 +342,22 @@ public:
     MIP_KnobWidget* range_fx_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
     MRootWidget->appendChildWidget(range_fx_knob);
     range_fx_knob->setArcThickness(7);
+    range_fx_knob->setDisabled(true);
+    range_fx_knob->setActive(false);
 
     MIP_TextWidget* range_fx_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"FX");
     MRootWidget->appendChildWidget(range_fx_text);
     range_fx_text->setDrawBorder(false);
     range_fx_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+    range_fx_text->setDisabled(true);
+    range_fx_text->setActive(false);
 
-    MIP_DualSliderWidget* range_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.2, 0.7 );
+    MIP_DualSliderWidget* range_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
     MRootWidget->appendChildWidget(range_fx_range_slider);
     range_fx_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     range_fx_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-
+    range_fx_range_slider->setDisabled(true);
+    range_fx_range_slider->setActive(false);
 
 //------------------------------
 // 3 loop
@@ -343,12 +378,15 @@ public:
     MRootWidget->appendChildWidget(loop_length_knob);
     loop_length_knob->setArcThickness(7);
 
+    loop_length_knob->setAutoHideCursor(false);
+    loop_length_knob->setAutoLockCursor(false);
+
     MIP_TextWidget* loop_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Length");
     MRootWidget->appendChildWidget(loop_length_text);
     loop_length_text->setDrawBorder(false);
     loop_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* loop_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.2, 0.7 );
+    MIP_DualSliderWidget* loop_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
     MRootWidget->appendChildWidget(loop_length_range_slider);
     loop_length_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     loop_length_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
@@ -366,7 +404,7 @@ public:
     loop_speed_text->setDrawBorder(false);
     loop_speed_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* loop_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.2, 0.7 );
+    MIP_DualSliderWidget* loop_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
     MRootWidget->appendChildWidget(loop_speed_range_slider);
     loop_speed_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     loop_speed_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
@@ -384,7 +422,7 @@ public:
     loop_offset_text->setDrawBorder(false);
     loop_offset_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* loop_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.2, 0.7 );
+    MIP_DualSliderWidget* loop_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
     MRootWidget->appendChildWidget(loop_offset_range_slider);
     loop_offset_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     loop_offset_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
@@ -402,7 +440,7 @@ public:
     loop_reverse_text->setDrawBorder(false);
     loop_reverse_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    //MIP_DualSliderWidget* loop_reverse_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.2, 0.7 );
+    //MIP_DualSliderWidget* loop_reverse_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
     //MRootWidget->appendChildWidget(loop_reverse_range_slider);
     //loop_reverse_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     //loop_reverse_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
@@ -414,16 +452,22 @@ public:
     MIP_KnobWidget* loop_fx_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
     MRootWidget->appendChildWidget(loop_fx_knob);
     loop_fx_knob->setArcThickness(7);
+    loop_fx_knob->setDisabled(true);
+    loop_fx_knob->setActive(false);
 
     MIP_TextWidget* loop_fx_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"FX");
     MRootWidget->appendChildWidget(loop_fx_text);
     loop_fx_text->setDrawBorder(false);
     loop_fx_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+    loop_fx_text->setDisabled(true);
+    loop_fx_text->setActive(false);
 
-    MIP_DualSliderWidget* loop_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.2, 0.7 );
+    MIP_DualSliderWidget* loop_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
     MRootWidget->appendChildWidget(loop_fx_range_slider);
     loop_fx_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     loop_fx_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    loop_fx_range_slider->setDisabled(true);
+    loop_fx_range_slider->setActive(false);
 
 //------------------------------
 // footer
