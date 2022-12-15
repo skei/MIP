@@ -115,7 +115,7 @@ public:
     MNumBeatsWidget->setHint("Number of beats in buffer");
     MNumBeatsWidget->setIValueColor(MIP_COLOR_LIGHT_RED);
 
-    connect( MNumBeatsWidget,  AParameters->getItem(0) );
+  connect( MNumBeatsWidget,  AParameters->getItem(0) );
 
     // slices
 
@@ -130,7 +130,7 @@ public:
     MNumSlicesWidget->setHint("Number of slices per beat");
     MNumSlicesWidget->setIValueColor(MIP_COLOR_LIGHT_RED);
 
-    connect( MNumSlicesWidget, AParameters->getItem(1) );
+  connect( MNumSlicesWidget, AParameters->getItem(1) );
 
     // pages
 
@@ -172,11 +172,15 @@ public:
     MIP_KnobWidget* prob_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,90,90), "", 0.0);
     MRootWidget->appendChildWidget(prob_knob);
     prob_knob->setArcThickness(15);
+    prob_knob->setDrawText(true);
+    prob_knob->setTextSize(20);
     prob_knob->setDrawValue(true);
-    prob_knob->setValueAlignment(MIP_TEXT_ALIGN_CENTER);
-    prob_knob->setValueOffset(0);
-    prob_knob->setValueSize(22);
+    prob_knob->setValueSize(25);
+    //prob_knob->setValueAlignment(MIP_TEXT_ALIGN_CENTER);
+    //prob_knob->setValueOffset(0);
     prob_knob->setHint("Main probability");
+
+  connect( prob_knob, AParameters->getItem(5) );
 
     // slices
 
@@ -259,13 +263,14 @@ public:
 
     // loop length
 
-    MIP_KnobWidget* range_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
+    MIP_KnobWidget* range_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(range_length_knob);
     range_length_knob->setArcThickness(7);
     range_length_knob->setHint("Loop length");
-
     range_length_knob->setAutoHideCursor(false);
-//    range_length_knob->setAutoLockCursor(false);
+    //range_length_knob->setAutoLockCursor(false);
+
+  connect( range_length_knob, AParameters->getItem(4) );
 
     MIP_TextWidget* range_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Length");
     MRootWidget->appendChildWidget(range_length_text);
@@ -278,14 +283,14 @@ public:
     range_length_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     range_length_range_slider->setHint("Loop min/max");
 
-    connect( range_length_range_slider, 0, AParameters->getItem(2) );
-    connect( range_length_range_slider, 1, AParameters->getItem(3) );
+  connect( range_length_range_slider, 0, AParameters->getItem(2) );
+  connect( range_length_range_slider, 1, AParameters->getItem(3) );
 
     // loop speed
 
     y = 245;
 
-    MIP_KnobWidget* range_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
+    MIP_KnobWidget* range_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(range_speed_knob);
     range_speed_knob->setArcThickness(7);
 
@@ -303,7 +308,7 @@ public:
 
     y = 290;
 
-    MIP_KnobWidget* range_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
+    MIP_KnobWidget* range_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(range_offset_knob);
     range_offset_knob->setArcThickness(7);
 
@@ -321,7 +326,7 @@ public:
 
     y = 335;
 
-    MIP_KnobWidget* range_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
+    MIP_KnobWidget* range_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(range_reverse_knob);
     range_reverse_knob->setArcThickness(7);
 
@@ -339,7 +344,7 @@ public:
 
     y = 380;
 
-    MIP_KnobWidget* range_fx_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
+    MIP_KnobWidget* range_fx_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(range_fx_knob);
     range_fx_knob->setArcThickness(7);
     range_fx_knob->setDisabled(true);
@@ -374,7 +379,7 @@ public:
 
     // loop length
 
-    MIP_KnobWidget* loop_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
+    MIP_KnobWidget* loop_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(loop_length_knob);
     loop_length_knob->setArcThickness(7);
 
@@ -395,7 +400,7 @@ public:
 
     y = 245;
 
-    MIP_KnobWidget* loop_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
+    MIP_KnobWidget* loop_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(loop_speed_knob);
     loop_speed_knob->setArcThickness(7);
 
@@ -413,7 +418,7 @@ public:
 
     y = 290;
 
-    MIP_KnobWidget* loop_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
+    MIP_KnobWidget* loop_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(loop_offset_knob);
     loop_offset_knob->setArcThickness(7);
 
@@ -431,7 +436,7 @@ public:
 
     y = 335;
 
-    MIP_KnobWidget* loop_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
+    MIP_KnobWidget* loop_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(loop_reverse_knob);
     loop_reverse_knob->setArcThickness(7);
 
@@ -449,7 +454,7 @@ public:
 
     y = 380;
 
-    MIP_KnobWidget* loop_fx_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"knob", 0.0);
+    MIP_KnobWidget* loop_fx_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(loop_fx_knob);
     loop_fx_knob->setArcThickness(7);
     loop_fx_knob->setDisabled(true);

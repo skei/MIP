@@ -18,8 +18,13 @@ class MIP_DualSliderWidget
 private:
 //------------------------------
 
+  double MLastMouseX = 0.0;
+  double MLastMouseY = 0.0;
 
   uint32_t MSelectedEdge = 0;
+
+  MIP_Color MEdgeColor  = MIP_COLOR_WHITE;
+  MIP_Color MIEdgeColor = MIP_COLOR_LIGHT_GREEN;
 
 
 //------------------------------
@@ -41,6 +46,7 @@ public:
     setNumParameters(2);
     setValue(1,AValue2);
     setDragDirection(MIP_RIGHT);
+    setDragSensitivity( 1.0 / 400.0 );
     setValueSize(12);
     setValueOffset(MIP_DRect(5,0,5,0));
     setTextAlignment(MIP_TEXT_ALIGN_CENTER);
@@ -110,22 +116,40 @@ public:
 
     painter->fillRect(p1,y,w,h);
 
+/*
+    if (MIsInteracting) {
+      MIP_Color color = MIArcValueColor;
+      if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+      painter->setDrawColor(color);
+    }
+    else {
+      MIP_Color color = MArcValueColor;
+      if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+      painter->setDrawColor(color);
+    }
+
+*/
+
+
+    MIP_Color color;
+    if (MIsInteracting) color = MIEdgeColor;
+    else color = MEdgeColor;
+    if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+    painter->setFillColor(color);
+
     switch (MSelectedEdge) {
       case 1: {
-        MIP_Color color = MIP_COLOR_WHITE;
-        if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
-        painter->setFillColor(color);
         painter->fillRect(p1,y,S5,h);
+        MLastMouseX = p1 + (S5 * 0.5);
         break;
       }
       case 2: {
-        MIP_Color color = MIP_COLOR_WHITE;
-        if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
-        painter->setFillColor(color);
         painter->fillRect(p2-S5,y,S5,h);
+        MLastMouseX = p2 - (S5 * 0.5);
         break;
       }
     }
+
 
   }
 
@@ -206,6 +230,19 @@ public:
     if (MDrawValue) drawDualValues(AContext);
     paintChildWidgets(AContext);
     if (MDrawBorder) drawBorder(AContext);
+  }
+
+  //----------
+
+  void on_widget_mouse_click(uint32_t AButton, uint32_t AState, double AXpos, double AYpos, uint32_t ATime) override {
+    MIP_SliderWidget::on_widget_mouse_click(AButton,AState,AXpos,AYpos,ATime);
+    MLastMouseX = AXpos;
+    MLastMouseY = AYpos;
+  }
+
+  void on_widget_mouse_release(uint32_t AButton, uint32_t AState, double AXpos, double AYpos, uint32_t ATime) override {
+    MIP_SliderWidget::on_widget_mouse_release(AButton,AState,AXpos,AYpos,ATime);
+    do_widget_set_cursor_pos(this,MLastMouseX,MLastMouseY);
   }
 
   //----------

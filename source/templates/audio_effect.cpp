@@ -1,17 +1,8 @@
 
+// nc -U -l -k /tmp/mip.socket
 #ifdef MIP_PLUGIN
   #define MIP_DEBUG_PRINT_SOCKET
-  // nc -U -l -k /tmp/mip.socket
 #endif
-
-//----------
-
-#define MY_PLUGIN_NAME            "my_plugin"
-#define MY_PLUGIN_VENDOR          "skei.audio"
-#define MY_PLUGIN_VERSION         "0.3.0"
-#define MY_PLUGIN_DESCRIPTION     "sabotage your audio!"
-#define MY_PLUGIN_EDITOR_WIDTH    400
-#define MY_PLUGIN_EDITOR_HEIGHT   500
 
 //----------------------------------------------------------------------
 
@@ -27,16 +18,19 @@
 
 const clap_plugin_descriptor_t my_descriptor = {
   .clap_version = CLAP_VERSION,
-  .id           = MY_PLUGIN_VENDOR "/" MY_PLUGIN_NAME "/v" MY_PLUGIN_VERSION,
-  .name         = MY_PLUGIN_NAME,
-  .vendor       = MY_PLUGIN_VENDOR,
+  .id           = "me/my_plugin/0.0.0",
+  .name         = "my_plugin",
+  .vendor       = "me",
   .url          = "",
   .manual_url   = "",
   .support_url  = "",
-  .version      = MY_PLUGIN_VERSION,
-  .description  = MY_PLUGIN_DESCRIPTION,
+  .version      = "0.0.0",
+  .description  = "my amazing plugin!",
   .features     = (const char*[]){"audio-effect",nullptr}
 };
+
+#define MY_PLUGIN_EDITOR_WIDTH    400
+#define MY_PLUGIN_EDITOR_HEIGHT   500
 
 //----------------------------------------------------------------------
 //
@@ -81,8 +75,6 @@ public:
 
   bool gui_create(const char* api, bool is_floating) final {
     MIsEditorOpen = false;
-    //return MIP_Plugin::gui_create(api,is_floating);
-    //MEditor = new my_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
     MEditor = new MIP_Editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
     if (MEditor) {
       MIP_PanelWidget* background = new MIP_PanelWidget(MIP_DRect(0,0, MY_PLUGIN_EDITOR_WIDTH, MY_PLUGIN_EDITOR_HEIGHT));

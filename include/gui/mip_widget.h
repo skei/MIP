@@ -45,6 +45,7 @@ public:
   virtual void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) {}
   virtual void do_widget_redraw(MIP_Widget* AWidget, uint32_t AMode=0) {}
   virtual void do_widget_set_cursor(MIP_Widget* AWidget, int32_t ACursor) {}
+  virtual void do_widget_set_cursor_pos(MIP_Widget* AWidget, int32_t AXpos, int32_t AYpos) {}
   virtual void do_widget_set_key_capture(MIP_Widget* AWidget, uint32_t AMode) {}
   virtual void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode) {}
   virtual void do_widget_set_hint(MIP_Widget* AWidget, const char* AHint) {}
@@ -507,6 +508,10 @@ public:
 
   void do_widget_set_cursor(MIP_Widget* AWidget, int32_t ACursor) override {
     if (MListener) MListener->do_widget_set_cursor(AWidget,ACursor);
+  }
+
+  void do_widget_set_cursor_pos(MIP_Widget* AWidget, int32_t AXpos, int32_t AYpos) override {
+    if (MListener) MListener->do_widget_set_cursor_pos(AWidget,AXpos,AYpos);
   }
 
   void do_widget_set_key_capture(MIP_Widget* AWidget, uint32_t AMode) override {

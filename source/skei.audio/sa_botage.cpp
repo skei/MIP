@@ -84,7 +84,7 @@ public:
     appendStereoInput();
     appendStereoOutput();
     sa_botage_init_parameters(this);
-    setDefaultParameterValues();
+    //setDefaultParameterValues();
     return result;
   }
 

@@ -34,18 +34,22 @@ protected:
 public:
 //------------------------------
 
-  MIP_KnobWidget(MIP_DRect ARect, const char* AText="", double AValue=0.0)
+  MIP_KnobWidget(MIP_DRect ARect, const char* AText="%", double AValue=0.0)
   : MIP_DragValueWidget(ARect,AText,AValue) {
 
     setDrawBorder(false);
 
-    setDrawValue(false);
+    //setDrawValue(false);
+    setDrawValue(true);
     setValueAlignment(MIP_TEXT_ALIGN_CENTER);
     setValueOffset(0);
+    setValueSize(8);
 
-    setDrawText(false);
-    setTextAlignment(MIP_TEXT_ALIGN_CENTER);
+    //setDrawText(false);
+    setDrawText(true);
+    setTextAlignment(MIP_TEXT_ALIGN_BOTTOM);
     setTextOffset(0);
+    setTextSize(8);
 
   }
 

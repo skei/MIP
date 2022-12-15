@@ -488,6 +488,13 @@ public: // widget listener
 
   //----------
 
+  void do_widget_set_cursor_pos(MIP_Widget* AWidget, int32_t AXpos, int32_t AYpos) override {
+    if (MWindow) MWindow->do_widget_set_cursor_pos(AWidget,AXpos,AYpos);
+  }
+
+  //----------
+
+
   void do_widget_set_key_capture(MIP_Widget* AWidget, uint32_t AMode) override {
     //MIP_Print("mode: %i\n",AMode);
     if (MWindow) MWindow->do_widget_set_key_capture(AWidget,AMode);

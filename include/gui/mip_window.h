@@ -294,10 +294,15 @@ public: // window
       int32_t deltay = AYpos - MMouseClickedY;
       MMouseDragX += deltax;
       MMouseDragY += deltay;
+
+//      setCursorPos(MMouseClickedX,MMouseClickedY);
+
       if (MCapturedMouseWidget) {
         MCapturedMouseWidget->on_widget_mouse_move(AState,MMouseDragX,MMouseDragY,ATime);
       }
+
       setCursorPos(MMouseClickedX,MMouseClickedY);
+
     }
     else {
       //updateHoverWidget(AXpos,AYpos);
@@ -394,6 +399,13 @@ public: // widget listener
         }
         break;
     }
+  }
+
+  //----------
+
+  void do_widget_set_cursor_pos(MIP_Widget* AWidget, int32_t AXpos, int32_t AYpos) override {
+    //MIP_PRINT;
+    setCursorPos(AXpos,AYpos);
   }
 
   //----------
