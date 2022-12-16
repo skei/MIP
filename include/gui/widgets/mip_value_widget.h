@@ -119,13 +119,13 @@ public:
 public:
 //------------------------------
 
-  virtual void on_widget_connect(MIP_Parameter* AParameter) {
-    MIP_TextWidget::on_widget_connect(AParameter);
-    double value = AParameter->getValue();
-    setValue(value);
-    //const char* name = AParameter->getName();
-    //setText(name);
-  }
+//  void on_widget_connect(MIP_Parameter* AParameter) override {
+//    MIP_TextWidget::on_widget_connect(AParameter);
+//    double value = AParameter->getValue();
+//    setValue(value);
+//    //const char* name = AParameter->getName();
+//    //setText(name);
+//  }
 
 
   void on_widget_paint(MIP_PaintContext* AContext) override {

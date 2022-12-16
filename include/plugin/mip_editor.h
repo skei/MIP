@@ -206,6 +206,12 @@ public:
     }
   }
 
+  //----------
+
+  virtual void timerCallback() {
+    MIP_PRINT;
+  }
+
 //------------------------------
 public:
 //------------------------------
@@ -251,6 +257,12 @@ public:
       }
     }
   }
+
+  //----------
+
+  //virtual void updateTimer() {
+  //  MIP_PRINT;
+  //}
 
 //------------------------------
 public: // clap.gui
@@ -456,6 +468,7 @@ public: // widget listener
 
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
     uint32_t num = AWidget->getNumParameters();
+    //MIP_Print("num %i\n",num);
     for (uint32_t i=0; i<num; i++) {
       MIP_Parameter* parameter = AWidget->getParameter(i);
       if (parameter) {
@@ -463,7 +476,7 @@ public: // widget listener
         //double value = parameter->getValue();
         double value = AWidget->getValue(i);
         if (MListener) {
-          //MIP_Print("%i = %f\n",index,value);
+//          MIP_Print("%i = %f\n",index,value);
           MListener->on_editor_parameter_change(index,value);
         }
       }

@@ -19,6 +19,7 @@ protected:
 //------------------------------
 
   bool        MDrawText       = true;
+  bool        MDrawParamText  = false;//true;
   double      MTextSize       = 14.0;
   MIP_Color   MTextColor      = MIP_COLOR_DARK_GRAY;
   const char* MText           = "";
@@ -63,13 +64,15 @@ public:
     MIP_DRect mrect = getRect();
 
     const char* txt = MText;
-    MIP_Parameter* parameter = getParameter();
-    if (parameter) {
-      MText = parameter->getName();
-      //double par_val = parameter->getValue();
-      //char par_txt[17] = {0};
-      //parameter->valueToText(par_val, par_txt, 16);
-      //double value = parameter->normalizeValue(par_val);
+    if (MDrawParamText) {
+      MIP_Parameter* parameter = getParameter();
+      if (parameter) {
+        MText = parameter->getName();
+        //double par_val = parameter->getValue();
+        //char par_txt[17] = {0};
+        //parameter->valueToText(par_val, par_txt, 16);
+        //double value = parameter->normalizeValue(par_val);
+      }
     }
 
     MIP_DRect to = MTextOffset;
@@ -90,13 +93,13 @@ public:
 public:
 //------------------------------
 
-  virtual void on_widget_connect(MIP_Parameter* AParameter) {
-    MIP_PanelWidget::on_widget_connect(AParameter);
-    //double value = AParameter->getValue();
-    //setValue(value);
-    const char* name = AParameter->getName();
-    setText(name);
-  }
+//  virtual void on_widget_connect(MIP_Parameter* AParameter) {
+//    MIP_PanelWidget::on_widget_connect(AParameter);
+//    //double value = AParameter->getValue();
+//    //setValue(value);
+//      const char* name = AParameter->getName();
+//      setText(name);
+//  }
 
   void on_widget_paint(MIP_PaintContext* AContext) override {
     if (MFillBackground) fillBackground(AContext);

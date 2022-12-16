@@ -45,6 +45,8 @@ public:
   MIP_ButtonRowWidget(MIP_DRect ARect, int32_t ANum, const char** ATxt=nullptr, int32_t AMode=MIP_BUTTON_ROW_SINGLE)
   : MIP_GridWidget(ARect,ANum,1) {
 
+    setNumParameters(1);
+
     //MName = "MIP_ButtonRowWidget";
     //setHint("buttonrow");
     setCursor(MIP_CURSOR_FINGER);
@@ -153,12 +155,9 @@ public:
   //----------
 
   double getValue(uint32_t AIndex=0) override {
+    //MIP_PRINT;
     if (MValueIsBits) {
       return getButtonBits();
-      //uint32_t bits = getButtonBits();
-      //double v = (float)bits / 255.0;
-      //MIP_GridWidget::setValue(v);
-      //return v;
     }
     else {
       return MIP_GridWidget::getValue();
@@ -168,14 +167,11 @@ public:
   //----------
 
   void setValue(double AValue) override {
+    //MIP_PRINT;
     if (MValueIsBits) {
       int i = (int)AValue;
       setButtonBits(i);
       MIP_GridWidget::setValue(AValue);
-      //double f = AValue * 255.0;
-      //int i = (int)f;
-      //setButtonBits(i);
-      //MIP_GridWidget::setValue(AValue);
     }
     else {
       MIP_GridWidget::setValue(AValue);
@@ -185,11 +181,15 @@ public:
 
   //----------
 
+  void setValue(uint32_t AIndex,double AValue) override {
+    //MIP_PRINT;
+    setValue(AValue);
+  }
+
+  //----------
+
   void selectButton(int32_t index) {
     MSelected = index;
-
-    //if (MMustHaveOne) {
-    //}
 
     if (MMode == MIP_BUTTON_ROW_SINGLE) {
       for (int32_t i=0; i<MNumColumns; i++) {

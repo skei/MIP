@@ -33,6 +33,18 @@ private:
   MIP_DragValueWidget*  MNumSlicesWidget  = nullptr;
   MIP_TextWidget*       MHintWidget       = nullptr;
 
+  MIP_Color MReadPosColor   = MIP_COLOR_BRIGHT_GREEN;
+  MIP_Color MWritePosColor  = MIP_COLOR_BRIGHT_RED;
+
+  double    MReadPosWidth   = 1.5;
+  double    MWritePosWidth  = 1.5;
+
+  MIP_Color MRangeColor     = MIP_Color( 0, 0.5, 0, 0.2);
+  MIP_Color MLoopColor      = MIP_Color( 0, 1.0, 0, 0.2);
+  MIP_Color MSliceColor     = MIP_Color( 0, 0,   0, 0.2);
+
+
+
 //------------------------------
 public:
 //------------------------------
@@ -104,7 +116,7 @@ public:
     //w = ((SA_BOTAGE_EDITOR_WIDTH - 30) / 2);
     //x = 10 + w + 10;
 
-    MNumBeatsWidget = new MIP_DragValueWidget( MIP_DRect(10,160,120,20));
+    MNumBeatsWidget = new MIP_DragValueWidget( MIP_DRect(10,160,120,20),"Beats");
     MRootWidget->appendChildWidget(MNumBeatsWidget);
     MNumBeatsWidget->setFillBackground(true);
     MNumBeatsWidget->setBackgroundColor(MIP_COLOR_LIGHT_GRAY);
@@ -115,11 +127,11 @@ public:
     MNumBeatsWidget->setHint("Number of beats in buffer");
     MNumBeatsWidget->setIValueColor(MIP_COLOR_LIGHT_RED);
 
-  connect( MNumBeatsWidget,  AParameters->getItem(0) );
+  connect( MNumBeatsWidget,  AParameters->getItem(PAR_NUM_BEATS) );
 
     // slices
 
-    MNumSlicesWidget = new MIP_DragValueWidget( MIP_DRect(140,160,120,20));
+    MNumSlicesWidget = new MIP_DragValueWidget( MIP_DRect(140,160,120,20),"Slices");
     MRootWidget->appendChildWidget(MNumSlicesWidget);
     MNumSlicesWidget->setFillBackground(true);
     MNumSlicesWidget->setBackgroundColor(MIP_COLOR_LIGHT_GRAY);
@@ -130,7 +142,7 @@ public:
     MNumSlicesWidget->setHint("Number of slices per beat");
     MNumSlicesWidget->setIValueColor(MIP_COLOR_LIGHT_RED);
 
-  connect( MNumSlicesWidget, AParameters->getItem(1) );
+  connect( MNumSlicesWidget, AParameters->getItem(PAR_NUM_SLICES) );
 
     // pages
 
@@ -169,7 +181,7 @@ public:
     prob_header->setBackgroundColor(MIP_COLOR_DARK_GRAY);
     prob_header->setTextColor(MIP_COLOR_LIGHT_GRAY);
 
-    MIP_KnobWidget* prob_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,90,90), "", 0.0);
+    MIP_KnobWidget* prob_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,90,90), "%", 0.0);
     MRootWidget->appendChildWidget(prob_knob);
     prob_knob->setArcThickness(15);
     prob_knob->setDrawText(true);
@@ -180,7 +192,7 @@ public:
     //prob_knob->setValueOffset(0);
     prob_knob->setHint("Main probability");
 
-  connect( prob_knob, AParameters->getItem(2) );
+  connect( prob_knob, AParameters->getItem(PAR_RANGE_PROB) );
 
     // slices
 
@@ -196,8 +208,10 @@ public:
     MRootWidget->appendChildWidget(prob_slices);
     prob_slices->selectButton(0);
     prob_slices->setAllowZeroBits(false);
-    //prob_slices->setValueIsBits(true,8);
+    prob_slices->setValueIsBits(true,8);
     prob_slices->setHint("Number of slices in range");
+
+  connect( prob_slices,  AParameters->getItem(PAR_RANGE_SLICE_COUNT) );
 
     // loops
 
@@ -210,8 +224,10 @@ public:
     MRootWidget->appendChildWidget(prob_loops);
     prob_loops->selectButton(0);
     prob_loops->setAllowZeroBits(false);
-    //prob_loops->setValueIsBits(true,8);
+    prob_loops->setValueIsBits(true,8);
     prob_loops->setHint("Range subdivision");
+
+  connect( prob_loops,  AParameters->getItem(PAR_RANGE_LOOP_COUNT) );
 
     // envelopes
 
@@ -224,13 +240,13 @@ public:
     loop_env_label->setBackgroundColor(MIP_COLOR_DARK_GRAY);
     loop_env_label->setTextColor(MIP_COLOR_LIGHT_GRAY);
 
-    MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(x,y+30,120,25), "ms", 0.1, 0.9 );
+    MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(x,y+30,120,25), "", 0.1, 0.9 );
     MRootWidget->appendChildWidget(env1_slider);
     env1_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     env1_slider->setHint("Loop envelope");
 
-  connect( env1_slider, 0, AParameters->getItem(3) );
-  connect( env1_slider, 1, AParameters->getItem(4) );
+  connect( env1_slider, 0, AParameters->getItem(PAR_LOOP_ENV_ATTACK) );
+  connect( env1_slider, 1, AParameters->getItem(PAR_LOOP_ENV_DECAY) );
 
     MIP_TextWidget* slice_env_label = new MIP_TextWidget(MIP_DRect(x+130,y,120,20), "Slice Env");
     MRootWidget->appendChildWidget(slice_env_label);
@@ -238,13 +254,13 @@ public:
     slice_env_label->setBackgroundColor(MIP_COLOR_DARK_GRAY);
     slice_env_label->setTextColor(MIP_COLOR_LIGHT_GRAY);
 
-    MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(x+130,y+30,120,25), "%", 0.1, 0.9 );
+    MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(x+130,y+30,120,25), "", 0.1, 0.9 );
     MRootWidget->appendChildWidget(env2_slider);
     env2_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     env2_slider->setHint("Slice envelope");
 
-  connect( env2_slider, 0, AParameters->getItem(5) );
-  connect( env2_slider, 1, AParameters->getItem(6) );
+  connect( env2_slider, 0, AParameters->getItem(PAR_SLICE_ENV_ATTACK) );
+  connect( env2_slider, 1, AParameters->getItem(PAR_SLICE_ENV_DECAY) );
 
 //------------------------------
 // 2 range
@@ -259,7 +275,7 @@ public:
     c1_header->setBackgroundColor(0.35);
     c1_header->setTextColor(MIP_COLOR_LIGHT_GRAY);
 
-    // loop length
+    // range length
 
     MIP_KnobWidget* range_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(range_length_knob);
@@ -268,7 +284,7 @@ public:
     range_length_knob->setAutoHideCursor(false);
     //range_length_knob->setAutoLockCursor(false);
 
-  connect( range_length_knob, AParameters->getItem(7) );
+  connect( range_length_knob, AParameters->getItem(PAR_PROB_SIZE_PROB_RANGE) );
 
     MIP_TextWidget* range_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Length");
     MRootWidget->appendChildWidget(range_length_text);
@@ -276,13 +292,13 @@ public:
     range_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
     //MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "range", 0.5, 0.5 );
-    sa_botage_dual_slider* range_length_range_slider = new sa_botage_dual_slider( MIP_DRect(x+45,y+45,130,20), "range", 0.5, 0.5 );
+    sa_botage_dual_slider* range_length_range_slider = new sa_botage_dual_slider( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MRootWidget->appendChildWidget(range_length_range_slider);
     range_length_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     range_length_range_slider->setHint("Loop min/max");
 
-  connect( range_length_range_slider, 0, AParameters->getItem(8) );
-  connect( range_length_range_slider, 1, AParameters->getItem(9) );
+  connect( range_length_range_slider, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_RANGE) );
+  connect( range_length_range_slider, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_RANGE) );
 
     // loop speed
 
@@ -292,15 +308,19 @@ public:
     MRootWidget->appendChildWidget(range_speed_knob);
     range_speed_knob->setArcThickness(7);
 
+  connect( range_speed_knob, AParameters->getItem(PAR_PROB_SPEED_PROB_RANGE) );
+
     MIP_TextWidget* range_speed_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Speed");
     MRootWidget->appendChildWidget(range_speed_text);
     range_speed_text->setDrawBorder(false);
     range_speed_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* range_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
+    MIP_DualSliderWidget* range_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MRootWidget->appendChildWidget(range_speed_range_slider);
-    range_speed_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     range_speed_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+
+  connect( range_speed_range_slider, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_RANGE) );
+  connect( range_speed_range_slider, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_RANGE) );
 
     // loop offset
 
@@ -310,15 +330,19 @@ public:
     MRootWidget->appendChildWidget(range_offset_knob);
     range_offset_knob->setArcThickness(7);
 
+  connect( range_offset_knob, AParameters->getItem(PAR_PROB_OFFSET_PROB_RANGE) );
+
     MIP_TextWidget* range_offset_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Offset");
     MRootWidget->appendChildWidget(range_offset_text);
     range_offset_text->setDrawBorder(false);
     range_offset_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* range_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
+    MIP_DualSliderWidget* range_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MRootWidget->appendChildWidget(range_offset_range_slider);
-    range_offset_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     range_offset_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+
+  connect( range_offset_range_slider, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_RANGE) );
+  connect( range_offset_range_slider, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_RANGE) );
 
     // loop reverse
 
@@ -327,6 +351,8 @@ public:
     MIP_KnobWidget* range_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(range_reverse_knob);
     range_reverse_knob->setArcThickness(7);
+
+  connect( range_reverse_knob, AParameters->getItem(PAR_PROB_REVERSE_PROB_RANGE) );
 
     MIP_TextWidget* range_reverse_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Reverse");
     MRootWidget->appendChildWidget(range_reverse_text);
@@ -348,6 +374,8 @@ public:
     range_fx_knob->setDisabled(true);
     range_fx_knob->setActive(false);
 
+  connect( range_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_RANGE) );
+
     MIP_TextWidget* range_fx_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"FX");
     MRootWidget->appendChildWidget(range_fx_text);
     range_fx_text->setDrawBorder(false);
@@ -355,12 +383,14 @@ public:
     range_fx_text->setDisabled(true);
     range_fx_text->setActive(false);
 
-    MIP_DualSliderWidget* range_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
+    MIP_DualSliderWidget* range_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MRootWidget->appendChildWidget(range_fx_range_slider);
-    range_fx_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     range_fx_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     range_fx_range_slider->setDisabled(true);
     range_fx_range_slider->setActive(false);
+
+  connect( range_fx_range_slider, 0, AParameters->getItem(PAR_PROB_FX_MIN_RANGE) );
+  connect( range_fx_range_slider, 1, AParameters->getItem(PAR_PROB_FX_MAX_RANGE) );
 
 //------------------------------
 // 3 loop
@@ -384,15 +414,19 @@ public:
     loop_length_knob->setAutoHideCursor(false);
     loop_length_knob->setAutoLockCursor(false);
 
+  connect( loop_length_knob, AParameters->getItem(PAR_PROB_SIZE_PROB_LOOP) );
+
     MIP_TextWidget* loop_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Length");
     MRootWidget->appendChildWidget(loop_length_text);
     loop_length_text->setDrawBorder(false);
     loop_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* loop_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
+    MIP_DualSliderWidget* loop_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MRootWidget->appendChildWidget(loop_length_range_slider);
-    loop_length_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     loop_length_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+
+  connect( loop_length_range_slider, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_LOOP) );
+  connect( loop_length_range_slider, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_LOOP) );
 
     // loop speed
 
@@ -402,15 +436,19 @@ public:
     MRootWidget->appendChildWidget(loop_speed_knob);
     loop_speed_knob->setArcThickness(7);
 
+  connect( loop_speed_knob, AParameters->getItem(PAR_PROB_SPEED_PROB_LOOP) );
+
     MIP_TextWidget* loop_speed_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Speed");
     MRootWidget->appendChildWidget(loop_speed_text);
     loop_speed_text->setDrawBorder(false);
     loop_speed_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* loop_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
+    MIP_DualSliderWidget* loop_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MRootWidget->appendChildWidget(loop_speed_range_slider);
-    loop_speed_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     loop_speed_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+
+  connect( loop_speed_range_slider, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_LOOP) );
+  connect( loop_speed_range_slider, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_LOOP) );
 
     // loop offset
 
@@ -420,15 +458,19 @@ public:
     MRootWidget->appendChildWidget(loop_offset_knob);
     loop_offset_knob->setArcThickness(7);
 
+  connect( loop_offset_knob, AParameters->getItem(PAR_PROB_OFFSET_PROB_LOOP) );
+
     MIP_TextWidget* loop_offset_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Offset");
     MRootWidget->appendChildWidget(loop_offset_text);
     loop_offset_text->setDrawBorder(false);
     loop_offset_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* loop_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
+    MIP_DualSliderWidget* loop_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MRootWidget->appendChildWidget(loop_offset_range_slider);
-    loop_offset_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     loop_offset_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+
+  connect( loop_offset_range_slider, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_LOOP) );
+  connect( loop_offset_range_slider, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_LOOP) );
 
     // loop reverse
 
@@ -437,6 +479,8 @@ public:
     MIP_KnobWidget* loop_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(loop_reverse_knob);
     loop_reverse_knob->setArcThickness(7);
+
+  connect( loop_reverse_knob, AParameters->getItem(PAR_PROB_REVERSE_PROB_LOOP) );
 
     MIP_TextWidget* loop_reverse_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Reverse");
     MRootWidget->appendChildWidget(loop_reverse_text);
@@ -458,6 +502,8 @@ public:
     loop_fx_knob->setDisabled(true);
     loop_fx_knob->setActive(false);
 
+  connect( loop_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_LOOP) );
+
     MIP_TextWidget* loop_fx_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"FX");
     MRootWidget->appendChildWidget(loop_fx_text);
     loop_fx_text->setDrawBorder(false);
@@ -465,12 +511,14 @@ public:
     loop_fx_text->setDisabled(true);
     loop_fx_text->setActive(false);
 
-    MIP_DualSliderWidget* loop_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
+    MIP_DualSliderWidget* loop_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MRootWidget->appendChildWidget(loop_fx_range_slider);
-    loop_fx_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     loop_fx_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     loop_fx_range_slider->setDisabled(true);
     loop_fx_range_slider->setActive(false);
+
+  connect( loop_fx_range_slider, 0, AParameters->getItem(PAR_PROB_FX_MIN_LOOP) );
+  connect( loop_fx_range_slider, 1, AParameters->getItem(PAR_PROB_FX_MAX_LOOP) );
 
 //------------------------------
 // footer
@@ -529,6 +577,79 @@ public:
       MHintWidget->redraw();
     }
     MIP_Editor::do_widget_set_hint(AWidget,AHint);
+  }
+
+//------------------------------
+public:
+//------------------------------
+
+//  void timer_update(sa_botage_processor* processor) {
+//    //MIP_Assert(MWaveformWidget);
+//    if (MIsEditorOpen) {
+//      updateWaveformWidget(processor);
+//      MWaveformWidget->redraw(); // do_widget_redraw(MWaveformWidget);
+//    }
+//  }
+
+  //----------
+
+  void updateWaveformWidget(sa_botage_processor* processor) {
+
+    MWaveformWidget->setBuffer(processor->MLeftBuffer,processor->MBufferLength);
+    MWaveformWidget->setNumGrid(processor->par_num_beats);
+    MWaveformWidget->setNumSubGrid(processor->par_num_slices);
+
+    // marker 0 write pos
+    MWaveformWidget->setMarkerActive(0,true);
+    MWaveformWidget->setMarkerPos(   0,processor->MWritePos);
+    MWaveformWidget->setMarkerColor( 0,MWritePosColor);
+    MWaveformWidget->setMarkerWidth( 0,MWritePosWidth);
+
+    // marker 1 read pos
+    MWaveformWidget->setMarkerActive(1,true);
+    MWaveformWidget->setMarkerPos(   1,processor->MReadPos);
+    MWaveformWidget->setMarkerColor( 1,MReadPosColor);
+    MWaveformWidget->setMarkerWidth( 1,MReadPosWidth);
+
+    if (processor->MRange) {
+      MWaveformWidget->setAreaActive(0,false);
+      // area 1 range
+      MWaveformWidget->setAreaActive(1,true);
+      MWaveformWidget->setAreaStart( 1,processor->MRangeStart);
+      MWaveformWidget->setAreaLength(1,processor->MRangeLength);
+      MWaveformWidget->setAreaColor( 1,MRangeColor);
+
+      if (processor->MLoop) {
+        // area 2 loop
+        MWaveformWidget->setAreaActive(2,true);
+        MWaveformWidget->setAreaStart( 2,processor->MLoopStart);
+        MWaveformWidget->setAreaLength(2,processor->MLoopLength);
+        MWaveformWidget->setAreaColor( 2,MLoopColor);
+      }
+      else {
+        MWaveformWidget->setAreaActive(2,false);
+      }
+    }
+
+    else { // no range
+      MWaveformWidget->setAreaActive(1,false);
+      MWaveformWidget->setAreaActive(2,false);
+
+      // area 0 current slice
+      if (processor->MIsPlaying) {
+        MWaveformWidget->setAreaActive(0,true);
+        MWaveformWidget->setAreaStart( 0,processor->MSliceStart);
+        MWaveformWidget->setAreaLength(0,processor->MSliceLength);
+        MWaveformWidget->setAreaColor( 0,MSliceColor);
+      }
+      else {
+        MWaveformWidget->setAreaActive(0,false);
+      }
+
+    }
+
+    MWaveformWidget->redraw();
+
   }
 
 };

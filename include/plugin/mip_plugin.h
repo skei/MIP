@@ -847,10 +847,16 @@ public: // timer listener
 
   #ifndef MIP_NO_GUI
 
-  void on_timer_callback(MIP_Timer* ATimer) {
+  // added override.. :-/
+
+  void on_timer_callback(MIP_Timer* ATimer) override {
     //MIP_Print("1\n");
     if (ATimer == &MGuiTimer) {
       if (MIsEditorOpen) { //  && !MIsEditorBusy) {
+
+//          MEditor->updateTimer();
+//        MEditor.updateWaveformWidget(sa_botage_processor* process) {
+
         flushGuiParams();
         flushGuiMods();
       }

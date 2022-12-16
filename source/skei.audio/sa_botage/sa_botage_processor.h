@@ -138,47 +138,47 @@ public:
   //----------
 
   void setParamValue(uint32_t param_id,double value) {
-    //switch (param_id) {
-    //  case PAR_NUM_BEATS                : par_num_beats               = value; break;
-    //  case PAR_NUM_SLICES               : par_num_slices              = value; break;
-    //  case PAR_RANGE_PROB               : par_range_prob              = value; break;
-    //  case PAR_RANGE_SLICE_COUNT        : par_range_slice_count       = value; break;
-    //  case PAR_RANGE_LOOP_COUNT         : par_range_loop_count        = value; break;
-    //  case PAR_LOOP_ENV_ATTACK          : par_loop_env_attack         = value; break;
-    //  case PAR_LOOP_ENV_DECAY           : par_loop_env_decay          = value; break;
-    //  case PAR_SLICE_ENV_ATTACK         : par_slice_env_attack        = value; break;
-    //  case PAR_SLICE_ENV_DECAY          : par_slice_env_decay         = value; break;
-    //  case PAR_FX_FILTER_PROB           : par_fx_filter_prob          = value; break;
-    //  case PAR_FX_FILTER_TYPE           : par_fx_filter_type          = value; break;
-    //  case PAR_FX_FILTER_FREQ           : par_fx_filter_freq          = value; break;
-    //  case PAR_FX_FILTER_BW             : par_fx_filter_bw            = value; break;
-    //  case PAR_PROB_SIZE_PROB_RANGE     : par_prob_size_prob_range    = value; break;
-    //  case PAR_PROB_SIZE_MIN_RANGE      : par_prob_size_min_range     = value; break;
-    //  case PAR_PROB_SIZE_MAX_RANGE      : par_prob_size_max_range     = value; break;
-    //  case PAR_PROB_SIZE_PROB_LOOP      : par_prob_size_prob_loop     = value; break;
-    //  case PAR_PROB_SIZE_MIN_LOOP       : par_prob_size_min_loop      = value; break;
-    //  case PAR_PROB_SIZE_MAX_LOOP       : par_prob_size_max_loop      = value; break;
-    //  case PAR_PROB_SPEED_PROB_RANGE    : par_prob_speed_prob_range   = value; break;
-    //  case PAR_PROB_SPEED_MIN_RANGE     : par_prob_speed_min_range    = value; break;
-    //  case PAR_PROB_SPEED_MAX_RANGE     : par_prob_speed_max_range    = value; break;
-    //  case PAR_PROB_SPEED_PROB_LOOP     : par_prob_speed_prob_loop    = value; break;
-    //  case PAR_PROB_SPEED_MIN_LOOP      : par_prob_speed_min_loop     = value; break;
-    //  case PAR_PROB_SPEED_MAX_LOOP      : par_prob_speed_max_loop     = value; break;
-    //  case PAR_PROB_OFFSET_PROB_RANGE   : par_prob_offset_prob_range  = value; break;
-    //  case PAR_PROB_OFFSET_MIN_RANGE    : par_prob_offset_min_range   = value; break;
-    //  case PAR_PROB_OFFSET_MAX_RANGE    : par_prob_offset_max_range   = value; break;
-    //  case PAR_PROB_OFFSET_PROB_LOOP    : par_prob_offset_prob_loop   = value; break;
-    //  case PAR_PROB_OFFSET_MIN_LOOP     : par_prob_offset_min_loop    = value; break;
-    //  case PAR_PROB_OFFSET_MAX_LOOP     : par_prob_offset_max_loop    = value; break;
-    //  case PAR_PROB_REVERSE_PROB_RANGE  : par_prob_reverse_prob_range = value; break;
-    //  case PAR_PROB_REVERSE_PROB_LOOP   : par_prob_reverse_prob_loop  = value; break;
-    //  case PAR_PROB_FX_PROB_RANGE       : par_prob_fx_prob_range      = value; break;
-    //  case PAR_PROB_FX_MIN_RANGE        : par_prob_fx_min_range       = value; break;
-    //  case PAR_PROB_FX_MAX_RANGE        : par_prob_fx_max_range       = value; break;
-    //  case PAR_PROB_FX_PROB_LOOP        : par_prob_fx_prob_loop       = value; break;
-    //  case PAR_PROB_FX_MIN_LOOP         : par_prob_fx_min_loop        = value; break;
-    //  case PAR_PROB_FX_MAX_LOOP         : par_prob_fx_max_loop        = value; break;
-    //}
+    switch (param_id) {
+      case PAR_NUM_BEATS                : par_num_beats               = value; break;
+      case PAR_NUM_SLICES               : par_num_slices              = value; break;
+      case PAR_RANGE_PROB               : par_range_prob              = value; break;
+      case PAR_RANGE_SLICE_COUNT        : par_range_slice_count       = value; break;
+      case PAR_RANGE_LOOP_COUNT         : par_range_loop_count        = value; break;
+      case PAR_LOOP_ENV_ATTACK          : par_loop_env_attack         = value; break;
+      case PAR_LOOP_ENV_DECAY           : par_loop_env_decay          = 25.0 - value; break;
+      case PAR_SLICE_ENV_ATTACK         : par_slice_env_attack        = value; break;
+      case PAR_SLICE_ENV_DECAY          : par_slice_env_decay         = 1.0 - value; break;
+      case PAR_FX_FILTER_PROB           : par_fx_filter_prob          = value; break;
+      case PAR_FX_FILTER_TYPE           : par_fx_filter_type          = value; break;
+      case PAR_FX_FILTER_FREQ           : par_fx_filter_freq          = value; break;
+      case PAR_FX_FILTER_BW             : par_fx_filter_bw            = value; break;
+      case PAR_PROB_SIZE_PROB_RANGE     : par_prob_size_prob_range    = value; break;
+      case PAR_PROB_SIZE_MIN_RANGE      : par_prob_size_min_range     = value; break;
+      case PAR_PROB_SIZE_MAX_RANGE      : par_prob_size_max_range     = value; break;
+      case PAR_PROB_SIZE_PROB_LOOP      : par_prob_size_prob_loop     = value; break;
+      case PAR_PROB_SIZE_MIN_LOOP       : par_prob_size_min_loop      = value; break;
+      case PAR_PROB_SIZE_MAX_LOOP       : par_prob_size_max_loop      = value; break;
+      case PAR_PROB_SPEED_PROB_RANGE    : par_prob_speed_prob_range   = value; break;
+      case PAR_PROB_SPEED_MIN_RANGE     : par_prob_speed_min_range    = value; break;
+      case PAR_PROB_SPEED_MAX_RANGE     : par_prob_speed_max_range    = value; break;
+      case PAR_PROB_SPEED_PROB_LOOP     : par_prob_speed_prob_loop    = value; break;
+      case PAR_PROB_SPEED_MIN_LOOP      : par_prob_speed_min_loop     = value; break;
+      case PAR_PROB_SPEED_MAX_LOOP      : par_prob_speed_max_loop     = value; break;
+      case PAR_PROB_OFFSET_PROB_RANGE   : par_prob_offset_prob_range  = value; break;
+      case PAR_PROB_OFFSET_MIN_RANGE    : par_prob_offset_min_range   = value; break;
+      case PAR_PROB_OFFSET_MAX_RANGE    : par_prob_offset_max_range   = value; break;
+      case PAR_PROB_OFFSET_PROB_LOOP    : par_prob_offset_prob_loop   = value; break;
+      case PAR_PROB_OFFSET_MIN_LOOP     : par_prob_offset_min_loop    = value; break;
+      case PAR_PROB_OFFSET_MAX_LOOP     : par_prob_offset_max_loop    = value; break;
+      case PAR_PROB_REVERSE_PROB_RANGE  : par_prob_reverse_prob_range = value; break;
+      case PAR_PROB_REVERSE_PROB_LOOP   : par_prob_reverse_prob_loop  = value; break;
+      case PAR_PROB_FX_PROB_RANGE       : par_prob_fx_prob_range      = value; break;
+      case PAR_PROB_FX_MIN_RANGE        : par_prob_fx_min_range       = value; break;
+      case PAR_PROB_FX_MAX_RANGE        : par_prob_fx_max_range       = value; break;
+      case PAR_PROB_FX_PROB_LOOP        : par_prob_fx_prob_loop       = value; break;
+      case PAR_PROB_FX_MIN_LOOP         : par_prob_fx_min_loop        = value; break;
+      case PAR_PROB_FX_MAX_LOOP         : par_prob_fx_max_loop        = value; break;
+    }
   }
 
   //----------
@@ -240,6 +240,7 @@ public:
     if (MIsPlaying) {
 
       double slice_length = MBufferLengthF / (double)(par_num_beats * par_num_slices);
+
       for (uint32_t i=0; i<len; i++) {
 
         // get input
@@ -267,17 +268,16 @@ public:
         MSliceStart = MSlice * slice_length;
         MSliceLength = slice_length;
 
-
         // loop fract
 
-//        if (MLoop) {
-//          if (MLoopLength > 0) {
-//            MLoopFract = (MReadPos - MLoopStart) / MLoopLength;
-//          }
-//        }
-//        else {
-//          MLoopFract = 0.0;
-//        }
+        //if (MLoop) {
+        //  if (MLoopLength > 0) {
+        //    MLoopFract = (MReadPos - MLoopStart) / MLoopLength;
+        //  }
+        //}
+        //else {
+        //  MLoopFract = 0.0;
+        //}
 
         // count slices, samples
 

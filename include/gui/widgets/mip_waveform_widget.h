@@ -183,7 +183,7 @@ public:
         //        painter->strokeColor(MWaveformColor);
         //        painter->strokeWidth(MWaveformWidth);
         MNumCoords = 0;
-        for (uint32_t i=0; i<widget_width; i++) {
+        for (uint32_t i=0; i<mrect.w; i++) {
           uint32_t p = (uint32_t)pos;
           double v = MBuffer[p];
           v = MIP_Clamp(v,-1,1);
@@ -199,7 +199,7 @@ public:
         //        painter->stroke();
         painter->setDrawColor(MWaveformColor);
         painter->setLineWidth(MWaveformWidth * S);
-        painter->drawLineStrip(MNumCoords,MCoords);
+        painter->drawLineStrip(MNumCoords / 2,MCoords);
 
       }
     }

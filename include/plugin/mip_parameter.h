@@ -204,7 +204,11 @@ public:
 //------------------------------
 
   double getValue() override {
-    return (int32_t)MValue;
+    return (int)MValue;
+  }
+
+  void setValue(double AValue) override {
+    MValue = (int)AValue;
   }
 
   //----------

@@ -25,9 +25,9 @@
 
 //----------
 
-#include "sa_botage/sa_botage_editor.h"
 #include "sa_botage/sa_botage_parameters.h"
 #include "sa_botage/sa_botage_processor.h"
+#include "sa_botage/sa_botage_editor.h"
 #include "sa_botage/sa_botage_widgets.h"
 
 //----------------------------------------------------------------------
@@ -66,6 +66,8 @@ private:
   //double left  = 0.0;
   //double right = 0.0;
 
+  sa_botage_processor MProcessor;
+
 //------------------------------
 public:
 //------------------------------
@@ -90,6 +92,16 @@ public:
 
   //----------
 
+  bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) final {
+    MIP_Plugin::activate(sample_rate,min_frames_count,max_frames_count);
+    MProcessor.activate(sample_rate);
+    return true;
+  }
+
+
+
+  //----------
+
   bool gui_create(const char* api, bool is_floating) final {
     //MIP_Print("\n");
     MIsEditorOpen = false;
@@ -107,55 +119,82 @@ public:
 
   void processParamValue(const clap_event_param_value_t* event) final {
 
-    switch (event->param_id) {
+//    switch (event->param_id) {
+//
+//      case 0: {
+//        uint32_t beats = (uint32_t)event->value;
+//        if (MIsEditorOpen) {
+//          sa_botage_editor* editor = (sa_botage_editor*)MEditor;
+//          if (editor) {
+//            MIP_WaveformWidget* waveform = editor->MWaveformWidget;
+//            if (waveform) {
+//              waveform->setNumGrid(beats);
+//              //editor->redraw(waveform);
+//              waveform->redraw();
+//            }
+//          }
+//        }
+//        break;
+//      }
+//
+//      case 1: {
+//        uint32_t slices = (uint32_t)event->value;
+//        if (MIsEditorOpen) {
+//          sa_botage_editor* editor = (sa_botage_editor*)MEditor;
+//          if (editor) {
+//            MIP_WaveformWidget* waveform = editor->MWaveformWidget;
+//            if (waveform) {
+//              waveform->setNumSubGrid(slices);
+//              //editor->redraw(waveform);
+//              waveform->redraw();
+//            }
+//          }
+//        }
+//        break;
+//      }
+//
+//    } // switch
 
-      case 0: {
-        uint32_t beats = (uint32_t)event->value;
-        if (MIsEditorOpen) {
-          sa_botage_editor* editor = (sa_botage_editor*)MEditor;
-          if (editor) {
-            MIP_WaveformWidget* waveform = editor->MWaveformWidget;
-            if (waveform) {
-              waveform->setNumGrid(beats);
-              //editor->redraw(waveform);
-              waveform->redraw();
-            }
-          }
-        }
-        break;
-      }
+    MProcessor.setParamValue(event->param_id,event->value);
 
-      case 1: {
-        uint32_t slices = (uint32_t)event->value;
-        if (MIsEditorOpen) {
-          sa_botage_editor* editor = (sa_botage_editor*)MEditor;
-          if (editor) {
-            MIP_WaveformWidget* waveform = editor->MWaveformWidget;
-            if (waveform) {
-              waveform->setNumSubGrid(slices);
-              //editor->redraw(waveform);
-              waveform->redraw();
-            }
-          }
-        }
-        break;
-      }
+  }
 
-    } // switch
+  //----------
+
+  void processTransport(const clap_event_transport_t* transport) final {
+    MIP_Plugin::processTransport(transport);
+    MProcessor.transport(transport->flags);
+
   }
 
   //----------
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
-    const clap_process_t* process = AContext->process;
-    uint32_t length = process->frames_count;
-    float** inputs  = process->audio_inputs[0].data32;
-    float** outputs = process->audio_outputs[0].data32;
-    //gain   = 1.0; // MParameters[0]->getValue();
-    //left   = 1.0; // MParameters[1]->getValue();
-    //right  = 1.0; // MParameters[2]->getValue();
-    MIP_CopyStereoBuffer(outputs,inputs,length);
-    //MIP_ScaleStereoBuffer(outputs,left*gain,right*gain,length);
+//    const clap_process_t* process = AContext->process;
+//    uint32_t length = process->frames_count;
+//    float** inputs  = process->audio_inputs[0].data32;
+//    float** outputs = process->audio_outputs[0].data32;
+//    //gain   = 1.0; // MParameters[0]->getValue();
+//    //left   = 1.0; // MParameters[1]->getValue();
+//    //right  = 1.0; // MParameters[2]->getValue();
+//    MIP_CopyStereoBuffer(outputs,inputs,length);
+//    //MIP_ScaleStereoBuffer(outputs,left*gain,right*gain,length);
+
+    MProcessor.processAudioBlock(AContext);
+
+  }
+
+//------------------------------
+public:
+//------------------------------
+
+  void on_timer_callback(MIP_Timer* ATimer) override {
+    if (MEditor && MEditor->isEditorOpen()) {
+      sa_botage_editor* editor = (sa_botage_editor*)MEditor;
+      editor->updateWaveformWidget(&MProcessor);
+//      MWaveformWidget->redraw();
+    }
+    MIP_Plugin::on_timer_callback(ATimer);
   }
 
 };
