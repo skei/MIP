@@ -15,27 +15,23 @@ class MIP_DualSliderWidget
 : public MIP_SliderWidget {
 
 //------------------------------
-private:
+protected:
 //------------------------------
 
-  double MLastMouseX = 0.0;
-  double MLastMouseY = 0.0;
-
-  uint32_t MSelectedEdge = 0;
-
-  MIP_Color MEdgeColor  = MIP_COLOR_WHITE;
-  MIP_Color MIEdgeColor = MIP_COLOR_LIGHT_GREEN;
+  double    MLastMouseX   = 0.0;
+  double    MLastMouseY   = 0.0;
+  uint32_t  MSelectedEdge = 0;
+  MIP_Color MEdgeColor    = MIP_COLOR_WHITE;
+  MIP_Color MIEdgeColor   = MIP_COLOR_LIGHT_GREEN;
 
 
 //------------------------------
 protected:
 //------------------------------
 
-
 //  bool      MDrawSlider   = true;
 //  MIP_Color MSliderColor  = MIP_COLOR_LIGHT_GRAY;
 //  MIP_Color MISliderColor = MIP_COLOR_WHITE;
-
 
 //------------------------------
 public:
@@ -68,15 +64,35 @@ public:
 public:
 //------------------------------
 
-  virtual void drawDualSlider(MIP_PaintContext* AContext) {
+//  void calc_left_right(double* x1, double* x2) {
+//    MIP_DRect mrect = getRect();
+//    double v1 = getValue(0);
+//    double v2 = getValue(1);
+//    MIP_Parameter* param1 = getParameter(0);
+//    MIP_Parameter* param2 = getParameter(1);
+//    if (param1) v1 = param1->normalizeValue(v1);
+//    if (param2) v2 = param2->normalizeValue(v2);
+//    if (v1 > v2) {
+//      double temp = v1;
+//      v1 = v2;
+//      v2 = temp;
+//    }
+//    double p1 = mrect.x + (v1 * mrect.w);
+//    double p2 = mrect.x + (v2 * mrect.w);
+//    *x1 = p1;
+//    *x2 = p2;
+//  }
 
+//------------------------------
+public:
+//------------------------------
+
+  virtual void drawDualSlider(MIP_PaintContext* AContext) {
     MIP_Window* window = (MIP_Window*)getOwnerWindow();
     double S = window->getWindowScale();
     MIP_Painter* painter = AContext->painter;
     MIP_DRect mrect = getRect();
-
     double S5 = S * 5.0;
-
     if (MIsInteracting) {
       MIP_Color color = MISliderColor;
       if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
@@ -87,56 +103,49 @@ public:
       if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
       painter->setFillColor(color);
     }
-
     double v1 = getValue(0);
     double v2 = getValue(1);
     MIP_Parameter* param1 = getParameter(0);
     MIP_Parameter* param2 = getParameter(1);
     if (param1) v1 = param1->normalizeValue(v1);
     if (param2) v2 = param2->normalizeValue(v2);
-//    MIP_Print("param1 %p param2 %p v1 %f v2 %f\n",param1,param2,v1,v2);
-
     if (v1 > v2) {
       double temp = v1;
       v1 = v2;
       v2 = temp;
     }
-
-    double mw   = mrect.w - S5;
+    double mw = mrect.w - S5;
     double p1 = mrect.x + (v1 * mw);
     double p2 = mrect.x + (v2 * mw);
-    double w    = p2 - p1; // mrect.w * v1;
-
+    double w  = p2 - p1;
     w += S5;
     p2 += S5;
-
-    //double x = mrect.x;
     double y = mrect.y;
     double h = mrect.h;
 
+//    double lines[6] = {0};
+//    lines[0] = mrect.x;
+//    lines[1] = mrect.y2();
+//    lines[2] = p1;
+//    lines[3] = mrect.y;
+//    lines[4] = p1;
+//    lines[5] = mrect.y2();
+//    painter->fillLineStrip(3,lines);
+//    lines[0] = p2;
+//    lines[1] = mrect.y;
+//    lines[2] = mrect.x2();
+//    lines[3] = mrect.y2();
+//    lines[4] = p2;
+//    lines[5] = mrect.y2();
+//    painter->fillLineStrip(3,lines);
+
     painter->fillRect(p1,y,w,h);
-
-/*
-    if (MIsInteracting) {
-      MIP_Color color = MIArcValueColor;
-      if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
-      painter->setDrawColor(color);
-    }
-    else {
-      MIP_Color color = MArcValueColor;
-      if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
-      painter->setDrawColor(color);
-    }
-
-*/
-
 
     MIP_Color color;
     if (MIsInteracting) color = MIEdgeColor;
     else color = MEdgeColor;
     if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
     painter->setFillColor(color);
-
     switch (MSelectedEdge) {
       case 1: {
         painter->fillRect(p1,y,S5,h);
@@ -149,8 +158,6 @@ public:
         break;
       }
     }
-
-
   }
 
   //----------
@@ -160,29 +167,21 @@ public:
     double S = window->getWindowScale();
     MIP_Painter* painter = AContext->painter;
     MIP_DRect mrect = getRect();
-
     MIP_DRect vo = MValueOffset;
     vo.scale(S);
     mrect.shrink(vo);
-
     MIP_Color color;
     if (MIsInteracting && (MSelectedEdge==1)) color = MIValueColor;
     else color = MValueColor;
-    //MIP_Color color = MValueColor;
     if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
     painter->setTextColor(color);
-
     painter->setTextSize(MValueSize * S);
-
     // value 1
-
     double value = getValue(0);
     char value_txt[33] = {0};
     MIP_Parameter* parameter = getParameter(0);
-
     if (parameter) parameter->valueToText(value,value_txt,32);
     else sprintf(value_txt,"%.3f",value);
-
     double bounds[4] = {0};
     painter->getTextBounds(value_txt,bounds);
     double x = mrect.x - bounds[0];
@@ -191,23 +190,15 @@ public:
     double h = bounds[3] - bounds[1];
     y += ((mrect.h - h) * 0.5);
     painter->drawText(x,y,value_txt);
-
     // value 2
-
-    //MIP_Color color;
     if (MIsInteracting && (MSelectedEdge==2)) color = MIValueColor;
     else color = MValueColor;
-    //MIP_Color color = MValueColor;
     if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
     painter->setTextColor(color);
-
     value = getValue(1);
     parameter = getParameter(1);
-
     if (parameter) parameter->valueToText(value,value_txt,32);
     else sprintf(value_txt,"%.3f",value);
-
-    //double bounds[4] = {0};
     painter->getTextBounds(value_txt,bounds);
     x = mrect.x - bounds[0];
     y = mrect.y - bounds[1];
@@ -216,7 +207,6 @@ public:
     x = mrect.w - w + x;
     y += ((mrect.h - h) * 0.5);
     painter->drawText(x,y,value_txt);
-
   }
 
 //------------------------------
@@ -240,6 +230,8 @@ public:
     MLastMouseY = AYpos;
   }
 
+  //----------
+
   void on_widget_mouse_release(uint32_t AButton, uint32_t AState, double AXpos, double AYpos, uint32_t ATime) override {
     MIP_SliderWidget::on_widget_mouse_release(AButton,AState,AXpos,AYpos,ATime);
     do_widget_set_cursor_pos(this,MLastMouseX,MLastMouseY);
@@ -253,21 +245,15 @@ public:
     double S = window->getWindowScale();
     double S5 = S * 5.0;
     double mw = mrect.w - S5;
-
     double value1 = getValue(0);
     double value2 = getValue(1);
     double nv1 = value1;
     double nv2 = value2;
-
     MIP_Parameter* param1 = getParameter(0);
     MIP_Parameter* param2 = getParameter(1);
     if (param1) nv1 = param1->normalizeValue(nv1);
     if (param2) nv2 = param2->normalizeValue(nv2);
-
     if (isDragging()) {
-
-//---
-
       // delta
       double deltax = AXpos - MPrevXpos;
       double deltay = AYpos - MPrevYpos;
@@ -280,17 +266,12 @@ public:
       }
       double range = maxval - minval;
       if (range > 0) {
-        //MIP_Print("range %f\n",range);
         double sens = MDragSensitivity;
         if (AState & MIP_KEY_SHIFT) sens *= MDragSensitivity2;
         sens *= range;
         deltax *= sens;
         deltay *= sens;
         // value
-
-//        MIP_Parameter* param1 = getParameter(0);
-//        MIP_Parameter* param2 = getParameter(1);
-
         switch (MSelectedEdge) {
           case 1: {
             switch (MDragDirection) {
@@ -306,16 +287,7 @@ public:
               value2 = temp;
               MSelectedEdge = 2;
             }
-
-            //setValue(0,value1);
-//            if (param1) {
-//              double nv1 = param1->denormalizeValue(value1);
-//              setValue(0,nv1);
-//            }
-//            else {
-              setValue(0,value1);
-//            }
-
+            setValue(0,value1);
             break;
           }
           case 2: {
@@ -332,53 +304,28 @@ public:
               value2 = temp;
               MSelectedEdge = 1;
             }
-
-            //setValue(1,value2);
-//            if (param2) {
-//              double nv2 = param2->denormalizeValue(value2);
-//              setValue(1,nv2);
-//            }
-//            else {
-              setValue(1,value2);
-//            }
-
+            setValue(1,value2);
             break;
           }
         }
-
-        // check if we need to swap?
-        // also swap MSelectedEdge
-
-
+        // check if we need to swap? also swap MSelectedEdge
         MPrevXpos = AXpos;
         MPrevYpos = AYpos;
-
         do_widget_update(this);
         do_widget_redraw(this);
-
       } // range
-
-//---
-
     }
     else {
-
-      //double p1 = mrect.x + (value1 * mrect.w);
-      //double p2 = mrect.x + (value2 * mrect.w);
-
       double p1 = mrect.x + (nv1 * mw);
       double p2 = mrect.x + (nv2 * mw);
-
       double dist1 = fabs(p1 - AXpos);
       double dist2 = fabs(p2 - AXpos);
       uint32_t prevsel = MSelectedEdge;
       MSelectedEdge = 0;
       if (dist1 < dist2) {
-        //MIP_Print("v1 dist %.2f\n",dist1);
         if (dist1 < (10.0*S)) MSelectedEdge = 1;
       }
       else {
-        //MIP_Print("v2 dist %.2f\n",dist2);
         if (dist2 < (10.0*S)) MSelectedEdge = 2;
       }
       if (MSelectedEdge != prevsel) do_widget_redraw(this);

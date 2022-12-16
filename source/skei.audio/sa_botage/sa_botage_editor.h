@@ -180,7 +180,7 @@ public:
     //prob_knob->setValueOffset(0);
     prob_knob->setHint("Main probability");
 
-  connect( prob_knob, AParameters->getItem(5) );
+  connect( prob_knob, AParameters->getItem(2) );
 
     // slices
 
@@ -218,35 +218,33 @@ public:
     x = 10;
     y = 350;
 
-    MIP_TextWidget* loop_env_label = new MIP_TextWidget(MIP_DRect(x,y,250,20), "Loop Env");
+    MIP_TextWidget* loop_env_label = new MIP_TextWidget(MIP_DRect(x,y,120,20), "Loop Env");
     MRootWidget->appendChildWidget(loop_env_label);
     loop_env_label->setFillBackground(true);
     loop_env_label->setBackgroundColor(MIP_COLOR_DARK_GRAY);
     loop_env_label->setTextColor(MIP_COLOR_LIGHT_GRAY);
 
-    MIP_SliderWidget* loop_env_att_slider = new MIP_SliderWidget(MIP_DRect(x,y+30,120,20),"Att");
-    MRootWidget->appendChildWidget(loop_env_att_slider);
-    loop_env_att_slider->setHint("Loop Envelope Attack");
+    MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(x,y+30,120,25), "ms", 0.1, 0.9 );
+    MRootWidget->appendChildWidget(env1_slider);
+    env1_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    env1_slider->setHint("Loop envelope");
 
-    MIP_SliderWidget* loop_env_rel_slider = new MIP_SliderWidget(MIP_DRect(x+130,y+30,120,20),"Rel");
-    MRootWidget->appendChildWidget(loop_env_rel_slider);
-    loop_env_rel_slider->setHint("Loop Envelope Release");
+  connect( env1_slider, 0, AParameters->getItem(3) );
+  connect( env1_slider, 1, AParameters->getItem(4) );
 
-    y = 350 + 60;
-
-    MIP_TextWidget* slice_env_label = new MIP_TextWidget(MIP_DRect(x,y,250,20), "Slice Env");
+    MIP_TextWidget* slice_env_label = new MIP_TextWidget(MIP_DRect(x+130,y,120,20), "Slice Env");
     MRootWidget->appendChildWidget(slice_env_label);
     slice_env_label->setFillBackground(true);
     slice_env_label->setBackgroundColor(MIP_COLOR_DARK_GRAY);
     slice_env_label->setTextColor(MIP_COLOR_LIGHT_GRAY);
 
-    MIP_SliderWidget* slice_env_att_slider = new MIP_SliderWidget(MIP_DRect(x,y+30,120,20),"Att");
-    MRootWidget->appendChildWidget(slice_env_att_slider);
-    slice_env_att_slider->setHint("Slice Envelope Attack");
+    MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(x+130,y+30,120,25), "%", 0.1, 0.9 );
+    MRootWidget->appendChildWidget(env2_slider);
+    env2_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    env2_slider->setHint("Slice envelope");
 
-    MIP_SliderWidget* slice_env_rel_slider = new MIP_SliderWidget(MIP_DRect(x+130,y+30,120,20),"Rel");
-    MRootWidget->appendChildWidget(slice_env_rel_slider);
-    slice_env_rel_slider->setHint("Slice Envelope Release");
+  connect( env2_slider, 0, AParameters->getItem(5) );
+  connect( env2_slider, 1, AParameters->getItem(6) );
 
 //------------------------------
 // 2 range
@@ -270,7 +268,7 @@ public:
     range_length_knob->setAutoHideCursor(false);
     //range_length_knob->setAutoLockCursor(false);
 
-  connect( range_length_knob, AParameters->getItem(4) );
+  connect( range_length_knob, AParameters->getItem(7) );
 
     MIP_TextWidget* range_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Length");
     MRootWidget->appendChildWidget(range_length_text);
@@ -283,8 +281,8 @@ public:
     range_length_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     range_length_range_slider->setHint("Loop min/max");
 
-  connect( range_length_range_slider, 0, AParameters->getItem(2) );
-  connect( range_length_range_slider, 1, AParameters->getItem(3) );
+  connect( range_length_range_slider, 0, AParameters->getItem(8) );
+  connect( range_length_range_slider, 1, AParameters->getItem(9) );
 
     // loop speed
 

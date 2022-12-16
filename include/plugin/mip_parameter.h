@@ -134,7 +134,7 @@ public:
   //TODO: check size, etc..
 
   virtual bool valueToText(double value, char *display, uint32_t size) {
-    sprintf(display,"%.3f",value);
+    sprintf(display,"%.2f",value);
     return true;
   }
 

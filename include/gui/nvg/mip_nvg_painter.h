@@ -343,6 +343,41 @@ public:
     nvgFill(MContext);
   }
 
+  //----------
+
+  void fillLines(uint32_t num, double* coords) override {
+    if (num >= 2) {
+      nvgBeginPath(MContext);
+      for (uint32_t i=1; i<num; i++) {
+        double x = *coords++;
+        double y = *coords++;
+        nvgMoveTo(MContext,x,y);
+        x = *coords++;
+        y = *coords++;
+        nvgLineTo(MContext,x,y);
+      }
+      nvgStroke(MContext);
+      nvgFill(MContext);
+    }
+  }
+
+  //----------
+
+  void fillLineStrip(uint32_t num, double* coords) override {
+    if (num >= 2) {
+      nvgBeginPath(MContext);
+      double x = *coords++;
+      double y = *coords++;
+      nvgMoveTo(MContext,x,y);
+      for (uint32_t i=1; i<num; i++) {
+        x = *coords++;
+        y = *coords++;
+        nvgLineTo(MContext,x,y);
+      }
+      nvgFill(MContext);
+    }
+  }
+
 //------------------------------
 public:
 //------------------------------

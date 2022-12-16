@@ -34,7 +34,10 @@ public:
   virtual void    drawLineStrip(uint32_t num, double* coords) {}
   virtual void    drawArc(double cx, double cy, double r, double a1, double a2) {}
   virtual void    drawRect(double x, double y, double w, double h) {}
+
   virtual void    fillRect(double x, double y, double w, double h) {}
+  virtual void    fillLines(uint32_t num, double* coords) {}
+  virtual void    fillLineStrip(uint32_t num, double* coords) {}
 
   virtual void    drawRoundedRect(double x, double y, double w, double h, double r) {}
   virtual void    drawRoundedRect(double x, double y, double w, double h, double rtl, double rtr, double rbr, double rbl) {}
