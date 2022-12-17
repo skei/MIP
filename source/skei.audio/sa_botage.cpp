@@ -16,8 +16,7 @@
 #endif
 
 #define SA_BOTAGE_VENDOR        "skei.audio"
-#define SA_BOTAGE_VERSION       "0.3.0"
-
+#define SA_BOTAGE_VERSION       "0.1.0"
 //----------------------------------------------------------------------
 
 #include "plugin/mip_plugin.h"

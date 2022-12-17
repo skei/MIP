@@ -50,8 +50,9 @@ private:
   double            MWindowScale          = 1.0;
 
   MIP_Widget*       MHoverWidget          = nullptr;
-  MIP_Widget*       MCapturedMouseWidget  = nullptr;
-  MIP_Widget*       MCapturedKeysWidget   = nullptr;
+  //MIP_Widget*       MCapturedMouseWidget  = nullptr;
+  //MIP_Widget*       MCapturedKeysWidget   = nullptr;
+  MIP_Widget*       MCapturedWidget       = nullptr;
   MIP_Widget*       MMouseLockedWidget    = nullptr;
 
   int32_t           MMouseClickedX        = 0;
@@ -235,13 +236,13 @@ public: // window
   //----------
 
   void on_window_key_press(uint32_t AKey, uint32_t AState, uint32_t ATime) override {
-    if (MCapturedKeysWidget) MCapturedKeysWidget->on_widget_key_press(AKey,AState,ATime);
+    if (MCapturedWidget) MCapturedWidget->on_widget_key_press(AKey,AState,ATime);
   }
 
   //----------
 
   void on_window_key_release(uint32_t AKey, uint32_t AState, uint32_t ATime) override {
-    if (MCapturedKeysWidget) MCapturedKeysWidget->on_widget_key_release(AKey,AState,ATime);
+    if (MCapturedWidget) MCapturedWidget->on_widget_key_release(AKey,AState,ATime);
   }
 
   //----------
@@ -255,7 +256,7 @@ public: // window
 
 //      MMouseLockedWidget = MHoverWidget;
 
-      MCapturedMouseWidget = MHoverWidget;
+      MCapturedWidget = MHoverWidget;
       MHoverWidget->on_widget_mouse_click(AButton,AState,AXpos,AYpos,ATime);
 
     }
@@ -264,12 +265,12 @@ public: // window
   //----------
 
   void on_window_mouse_release(uint32_t AButton, uint32_t AState, int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
-    if (MCapturedMouseWidget) {
+    if (MCapturedWidget) {
 
 //      MMouseLockedWidget = nullptr;
 
-      MCapturedMouseWidget->on_widget_mouse_release(AButton,AState,AXpos,AYpos,ATime);
-      MCapturedMouseWidget = nullptr;
+      MCapturedWidget->on_widget_mouse_release(AButton,AState,AXpos,AYpos,ATime);
+      MCapturedWidget = nullptr;
       updateHoverWidget(AXpos,AYpos);
     }
   }
@@ -277,7 +278,7 @@ public: // window
   //----------
 
   void on_window_mouse_dblclick(uint32_t AButton, uint32_t AState, int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
-    if (MCapturedMouseWidget) MCapturedMouseWidget->on_widget_mouse_dblclick(AButton,AState,AXpos,AYpos,ATime);
+    if (MCapturedWidget) MCapturedWidget->on_widget_mouse_dblclick(AButton,AState,AXpos,AYpos,ATime);
   }
 
   //----------
@@ -297,8 +298,8 @@ public: // window
 
 //      setCursorPos(MMouseClickedX,MMouseClickedY);
 
-      if (MCapturedMouseWidget) {
-        MCapturedMouseWidget->on_widget_mouse_move(AState,MMouseDragX,MMouseDragY,ATime);
+      if (MCapturedWidget) {
+        MCapturedWidget->on_widget_mouse_move(AState,MMouseDragX,MMouseDragY,ATime);
       }
 
       setCursorPos(MMouseClickedX,MMouseClickedY);
@@ -306,8 +307,8 @@ public: // window
     }
     else {
       //updateHoverWidget(AXpos,AYpos);
-      if (MCapturedMouseWidget) {
-        MCapturedMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
+      if (MCapturedWidget) {
+        MCapturedWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
       }
       else {
         updateHoverWidget(AXpos,AYpos);
@@ -410,7 +411,7 @@ public: // widget listener
 
   //----------
 
-  void do_widget_set_key_capture(MIP_Widget* AWidget, uint32_t AMode) override {
+  void do_widget_set_capture(MIP_Widget* AWidget, uint32_t AMode) override {
   }
 
   //----------

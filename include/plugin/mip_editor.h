@@ -508,9 +508,9 @@ public: // widget listener
   //----------
 
 
-  void do_widget_set_key_capture(MIP_Widget* AWidget, uint32_t AMode) override {
+  void do_widget_set_capture(MIP_Widget* AWidget, uint32_t AMode) override {
     //MIP_Print("mode: %i\n",AMode);
-    if (MWindow) MWindow->do_widget_set_key_capture(AWidget,AMode);
+    if (MWindow) MWindow->do_widget_set_capture(AWidget,AMode);
   }
 
   //----------

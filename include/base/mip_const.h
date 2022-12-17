@@ -7,6 +7,9 @@
 
 //----------------------------------------------------------------------
 
+const char*   MIP_VERSION    = "0.1.0";
+
+
 //const uint8_t MIP_NULL_ID[16]    = {0};
 const char    MIP_HEX_TABLE[]    = "0123456789ABCDEF";
 const char    MIP_CSYMBOLS[]     = "________________________________________________0123456789_______ABCDEFGHIJKLMNOPQRSTUVWXYZ______abcdefghijklmnopqrstuvwxyz_____";

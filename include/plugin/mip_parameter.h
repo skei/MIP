@@ -127,6 +127,10 @@ public:
   virtual double      getMinValue()         { return MParamInfo.min_value; }
   virtual double      getMaxValue()         { return MParamInfo.max_value; }
 
+  virtual bool        isAutomatable()       { return MParamInfo.flags & CLAP_PARAM_IS_AUTOMATABLE; }
+  virtual bool        isHidden()            { return MParamInfo.flags & CLAP_PARAM_IS_HIDDEN; }
+  virtual bool        isModulatable()       { return MParamInfo.flags & CLAP_PARAM_IS_MODULATABLE; }
+
 //------------------------------
 public:
 //------------------------------

@@ -24,6 +24,8 @@ protected:
   MIP_Color MEdgeColor    = MIP_COLOR_WHITE;
   MIP_Color MIEdgeColor   = MIP_COLOR_LIGHT_GREEN;
 
+//  double    MDragValue2   = 0.0;
+
 
 //------------------------------
 protected:
@@ -228,6 +230,8 @@ public:
     MIP_SliderWidget::on_widget_mouse_click(AButton,AState,AXpos,AYpos,ATime);
     MLastMouseX = AXpos;
     MLastMouseY = AYpos;
+//    MDragValue = getValue();
+//    MDragValue2 = getValue(1);
   }
 
   //----------
@@ -245,8 +249,13 @@ public:
     double S = window->getWindowScale();
     double S5 = S * 5.0;
     double mw = mrect.w - S5;
+
     double value1 = getValue(0);
     double value2 = getValue(1);
+
+//    double value1 = MDragValue;
+//    double value2 = MDragValue2;
+
     double nv1 = value1;
     double nv2 = value2;
     MIP_Parameter* param1 = getParameter(0);
@@ -255,6 +264,7 @@ public:
     if (param2) nv2 = param2->normalizeValue(nv2);
     if (isDragging()) {
       // delta
+
       double deltax = AXpos - MPrevXpos;
       double deltay = AYpos - MPrevYpos;
       double minval = 0.0;
@@ -264,13 +274,20 @@ public:
         minval = parameter->getMinValue();
         maxval = parameter->getMaxValue();
       }
+
       double range = maxval - minval;
       if (range > 0) {
+
+//----------
+
         double sens = MDragSensitivity;
         if (AState & MIP_KEY_SHIFT) sens *= MDragSensitivity2;
         sens *= range;
         deltax *= sens;
         deltay *= sens;
+
+//----------
+
         // value
         switch (MSelectedEdge) {
           case 1: {
@@ -308,6 +325,56 @@ public:
             break;
           }
         }
+
+//----------
+
+        /*
+        switch (MSelectedEdge) {
+          case 1: {
+            switch (MDragDirection) {
+              case MIP_LEFT:  MDragValue -= deltax;   break;
+              case MIP_RIGHT: MDragValue += deltax;   break;
+              case MIP_DOWN:  MDragValue += deltay;   break;
+              case MIP_UP:    MDragValue -= deltay;   break;
+            }
+            MDragValue = MIP_Clamp(MDragValue,minval,maxval);
+            if (MDragValue > MDragValue2) {
+              double temp = MDragValue;
+              MDragValue = MDragValue2;
+              MDragValue2 = temp;
+              MSelectedEdge = 2;
+            }
+            float v = MDragValue;
+            if (MSnap && !(AState & MIP_KEY_SHIFT)) v = snapValue(v);
+            v = MIP_Clamp(v,minval,maxval);
+            setValue(0,MDragValue);
+            break;
+          }
+          case 2: {
+            switch (MDragDirection) {
+              case MIP_LEFT:  MDragValue2 -= deltax;   break;
+              case MIP_RIGHT: MDragValue2 += deltax;   break;
+              case MIP_DOWN:  MDragValue2 += deltay;   break;
+              case MIP_UP:    MDragValue2 -= deltay;   break;
+            }
+            MDragValue2 = MIP_Clamp(MDragValue2,minval,maxval);
+            if (MDragValue2 < MDragValue) {
+              double temp = MDragValue;
+              MDragValue = MDragValue2;
+              MDragValue2 = temp;
+              MSelectedEdge = 1;
+            }
+            float v = MDragValue2;
+            if (MSnap && !(AState & MIP_KEY_SHIFT)) v = snapValue(v);
+            v = MIP_Clamp(v,minval,maxval);
+            setValue(1,MDragValue2);
+            break;
+          }
+        }
+        */
+
+//----------
+
         // check if we need to swap? also swap MSelectedEdge
         MPrevXpos = AXpos;
         MPrevYpos = AYpos;
@@ -331,6 +398,12 @@ public:
       if (MSelectedEdge != prevsel) do_widget_redraw(this);
     }
   }
+
+  //----------
+
+  //void on_widget_enter(double AXpos, double AYpos) override {
+  //  on_widget_mouse_move(0,AXpos,AYpos,0);
+  //}
 
   //----------
 

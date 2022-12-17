@@ -6,7 +6,7 @@
 	"gui/mip_window.h"
 	"gui/mip_widgets.h"
 
-1671070440 /DISKS/sda2/code/git/MIP/include/gui/mip_window.h
+1671270845 /DISKS/sda2/code/git/MIP/include/gui/mip_window.h
 	"base/mip.h"
 	"gui/mip_paint_context.h"
 	"gui/mip_widget.h"
@@ -38,7 +38,7 @@
 
 1641519085 /DISKS/sda2/code/git/MIP/include/base/mip_attributes.h
 
-1668620227 /DISKS/sda2/code/git/MIP/include/base/mip_const.h
+1671248207 /DISKS/sda2/code/git/MIP/include/base/mip_const.h
 
 1670345812 /DISKS/sda2/code/git/MIP/include/base/mip_enums.h
 
@@ -644,7 +644,7 @@
 	"gui/mip_paint_source.h"
 	"gui/mip_paint_target.h"
 
-1671228613 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
+1671270776 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
 	"base/mip.h"
 	"gui/base/mip_base_window.h"
 	"gui/mip_paint_context.h"
@@ -699,7 +699,7 @@
 	"base/mip.h"
 	"gui/widgets/mip_value_widget.h"
 
-1670967339 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_drag_value_widget.h
+1671272012 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_drag_value_widget.h
 	"base/mip.h"
 	"gui/mip_widget.h"
 
@@ -746,7 +746,7 @@
 1669323584 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_plugin.h
 	"plugin/clap/mip_clap.h"
 
-1671229038 /DISKS/sda2/code/git/MIP/include/plugin/mip_editor.h
+1671270852 /DISKS/sda2/code/git/MIP/include/plugin/mip_editor.h
 	"base/mip.h"
 	"plugin/clap/mip_clap.h"
 	"gui/mip_window.h"
@@ -840,7 +840,7 @@
 
 1668352915 /DISKS/sda2/code/git/MIP/include/plugin/exe/mip_exe.h
 
-1671237676 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
+1671248217 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
 	"plugin/mip_plugin.h"
 	"audio/mip_audio_utils.h"
 	"sa_botage/sa_botage_parameters.h"
@@ -849,7 +849,7 @@
 	"sa_botage/sa_botage_widgets.h"
 	"plugin/mip_entry.h"
 
-1671237280 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
+1671274155 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
 	"base/mip.h"
 	"gui/mip_widgets.h"
 	"plugin/mip_editor.h"
@@ -867,7 +867,7 @@
 
 1670542718 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_group_box_widget.h
 
-1671237008 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_widgets.h
+1671248158 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_widgets.h
 	"base/mip.h"
 	"gui/widgets/mip_image_widget.h"
 	"gui/widgets/mip_panel_widget.h"
@@ -889,7 +889,7 @@
 	"gui/mip_paint_context.h"
 	"gui/widgets/mip_panel_widget.h"
 
-1671111128 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_dual_slider_widget.h
+1671273863 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_dual_slider_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_slider_widget.h"
 

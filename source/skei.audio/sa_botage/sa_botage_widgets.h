@@ -36,7 +36,7 @@ private:
 
 public:
 
-  sa_botage_header(MIP_DRect ARect)
+  sa_botage_header(MIP_DRect ARect, const char* AVersion)
   : MIP_PanelWidget(ARect) {
 
     setFillBackground(true);
@@ -56,7 +56,7 @@ public:
 
     // sa_botage version
 
-    MVersionText = new MIP_TextWidget(MIP_DRect(84,50,60,20),"v0.3.0-a1");
+    MVersionText = new MIP_TextWidget(MIP_DRect(84,50,60,20),AVersion);
     appendChildWidget(MVersionText);
     MVersionText->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     MVersionText->setTextSize(8);
@@ -73,7 +73,7 @@ public:
 
     // mip version
 
-    MVersionText = new MIP_TextWidget(MIP_DRect((ARect.w - 110),55,60,10),"v0.2.999");
+    MVersionText = new MIP_TextWidget(MIP_DRect((ARect.w - 110),55,60,10),MIP_VERSION);
     appendChildWidget(MVersionText);
     MVersionText->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     MVersionText->setTextSize(8);

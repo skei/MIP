@@ -13,6 +13,7 @@
 #include "plugin/clap/mip_clap_plugin.h"
 
 #include "plugin/mip_editor.h"
+#include "gui/mip_widgets.h"
 
 //----------------------------------------------------------------------
 //
@@ -1498,6 +1499,105 @@ public: // process events
     //MIP_Print("MIDI2\n");
     processMidi2(event);
   }
+
+//------------------------------
+public: // generic gui
+//------------------------------
+
+  #ifndef MIP_NO_GUI
+
+
+  uint32_t getGenericNumControls() {
+    uint32_t num = 0;
+    for (uint32_t i=0; i<MParameters.size(); i++) {
+      MIP_Parameter* parameter = MParameters[i];
+      if (parameter->isAutomatable())
+        if (!parameter->isHidden())
+          num += 1;
+    }
+    return num;
+  }
+
+  //----------
+
+  uint32_t getGenericWidth() {
+    return 400;
+  }
+
+  //----------
+
+  uint32_t getGenericHeight() {
+    uint32_t numparams = getGenericNumControls();
+    return 80 + 10 + (numparams * 20) + ((numparams-1) * 5) + 10 + 25;
+  }
+
+  //----------
+
+  MIP_Widget* setupGenericEditor() {
+
+    uint32_t w = getGenericWidth();
+    uint32_t h = getGenericHeight();
+
+    //----- background -----
+
+    MIP_PanelWidget* editor = new MIP_PanelWidget(MIP_DRect(w,h));
+    //editor->Layout.alignment = MIP_WIDGET_ALIGN_FILL_CLIENT;
+    //editor->Layout.aspectRatio = (double)w / (double)h;
+    editor->setFillBackground(true);
+    editor->setDrawBorder(false);
+    editor->setBackgroundColor(0.55);
+
+    //----- sa header -----
+
+    const char* name = getClapDescriptor()->name;
+    const char* version = getClapDescriptor()->version;
+    if ((name[0] == 's') && (name[1] == 'a') && (name[2] == '_')) name += 3;
+
+//    MIP_SAHeaderWidget* saheader = new MIP_SAHeaderWidget(MIP_DRect(0,0,w,80));
+//    editor->appendChildWidget(saheader);
+//    saheader->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
+//    saheader->setPluginName(name);
+//    saheader->setPluginVersion(version);
+//    saheader->setPluginVersion(getDescriptor()->version);
+
+    //----- footer -----
+
+//    MIP_TextWidget* footer_panel = new MIP_TextWidget(MIP_DRect(0,(h-25),w,25), "footer" );
+//    editor->appendChildWidget(footer_panel);
+//    footer_panel->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
+//    footer_panel->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
+//    footer_panel->setFillBackground(true);
+//    footer_panel->setBackgroundColor(0.4);
+//    footer_panel->setDrawBorder(false);
+//    footer_panel->setDrawText(true);
+//    footer_panel->setTextColor(MIP_Color(0.75));
+//    footer_panel->setTextSize(-0.5);
+//    footer_panel->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+//    footer_panel->setTextOffset(MIP_DPoint(5,0));
+
+    //----- parameters -----
+
+    for (uint32_t i=0; i<MParameters.size(); i++) {
+      MIP_Parameter* parameter = MParameters[i];
+      if (parameter->isAutomatable()) {
+        if (!parameter->isHidden()) {
+          const char* name = parameter->getName();
+          double value = parameter->getDefValue();
+          MIP_SliderWidget* slider = new MIP_SliderWidget( MIP_DRect(10, 90 + (25 * i), w - 20, 20),name,value);
+          editor->appendChildWidget(slider);
+          //slider->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
+          slider->setTextSize(-0.8);
+          slider->setValueSize(-0.8);
+          MEditor->connect(slider,parameter);
+        }
+      }
+    }
+
+    return editor;
+
+  }
+
+  #endif // MIP_NO_GUI
 
 };
 

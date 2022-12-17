@@ -64,7 +64,7 @@ public:
 // header
 //------------------------------
 
-    sa_botage_header* header  = new sa_botage_header(MIP_DRect(0,0,width,SA_BOTAGE_HEADER_HEIGHT));
+    sa_botage_header* header  = new sa_botage_header(MIP_DRect(0,0,width,SA_BOTAGE_HEADER_HEIGHT),SA_BOTAGE_VERSION);
     MRootWidget->appendChildWidget(header);
 
     // icons
@@ -188,9 +188,10 @@ public:
     prob_knob->setTextSize(20);
     prob_knob->setDrawValue(true);
     prob_knob->setValueSize(25);
-    //prob_knob->setValueAlignment(MIP_TEXT_ALIGN_CENTER);
-    //prob_knob->setValueOffset(0);
     prob_knob->setHint("Main probability");
+    //prob_knob->setSnap(true);
+    //prob_knob->setSnapPos(0.5);
+    //prob_knob->setSnapDist(0.05);
 
   connect( prob_knob, AParameters->getItem(PAR_RANGE_PROB) );
 
@@ -281,8 +282,9 @@ public:
     MRootWidget->appendChildWidget(range_length_knob);
     range_length_knob->setArcThickness(7);
     range_length_knob->setHint("Loop length");
-    //range_length_knob->setAutoHideCursor(false);
-    //range_length_knob->setAutoLockCursor(false);
+    //range_length_knob->setSnap(true);
+    //range_length_knob->setSnapPos(0.5);
+    //range_length_knob->setSnapDist(0.05);
 
   connect( range_length_knob, AParameters->getItem(PAR_PROB_SIZE_PROB_RANGE) );
 
@@ -292,10 +294,14 @@ public:
     range_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
     //MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "range", 0.5, 0.5 );
-    MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
+    MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%");//, 0.5, 0.5 );
     MRootWidget->appendChildWidget(range_length_range_slider);
     range_length_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     range_length_range_slider->setHint("Loop min/max");
+//    range_length_range_slider->setSnap(true);
+//    range_length_range_slider->setSnapPos(0.5);
+//    range_length_range_slider->setSnapDist(0.05);
+
 
   connect( range_length_range_slider, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_RANGE) );
   connect( range_length_range_slider, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_RANGE) );
@@ -307,6 +313,9 @@ public:
     MIP_KnobWidget* range_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(range_speed_knob);
     range_speed_knob->setArcThickness(7);
+    //range_speed_knob->setSnap(true);
+    //range_speed_knob->setSnapPos(0.5);
+    //range_speed_knob->setSnapDist(0.05);
 
   connect( range_speed_knob, AParameters->getItem(PAR_PROB_SPEED_PROB_RANGE) );
 
@@ -329,6 +338,9 @@ public:
     MIP_KnobWidget* range_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(range_offset_knob);
     range_offset_knob->setArcThickness(7);
+    //range_offset_knob->setSnap(true);
+    //range_offset_knob->setSnapPos(0.5);
+    //range_offset_knob->setSnapDist(0.05);
 
   connect( range_offset_knob, AParameters->getItem(PAR_PROB_OFFSET_PROB_RANGE) );
 
@@ -351,6 +363,9 @@ public:
     MIP_KnobWidget* range_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(range_reverse_knob);
     range_reverse_knob->setArcThickness(7);
+    //range_reverse_knob->setSnap(true);
+    //ange_reverse_knob->setSnapPos(0.5);
+    //range_reverse_knob->setSnapDist(0.05);
 
   connect( range_reverse_knob, AParameters->getItem(PAR_PROB_REVERSE_PROB_RANGE) );
 
@@ -373,6 +388,9 @@ public:
     range_fx_knob->setArcThickness(7);
     range_fx_knob->setDisabled(true);
     range_fx_knob->setActive(false);
+    //range_fx_knob->setSnap(true);
+    //range_fx_knob->setSnapPos(0.5);
+    //range_fx_knob->setSnapDist(0.05);
 
   connect( range_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_RANGE) );
 
@@ -434,6 +452,9 @@ public:
     MIP_KnobWidget* loop_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(loop_speed_knob);
     loop_speed_knob->setArcThickness(7);
+    //loop_speed_knob->setSnap(true);
+    //loop_speed_knob->setSnapPos(0.5);
+    //loop_speed_knob->setSnapDist(0.05);
 
   connect( loop_speed_knob, AParameters->getItem(PAR_PROB_SPEED_PROB_LOOP) );
 
@@ -456,6 +477,9 @@ public:
     MIP_KnobWidget* loop_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(loop_offset_knob);
     loop_offset_knob->setArcThickness(7);
+    //loop_offset_knob->setSnap(true);
+    //loop_offset_knob->setSnapPos(0.5);
+    //loop_offset_knob->setSnapDist(0.05);
 
   connect( loop_offset_knob, AParameters->getItem(PAR_PROB_OFFSET_PROB_LOOP) );
 
@@ -478,6 +502,9 @@ public:
     MIP_KnobWidget* loop_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(loop_reverse_knob);
     loop_reverse_knob->setArcThickness(7);
+    //loop_reverse_knob->setSnap(true);
+    //loop_reverse_knob->setSnapPos(0.5);
+    //loop_reverse_knob->setSnapDist(0.05);
 
   connect( loop_reverse_knob, AParameters->getItem(PAR_PROB_REVERSE_PROB_LOOP) );
 
@@ -500,6 +527,9 @@ public:
     loop_fx_knob->setArcThickness(7);
     loop_fx_knob->setDisabled(true);
     loop_fx_knob->setActive(false);
+    //loop_fx_knob->setSnap(true);
+    //loop_fx_knob->setSnapPos(0.5);
+    //loop_fx_knob->setSnapDist(0.05);
 
   connect( loop_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_LOOP) );
 
