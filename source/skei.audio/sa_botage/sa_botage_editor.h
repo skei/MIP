@@ -269,7 +269,7 @@ public:
     x = 10 + 250 + 10 /*+ 175 + 10 + 10 + 175 + 10 */;
     y = 200;
 
-    MIP_TextWidget* c1_header = new MIP_TextWidget(MIP_DRect(x,y,175,20),"Start");
+    MIP_TextWidget* c1_header = new MIP_TextWidget(MIP_DRect(x,y,175,20),"Range");
     MRootWidget->appendChildWidget(c1_header);
     c1_header->setFillBackground(true);
     c1_header->setBackgroundColor(0.35);
@@ -281,18 +281,18 @@ public:
     MRootWidget->appendChildWidget(range_length_knob);
     range_length_knob->setArcThickness(7);
     range_length_knob->setHint("Loop length");
-    range_length_knob->setAutoHideCursor(false);
+    //range_length_knob->setAutoHideCursor(false);
     //range_length_knob->setAutoLockCursor(false);
 
   connect( range_length_knob, AParameters->getItem(PAR_PROB_SIZE_PROB_RANGE) );
 
-    MIP_TextWidget* range_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Length");
+    MIP_TextWidget* range_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Size");
     MRootWidget->appendChildWidget(range_length_text);
     range_length_text->setDrawBorder(false);
     range_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
     //MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "range", 0.5, 0.5 );
-    sa_botage_dual_slider* range_length_range_slider = new sa_botage_dual_slider( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
+    MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MRootWidget->appendChildWidget(range_length_range_slider);
     range_length_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     range_length_range_slider->setHint("Loop min/max");
@@ -410,13 +410,12 @@ public:
     MIP_KnobWidget* loop_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRootWidget->appendChildWidget(loop_length_knob);
     loop_length_knob->setArcThickness(7);
-
-    loop_length_knob->setAutoHideCursor(false);
-    loop_length_knob->setAutoLockCursor(false);
+    //loop_length_knob->setAutoHideCursor(false);
+    //loop_length_knob->setAutoLockCursor(false);
 
   connect( loop_length_knob, AParameters->getItem(PAR_PROB_SIZE_PROB_LOOP) );
 
-    MIP_TextWidget* loop_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Length");
+    MIP_TextWidget* loop_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Size");
     MRootWidget->appendChildWidget(loop_length_text);
     loop_length_text->setDrawBorder(false);
     loop_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
@@ -533,6 +532,7 @@ public:
   //----------
 
   virtual ~sa_botage_editor() {
+    if (MRootWidget) delete MRootWidget;
   }
 
 //------------------------------

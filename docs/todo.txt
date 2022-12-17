@@ -4,13 +4,6 @@
 GUI
 ----------------------------------------------------------------------
 
-* single widget, multiple parameters
-
-  - at the same time
-    (xy pad, slider bank, range slider)
-  - switchable
-    modes, different painting,
-
 * single parameter, multiple widgets ??
 
 * restrict/control redrawing while resizing (?)
@@ -64,14 +57,13 @@ xcb
 PLUGIN
 ----------------------------------------------------------------------
 
-* abstractions (simplifications, streamlining, house-keeping, ..)
-  - state, (editor state)
-  - thread-pool ? (layers, voices, parts, ..)
+*
 
 --------------------
 clap
 --------------------
 
 - proportional gui scaling, aspect ratio
+- adjustSize
 - spacebar
 

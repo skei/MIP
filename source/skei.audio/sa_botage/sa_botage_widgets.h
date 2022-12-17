@@ -109,7 +109,11 @@ public:
 
 };
 
-//----------
+//----------------------------------------------------------------------
+//
+//
+//
+//----------------------------------------------------------------------
 
 //class sa_botage_footer
 //: public MIP_PanelWidget {
@@ -127,23 +131,6 @@ public:
 //  }
 //
 //};
-
-
-//----------------------------------------------------------------------
-
-class sa_botage_dual_slider
-: public MIP_DualSliderWidget {
-
-public:
-
-  sa_botage_dual_slider(MIP_DRect ARect, const char* AText="", double AValue=0.0, double AValue2=0.0)
-  : MIP_DualSliderWidget(ARect,AText,AValue,AValue2) {
-  }
-
-  virtual ~sa_botage_dual_slider() {
-  }
-
-};
 
 //----------------------------------------------------------------------
 #endif

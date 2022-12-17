@@ -62,10 +62,6 @@ class sa_botage_plugin
 private:
 //------------------------------
 
-  //double gain  = 0.0;
-  //double left  = 0.0;
-  //double right = 0.0;
-
   sa_botage_processor MProcessor;
 
 //------------------------------
@@ -118,45 +114,7 @@ public:
   //----------
 
   void processParamValue(const clap_event_param_value_t* event) final {
-
-//    switch (event->param_id) {
-//
-//      case 0: {
-//        uint32_t beats = (uint32_t)event->value;
-//        if (MIsEditorOpen) {
-//          sa_botage_editor* editor = (sa_botage_editor*)MEditor;
-//          if (editor) {
-//            MIP_WaveformWidget* waveform = editor->MWaveformWidget;
-//            if (waveform) {
-//              waveform->setNumGrid(beats);
-//              //editor->redraw(waveform);
-//              waveform->redraw();
-//            }
-//          }
-//        }
-//        break;
-//      }
-//
-//      case 1: {
-//        uint32_t slices = (uint32_t)event->value;
-//        if (MIsEditorOpen) {
-//          sa_botage_editor* editor = (sa_botage_editor*)MEditor;
-//          if (editor) {
-//            MIP_WaveformWidget* waveform = editor->MWaveformWidget;
-//            if (waveform) {
-//              waveform->setNumSubGrid(slices);
-//              //editor->redraw(waveform);
-//              waveform->redraw();
-//            }
-//          }
-//        }
-//        break;
-//      }
-//
-//    } // switch
-
     MProcessor.setParamValue(event->param_id,event->value);
-
   }
 
   //----------
@@ -170,18 +128,7 @@ public:
   //----------
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
-//    const clap_process_t* process = AContext->process;
-//    uint32_t length = process->frames_count;
-//    float** inputs  = process->audio_inputs[0].data32;
-//    float** outputs = process->audio_outputs[0].data32;
-//    //gain   = 1.0; // MParameters[0]->getValue();
-//    //left   = 1.0; // MParameters[1]->getValue();
-//    //right  = 1.0; // MParameters[2]->getValue();
-//    MIP_CopyStereoBuffer(outputs,inputs,length);
-//    //MIP_ScaleStereoBuffer(outputs,left*gain,right*gain,length);
-
     MProcessor.processAudioBlock(AContext);
-
   }
 
 //------------------------------
@@ -192,7 +139,6 @@ public:
     if (MEditor && MEditor->isEditorOpen()) {
       sa_botage_editor* editor = (sa_botage_editor*)MEditor;
       editor->updateWaveformWidget(&MProcessor);
-//      MWaveformWidget->redraw();
     }
     MIP_Plugin::on_timer_callback(ATimer);
   }
