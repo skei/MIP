@@ -54,8 +54,8 @@ private:
   double            MWindowScale          = 1.0;
 
   MIP_Widget*       MHoverWidget          = nullptr;
-  //MIP_Widget*       MCapturedMouseWidget  = nullptr;
-  //MIP_Widget*       MCapturedKeysWidget   = nullptr;
+//MIP_Widget*       MCapturedMouseWidget  = nullptr;
+//MIP_Widget*       MCapturedKeysWidget   = nullptr;
   MIP_Widget*       MCapturedWidget       = nullptr;
   MIP_Widget*       MMouseLockedWidget    = nullptr;
 
