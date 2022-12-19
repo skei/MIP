@@ -1049,12 +1049,9 @@ private: // events
         int16_t w = expose->width;
         int16_t h = expose->height;
 
-        //MIP_PRINT;
         beginPaint();
-
         //if (MFillBackground) { fill(x,y,w,h,MBackgroundColor); }
         on_window_paint(x,y,w,h);
-
         endPaint();
 
         break;

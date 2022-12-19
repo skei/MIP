@@ -225,20 +225,24 @@ public:
 public:
 //------------------------------
 
-  // called by plugin
+  // called by:
+  //   plugin.updateEditorParameterValues
+  //   plugin.flushGuiParams
 
   virtual void updateParameter(uint32_t AIndex, double AValue, bool ARedraw=true) {
     MIP_Parameter* parameter = MParameters->getItem(AIndex);
     if (parameter) {
       MIP_Widget* widget = parameter->getWidget();
       if (widget) {
+
+        // widget->setValue(AValue);
         uint32_t num = widget->getNumParameters();
         for (uint32_t i=0; i<num; i++) {
           if (widget->getParameter(i) == parameter) {
             widget->setValue(i,AValue);
           }
         }
-//        widget->setValue(AValue);
+
         if (ARedraw) widget->redraw(/*MIP_WIDGET_REDRAW_VALUE*/);
       }
     }
@@ -251,8 +255,10 @@ public:
     if (parameter) {
       MIP_Widget* widget = parameter->getWidget();
       if (widget) {
-        // [de-]normalize value
+
+        //TODO: like parameters above
         widget->setModulation(AValue);
+
         if (ARedraw) widget->redraw(/*MIP_WIDGET_REDRAW_MODULATION*/);
       }
     }

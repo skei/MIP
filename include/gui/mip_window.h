@@ -22,6 +22,10 @@
   typedef MIP_XcbWindow MIP_ImplementedWindow;
 #endif
 
+//#define MIP_WINDOW_MAX_DIRTY_RECTS 1024
+//#define MIP_WINDOW_TIMER_MS 20
+//#define MIP_WINDOW_TIMER_ID 123
+
 //----------------------------------------------------------------------
 //
 //
@@ -64,6 +68,10 @@ private:
 
   int32_t           MCurrentCursor        = MIP_CURSOR_DEFAULT;
 
+  //
+
+  //MIP_IRect MDirtyRects[MIP_MAX_DIRTY_RECTS] = {0};
+  MIP_Queue<MIP_IRect,MIP_WINDOW_MAX_DIRTY_RECTS> MDirtyRectsQueue = {};
 
 //------------------------------
 protected:
@@ -151,12 +159,45 @@ public:
   }
 
 //------------------------------
+private:
+//------------------------------
+
+  void queueDirtyRect(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) {
+    MIP_IRect rect = {AXpos,AYpos,AWidth,AHeight };
+    MDirtyRectsQueue.write(rect);
+  }
+
+  //----------
+
+  void flushDirtyRects() {
+    MIP_IRect final_rect = {0};
+    MIP_IRect rect = {};
+    while ( MDirtyRectsQueue.read(&rect) ) {
+      //invalidate( (rect.x,rect.y,rect.w,rect.h);
+      final_rect.combine(rect);
+    }
+    if (final_rect.isNotEmpty()) {
+      MIP_ImplementedWindow::invalidate(final_rect.x,final_rect.y,final_rect.w,final_rect.h);
+    }
+  }
+
+
+//------------------------------
 public:
 //------------------------------
 
+  void invalidate(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
+    //MIP_ImplementedWindow::invalidate(AXpos,AYpos,AWidth,AHeight);
+    queueDirtyRect(AXpos,AYpos,AWidth,AHeight);
+    // called in on_window_timer
+    //flushDirtyRects();
+  }
+
+  //----------
+
   void open() override {
     MIP_ImplementedWindow::open();
-    //startTimer(MIP_GUI_TIMER_MS,MIP_GUI_TIMER_ID);
+    startTimer(MIP_WINDOW_TIMER_MS,MIP_WINDOW_TIMER_ID);
     if (MRootWidget) MRootWidget->open(this);
   }
 
@@ -164,7 +205,9 @@ public:
 
   void close() override {
     if (MRootWidget) MRootWidget->close(this);  // crash...
-    //stopTimer(MIP_GUI_TIMER_ID);
+
+    stopTimer(MIP_WINDOW_TIMER_ID);
+
     MIP_ImplementedWindow::close();
   }
 
@@ -209,6 +252,7 @@ public: // window
     if (MRootWidget) {
       MRootWidget->setSize(AWidth,AHeight);
     }
+
   }
 
   //----------
@@ -357,7 +401,7 @@ public: // window
   //----------
 
   void on_window_timer() override {
-    //MIP_Print("\n");
+    flushDirtyRects();
   }
 
 //------------------------------

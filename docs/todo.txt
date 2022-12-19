@@ -15,10 +15,28 @@ GUI
 
 ----------------------------------------------------------------------
 
+* restrict/control redrawing while resizing
+
+  plugin.guitimer (20 ms)
+
+  * read dirty_widgets queue
+  * remove duplicates (value is already set by do_widget_update),
+    we only want to redraw once)
+  * send (combined) invalidate rect
+  * resulting in later expose/wm_paint
+  * and the _actual_ drawing (on_widget_paint)
+  * endPaint results in swapBuffers
+    (do we want vsync?)
+
+  widget.redraw
+  * add widget to window.dirty_widgets
+
+  window.resize
+  * add (or set) root_widget as dirty_widget
+
+
+
 * single parameter, multiple widgets ??
-
-* restrict/control redrawing while resizing (?)
-
 * draggable widgets (reorder effects, processes)
 * resizable widgets
 * container widget

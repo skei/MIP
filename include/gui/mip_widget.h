@@ -377,19 +377,6 @@ public:
       MIP_DRect cliprect = mrect;
       cliprect.overlap(updaterect);
 
-//      for (uint32_t i=0; i<num; i++) {
-//        MIP_Widget* widget = MChildren[i];
-//        if (widget->isVisible()) {
-//          MIP_DRect widgetrect = widget->getRect();
-//          if (widgetrect.intersects(updaterect)) {
-//            //painter->pushClip(widgetrect);
-//            widget->on_widget_paint(AContext);
-//            //painter->popClip();
-//            if (ARecursive) widget->paintChildWidgets(AContext,ARecursive);
-//          } // intersect
-//        } // visible
-//      } // for
-
       for (uint32_t i=0; i<num; i++) {
         MIP_Widget* widget = MChildren[i];
         if (widget->isVisible()) {

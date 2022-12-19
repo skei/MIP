@@ -476,12 +476,12 @@ public: // ext gui
     bool result = MEditor->show();
     if (result) {
       #ifdef MIP_LINUX
-        MGuiTimer.start(MIP_GUI_TIMER_MS);
+        MGuiTimer.start(MIP_EDITOR_TIMER_MS);
       #endif
       #ifdef MIP_WIN32
         MIP_Win32Window* window = MEditor->getWindow();
         HWND hwnd = window->getHandle();
-        MGuiTimer.start(MIP_GUI_TIMER_MS,hwnd);
+        MGuiTimer.start(MIP_EDITOR_TIMER_MS,hwnd);
       #endif
       MIsEditorOpen = true;
     }
@@ -1550,8 +1550,9 @@ public: // generic gui
     //----- sa header -----
 
     const char* name = getClapDescriptor()->name;
-    const char* version = getClapDescriptor()->version;
     if ((name[0] == 's') && (name[1] == 'a') && (name[2] == '_')) name += 3;
+
+//    const char* version = getClapDescriptor()->version;
 
 //    MIP_SAHeaderWidget* saheader = new MIP_SAHeaderWidget(MIP_DRect(0,0,w,80));
 //    editor->appendChildWidget(saheader);

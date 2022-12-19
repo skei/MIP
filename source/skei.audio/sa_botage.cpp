@@ -135,11 +135,14 @@ public:
 //------------------------------
 
   void on_timer_callback(MIP_Timer* ATimer) override {
+
     if (MEditor && MEditor->isEditorOpen()) {
       sa_botage_editor* editor = (sa_botage_editor*)MEditor;
       editor->updateWaveformWidget(&MProcessor);
     }
+
     MIP_Plugin::on_timer_callback(ATimer);
+
   }
 
 };

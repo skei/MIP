@@ -24,13 +24,17 @@
 
   #define MIP_ALIGNMENT_SIMD            16
   #define MIP_ALIGNMENT_CACHE           64
-  #define MIP_GUI_TIMER_MS              20
-  #define MIP_GUI_TIMER_ID              333
+  #define MIP_EDITOR_TIMER_MS           20
+  #define MIP_EDITOR_TIMER_ID           333
   #define MIP_LOGFILE_NAME              "MIP.LOG"
   #define MIP_MAX_PATH_LENGTH           512
   #define MIP_MAX_STRING_LENGTH         256
   #define MIP_OPENGL_VERSION_MAJOR      3
   #define MIP_OPENGL_VERSION_MINOR      2
+  #define MIP_WINDOW_MAX_DIRTY_RECTS    1024
+  #define MIP_WINDOW_TIMER_MS           20
+  #define MIP_WINDOW_TIMER_ID           333
+
 
 //----------------------------------------------------------------------
 //
