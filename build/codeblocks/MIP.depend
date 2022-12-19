@@ -6,7 +6,7 @@
 	"gui/mip_window.h"
 	"gui/mip_widgets.h"
 
-1671468733 /DISKS/sda2/code/git/MIP/include/gui/mip_window.h
+1671472014 /DISKS/sda2/code/git/MIP/include/gui/mip_window.h
 	"base/mip.h"
 	"gui/mip_paint_context.h"
 	"gui/mip_widget.h"
@@ -34,7 +34,7 @@
 	"base/mip_test.h"
 	"plugin/mip_registry.h"
 
-1671468718 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
+1671472354 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
 
 1641519085 /DISKS/sda2/code/git/MIP/include/base/mip_attributes.h
 

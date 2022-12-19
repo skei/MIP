@@ -162,6 +162,11 @@ public:
 private:
 //------------------------------
 
+  /*
+    is it safe to save an entire rect in the queue?
+    (i think so)
+  */
+
   void queueDirtyRect(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) {
     MIP_IRect rect = {AXpos,AYpos,AWidth,AHeight };
     MDirtyRectsQueue.write(rect);
@@ -171,10 +176,10 @@ private:
 
   void flushDirtyRects() {
     MIP_IRect final_rect = {0};
-    MIP_IRect rect = {};
-    while ( MDirtyRectsQueue.read(&rect) ) {
+    MIP_IRect dirty_rect = {0};
+    while ( MDirtyRectsQueue.read(&dirty_rect) ) {
       //invalidate( (rect.x,rect.y,rect.w,rect.h);
-      final_rect.combine(rect);
+      final_rect.combine(dirty_rect);
     }
     if (final_rect.isNotEmpty()) {
       MIP_ImplementedWindow::invalidate(final_rect.x,final_rect.y,final_rect.w,final_rect.h);
@@ -186,14 +191,20 @@ private:
 public:
 //------------------------------
 
+  /*
+    override the real invalidate
+    so we can collect, and update multiple rects regularly (timer)
+  */
+
   void invalidate(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
-    //MIP_ImplementedWindow::invalidate(AXpos,AYpos,AWidth,AHeight);
-    queueDirtyRect(AXpos,AYpos,AWidth,AHeight);
-    // called in on_window_timer
-    //flushDirtyRects();
+    //MIP_ImplementedWindow::invalidate(AXpos,AYpos,AWidth,AHeight);  // not now..
+    queueDirtyRect(AXpos,AYpos,AWidth,AHeight);                       // save it
+    //flushDirtyRects();                                              // called in on_window_timer()
   }
 
   //----------
+
+  // we want to start the timer, and tell the rootwidget we're open
 
   void open() override {
     MIP_ImplementedWindow::open();
@@ -203,11 +214,11 @@ public:
 
   //----------
 
+  // stop the timer we started in open()
+
   void close() override {
     if (MRootWidget) MRootWidget->close(this);  // crash...
-
     stopTimer(MIP_WINDOW_TIMER_ID);
-
     MIP_ImplementedWindow::close();
   }
 
@@ -238,11 +249,11 @@ public: // window
   void on_window_resize(int32_t AWidth, int32_t AHeight) override {
     MWindowPainter->setClipRect(MIP_DRect(0,0,AWidth,AHeight));
 
-//          double scale = 1.0;
-//          double aspect = (double)AWidth / (double)AHeight;
-//          if (aspect >= MAspectRatio) scale = (double)AHeight / (double)MInitialHeight;
-//          else scale = (double)AWidth / (double)MInitialWidth;
-//          MWindow->setWindowScale(scale);
+    //double scale = 1.0;
+    //double aspect = (double)AWidth / (double)AHeight;
+    //if (aspect >= MAspectRatio) scale = (double)AHeight / (double)MInitialHeight;
+    //else scale = (double)AWidth / (double)MInitialWidth;
+    //MWindow->setWindowScale(scale);
 
     if (MInitialWidth > 0) {
       double s = (double)AWidth / (double)MInitialWidth;
@@ -297,9 +308,7 @@ public: // window
     MMouseDragX = AXpos;
     MMouseDragY = AYpos;
     if (MHoverWidget) {
-
-//      MMouseLockedWidget = MHoverWidget;
-
+      //MMouseLockedWidget = MHoverWidget;
       MCapturedWidget = MHoverWidget;
       MHoverWidget->on_widget_mouse_click(AButton,AState,AXpos,AYpos,ATime);
 
@@ -310,9 +319,7 @@ public: // window
 
   void on_window_mouse_release(uint32_t AButton, uint32_t AState, int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
     if (MCapturedWidget) {
-
-//      MMouseLockedWidget = nullptr;
-
+      //MMouseLockedWidget = nullptr;
       MCapturedWidget->on_widget_mouse_release(AButton,AState,AXpos,AYpos,ATime);
       MCapturedWidget = nullptr;
       updateHoverWidget(AXpos,AYpos);
@@ -339,9 +346,7 @@ public: // window
       int32_t deltay = AYpos - MMouseClickedY;
       MMouseDragX += deltax;
       MMouseDragY += deltay;
-
-//      setCursorPos(MMouseClickedX,MMouseClickedY);
-
+      //setCursorPos(MMouseClickedX,MMouseClickedY);
       if (MCapturedWidget) {
         MCapturedWidget->on_widget_mouse_move(AState,MMouseDragX,MMouseDragY,ATime);
       }
@@ -366,11 +371,11 @@ public: // window
     MMousePreviousX = AXpos;
     MMousePreviousY = AYpos;
 
-//    if (MCapturedMouseWidget) MCapturedMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
-//    //else if (MModalMouseWidget) MModalMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
-//    else {
-//      updateHoverWidget(AXpos,AYpos);
-//    }
+    //if (MCapturedMouseWidget) MCapturedMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
+    ////else if (MModalMouseWidget) MModalMouseWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
+    //else {
+    //  updateHoverWidget(AXpos,AYpos);
+    //}
 
   }
 
@@ -523,14 +528,12 @@ private:
   // when releasing mouse cursor after dragging
   // and entering window
 
-//  void updateHoverWidgetFrom(MIP_Widget* AFrom, int32_t AXpos, int32_t AYpos, uint32_t ATime) {
-//    if (MHoverWidget != AFrom) {
-//      if (AFrom) AFrom->on_widget_leave(MHoverWidget,AXpos,AYpos,ATime);
-//      if (MHoverWidget) MHoverWidget->on_widget_enter(AFrom,AXpos,AYpos,ATime);
-//    }
-//  }
-
-
+  //void updateHoverWidgetFrom(MIP_Widget* AFrom, int32_t AXpos, int32_t AYpos, uint32_t ATime) {
+  //  if (MHoverWidget != AFrom) {
+  //    if (AFrom) AFrom->on_widget_leave(MHoverWidget,AXpos,AYpos,ATime);
+  //    if (MHoverWidget) MHoverWidget->on_widget_enter(AFrom,AXpos,AYpos,ATime);
+  //  }
+  //}
 
 };
 

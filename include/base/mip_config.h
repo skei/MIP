@@ -110,7 +110,7 @@
 //#define MIP_WIN32_INVALIDATE_WHEN_RESIZING
 //#define MIP_WINDOW_BUFFERED
 //#define MIP_XCB_USE_STB_TRUETYPE
-//#define MIP_XCB_WAIT_FOR_MAPNOTIFY
+  #define MIP_XCB_WAIT_FOR_MAPNOTIFY
 
 //----------------------------------------------------------------------
 //
