@@ -33,6 +33,8 @@ private:
   MIP_DragValueWidget*  MNumSlicesWidget  = nullptr;
   MIP_TextWidget*       MHintWidget       = nullptr;
 
+  //
+
   MIP_Color MReadPosColor   = MIP_COLOR_BRIGHT_GREEN;
   MIP_Color MWritePosColor  = MIP_COLOR_BRIGHT_RED;
 
@@ -43,7 +45,32 @@ private:
   MIP_Color MLoopColor      = MIP_Color( 0, 1.0, 0, 0.2);
   MIP_Color MSliceColor     = MIP_Color( 0, 0,   0, 0.2);
 
+  //
 
+  MIP_KnobWidget*       MMainProbWidget           = nullptr;
+
+  MIP_ButtonRowWidget*  MMainSlicesWidget         = nullptr;
+  MIP_ButtonRowWidget*  MMainLoopsWidget          = nullptr;
+
+  MIP_KnobWidget*       MRangeSizeWidget          = nullptr;
+  MIP_KnobWidget*       MRangeSpeedWidget         = nullptr;
+  MIP_KnobWidget*       MRangeOffsetWidget        = nullptr;
+  MIP_KnobWidget*       MRangeReverseWidget       = nullptr;
+
+  MIP_KnobWidget*       MLoopSizeWidget           = nullptr;
+  MIP_KnobWidget*       MLoopSpeedWidget          = nullptr;
+  MIP_KnobWidget*       MLoopOffsetWidget         = nullptr;
+  MIP_KnobWidget*       MLoopReverseWidget        = nullptr;
+
+  MIP_DualSliderWidget* MRangeSizeValueWidget     = nullptr;
+  MIP_DualSliderWidget* MRangeSpeedValueWidget    = nullptr;
+  MIP_DualSliderWidget* MRangeOffsetValueWidget   = nullptr;
+  //MIP_DualSliderWidget* MRangeReverseValueWidget  = nullptr;
+
+  MIP_DualSliderWidget* MLoopSizeValueWidget      = nullptr;
+  MIP_DualSliderWidget* MLoopSpeedValueWidget     = nullptr;
+  MIP_DualSliderWidget* MLoopOffsetValueWidget    = nullptr;
+  //MIP_DualSliderWidget* MLoopReverseValueWidget   = nullptr;
 
 //------------------------------
 public:
@@ -151,20 +178,21 @@ public:
     prob_page_button->setBackgroundColor(0.8);
     prob_page_button->setHint("Probabilities");
 
-    MIP_ButtonWidget* seq_page_button = new MIP_ButtonWidget(MIP_DRect(460,160,50,20), "Seq",0);
+    MIP_ButtonWidget* fx_page_button = new MIP_ButtonWidget(MIP_DRect(460,160,50,20), "FX",0);
+    MRootWidget->appendChildWidget(fx_page_button);
+    fx_page_button->setBackgroundColor(0.6);
+    fx_page_button->setHint("Effects");
+
+    MIP_ButtonWidget* seq_page_button = new MIP_ButtonWidget(MIP_DRect(520,160,50,20), "Seq",0);
     MRootWidget->appendChildWidget(seq_page_button);
     seq_page_button->setBackgroundColor(0.6);
     seq_page_button->setHint("Sequence");
 
-    MIP_ButtonWidget* perf_page_button = new MIP_ButtonWidget(MIP_DRect(520,160,50,20), "Perf",0);
+    MIP_ButtonWidget* perf_page_button = new MIP_ButtonWidget(MIP_DRect(580,160,50,20), "Perf",0);
     MRootWidget->appendChildWidget(perf_page_button);
     perf_page_button->setBackgroundColor(0.6);
     perf_page_button->setHint("Perform");
 
-    MIP_ButtonWidget* fx_page_button = new MIP_ButtonWidget(MIP_DRect(580,160,50,20), "FX",0);
-    MRootWidget->appendChildWidget(fx_page_button);
-    fx_page_button->setBackgroundColor(0.6);
-    fx_page_button->setHint("Effects");
 
 //------------------------------
 // 1 prob
@@ -181,19 +209,20 @@ public:
     prob_header->setBackgroundColor(MIP_COLOR_DARK_GRAY);
     prob_header->setTextColor(MIP_COLOR_LIGHT_GRAY);
 
-    MIP_KnobWidget* prob_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,90,90), "%", 0.0);
-    MRootWidget->appendChildWidget(prob_knob);
-    prob_knob->setArcThickness(15);
-    prob_knob->setDrawText(true);
-    prob_knob->setTextSize(20);
-    prob_knob->setDrawValue(true);
-    prob_knob->setValueSize(25);
-    prob_knob->setHint("Main probability");
-    //prob_knob->setSnap(true);
-    //prob_knob->setSnapPos(0.5);
-    //prob_knob->setSnapDist(0.05);
+    //MIP_KnobWidget* prob_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,90,90), "%", 0.0);
+    MMainProbWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,90,90), "%", 0.0);
+    MRootWidget->appendChildWidget(MMainProbWidget);
+    MMainProbWidget->setArcThickness(15);
+    MMainProbWidget->setDrawText(true);
+    MMainProbWidget->setTextSize(20);
+    MMainProbWidget->setDrawValue(true);
+    MMainProbWidget->setValueSize(25);
+    MMainProbWidget->setHint("Main probability");
+    //MMainProbWidget->setSnap(true);
+    //MMainProbWidget->setSnapPos(0.5);
+    //MMainProbWidget->setSnapDist(0.05);
 
-  connect( prob_knob, AParameters->getItem(PAR_RANGE_PROB) );
+  connect( MMainProbWidget, AParameters->getItem(PAR_RANGE_PROB) );
 
     // slices
 
@@ -205,14 +234,15 @@ public:
     prob_slices_label->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     prob_slices_label->setDrawBorder(false);
 
-    MIP_ButtonRowWidget* prob_slices = new MIP_ButtonRowWidget( MIP_DRect(x,y+45,150,20), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
-    MRootWidget->appendChildWidget(prob_slices);
-    prob_slices->selectButton(0);
-    prob_slices->setAllowZeroBits(false);
-    prob_slices->setValueIsBits(true,8);
-    prob_slices->setHint("Number of slices in range");
+    //MIP_ButtonRowWidget* prob_slices = new MIP_ButtonRowWidget( MIP_DRect(x,y+45,150,20), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
+    MMainSlicesWidget = new MIP_ButtonRowWidget( MIP_DRect(x,y+45,150,20), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
+    MRootWidget->appendChildWidget(MMainSlicesWidget);
+    MMainSlicesWidget->selectButton(0);
+    MMainSlicesWidget->setAllowZeroBits(false);
+    MMainSlicesWidget->setValueIsBits(true,8);
+    MMainSlicesWidget->setHint("Number of slices in range");
 
-  connect( prob_slices,  AParameters->getItem(PAR_RANGE_SLICE_COUNT) );
+  connect( MMainSlicesWidget,  AParameters->getItem(PAR_RANGE_SLICE_COUNT) );
 
     // loops
 
@@ -221,14 +251,15 @@ public:
     prob_loops_label->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     prob_loops_label->setDrawBorder(false);
 
-    MIP_ButtonRowWidget* prob_loops = new MIP_ButtonRowWidget( MIP_DRect(x,y+90,150,20), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
-    MRootWidget->appendChildWidget(prob_loops);
-    prob_loops->selectButton(0);
-    prob_loops->setAllowZeroBits(false);
-    prob_loops->setValueIsBits(true,8);
-    prob_loops->setHint("Range subdivision");
+    //MIP_ButtonRowWidget* prob_loops = new MIP_ButtonRowWidget( MIP_DRect(x,y+90,150,20), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
+    MMainLoopsWidget = new MIP_ButtonRowWidget( MIP_DRect(x,y+90,150,20), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
+    MRootWidget->appendChildWidget(MMainLoopsWidget);
+    MMainLoopsWidget->selectButton(0);
+    MMainLoopsWidget->setAllowZeroBits(false);
+    MMainLoopsWidget->setValueIsBits(true,8);
+    MMainLoopsWidget->setHint("Range subdivision");
 
-  connect( prob_loops,  AParameters->getItem(PAR_RANGE_LOOP_COUNT) );
+  connect( MMainLoopsWidget,  AParameters->getItem(PAR_RANGE_LOOP_COUNT) );
 
     // envelopes
 
@@ -278,96 +309,101 @@ public:
 
     // range length
 
-    MIP_KnobWidget* range_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(range_length_knob);
-    range_length_knob->setArcThickness(7);
-    range_length_knob->setHint("Loop length");
-    //range_length_knob->setSnap(true);
-    //range_length_knob->setSnapPos(0.5);
-    //range_length_knob->setSnapDist(0.05);
+    //MIP_KnobWidget* range_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MRangeSizeWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MRootWidget->appendChildWidget(MRangeSizeWidget);
+    MRangeSizeWidget->setArcThickness(7);
+    MRangeSizeWidget->setHint("Loop length");
+    //MRangeSizeWidget->setSnap(true);
+    //MRangeSizeWidget->setSnapPos(0.5);
+    //MRangeSizeWidget->setSnapDist(0.05);
 
-  connect( range_length_knob, AParameters->getItem(PAR_PROB_SIZE_PROB_RANGE) );
+  connect( MRangeSizeWidget, AParameters->getItem(PAR_PROB_SIZE_PROB_RANGE) );
 
     MIP_TextWidget* range_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Size");
     MRootWidget->appendChildWidget(range_length_text);
     range_length_text->setDrawBorder(false);
     range_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    //MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "range", 0.5, 0.5 );
-    MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%");//, 0.5, 0.5 );
-    MRootWidget->appendChildWidget(range_length_range_slider);
-    range_length_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    range_length_range_slider->setHint("Loop min/max");
-//    range_length_range_slider->setSnap(true);
-//    range_length_range_slider->setSnapPos(0.5);
-//    range_length_range_slider->setSnapDist(0.05);
+    //MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%");//, 0.5, 0.5 );
+    MRangeSizeValueWidget = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%");//, 0.5, 0.5 );
+    MRootWidget->appendChildWidget(MRangeSizeValueWidget);
+    MRangeSizeValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    MRangeSizeValueWidget->setHint("Loop min/max");
+//    MRangeSizeValueWidget->setSnap(true);
+//    MRangeSizeValueWidget->setSnapPos(0.5);
+//    MRangeSizeValueWidget->setSnapDist(0.05);
 
+  connect( MRangeSizeValueWidget, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_RANGE) );
+  connect( MRangeSizeValueWidget, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_RANGE) );
 
-  connect( range_length_range_slider, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_RANGE) );
-  connect( range_length_range_slider, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_RANGE) );
-
-    // loop speed
+    // range speed
 
     y = 245;
 
-    MIP_KnobWidget* range_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(range_speed_knob);
-    range_speed_knob->setArcThickness(7);
-    //range_speed_knob->setSnap(true);
-    //range_speed_knob->setSnapPos(0.5);
-    //range_speed_knob->setSnapDist(0.05);
+    //MIP_KnobWidget* range_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MRangeSpeedWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MRootWidget->appendChildWidget(MRangeSpeedWidget);
+    MRangeSpeedWidget->setArcThickness(7);
+    //MRangeSpeedWidget->setSnap(true);
+    //MRangeSpeedWidget->setSnapPos(0.5);
+    //MRangeSpeedWidget->setSnapDist(0.05);
 
-  connect( range_speed_knob, AParameters->getItem(PAR_PROB_SPEED_PROB_RANGE) );
+  connect( MRangeSpeedWidget, AParameters->getItem(PAR_PROB_SPEED_PROB_RANGE) );
 
     MIP_TextWidget* range_speed_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Speed");
     MRootWidget->appendChildWidget(range_speed_text);
     range_speed_text->setDrawBorder(false);
     range_speed_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* range_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(range_speed_range_slider);
-    range_speed_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    //MIP_DualSliderWidget* range_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
+    MRangeSpeedValueWidget= new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
+    MRootWidget->appendChildWidget(MRangeSpeedValueWidget);
+    MRangeSpeedValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
-  connect( range_speed_range_slider, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_RANGE) );
-  connect( range_speed_range_slider, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_RANGE) );
+  connect( MRangeSpeedValueWidget, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_RANGE) );
+  connect( MRangeSpeedValueWidget, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_RANGE) );
 
-    // loop offset
+    // range offset
 
     y = 290;
 
-    MIP_KnobWidget* range_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(range_offset_knob);
-    range_offset_knob->setArcThickness(7);
-    //range_offset_knob->setSnap(true);
-    //range_offset_knob->setSnapPos(0.5);
-    //range_offset_knob->setSnapDist(0.05);
+    //MIP_KnobWidget* range_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MRangeOffsetWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MRootWidget->appendChildWidget(MRangeOffsetWidget);
+    MRangeOffsetWidget->setArcThickness(7);
+    //MRangeOffsetWidget->setSnap(true);
+    //MRangeOffsetWidget->setSnapPos(0.5);
+    //MRangeOffsetWidget->setSnapDist(0.05);
 
-  connect( range_offset_knob, AParameters->getItem(PAR_PROB_OFFSET_PROB_RANGE) );
+  connect( MRangeOffsetWidget, AParameters->getItem(PAR_PROB_OFFSET_PROB_RANGE) );
 
     MIP_TextWidget* range_offset_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Offset");
     MRootWidget->appendChildWidget(range_offset_text);
     range_offset_text->setDrawBorder(false);
     range_offset_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* range_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(range_offset_range_slider);
-    range_offset_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    //MIP_DualSliderWidget* range_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
+    MRangeOffsetValueWidget = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "sl", 0.5, 0.5 );
+    MRootWidget->appendChildWidget(MRangeOffsetValueWidget);
+    MRangeOffsetValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
-  connect( range_offset_range_slider, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_RANGE) );
-  connect( range_offset_range_slider, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_RANGE) );
+  connect( MRangeOffsetValueWidget, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_RANGE) );
+  connect( MRangeOffsetValueWidget, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_RANGE) );
 
     // loop reverse
 
     y = 335;
 
-    MIP_KnobWidget* range_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(range_reverse_knob);
-    range_reverse_knob->setArcThickness(7);
-    //range_reverse_knob->setSnap(true);
-    //ange_reverse_knob->setSnapPos(0.5);
-    //range_reverse_knob->setSnapDist(0.05);
+    //MIP_KnobWidget* range_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MRangeReverseWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MRootWidget->appendChildWidget(MRangeReverseWidget);
+    MRangeReverseWidget->setArcThickness(7);
+    //MRangeReverseWidget->setSnap(true);
+    //MRangeReverseWidget->setSnapPos(0.5);
+    //MRangeReverseWidget->setSnapDist(0.05);
 
-  connect( range_reverse_knob, AParameters->getItem(PAR_PROB_REVERSE_PROB_RANGE) );
+  connect( MRangeReverseWidget, AParameters->getItem(PAR_PROB_REVERSE_PROB_RANGE) );
 
     MIP_TextWidget* range_reverse_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Reverse");
     MRootWidget->appendChildWidget(range_reverse_text);
@@ -425,88 +461,95 @@ public:
 
     // loop length
 
-    MIP_KnobWidget* loop_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(loop_length_knob);
-    loop_length_knob->setArcThickness(7);
-    //loop_length_knob->setAutoHideCursor(false);
-    //loop_length_knob->setAutoLockCursor(false);
+    //MIP_KnobWidget* loop_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MLoopSizeWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MRootWidget->appendChildWidget(MLoopSizeWidget);
+    MLoopSizeWidget->setArcThickness(7);
+    //MLoopSizeWidget->setAutoHideCursor(false);
+    //MLoopSizeWidget->setAutoLockCursor(false);
 
-  connect( loop_length_knob, AParameters->getItem(PAR_PROB_SIZE_PROB_LOOP) );
+  connect( MLoopSizeWidget, AParameters->getItem(PAR_PROB_SIZE_PROB_LOOP) );
 
     MIP_TextWidget* loop_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Size");
     MRootWidget->appendChildWidget(loop_length_text);
     loop_length_text->setDrawBorder(false);
     loop_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* loop_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(loop_length_range_slider);
-    loop_length_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    //MIP_DualSliderWidget* loop_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
+    MLoopSizeValueWidget = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
+    MRootWidget->appendChildWidget(MLoopSizeValueWidget);
+    MLoopSizeValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
-  connect( loop_length_range_slider, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_LOOP) );
-  connect( loop_length_range_slider, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_LOOP) );
+  connect( MLoopSizeValueWidget, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_LOOP) );
+  connect( MLoopSizeValueWidget, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_LOOP) );
 
     // loop speed
 
     y = 245;
 
-    MIP_KnobWidget* loop_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(loop_speed_knob);
-    loop_speed_knob->setArcThickness(7);
-    //loop_speed_knob->setSnap(true);
-    //loop_speed_knob->setSnapPos(0.5);
-    //loop_speed_knob->setSnapDist(0.05);
+    //MIP_KnobWidget* loop_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MLoopSpeedWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MRootWidget->appendChildWidget(MLoopSpeedWidget);
+    MLoopSpeedWidget->setArcThickness(7);
+    //MLoopSpeedWidget->setSnap(true);
+    //MLoopSpeedWidget->setSnapPos(0.5);
+    //MLoopSpeedWidget->setSnapDist(0.05);
 
-  connect( loop_speed_knob, AParameters->getItem(PAR_PROB_SPEED_PROB_LOOP) );
+  connect( MLoopSpeedWidget, AParameters->getItem(PAR_PROB_SPEED_PROB_LOOP) );
 
     MIP_TextWidget* loop_speed_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Speed");
     MRootWidget->appendChildWidget(loop_speed_text);
     loop_speed_text->setDrawBorder(false);
     loop_speed_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* loop_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(loop_speed_range_slider);
-    loop_speed_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    //MIP_DualSliderWidget* loop_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
+    MLoopSpeedValueWidget = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
+    MRootWidget->appendChildWidget(MLoopSpeedValueWidget);
+    MLoopSpeedValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
-  connect( loop_speed_range_slider, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_LOOP) );
-  connect( loop_speed_range_slider, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_LOOP) );
+  connect( MLoopSpeedValueWidget, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_LOOP) );
+  connect( MLoopSpeedValueWidget, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_LOOP) );
 
     // loop offset
 
     y = 290;
 
-    MIP_KnobWidget* loop_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(loop_offset_knob);
-    loop_offset_knob->setArcThickness(7);
-    //loop_offset_knob->setSnap(true);
-    //loop_offset_knob->setSnapPos(0.5);
-    //loop_offset_knob->setSnapDist(0.05);
+    //MIP_KnobWidget* loop_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MLoopOffsetWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MRootWidget->appendChildWidget(MLoopOffsetWidget);
+    MLoopOffsetWidget->setArcThickness(7);
+    //MLoopOffsetWidget->setSnap(true);
+    //MLoopOffsetWidget->setSnapPos(0.5);
+    //MLoopOffsetWidget->setSnapDist(0.05);
 
-  connect( loop_offset_knob, AParameters->getItem(PAR_PROB_OFFSET_PROB_LOOP) );
+  connect( MLoopOffsetWidget, AParameters->getItem(PAR_PROB_OFFSET_PROB_LOOP) );
 
     MIP_TextWidget* loop_offset_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Offset");
     MRootWidget->appendChildWidget(loop_offset_text);
     loop_offset_text->setDrawBorder(false);
     loop_offset_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
-    MIP_DualSliderWidget* loop_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(loop_offset_range_slider);
-    loop_offset_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    //MIP_DualSliderWidget* loop_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
+    MLoopOffsetValueWidget = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
+    MRootWidget->appendChildWidget(MLoopOffsetValueWidget);
+    MLoopOffsetValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
-  connect( loop_offset_range_slider, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_LOOP) );
-  connect( loop_offset_range_slider, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_LOOP) );
+  connect( MLoopOffsetValueWidget, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_LOOP) );
+  connect( MLoopOffsetValueWidget, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_LOOP) );
 
     // loop reverse
 
     y = 335;
 
-    MIP_KnobWidget* loop_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(loop_reverse_knob);
-    loop_reverse_knob->setArcThickness(7);
-    //loop_reverse_knob->setSnap(true);
-    //loop_reverse_knob->setSnapPos(0.5);
-    //loop_reverse_knob->setSnapDist(0.05);
+    //MIP_KnobWidget* loop_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    MLoopReverseWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"sl%", 0.0);
+    MRootWidget->appendChildWidget(MLoopReverseWidget);
+    MLoopReverseWidget->setArcThickness(7);
+    //MLoopReverseWidget->setSnap(true);
+    //MLoopReverseWidget->setSnapPos(0.5);
+    //MLoopReverseWidget->setSnapDist(0.05);
 
-  connect( loop_reverse_knob, AParameters->getItem(PAR_PROB_REVERSE_PROB_LOOP) );
+  connect( MLoopReverseWidget, AParameters->getItem(PAR_PROB_REVERSE_PROB_LOOP) );
 
     MIP_TextWidget* loop_reverse_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Reverse");
     MRootWidget->appendChildWidget(loop_reverse_text);
@@ -679,6 +722,63 @@ public:
     }
 
     MWaveformWidget->redraw();
+
+  }
+
+  //----------
+
+  void updateProbIndicators(sa_botage_processor* processor) {
+
+    MMainProbWidget->setIndicatorValue(processor->rnd_main_prob);
+
+    if (processor->MRange) {
+
+      //MMainProbWidget->setIndicatorValue(processor->rnd_main_prob);
+      MMainSlicesWidget->setIndicatorValue(processor->rnd_main_slices);
+      MMainLoopsWidget->setIndicatorValue(processor->rnd_main_subdiv);
+      //
+      MRangeSizeWidget->setIndicatorValue(processor->rnd_range_size);
+      MRangeSpeedWidget->setIndicatorValue(processor->rnd_range_speed);
+      MRangeOffsetWidget->setIndicatorValue(processor->rnd_range_offset);
+      MRangeReverseWidget->setIndicatorValue(processor->rnd_range_reverse);
+      //
+      MLoopSizeWidget->setIndicatorValue(processor->rnd_loop_size);
+      MLoopSpeedWidget->setIndicatorValue(processor->rnd_loop_speed);
+      MLoopOffsetWidget->setIndicatorValue(processor->rnd_loop_offset);
+      MLoopReverseWidget->setIndicatorValue(processor->rnd_loop_reverse);
+      //
+      MRangeSizeValueWidget->setIndicatorValue(processor->rnd_range_size_value);
+      MRangeSpeedValueWidget->setIndicatorValue(processor->rnd_range_speed_value);
+      MRangeOffsetValueWidget->setIndicatorValue(processor->rnd_range_offset_value);
+      //
+      MLoopSizeValueWidget->setIndicatorValue(processor->rnd_loop_size_value);
+      MLoopSpeedValueWidget->setIndicatorValue(processor->rnd_loop_speed_value);
+      MLoopOffsetValueWidget->setIndicatorValue(processor->rnd_loop_offset_value);
+    }
+
+    else {
+      //MMainProbWidget->setIndicatorValue(-1);
+      MMainSlicesWidget->setIndicatorValue(-1);
+      MMainLoopsWidget->setIndicatorValue(-1);
+      //
+      MRangeSizeWidget->setIndicatorValue(-1);
+      MRangeSpeedWidget->setIndicatorValue(-1);
+      MRangeOffsetWidget->setIndicatorValue(-1);
+      MRangeReverseWidget->setIndicatorValue(-1);
+      //
+      MLoopSizeWidget->setIndicatorValue(-1);
+      MLoopSpeedWidget->setIndicatorValue(-1);
+      MLoopOffsetWidget->setIndicatorValue(-1);
+      MLoopReverseWidget->setIndicatorValue(-1);
+      //
+      MRangeSizeValueWidget->setIndicatorValue(-1);
+      MRangeSpeedValueWidget->setIndicatorValue(-1);
+      MRangeOffsetValueWidget->setIndicatorValue(-1);
+      //
+      MLoopSizeValueWidget->setIndicatorValue(-1);
+      MLoopSpeedValueWidget->setIndicatorValue(-1);
+      MLoopOffsetValueWidget->setIndicatorValue(-1);
+    }
 
   }
 

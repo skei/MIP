@@ -1,8 +1,8 @@
 
-#ifdef MIP_PLUGIN
-  #define MIP_DEBUG_PRINT_SOCKET
-  // nc -U -l -k /tmp/mip.socket
-#endif
+//#ifdef MIP_PLUGIN
+//  #define MIP_DEBUG_PRINT_SOCKET
+//  // nc -U -l -k /tmp/mip.socket
+//#endif
 
 //----------
 
@@ -81,7 +81,6 @@ public:
     appendStereoInput();
     appendStereoOutput();
     sa_botage_init_parameters(this);
-    //setDefaultParameterValues();
     return result;
   }
 
@@ -92,8 +91,6 @@ public:
     MProcessor.activate(sample_rate);
     return true;
   }
-
-
 
   //----------
 
@@ -121,7 +118,6 @@ public:
   void processTransport(const clap_event_transport_t* transport) final {
     MIP_Plugin::processTransport(transport);
     MProcessor.transport(transport->flags);
-
   }
 
   //----------
@@ -135,14 +131,12 @@ public:
 //------------------------------
 
   void on_timer_callback(MIP_Timer* ATimer) override {
-
     if (MEditor && MEditor->isEditorOpen()) {
       sa_botage_editor* editor = (sa_botage_editor*)MEditor;
       editor->updateWaveformWidget(&MProcessor);
+      editor->updateProbIndicators(&MProcessor);
     }
-
     MIP_Plugin::on_timer_callback(ATimer);
-
   }
 
 };

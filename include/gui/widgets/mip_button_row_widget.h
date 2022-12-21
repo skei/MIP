@@ -243,6 +243,11 @@ public:
       c2 = MActiveCellColor;
     }
 
+    if (MIndicatorValue >= 0.0) {
+      int32_t ind = MIP_Trunc(MIndicatorValue) - 1;
+      if (AX == ind) c1 = MIndicatorColor;
+    }
+
     // background
 
     painter->setFillColor(c1);

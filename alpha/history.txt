@@ -1,6 +1,15 @@
-0.1.0-alpha1 (17.dec.2022)
-* 'official'
 
-0.1.1
-* events and repainting handled better
+alpha 1 (17.dec.2022)
+* initial version
+
+alpha 2 (19.dec.2022)
+* much improved opengl repainting and resizing
+* fixed x11 gui initially coming up blank
+
+alpha 3 (20.dec.2022)
+* gui shows probabilities/randomization values
+
+alpha 4 /21.dec.2022)
+* slice offset now doesn't reset during loop wraparound
+* slice offset adjustments in slices (not %)
 

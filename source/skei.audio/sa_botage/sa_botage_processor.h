@@ -60,6 +60,7 @@ private:
   double    MLoopFract                = 0.0;
 
   bool      MLoopWrapped              = false;
+  double    MCurrentRangeOffset       = 0.0;
 
 //------------------------------
 private:
@@ -114,6 +115,34 @@ private:
   double    par_prob_fx_prob_loop       = 0.0;
   double    par_prob_fx_min_loop        = 0.0;
   double    par_prob_fx_max_loop        = 0.0;
+
+//------------------------------
+private:
+//------------------------------
+
+  double rnd_main_prob            = 0.0;
+  double rnd_main_slices          = 0.0;
+  double rnd_main_subdiv          = 0.0;
+
+  double rnd_range_size           = 0.0;
+  double rnd_range_speed          = 0.0;
+  double rnd_range_offset         = 0.0;
+  double rnd_range_reverse        = 0.0;
+
+  double rnd_loop_size            = 0.0;
+  double rnd_loop_speed           = 0.0;
+  double rnd_loop_offset          = 0.0;
+  double rnd_loop_reverse         = 0.0;
+
+  double rnd_range_size_value     = 0.0;
+  double rnd_range_speed_value    = 0.0;
+  double rnd_range_offset_value   = 0.0;
+  double rnd_range_reverse_value  = 0.0;
+
+  double rnd_loop_size_value      = 0.0;
+  double rnd_loop_speed_value     = 0.0;
+  double rnd_loop_offset_value    = 0.0;
+  double rnd_loop_reverse_value   = 0.0;
 
 //------------------------------
 public:
@@ -381,9 +410,15 @@ private:
       MLoop = false;
       // range
       //if (MIP_RandomRange(0.0, 0.999) < par_range_prob) {
-      if (MIP_Random() < par_range_prob) {
-        startRange();
-      }
+
+      //if (MIP_Random() < par_range_prob) {
+      //  startRange();
+      //}
+
+      rnd_main_prob = MIP_Random();
+
+      if (rnd_main_prob < par_range_prob) startRange();
+
     }
   }
 
@@ -441,6 +476,9 @@ private:
     MReadSpeed    = 1.0;
     handleLoopStarting();
 
+    rnd_main_slices = num_slices;
+    rnd_main_subdiv = num_loops;
+
   }
 
   //----------
@@ -468,13 +506,14 @@ private:
 
   void handleLoopStarting() {
 
-    float rnd = 0.0;
+    //float rnd = 0.0;
 
     // size
-    rnd = MIP_Random();
-    if (rnd < par_prob_size_prob_range) {
+    rnd_range_size = MIP_Random();
+    if (rnd_range_size < par_prob_size_prob_range) {
       double s = par_prob_size_max_range - par_prob_size_min_range;
-      s *= MIP_Random();
+      rnd_range_size_value = MIP_Random();
+      s *= rnd_range_size_value;
       s += par_prob_size_min_range;
       float n = powf(0.5,-s);
       MLoopLength *= n;
@@ -482,10 +521,11 @@ private:
     }
 
     // speed
-    rnd = MIP_Random();
-    if (rnd < par_prob_speed_prob_range) {
+    rnd_range_speed = MIP_Random();
+    if (rnd_range_speed < par_prob_speed_prob_range) {
       double s = par_prob_speed_max_range - par_prob_speed_min_range;
-      s *= MIP_Random();
+      rnd_range_speed_value = MIP_Random();
+      s *= rnd_range_speed_value;
       s += par_prob_speed_min_range;
       float n = powf(0.5,-s);
       MReadSpeed *= n;
@@ -493,20 +533,25 @@ private:
     }
 
     // offset
-    rnd = MIP_Random();
-    if (rnd < par_prob_offset_prob_range) {
+
+    MCurrentRangeOffset = 0.0;
+
+    rnd_range_offset = MIP_Random();
+    if (rnd_range_offset < par_prob_offset_prob_range) {
       double s = par_prob_offset_max_range - par_prob_offset_min_range;
-      s *= MIP_Random();
+      rnd_range_offset_value = MIP_Random();
+      s *= rnd_range_offset_value;
       s += par_prob_offset_min_range;
-      s *= (double)(par_num_beats * par_num_slices);
+      s *= 8.9; //(double)(par_num_beats * par_num_slices);
       s = MIP_Trunc(s);
-      //MIP_Print("s %.3f\n",s);
-      MReadPos += (s * MSliceLength);
+      MCurrentRangeOffset = (s * MSliceLength);
+      //MReadPos += (s * MSliceLength);
+      MReadPos += MCurrentRangeOffset;
     }
 
     // reverse
-    rnd = MIP_Random();
-    if (rnd < par_prob_reverse_prob_range) {
+    rnd_range_reverse = MIP_Random();
+    if (rnd_range_reverse < par_prob_reverse_prob_range) {
       MReadSpeed *= -1.0;
       if (MReadSpeed < 0.0) MReadPos += MLoopLength;
       else MReadPos -= MLoopLength;
@@ -529,15 +574,17 @@ private:
     MLoopCount = 0;
 
     if (MReadSpeed < 0.0) MReadPos = MLoopStart + MLoopLength;
-    else MReadPos = MLoopStart;
+    //else MReadPos = MLoopStart;
+    else MReadPos = MLoopStart + MCurrentRangeOffset;
 
-    float rnd = 0.0;
+    //float rnd = 0.0;
 
     // size
-    rnd = MIP_Random();
-    if (rnd < par_prob_size_prob_loop) {
+    rnd_loop_size = MIP_Random();
+    if (rnd_loop_size < par_prob_size_prob_loop) {
       double s = par_prob_size_max_loop - par_prob_size_min_loop;
-      s *= MIP_Random();
+      rnd_loop_size_value = MIP_Random();
+      s *= rnd_loop_size_value;
       s += par_prob_size_min_loop;
       float n = powf(0.5,-s);
       MLoopLength *= n;
@@ -545,10 +592,11 @@ private:
     }
 
     // speed
-    rnd = MIP_Random();
-    if (rnd < par_prob_speed_prob_loop) {
+    rnd_loop_speed = MIP_Random();
+    if (rnd_loop_speed < par_prob_speed_prob_loop) {
       double s = par_prob_speed_max_loop - par_prob_speed_min_loop;
-      s *= MIP_Random();
+      rnd_loop_speed_value = MIP_Random();
+      s *= rnd_loop_speed_value;
       s += par_prob_speed_min_loop;
       float n = powf(0.5,-s);
       MReadSpeed *= n;
@@ -556,21 +604,22 @@ private:
     }
 
     // offset
-    rnd = MIP_Random();
-    if (rnd < par_prob_offset_prob_loop) {
+    rnd_loop_offset = MIP_Random();
+    if (rnd_loop_offset < par_prob_offset_prob_loop) {
       double s = par_prob_offset_max_loop - par_prob_offset_min_loop;
-      s *= MIP_Random();
+      rnd_loop_offset_value = MIP_Random();
+      s *= rnd_loop_offset_value;
       s += par_prob_offset_min_loop;
-      s *= (double)(par_num_beats * par_num_slices);
+      s *= 8.9; // (double)(par_num_beats * par_num_slices);
       s = MIP_Trunc(s);
       //MIP_Print("s %.3f\n",s);
       MReadPos += (s * MSliceLength);
     }
 
     // reverse
-    rnd = MIP_Random();
+    rnd_loop_reverse = MIP_Random();
     //MIP_Print("rnd %.3f (par_prob_offset_prob_range %.3f)\n",rnd,par_prob_reverse_prob_range);
-    if (rnd < par_prob_reverse_prob_loop) {
+    if (rnd_loop_reverse < par_prob_reverse_prob_loop) {
       //MIP_Print("Reverse!\n");
       MReadSpeed *= -1.0;
       if (MReadSpeed < 0.0) MReadPos += MLoopLength;

@@ -108,6 +108,9 @@ protected:
   MIP_Color           MDisabledColor    = MIP_Color(0.5);
   double              MDisabledAlpha    = 0.5;
 
+  double              MIndicatorValue   = 0.0;
+  MIP_Color           MIndicatorColor   = MIP_Color(1,0,0,0.8);
+
 //------------------------------
 public:
 //------------------------------
@@ -205,6 +208,12 @@ public:
 
   virtual void setDisabledColor(MIP_Color AColor) { MDisabledColor = AColor; }
   virtual void setDisabledAlpha(double AAlpha)      { MDisabledAlpha = AAlpha; }
+
+
+  virtual void setIndicatorValue(double AValue, bool ARedraw=true) {
+    MIndicatorValue = AValue;
+    if (ARedraw) do_widget_redraw(this);
+  }
 
 //------------------------------
 public:

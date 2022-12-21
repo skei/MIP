@@ -644,7 +644,7 @@
 	"gui/mip_paint_source.h"
 	"gui/mip_paint_target.h"
 
-1671466600 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
+1671544042 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
 	"base/mip.h"
 	"gui/base/mip_base_window.h"
 	"gui/mip_paint_context.h"
@@ -707,7 +707,7 @@
 	"base/mip.h"
 	"gui/mip_widget.h"
 
-1671071589 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob_widget.h
+1671544089 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_drag_value_widget.h"
 
@@ -791,7 +791,7 @@
 	"gui/mip_paint_context.h"
 	"gui/widgets/mip_panel_widget.h"
 
-1671229312 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_button_row_widget.h
+1671542782 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_button_row_widget.h
 	"gui/widgets/mip_grid_widget.h"
 
 1671111088 /DISKS/sda2/code/git/MIP/include/gui/mip_widgets.h
@@ -841,7 +841,7 @@
 
 1668352915 /DISKS/sda2/code/git/MIP/include/plugin/exe/mip_exe.h
 
-1671380115 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
+1671540644 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
 	"plugin/mip_plugin.h"
 	"audio/mip_audio_utils.h"
 	"sa_botage/sa_botage_parameters.h"
@@ -850,7 +850,7 @@
 	"sa_botage/sa_botage_widgets.h"
 	"plugin/mip_entry.h"
 
-1671274155 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
+1671555772 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
 	"base/mip.h"
 	"gui/mip_widgets.h"
 	"plugin/mip_editor.h"
@@ -890,7 +890,7 @@
 	"gui/mip_paint_context.h"
 	"gui/widgets/mip_panel_widget.h"
 
-1671273863 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_dual_slider_widget.h
+1671555590 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_dual_slider_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_slider_widget.h"
 
@@ -900,7 +900,7 @@
 	"plugin/mip_plugin.h"
 	"mip.h"
 
-1671230452 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_processor.h
+1671555491 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_processor.h
 	"base/mip.h"
 
 1670786280 /DISKS/sda2/code/git/MIP/build/test/plug2.cpp

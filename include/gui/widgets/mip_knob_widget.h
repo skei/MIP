@@ -87,17 +87,20 @@ public:
     double r  = (mrect.w - thick)  * 0.5;
     //double br = (mrect.w - bthick) * 0.5;
 
-    double a1 = 0.35 + (value * 0.8);
-    double a2 =        (value * 0.8);
-    a1 *= MIP_PI2;
-    a2 *= MIP_PI2;
+    // draw background arc
 
     MIP_Color color = MArcBackColor;
     if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
     painter->setDrawColor(color);
-
     painter->setLineWidth(thick);
     painter->drawArc(cx,cy,r,0.15*MIP_PI2,0.8*MIP_PI2);
+
+    // draw value arc
+
+    double a1 = 0.35 + (value * 0.8);
+    double a2 =        (value * 0.8);
+    a1 *= MIP_PI2;
+    a2 *= MIP_PI2;
 
     painter->setLineWidth(thick);
 
@@ -114,11 +117,21 @@ public:
 
     painter->drawArc(cx,cy,r,a1,a2);
 
-//    double x = mrect.x;
-//    double y = mrect.y;
-//    double w = mrect.w * MValue;
-//    double h = mrect.h;
-//    painter->fillRect(x,y,w,h);
+    // draw indicator
+
+    if (!isDisabled()) {
+      if (MIndicatorValue >= 0.0) {
+        a1 = 0.35 + (MIndicatorValue * 0.8);
+        a2 = 0.02;//       (MIndicatorValue * 0.8);
+        a1 *= MIP_PI2;
+        a2 *= MIP_PI2;
+        painter->setLineWidth(thick);
+        color = MIndicatorColor;
+        painter->setDrawColor(color);
+        painter->drawArc(cx,cy,r,a1,a2);
+      }
+    }
+
   }
 
 //------------------------------

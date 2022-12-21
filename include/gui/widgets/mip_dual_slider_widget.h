@@ -160,6 +160,21 @@ public:
         break;
       }
     }
+
+    // draw indicator
+
+    if (!isDisabled()) {
+      if (MIndicatorValue >= 0.0) {
+        double v = MIndicatorValue; // 0..1
+        //v *= mrect.w;
+        v *= w;
+        painter->setLineWidth( 2.0 * S);
+        color = MIndicatorColor;
+        painter->setDrawColor(color);
+        painter->drawLine(p1+v,y,p1+v,mrect.y2());
+      }
+    }
+
   }
 
   //----------
