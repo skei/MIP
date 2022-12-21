@@ -742,21 +742,34 @@ public:
       MRangeOffsetWidget->setIndicatorValue(processor->rnd_range_offset);
       MRangeReverseWidget->setIndicatorValue(processor->rnd_range_reverse);
       //
-      MLoopSizeWidget->setIndicatorValue(processor->rnd_loop_size);
-      MLoopSpeedWidget->setIndicatorValue(processor->rnd_loop_speed);
-      MLoopOffsetWidget->setIndicatorValue(processor->rnd_loop_offset);
-      MLoopReverseWidget->setIndicatorValue(processor->rnd_loop_reverse);
-      //
       MRangeSizeValueWidget->setIndicatorValue(processor->rnd_range_size_value);
       MRangeSpeedValueWidget->setIndicatorValue(processor->rnd_range_speed_value);
       MRangeOffsetValueWidget->setIndicatorValue(processor->rnd_range_offset_value);
-      //
-      MLoopSizeValueWidget->setIndicatorValue(processor->rnd_loop_size_value);
-      MLoopSpeedValueWidget->setIndicatorValue(processor->rnd_loop_speed_value);
-      MLoopOffsetValueWidget->setIndicatorValue(processor->rnd_loop_offset_value);
+
+      if (processor->MLoopWrapped) {
+        MLoopSizeWidget->setIndicatorValue(processor->rnd_loop_size);
+        MLoopSpeedWidget->setIndicatorValue(processor->rnd_loop_speed);
+        MLoopOffsetWidget->setIndicatorValue(processor->rnd_loop_offset);
+        MLoopReverseWidget->setIndicatorValue(processor->rnd_loop_reverse);
+        //
+        MLoopSizeValueWidget->setIndicatorValue(processor->rnd_loop_size_value);
+        MLoopSpeedValueWidget->setIndicatorValue(processor->rnd_loop_speed_value);
+        MLoopOffsetValueWidget->setIndicatorValue(processor->rnd_loop_offset_value);
+      }
+      else {
+        MLoopSizeWidget->setIndicatorValue(-1);
+        MLoopSpeedWidget->setIndicatorValue(-1);
+        MLoopOffsetWidget->setIndicatorValue(-1);
+        MLoopReverseWidget->setIndicatorValue(-1);
+        //
+        MLoopSizeValueWidget->setIndicatorValue(-1);
+        MLoopSpeedValueWidget->setIndicatorValue(-1);
+        MLoopOffsetValueWidget->setIndicatorValue(-1);
+      }
     }
 
-    else {
+    else { // ! range
+
       //MMainProbWidget->setIndicatorValue(-1);
       MMainSlicesWidget->setIndicatorValue(-1);
       MMainLoopsWidget->setIndicatorValue(-1);
@@ -766,18 +779,19 @@ public:
       MRangeOffsetWidget->setIndicatorValue(-1);
       MRangeReverseWidget->setIndicatorValue(-1);
       //
+      MRangeSizeValueWidget->setIndicatorValue(-1);
+      MRangeSpeedValueWidget->setIndicatorValue(-1);
+      MRangeOffsetValueWidget->setIndicatorValue(-1);
+      //
       MLoopSizeWidget->setIndicatorValue(-1);
       MLoopSpeedWidget->setIndicatorValue(-1);
       MLoopOffsetWidget->setIndicatorValue(-1);
       MLoopReverseWidget->setIndicatorValue(-1);
       //
-      MRangeSizeValueWidget->setIndicatorValue(-1);
-      MRangeSpeedValueWidget->setIndicatorValue(-1);
-      MRangeOffsetValueWidget->setIndicatorValue(-1);
-      //
       MLoopSizeValueWidget->setIndicatorValue(-1);
       MLoopSpeedValueWidget->setIndicatorValue(-1);
       MLoopOffsetValueWidget->setIndicatorValue(-1);
+
     }
 
   }

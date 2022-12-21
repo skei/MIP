@@ -160,6 +160,12 @@ public:
 public:
 //------------------------------
 
+  bool hasWrapped() { return MLoopWrapped; }
+
+//------------------------------
+public:
+//------------------------------
+
   void activate(double sample_rate) {
     MSampleRate = sample_rate;
   }
