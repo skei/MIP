@@ -16,7 +16,7 @@
   #define MIP_PAINTER_NANOVG
 #endif
 
-#define MIP_PLUGIN_GENERIC_EDITOR
+//#define MIP_PLUGIN_GENERIC_EDITOR
 
 #ifndef MIP_EXE
   //#define MIP_DEBUG_PRINT_SOCKET
@@ -29,14 +29,19 @@
 #include "base/mip.h"
 #include "plugin/mip_plugin.h"
 
+//#include "../../data/cred_img.h"
+//#include "../../data/botage_img.h"
+
 //----------------------------------------------------------------------
 //
 //
 //
 //----------------------------------------------------------------------
 
-#define EDITOR_WIDTH  250
-#define EDITOR_HEIGHT 100
+#define EDITOR_WIDTH    400
+#define EDITOR_HEIGHT   190
+
+#define SA_CRED_VERSION "0.0.1"
 
 //----------
 
@@ -160,9 +165,13 @@ public: // plugin
       MIP_PanelWidget* MRoot = new MIP_PanelWidget( MIP_DRect(0,0,EDITOR_WIDTH,EDITOR_HEIGHT) );
       MEditor->setRootWidget(MRoot);
 
-      MIP_SliderWidget* slider1 = new MIP_SliderWidget( MIP_DRect(10,10,230,20), "Value1");
-      MIP_SliderWidget* slider2 = new MIP_SliderWidget( MIP_DRect(10,40,230,20), "Value2");
-      MIP_SliderWidget* slider3 = new MIP_SliderWidget( MIP_DRect(10,70,230,20), "Modulo");
+      //MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,EDITOR_WIDTH,80),SA_CRED_VERSION,(void*)botage_img,botage_img_size);
+      MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,EDITOR_WIDTH,80),SA_CRED_VERSION,nullptr,0);
+      MRoot->appendChildWidget(header);
+
+      MIP_SliderWidget* slider1 = new MIP_SliderWidget( MIP_DRect(10,100,380,20), "Value1");
+      MIP_SliderWidget* slider2 = new MIP_SliderWidget( MIP_DRect(10,130,380,20), "Value2");
+      MIP_SliderWidget* slider3 = new MIP_SliderWidget( MIP_DRect(10,160,380,20), "Modulo");
 
       MRoot->appendChildWidget(slider1);
       MRoot->appendChildWidget(slider2);

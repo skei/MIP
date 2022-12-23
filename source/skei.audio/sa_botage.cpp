@@ -31,7 +31,7 @@
 #include "sa_botage/sa_botage_parameters.h"
 #include "sa_botage/sa_botage_processor.h"
 #include "sa_botage/sa_botage_editor.h"
-#include "sa_botage/sa_botage_widgets.h"
+//#include "sa_botage/sa_botage_widgets.h"
 
 //----------------------------------------------------------------------
 //

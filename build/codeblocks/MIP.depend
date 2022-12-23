@@ -1,6 +1,6 @@
 # depslib dependency file v1.0
-1671793194 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../source/skei.audio/sa_cred.cpp"
+1671825469 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../source/skei.audio/sa_bulum.cpp"
 
 1670414796 /DISKS/sda2/code/git/MIP/build/test/test1.cpp
 	"gui/mip_window.h"
@@ -711,7 +711,7 @@
 	"base/mip.h"
 	"gui/widgets/mip_drag_value_widget.h"
 
-1671281878 /DISKS/sda2/code/git/MIP/include/plugin/mip_parameter.h
+1671825866 /DISKS/sda2/code/git/MIP/include/plugin/mip_parameter.h
 	"base/mip.h"
 	"plugin/clap/mip_clap.h"
 
@@ -721,7 +721,7 @@
 	"gui/mip_widgets.h"
 	"plugin/mip_entry.h"
 
-1671793415 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
+1671812493 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
 	"base/mip.h"
 	"base/system/mip_timer.h"
 	"plugin/mip_parameter.h"
@@ -794,7 +794,7 @@
 1671542782 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_button_row_widget.h
 	"gui/widgets/mip_grid_widget.h"
 
-1671750562 /DISKS/sda2/code/git/MIP/include/gui/mip_widgets.h
+1671812634 /DISKS/sda2/code/git/MIP/include/gui/mip_widgets.h
 	"base/mip.h"
 	"gui/mip_widget.h"
 	"gui/widgets/mip_button_widget.h"
@@ -811,6 +811,7 @@
 	"gui/widgets/mip_menu_item_widget.h"
 	"gui/widgets/mip_panel_widget.h"
 	"gui/widgets/mip_pages_widget.h"
+	"gui/widgets/mip_sa_header_widget.h"
 	"gui/widgets/mip_selector_widget.h"
 	"gui/widgets/mip_slider_widget.h"
 	"gui/widgets/mip_text_widget.h"
@@ -842,20 +843,19 @@
 
 1668352915 /DISKS/sda2/code/git/MIP/include/plugin/exe/mip_exe.h
 
-1671708825 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
+1671816293 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
 	"plugin/mip_plugin.h"
 	"audio/mip_audio_utils.h"
 	"sa_botage/sa_botage_parameters.h"
 	"sa_botage/sa_botage_processor.h"
 	"sa_botage/sa_botage_editor.h"
-	"sa_botage/sa_botage_widgets.h"
 	"plugin/mip_entry.h"
 
-1671752587 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
+1671816688 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
 	"base/mip.h"
 	"gui/mip_widgets.h"
 	"plugin/mip_editor.h"
-	"sa_botage_widgets.h"
+	"../../../data/botage_img.h"
 
 1670527678 /DISKS/sda2/code/git/MIP/source/skei.audio/img/sa_img.h
 
@@ -932,8 +932,25 @@
 	"gui/mip_widget.h"
 	"gui/mip_paint_context.h"
 
-1671794617 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_cred.cpp
+1671817025 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_cred.cpp
 	"base/mip.h"
+	"plugin/mip_plugin.h"
+	"plugin/mip_entry.h"
+
+1671817011 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_sa_header_widget.h
+	"base/mip.h"
+	"gui/widgets/mip_image_widget.h"
+	"gui/widgets/mip_panel_widget.h"
+	"../../../data/sa_img.h"
+	"../../../data/mip_img.h"
+
+1670527678 /DISKS/sda2/code/git/MIP/data/sa_img.h
+
+1670527700 /DISKS/sda2/code/git/MIP/data/botage_img.h
+
+1670527716 /DISKS/sda2/code/git/MIP/data/mip_img.h
+
+1671826021 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_bulum.cpp
 	"plugin/mip_plugin.h"
 	"plugin/mip_entry.h"
 

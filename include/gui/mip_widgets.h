@@ -19,6 +19,7 @@
 #include "gui/widgets/mip_menu_item_widget.h"
 #include "gui/widgets/mip_panel_widget.h"
 #include "gui/widgets/mip_pages_widget.h"
+#include "gui/widgets/mip_sa_header_widget.h"
 #include "gui/widgets/mip_selector_widget.h"
 #include "gui/widgets/mip_slider_widget.h"
 #include "gui/widgets/mip_text_widget.h"

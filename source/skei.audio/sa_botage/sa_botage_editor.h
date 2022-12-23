@@ -8,7 +8,8 @@
 
 //----------
 
-#include "sa_botage_widgets.h"
+//#include "sa_botage_widgets.h"
+#include "../../../data/botage_img.h"
 
 //----------------------------------------------------------------------
 
@@ -100,7 +101,8 @@ public:
 // header
 //------------------------------
 
-    sa_botage_header* header  = new sa_botage_header(MIP_DRect(0,0,width,SA_BOTAGE_HEADER_HEIGHT),SA_BOTAGE_VERSION);
+    //sa_botage_header* header  = new sa_botage_header(MIP_DRect(0,0,width,SA_BOTAGE_HEADER_HEIGHT),SA_BOTAGE_VERSION);
+    MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,width,80),SA_BOTAGE_VERSION,(void*)botage_img,botage_img_size);
     MRootWidget->appendChildWidget(header);
 
     // icons

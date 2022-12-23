@@ -243,8 +243,8 @@ private:
 public:
 //------------------------------
 
-  MIP_TextParameter(const char* AName, double AValue, const char** AText)
-  : MIP_IntParameter(AName,AValue) {
+  MIP_TextParameter(const char* AName, double AValue=0.0, double AMin=0.0, double AMax=1.0, const char** AText=nullptr)
+  : MIP_IntParameter(AName,AValue,AMin,AMax) {
     MText = AText;
   }
 

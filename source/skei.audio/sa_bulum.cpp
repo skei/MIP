@@ -2,8 +2,6 @@
 #define sa_bulum_included
 //----------------------------------------------------------------------
 
-#define MIP_GUI_XCB
-#define MIP_PAINTER_NANOVG
 #define MIP_PLUGIN_GENERIC_EDITOR
 
 #include "plugin/mip_plugin.h"
@@ -141,21 +139,23 @@ public: // plugin
     //    appendParameter( new MIP_FloatParameter( "dur jit",     0.2             ));
 
   bool init() final {
-    appendAudioInputPort( &sa_bulum_audio_input_ports[0] );
-    appendAudioOutputPort(&sa_bulum_audio_output_ports[0]);
-    appendParameter(new MIP_Parameter(     0, "Master",       "", -60,  6,      -6,   CLAP_PARAM_IS_AUTOMATABLE             ));
-    appendParameter(new MIP_IntParameter(  1, "Num Grains",   "",  1,   100,    10,   CLAP_PARAM_IS_AUTOMATABLE             ));
-    appendParameter(new MIP_Parameter(     2, "Buffer Size",  "",  1,   1000,   1000, CLAP_PARAM_IS_AUTOMATABLE             ));
-    appendParameter(new MIP_TextParameter( 3, "Freeze",       "",  0,   1,      0,    CLAP_PARAM_IS_AUTOMATABLE, freeze_txt ));
-    appendParameter(new MIP_Parameter(     4, "Grain Dist",   "",  0,   100,    20,   CLAP_PARAM_IS_AUTOMATABLE             ));
-    appendParameter(new MIP_Parameter(     5, "Grain Size",   "",  1,   100,    30,   CLAP_PARAM_IS_AUTOMATABLE             ));
-    appendParameter(new MIP_Parameter(     6, "Grain Dur",    "",  1,   1000,   300,  CLAP_PARAM_IS_AUTOMATABLE             ));
-    appendParameter(new MIP_Parameter(     7, "Grain Pitch",  "",  0,   10,     1,    CLAP_PARAM_IS_AUTOMATABLE             ));
-    appendParameter(new MIP_Parameter(     8, "Grain Env",    "",  0,   1,      0,    CLAP_PARAM_IS_AUTOMATABLE             ));
-    appendParameter(new MIP_Parameter(     9, "Dist Jitter",  "",  0,   1,      0.2,  CLAP_PARAM_IS_AUTOMATABLE             ));
-    appendParameter(new MIP_Parameter(    10, "Pitch Jitter", "",  0,   1,      0.2,  CLAP_PARAM_IS_AUTOMATABLE             ));
-    appendParameter(new MIP_Parameter(    11, "Size Jitter",  "",  0,   1,      0.2,  CLAP_PARAM_IS_AUTOMATABLE             ));
-    appendParameter(new MIP_Parameter(    12, "Dur Jitter",   "",  0,   1,      0.2,  CLAP_PARAM_IS_AUTOMATABLE             ));
+    //appendAudioInputPort( &sa_bulum_audio_input_ports[0] );
+    //appendAudioOutputPort(&sa_bulum_audio_output_ports[0]);
+    appendStereoInput();
+    appendStereoOutput();
+    appendParameter(new MIP_Parameter(      "Master",        -6,   -60,  6    ));
+    appendParameter(new MIP_IntParameter(   "Num Grains",     10,   1,   100  ));
+    appendParameter(new MIP_Parameter(      "Buffer Size",    1000, 1,   1000 ));
+    appendParameter(new MIP_TextParameter(  "Freeze",         0,    0,   1,   freeze_txt ));
+    appendParameter(new MIP_Parameter(      "Grain Dist",     20,   0,   100  ));
+    appendParameter(new MIP_Parameter(      "Grain Size",     30,   1,   100  ));
+    appendParameter(new MIP_Parameter(      "Grain Dur",      300,  1,   1000 ));
+    appendParameter(new MIP_Parameter(      "Grain Pitch",    1,    0,   10   ));
+    appendParameter(new MIP_Parameter(      "Grain Env",      0,    0,   1    ));
+    appendParameter(new MIP_Parameter(      "Dist Jitter",    0.2,  0,   1    ));
+    appendParameter(new MIP_Parameter(      "Pitch Jitter",   0.2,  0,   1    ));
+    appendParameter(new MIP_Parameter(      "Size Jitter",    0.2,  0,   1    ));
+    appendParameter(new MIP_Parameter(      "Dur Jitter",     0.2,  0,   1    ));
     bool result = MIP_Plugin::init();
     if (result) {
       setDefaultParameterValues();
@@ -324,12 +324,14 @@ private:
 //
 //----------------------------------------------------------------------
 
-#include "plugin/clap/mip_clap_entry.h"
-#include "plugin/exe/mip_exe_entry.h"
+//#include "plugin/clap/mip_clap_entry.h"
+//#include "plugin/exe/mip_exe_entry.h"
 //#include "plugin/vst2/mip_vst2_entry.h"
 //#include "plugin/vst3/mip_vst3_entry.h"
 
 //----------
+
+#include "plugin/mip_entry.h"
 
 MIP_DEFAULT_ENTRY(sa_bulum_descriptor,sa_bulum_plugin);
 
