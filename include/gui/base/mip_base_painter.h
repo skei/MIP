@@ -70,6 +70,10 @@ public:
 //virtual void    setFillImage(int32_t AImage, double alpha=1.0, double angle=0.0) {}
   virtual void    setFillImage(int32_t AImage, double xofs, double yofs, double xscale, double yscale, double AAlpha=1.0, double AAngle=0.0) {}
 
+  virtual void*   createRenderBuffer(uint32_t AWidth, uint32_t AHeight) { return nullptr; }
+  virtual void    deleteRenderBuffer(void* buffer) {}
+  virtual void    selectRenderBuffer(void* buffer) {}
+  virtual int32_t getImageFromRenderBuffer(void* buffer) { return -1; }
 
 };
 

@@ -6,6 +6,9 @@
 
 //----------
 
+#define MIP_LOGGING
+#define MIP_LOG_APPEND
+
 #define SA_BOTAGE_EDITOR_WIDTH  640
 #define SA_BOTAGE_EDITOR_HEIGHT 480
 
@@ -16,7 +19,8 @@
 #endif
 
 #define SA_BOTAGE_VENDOR        "skei.audio"
-#define SA_BOTAGE_VERSION       "0.1.5"
+#define SA_BOTAGE_VERSION       "0.1.6"
+
 //----------------------------------------------------------------------
 
 #include "plugin/mip_plugin.h"

@@ -26,7 +26,7 @@
   #define MIP_ALIGNMENT_CACHE           64
   #define MIP_EDITOR_TIMER_MS           20
   #define MIP_EDITOR_TIMER_ID           333
-  #define MIP_LOGFILE_NAME              "MIP.LOG"
+  #define MIP_LOGFILE_NAME              "mip.log"
   #define MIP_MAX_PATH_LENGTH           512
   #define MIP_MAX_STRING_LENGTH         256
   #define MIP_OPENGL_VERSION_MAJOR      3
@@ -123,8 +123,8 @@
 //#define MIP_NO_REGISTRY
   #define MIP_PLUGIN_CLAP
   #define MIP_PLUGIN_EXE
-  #define MIP_PLUGIN_VST2
-  #define MIP_PLUGIN_VST3
+//#define MIP_PLUGIN_VST2
+//#define MIP_PLUGIN_VST3
 //#define MIP_PLUGIN_GENERIC_EDITOR
 //#define MIP_VST2_FST
 //#define MIP_VST2_SDK

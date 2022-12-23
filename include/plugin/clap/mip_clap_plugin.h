@@ -24,6 +24,7 @@ public:
 //------------------------------
 
   MIP_ClapPlugin(const clap_plugin_descriptor_t* descriptor/*, const clap_host_t* host*/) {
+    LOG.print("MIP_ClapPlugin()\n");
     //MHost = host;
     MPlugin.desc = descriptor;
   }
@@ -31,6 +32,7 @@ public:
   //----------
 
   virtual ~MIP_ClapPlugin() {
+    LOG.print("~MIP_ClapPlugin()\n");
   }
 
 //------------------------------
@@ -51,13 +53,13 @@ public:
 public: // plugin
 //------------------------------
 
-  virtual bool                init() { return true; }
-  virtual void                destroy() { }
-  virtual bool                activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) { return true; }
-  virtual void                deactivate() { }
-  virtual bool                start_processing() { return true; }
-  virtual void                stop_processing() { }
-  virtual void                reset() { }
+  virtual bool                init() { LOG.print("MIP_ClapPlugin.init\n"); return true; }
+  virtual void                destroy() { LOG.print("MIP_ClapPlugin.destroy\n"); }
+  virtual bool                activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) { LOG.print("MIP_ClapPlugin.activate(%.2f,%i,%i\n",sample_rate,min_frames_count,max_frames_count); return true; }
+  virtual void                deactivate() { LOG.print("MIP_ClapPlugin.deactivate\n"); }
+  virtual bool                start_processing() { LOG.print("MIP_ClapPlugin.start_processing\n"); return true; }
+  virtual void                stop_processing() { LOG.print("MIP_ClapPlugin.stop_processing\n"); }
+  virtual void                reset() { LOG.print("MIP_ClapPlugin.reset\n"); }
   virtual clap_process_status process(const clap_process_t *process) { return CLAP_PROCESS_CONTINUE; }
   virtual const void*         get_extension(const char *id) { return nullptr; }
   virtual void                on_main_thread() { }

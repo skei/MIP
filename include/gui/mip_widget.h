@@ -142,7 +142,6 @@ public:
 
 //virtual MIP_Parameter*  getParameter()                    { return MParameter; }
   virtual MIP_Parameter*  getParameter(uint32_t AIndex=0)   { return MParameters[AIndex]; }
-
   virtual uint32_t        getNumParameters()                { return MNumParameters; }
 
 //virtual double          getValue()                        { return MValue; }
@@ -153,8 +152,8 @@ public:
 
   virtual int32_t         getCursor()                       { return MCursor; }
 
-  virtual MIP_Color   getDisabledColor() { return MDisabledColor; }
-  virtual double      getDisabledAlpha() { return MDisabledAlpha; }
+  virtual MIP_Color       getDisabledColor()                { return MDisabledColor; }
+  virtual double          getDisabledAlpha()                { return MDisabledAlpha; }
 
   //virtual uint32_t        getFlags()                      { return MFlags; }
   //virtual bool            hasFlag(uint32_t AFlag)         { return MFlags & AFlag; }
@@ -183,7 +182,7 @@ public:
   virtual void setAutoHideCursor(bool AAuto=true)         { MAutoHideCursor = AAuto; }
   virtual void setAutoLockCursor(bool AAuto=true)         { MAutoLockCursor = AAuto; }
 
-  virtual void setListener(MIP_WidgetListener* AListener) { MListener = AListener; }
+  virtual void setListener(MIP_WidgetListener* AListener)               { MListener = AListener; }
   virtual void setParameter(MIP_Parameter* AParameter)                  { MParameters[0] = AParameter; }
   virtual void setParameter(uint32_t AIndex, MIP_Parameter* AParameter) { MParameters[AIndex] = AParameter; }
 
@@ -285,13 +284,16 @@ public:
 public:
 //------------------------------
 
-  virtual void appendChildWidget(MIP_Widget* AWidget, MIP_WidgetListener* AListener=nullptr) {
+  //virtual void appendChildWidget(MIP_Widget* AWidget, MIP_WidgetListener* AListener=nullptr) {
+  virtual MIP_Widget* appendChildWidget(MIP_Widget* AWidget, MIP_WidgetListener* AListener=nullptr) {
     int32_t index = MChildren.size();
     //AWidget->MParent = this;
     if (AListener) AWidget->MListener = AListener;
     else AWidget->MListener = this;
     AWidget->MIndex = index;
     MChildren.append(AWidget);
+    //return index;
+    return AWidget;
   }
 
   //----------

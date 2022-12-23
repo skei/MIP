@@ -14,7 +14,7 @@ extern MIP_Plugin* MIP_CreatePlugin(uint32_t AIndex, const clap_plugin_descripto
 uint32_t clap_plugin_factory_get_plugin_count_callback(const struct clap_plugin_factory *factory) {
   //MIP_Print("\n");
   int32_t num = MIP_REGISTRY.getNumDescriptors();
-  //LOG.print("FACTORY: get_plugin_count\n");
+  LOG.print("CLAP FACTORY: get_plugin_count\n");
   return num;
 }
 
@@ -22,7 +22,7 @@ uint32_t clap_plugin_factory_get_plugin_count_callback(const struct clap_plugin_
 
 const clap_plugin_descriptor_t* clap_plugin_factory_get_plugin_descriptor_callback(const struct clap_plugin_factory *factory, uint32_t index) {
   //MIP_Print("index: %i\n",index);
-  //LOG.print("FACTORY: get_plugin_descriptor (%i)\n",index);
+  LOG.print("CLAP_FACTORY: get_plugin_descriptor (%i)\n",index);
   return MIP_REGISTRY.getDescriptor(index);
 }
 
@@ -30,7 +30,7 @@ const clap_plugin_descriptor_t* clap_plugin_factory_get_plugin_descriptor_callba
 
 const clap_plugin_t* clap_plugin_factory_create_plugin_callback(const struct clap_plugin_factory *factory, const clap_host_t *host, const char *plugin_id) {
   //MIP_Print("plugin_id: %s\n",plugin_id);
-  //LOG.print("FACTORY: create_plugin (%s)\n",plugin_id);
+  LOG.print("CLAP_FACTORY: create_plugin (%s)\n",plugin_id);
   if (MIP_CreatePlugin) {
     int32_t index = MIP_REGISTRY.findDescriptorById(plugin_id);
     //LOG.print("  - index %i\n",index);

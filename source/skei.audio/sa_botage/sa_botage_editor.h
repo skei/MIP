@@ -33,6 +33,15 @@ private:
   MIP_DragValueWidget*  MNumSlicesWidget  = nullptr;
   MIP_TextWidget*       MHintWidget       = nullptr;
 
+  MIP_PagesWidget*      MPages            = nullptr;
+
+  MIP_ButtonWidget*     prob_page_button  = nullptr;
+  MIP_ButtonWidget*     fx_page_button    = nullptr;
+  MIP_ButtonWidget*     seq_page_button   = nullptr;
+  MIP_ButtonWidget*     perf_page_button  = nullptr;
+
+  uint32_t MCurrentPage = 0;
+
   //
 
   MIP_Color MReadPosColor   = MIP_COLOR_BRIGHT_GREEN;
@@ -173,25 +182,58 @@ public:
 
     // pages
 
-    MIP_ButtonWidget* prob_page_button = new MIP_ButtonWidget(MIP_DRect(400,160,50,20), "Prob",0);
+    prob_page_button = new MIP_ButtonWidget(MIP_DRect(400,160,50,20), "Prob",0);
     MRootWidget->appendChildWidget(prob_page_button);
-    prob_page_button->setBackgroundColor(0.8);
     prob_page_button->setHint("Probabilities");
 
-    MIP_ButtonWidget* fx_page_button = new MIP_ButtonWidget(MIP_DRect(460,160,50,20), "FX",0);
+    fx_page_button = new MIP_ButtonWidget(MIP_DRect(460,160,50,20), "FX",0);
     MRootWidget->appendChildWidget(fx_page_button);
-    fx_page_button->setBackgroundColor(0.6);
     fx_page_button->setHint("Effects");
 
-    MIP_ButtonWidget* seq_page_button = new MIP_ButtonWidget(MIP_DRect(520,160,50,20), "Seq",0);
+    seq_page_button = new MIP_ButtonWidget(MIP_DRect(520,160,50,20), "Seq",0);
     MRootWidget->appendChildWidget(seq_page_button);
-    seq_page_button->setBackgroundColor(0.6);
     seq_page_button->setHint("Sequence");
 
-    MIP_ButtonWidget* perf_page_button = new MIP_ButtonWidget(MIP_DRect(580,160,50,20), "Perf",0);
+    perf_page_button = new MIP_ButtonWidget(MIP_DRect(580,160,50,20), "Perf",0);
     MRootWidget->appendChildWidget(perf_page_button);
-    perf_page_button->setBackgroundColor(0.6);
     perf_page_button->setHint("Perform");
+
+    prob_page_button->setBackgroundColor(0.8);
+    fx_page_button->setBackgroundColor(0.6);
+    seq_page_button->setBackgroundColor(0.6);
+    perf_page_button->setBackgroundColor(0.6);
+
+
+
+
+
+    MPages = new MIP_PagesWidget( MIP_DRect(0,190,width,260));
+    MRootWidget->appendChildWidget(MPages);
+
+      MIP_Widget* page1 = new MIP_PagesWidget( MIP_DRect(0,190,width,260));
+      MIP_Widget* page2 = new MIP_PagesWidget( MIP_DRect(0,190,width,260));
+      MIP_Widget* page3 = new MIP_PagesWidget( MIP_DRect(0,190,width,260));
+      MIP_Widget* page4 = new MIP_PagesWidget( MIP_DRect(0,190,width,260));
+
+      MPages->appendPage(page1);
+      MPages->appendPage(page2);
+      MPages->appendPage(page3);
+      MPages->appendPage(page4);
+
+    MPages->setPage(0);
+
+
+
+
+
+//--------------------------------------------------
+//
+// page 1 - prob
+//
+//--------------------------------------------------
+
+
+
 
 
 //------------------------------
@@ -204,14 +246,14 @@ public:
     // prob
 
     MIP_TextWidget* prob_header = new MIP_TextWidget(MIP_DRect(x,y,250,20),"Probability");
-    MRootWidget->appendChildWidget(prob_header);
+    page1->appendChildWidget(prob_header);
     prob_header->setFillBackground(true);
     prob_header->setBackgroundColor(MIP_COLOR_DARK_GRAY);
     prob_header->setTextColor(MIP_COLOR_LIGHT_GRAY);
 
     //MIP_KnobWidget* prob_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,90,90), "%", 0.0);
     MMainProbWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,90,90), "%", 0.0);
-    MRootWidget->appendChildWidget(MMainProbWidget);
+    page1->appendChildWidget(MMainProbWidget);
     MMainProbWidget->setArcThickness(15);
     MMainProbWidget->setDrawText(true);
     MMainProbWidget->setTextSize(20);
@@ -230,13 +272,13 @@ public:
     y = 200;
 
     MIP_TextWidget* prob_slices_label = new MIP_TextWidget( MIP_DRect(x,y+30,150,15), "Slices" );
-    MRootWidget->appendChildWidget(prob_slices_label);
+    page1->appendChildWidget(prob_slices_label);
     prob_slices_label->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     prob_slices_label->setDrawBorder(false);
 
     //MIP_ButtonRowWidget* prob_slices = new MIP_ButtonRowWidget( MIP_DRect(x,y+45,150,20), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
     MMainSlicesWidget = new MIP_ButtonRowWidget( MIP_DRect(x,y+45,150,20), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
-    MRootWidget->appendChildWidget(MMainSlicesWidget);
+    page1->appendChildWidget(MMainSlicesWidget);
     MMainSlicesWidget->selectButton(0);
     MMainSlicesWidget->setAllowZeroBits(false);
     MMainSlicesWidget->setValueIsBits(true,8);
@@ -247,13 +289,13 @@ public:
     // loops
 
     MIP_TextWidget* prob_loops_label = new MIP_TextWidget( MIP_DRect(x,y+75,150,15), "Loops" );
-    MRootWidget->appendChildWidget(prob_loops_label);
+    page1->appendChildWidget(prob_loops_label);
     prob_loops_label->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     prob_loops_label->setDrawBorder(false);
 
     //MIP_ButtonRowWidget* prob_loops = new MIP_ButtonRowWidget( MIP_DRect(x,y+90,150,20), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
     MMainLoopsWidget = new MIP_ButtonRowWidget( MIP_DRect(x,y+90,150,20), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
-    MRootWidget->appendChildWidget(MMainLoopsWidget);
+    page1->appendChildWidget(MMainLoopsWidget);
     MMainLoopsWidget->selectButton(0);
     MMainLoopsWidget->setAllowZeroBits(false);
     MMainLoopsWidget->setValueIsBits(true,8);
@@ -267,13 +309,13 @@ public:
     y = 350;
 
     MIP_TextWidget* loop_env_label = new MIP_TextWidget(MIP_DRect(x,y,120,20), "Loop Env");
-    MRootWidget->appendChildWidget(loop_env_label);
+    page1->appendChildWidget(loop_env_label);
     loop_env_label->setFillBackground(true);
     loop_env_label->setBackgroundColor(MIP_COLOR_DARK_GRAY);
     loop_env_label->setTextColor(MIP_COLOR_LIGHT_GRAY);
 
     MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(x,y+30,120,25), "", 0.1, 0.9 );
-    MRootWidget->appendChildWidget(env1_slider);
+    page1->appendChildWidget(env1_slider);
     env1_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     env1_slider->setHint("Loop envelope");
 
@@ -281,13 +323,13 @@ public:
   connect( env1_slider, 1, AParameters->getItem(PAR_LOOP_ENV_DECAY) );
 
     MIP_TextWidget* slice_env_label = new MIP_TextWidget(MIP_DRect(x+130,y,120,20), "Slice Env");
-    MRootWidget->appendChildWidget(slice_env_label);
+    page1->appendChildWidget(slice_env_label);
     slice_env_label->setFillBackground(true);
     slice_env_label->setBackgroundColor(MIP_COLOR_DARK_GRAY);
     slice_env_label->setTextColor(MIP_COLOR_LIGHT_GRAY);
 
     MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(x+130,y+30,120,25), "", 0.1, 0.9 );
-    MRootWidget->appendChildWidget(env2_slider);
+    page1->appendChildWidget(env2_slider);
     env2_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     env2_slider->setHint("Slice envelope");
 
@@ -302,7 +344,7 @@ public:
     y = 200;
 
     MIP_TextWidget* c1_header = new MIP_TextWidget(MIP_DRect(x,y,175,20),"Range");
-    MRootWidget->appendChildWidget(c1_header);
+    page1->appendChildWidget(c1_header);
     c1_header->setFillBackground(true);
     c1_header->setBackgroundColor(0.35);
     c1_header->setTextColor(MIP_COLOR_LIGHT_GRAY);
@@ -311,7 +353,7 @@ public:
 
     //MIP_KnobWidget* range_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRangeSizeWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(MRangeSizeWidget);
+    page1->appendChildWidget(MRangeSizeWidget);
     MRangeSizeWidget->setArcThickness(7);
     MRangeSizeWidget->setHint("Loop length");
     //MRangeSizeWidget->setSnap(true);
@@ -321,13 +363,13 @@ public:
   connect( MRangeSizeWidget, AParameters->getItem(PAR_PROB_SIZE_PROB_RANGE) );
 
     MIP_TextWidget* range_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Size");
-    MRootWidget->appendChildWidget(range_length_text);
+    page1->appendChildWidget(range_length_text);
     range_length_text->setDrawBorder(false);
     range_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
     //MIP_DualSliderWidget* range_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%");//, 0.5, 0.5 );
     MRangeSizeValueWidget = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%");//, 0.5, 0.5 );
-    MRootWidget->appendChildWidget(MRangeSizeValueWidget);
+    page1->appendChildWidget(MRangeSizeValueWidget);
     MRangeSizeValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     MRangeSizeValueWidget->setHint("Loop min/max");
 //    MRangeSizeValueWidget->setSnap(true);
@@ -343,7 +385,7 @@ public:
 
     //MIP_KnobWidget* range_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRangeSpeedWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(MRangeSpeedWidget);
+    page1->appendChildWidget(MRangeSpeedWidget);
     MRangeSpeedWidget->setArcThickness(7);
     //MRangeSpeedWidget->setSnap(true);
     //MRangeSpeedWidget->setSnapPos(0.5);
@@ -352,13 +394,13 @@ public:
   connect( MRangeSpeedWidget, AParameters->getItem(PAR_PROB_SPEED_PROB_RANGE) );
 
     MIP_TextWidget* range_speed_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Speed");
-    MRootWidget->appendChildWidget(range_speed_text);
+    page1->appendChildWidget(range_speed_text);
     range_speed_text->setDrawBorder(false);
     range_speed_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
     //MIP_DualSliderWidget* range_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MRangeSpeedValueWidget= new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(MRangeSpeedValueWidget);
+    page1->appendChildWidget(MRangeSpeedValueWidget);
     MRangeSpeedValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
   connect( MRangeSpeedValueWidget, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_RANGE) );
@@ -370,7 +412,7 @@ public:
 
     //MIP_KnobWidget* range_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRangeOffsetWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(MRangeOffsetWidget);
+    page1->appendChildWidget(MRangeOffsetWidget);
     MRangeOffsetWidget->setArcThickness(7);
     //MRangeOffsetWidget->setSnap(true);
     //MRangeOffsetWidget->setSnapPos(0.5);
@@ -379,13 +421,13 @@ public:
   connect( MRangeOffsetWidget, AParameters->getItem(PAR_PROB_OFFSET_PROB_RANGE) );
 
     MIP_TextWidget* range_offset_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Offset");
-    MRootWidget->appendChildWidget(range_offset_text);
+    page1->appendChildWidget(range_offset_text);
     range_offset_text->setDrawBorder(false);
     range_offset_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
     //MIP_DualSliderWidget* range_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MRangeOffsetValueWidget = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "sl", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(MRangeOffsetValueWidget);
+    page1->appendChildWidget(MRangeOffsetValueWidget);
     MRangeOffsetValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
   connect( MRangeOffsetValueWidget, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_RANGE) );
@@ -397,7 +439,7 @@ public:
 
     //MIP_KnobWidget* range_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MRangeReverseWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(MRangeReverseWidget);
+    page1->appendChildWidget(MRangeReverseWidget);
     MRangeReverseWidget->setArcThickness(7);
     //MRangeReverseWidget->setSnap(true);
     //MRangeReverseWidget->setSnapPos(0.5);
@@ -406,12 +448,12 @@ public:
   connect( MRangeReverseWidget, AParameters->getItem(PAR_PROB_REVERSE_PROB_RANGE) );
 
     MIP_TextWidget* range_reverse_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Reverse");
-    MRootWidget->appendChildWidget(range_reverse_text);
+    page1->appendChildWidget(range_reverse_text);
     range_reverse_text->setDrawBorder(false);
     range_reverse_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
     //MIP_DualSliderWidget* range_reverse_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
-    //MRootWidget->appendChildWidget(range_reverse_range_slider);
+    //page1->appendChildWidget(range_reverse_range_slider);
     //range_reverse_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     //range_reverse_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
@@ -420,7 +462,7 @@ public:
     y = 380;
 
     MIP_KnobWidget* range_fx_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(range_fx_knob);
+    page1->appendChildWidget(range_fx_knob);
     range_fx_knob->setArcThickness(7);
     range_fx_knob->setDisabled(true);
     range_fx_knob->setActive(false);
@@ -431,14 +473,14 @@ public:
   connect( range_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_RANGE) );
 
     MIP_TextWidget* range_fx_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"FX");
-    MRootWidget->appendChildWidget(range_fx_text);
+    page1->appendChildWidget(range_fx_text);
     range_fx_text->setDrawBorder(false);
     range_fx_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     range_fx_text->setDisabled(true);
     range_fx_text->setActive(false);
 
     MIP_DualSliderWidget* range_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(range_fx_range_slider);
+    page1->appendChildWidget(range_fx_range_slider);
     range_fx_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     range_fx_range_slider->setDisabled(true);
     range_fx_range_slider->setActive(false);
@@ -454,7 +496,7 @@ public:
     y = 200;
 
     MIP_TextWidget* c2_header = new MIP_TextWidget(MIP_DRect(x,y,175,20),"Loop");
-    MRootWidget->appendChildWidget(c2_header);
+    page1->appendChildWidget(c2_header);
     c2_header->setFillBackground(true);
     c2_header->setBackgroundColor(0.35);
     c2_header->setTextColor(MIP_COLOR_LIGHT_GRAY);
@@ -463,7 +505,7 @@ public:
 
     //MIP_KnobWidget* loop_length_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MLoopSizeWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(MLoopSizeWidget);
+    page1->appendChildWidget(MLoopSizeWidget);
     MLoopSizeWidget->setArcThickness(7);
     //MLoopSizeWidget->setAutoHideCursor(false);
     //MLoopSizeWidget->setAutoLockCursor(false);
@@ -471,13 +513,13 @@ public:
   connect( MLoopSizeWidget, AParameters->getItem(PAR_PROB_SIZE_PROB_LOOP) );
 
     MIP_TextWidget* loop_length_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Size");
-    MRootWidget->appendChildWidget(loop_length_text);
+    page1->appendChildWidget(loop_length_text);
     loop_length_text->setDrawBorder(false);
     loop_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
     //MIP_DualSliderWidget* loop_length_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MLoopSizeValueWidget = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(MLoopSizeValueWidget);
+    page1->appendChildWidget(MLoopSizeValueWidget);
     MLoopSizeValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
   connect( MLoopSizeValueWidget, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_LOOP) );
@@ -489,7 +531,7 @@ public:
 
     //MIP_KnobWidget* loop_speed_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MLoopSpeedWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(MLoopSpeedWidget);
+    page1->appendChildWidget(MLoopSpeedWidget);
     MLoopSpeedWidget->setArcThickness(7);
     //MLoopSpeedWidget->setSnap(true);
     //MLoopSpeedWidget->setSnapPos(0.5);
@@ -498,13 +540,13 @@ public:
   connect( MLoopSpeedWidget, AParameters->getItem(PAR_PROB_SPEED_PROB_LOOP) );
 
     MIP_TextWidget* loop_speed_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Speed");
-    MRootWidget->appendChildWidget(loop_speed_text);
+    page1->appendChildWidget(loop_speed_text);
     loop_speed_text->setDrawBorder(false);
     loop_speed_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
     //MIP_DualSliderWidget* loop_speed_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
     MLoopSpeedValueWidget = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(MLoopSpeedValueWidget);
+    page1->appendChildWidget(MLoopSpeedValueWidget);
     MLoopSpeedValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
   connect( MLoopSpeedValueWidget, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_LOOP) );
@@ -516,7 +558,7 @@ public:
 
     //MIP_KnobWidget* loop_offset_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
     MLoopOffsetWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(MLoopOffsetWidget);
+    page1->appendChildWidget(MLoopOffsetWidget);
     MLoopOffsetWidget->setArcThickness(7);
     //MLoopOffsetWidget->setSnap(true);
     //MLoopOffsetWidget->setSnapPos(0.5);
@@ -525,13 +567,13 @@ public:
   connect( MLoopOffsetWidget, AParameters->getItem(PAR_PROB_OFFSET_PROB_LOOP) );
 
     MIP_TextWidget* loop_offset_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Offset");
-    MRootWidget->appendChildWidget(loop_offset_text);
+    page1->appendChildWidget(loop_offset_text);
     loop_offset_text->setDrawBorder(false);
     loop_offset_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
     //MIP_DualSliderWidget* loop_offset_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MLoopOffsetValueWidget = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(MLoopOffsetValueWidget);
+    MLoopOffsetValueWidget = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "sl", 0.5, 0.5 );
+    page1->appendChildWidget(MLoopOffsetValueWidget);
     MLoopOffsetValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
   connect( MLoopOffsetValueWidget, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_LOOP) );
@@ -542,8 +584,8 @@ public:
     y = 335;
 
     //MIP_KnobWidget* loop_reverse_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MLoopReverseWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"sl%", 0.0);
-    MRootWidget->appendChildWidget(MLoopReverseWidget);
+    MLoopReverseWidget = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
+    page1->appendChildWidget(MLoopReverseWidget);
     MLoopReverseWidget->setArcThickness(7);
     //MLoopReverseWidget->setSnap(true);
     //MLoopReverseWidget->setSnapPos(0.5);
@@ -552,12 +594,12 @@ public:
   connect( MLoopReverseWidget, AParameters->getItem(PAR_PROB_REVERSE_PROB_LOOP) );
 
     MIP_TextWidget* loop_reverse_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"Reverse");
-    MRootWidget->appendChildWidget(loop_reverse_text);
+    page1->appendChildWidget(loop_reverse_text);
     loop_reverse_text->setDrawBorder(false);
     loop_reverse_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
 
     //MIP_DualSliderWidget* loop_reverse_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "", 0.5, 0.5 );
-    //MRootWidget->appendChildWidget(loop_reverse_range_slider);
+    //page1->appendChildWidget(loop_reverse_range_slider);
     //loop_reverse_range_slider->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     //loop_reverse_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
 
@@ -566,7 +608,7 @@ public:
     y = 380;
 
     MIP_KnobWidget* loop_fx_knob = new MIP_KnobWidget(MIP_DRect(x,y+30,35,35),"%", 0.0);
-    MRootWidget->appendChildWidget(loop_fx_knob);
+    page1->appendChildWidget(loop_fx_knob);
     loop_fx_knob->setArcThickness(7);
     loop_fx_knob->setDisabled(true);
     loop_fx_knob->setActive(false);
@@ -577,20 +619,39 @@ public:
   connect( loop_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_LOOP) );
 
     MIP_TextWidget* loop_fx_text = new MIP_TextWidget(MIP_DRect(x+45,y+30,130,15),"FX");
-    MRootWidget->appendChildWidget(loop_fx_text);
+    page1->appendChildWidget(loop_fx_text);
     loop_fx_text->setDrawBorder(false);
     loop_fx_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     loop_fx_text->setDisabled(true);
     loop_fx_text->setActive(false);
 
     MIP_DualSliderWidget* loop_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(x+45,y+45,130,20), "%", 0.5, 0.5 );
-    MRootWidget->appendChildWidget(loop_fx_range_slider);
+    page1->appendChildWidget(loop_fx_range_slider);
     loop_fx_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     loop_fx_range_slider->setDisabled(true);
     loop_fx_range_slider->setActive(false);
 
   connect( loop_fx_range_slider, 0, AParameters->getItem(PAR_PROB_FX_MIN_LOOP) );
   connect( loop_fx_range_slider, 1, AParameters->getItem(PAR_PROB_FX_MAX_LOOP) );
+
+//----------------------------------------------------------------------
+//
+// page 2 - fx
+//
+//----------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------
+//
+// page 3 - seq
+//
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+//
+// page 4 - perf
+//
+//----------------------------------------------------------------------
 
 //------------------------------
 // footer
@@ -635,11 +696,62 @@ public:
       MWaveformWidget->setNumGrid(value);
       MWaveformWidget->redraw();
     }
-    if (AWidget == MNumSlicesWidget) {
+    else if (AWidget == MNumSlicesWidget) {
       double value = AWidget->getValue();
       MWaveformWidget->setNumSubGrid(value);
       MWaveformWidget->redraw();
     }
+    else if (AWidget == prob_page_button) {
+      MCurrentPage = 0;
+      MPages->setPage(0);
+      MPages->redraw();
+      prob_page_button->setBackgroundColor(0.8);
+      fx_page_button->setBackgroundColor(0.6);
+      seq_page_button->setBackgroundColor(0.6);
+      perf_page_button->setBackgroundColor(0.6);
+      prob_page_button->redraw();
+      fx_page_button->redraw();
+      seq_page_button->redraw();
+      perf_page_button->redraw();
+    }
+    else if (AWidget == fx_page_button)   {
+      MCurrentPage = 1;
+      MPages->setPage(1);
+      MPages->redraw();
+      prob_page_button->setBackgroundColor(0.6);
+      fx_page_button->setBackgroundColor(0.8);
+      seq_page_button->setBackgroundColor(0.6);
+      perf_page_button->setBackgroundColor(0.6);
+      prob_page_button->redraw();
+      fx_page_button->redraw();
+      seq_page_button->redraw();
+      perf_page_button->redraw();
+    }
+    else if (AWidget == seq_page_button)  {
+      MCurrentPage = 2;
+      MPages->setPage(2); MPages->redraw();
+      prob_page_button->setBackgroundColor(0.6);
+      fx_page_button->setBackgroundColor(0.6);
+      seq_page_button->setBackgroundColor(0.8);
+      perf_page_button->setBackgroundColor(0.6);
+      prob_page_button->redraw();
+      fx_page_button->redraw();
+      seq_page_button->redraw();
+      perf_page_button->redraw();
+    }
+    else if (AWidget == perf_page_button) {
+      MCurrentPage = 3;
+      MPages->setPage(3); MPages->redraw();
+      prob_page_button->setBackgroundColor(0.6);
+      fx_page_button->setBackgroundColor(0.6);
+      seq_page_button->setBackgroundColor(0.6);
+      perf_page_button->setBackgroundColor(0.8);
+      prob_page_button->redraw();
+      fx_page_button->redraw();
+      seq_page_button->redraw();
+      perf_page_button->redraw();
+    }
+
   }
 
   //----------
@@ -729,34 +841,64 @@ public:
 
   void updateProbIndicators(sa_botage_processor* processor) {
 
-    MMainProbWidget->setIndicatorValue(processor->rnd_main_prob);
+    if (MCurrentPage == 0) {
 
-    if (processor->MRange) {
-
-      //MMainProbWidget->setIndicatorValue(processor->rnd_main_prob);
-      MMainSlicesWidget->setIndicatorValue(processor->rnd_main_slices);
-      MMainLoopsWidget->setIndicatorValue(processor->rnd_main_subdiv);
-      //
-      MRangeSizeWidget->setIndicatorValue(processor->rnd_range_size);
-      MRangeSpeedWidget->setIndicatorValue(processor->rnd_range_speed);
-      MRangeOffsetWidget->setIndicatorValue(processor->rnd_range_offset);
-      MRangeReverseWidget->setIndicatorValue(processor->rnd_range_reverse);
-      //
-      MRangeSizeValueWidget->setIndicatorValue(processor->rnd_range_size_value);
-      MRangeSpeedValueWidget->setIndicatorValue(processor->rnd_range_speed_value);
-      MRangeOffsetValueWidget->setIndicatorValue(processor->rnd_range_offset_value);
-
-      if (processor->MLoopWrapped) {
-        MLoopSizeWidget->setIndicatorValue(processor->rnd_loop_size);
-        MLoopSpeedWidget->setIndicatorValue(processor->rnd_loop_speed);
-        MLoopOffsetWidget->setIndicatorValue(processor->rnd_loop_offset);
-        MLoopReverseWidget->setIndicatorValue(processor->rnd_loop_reverse);
+      MMainProbWidget->setIndicatorValue(processor->rnd_main_prob);
+      if (processor->MRange) {
+        //MMainProbWidget->setIndicatorValue(processor->rnd_main_prob);
+        MMainSlicesWidget->setIndicatorValue(processor->rnd_main_slices);
+        MMainLoopsWidget->setIndicatorValue(processor->rnd_main_subdiv);
         //
-        MLoopSizeValueWidget->setIndicatorValue(processor->rnd_loop_size_value);
-        MLoopSpeedValueWidget->setIndicatorValue(processor->rnd_loop_speed_value);
-        MLoopOffsetValueWidget->setIndicatorValue(processor->rnd_loop_offset_value);
+        MRangeSizeWidget->setIndicatorValue(processor->rnd_range_size);
+        MRangeSpeedWidget->setIndicatorValue(processor->rnd_range_speed);
+        MRangeOffsetWidget->setIndicatorValue(processor->rnd_range_offset);
+        MRangeReverseWidget->setIndicatorValue(processor->rnd_range_reverse);
+        //
+        if (processor->rnd_range_size_on) MRangeSizeValueWidget->setIndicatorValue(processor->rnd_range_size_value);
+        else MRangeSizeValueWidget->setIndicatorValue(-1);
+        if (processor->rnd_range_speed_on) MRangeSpeedValueWidget->setIndicatorValue(processor->rnd_range_speed_value);
+        else MRangeSpeedValueWidget->setIndicatorValue(-1);
+        if (processor->rnd_range_offset_on) MRangeOffsetValueWidget->setIndicatorValue(processor->rnd_range_offset_value);
+        else MRangeOffsetValueWidget->setIndicatorValue(-1);
+        //
+        if (processor->MLoopWrapped) {
+          MLoopSizeWidget->setIndicatorValue(processor->rnd_loop_size);
+          MLoopSpeedWidget->setIndicatorValue(processor->rnd_loop_speed);
+          MLoopOffsetWidget->setIndicatorValue(processor->rnd_loop_offset);
+          MLoopReverseWidget->setIndicatorValue(processor->rnd_loop_reverse);
+          //
+          if (processor->rnd_loop_size_on) MLoopSizeValueWidget->setIndicatorValue(processor->rnd_loop_size_value);
+          else MLoopSizeValueWidget->setIndicatorValue(-1);
+          if (processor->rnd_loop_speed_on) MLoopSpeedValueWidget->setIndicatorValue(processor->rnd_loop_speed_value);
+          else MLoopSpeedValueWidget->setIndicatorValue(-1);
+          if (processor->rnd_loop_offset_on) MLoopOffsetValueWidget->setIndicatorValue(processor->rnd_loop_offset_value);
+          else MLoopOffsetValueWidget->setIndicatorValue(-1);
+        }
+        else {
+          MLoopSizeWidget->setIndicatorValue(-1);
+          MLoopSpeedWidget->setIndicatorValue(-1);
+          MLoopOffsetWidget->setIndicatorValue(-1);
+          MLoopReverseWidget->setIndicatorValue(-1);
+          //
+          MLoopSizeValueWidget->setIndicatorValue(-1);
+          MLoopSpeedValueWidget->setIndicatorValue(-1);
+          MLoopOffsetValueWidget->setIndicatorValue(-1);
+        }
       }
-      else {
+      else { // ! range
+        //MMainProbWidget->setIndicatorValue(-1);
+        MMainSlicesWidget->setIndicatorValue(-1);
+        MMainLoopsWidget->setIndicatorValue(-1);
+        //
+        MRangeSizeWidget->setIndicatorValue(-1);
+        MRangeSpeedWidget->setIndicatorValue(-1);
+        MRangeOffsetWidget->setIndicatorValue(-1);
+        MRangeReverseWidget->setIndicatorValue(-1);
+        //
+        MRangeSizeValueWidget->setIndicatorValue(-1);
+        MRangeSpeedValueWidget->setIndicatorValue(-1);
+        MRangeOffsetValueWidget->setIndicatorValue(-1);
+        //
         MLoopSizeWidget->setIndicatorValue(-1);
         MLoopSpeedWidget->setIndicatorValue(-1);
         MLoopOffsetWidget->setIndicatorValue(-1);
@@ -766,34 +908,8 @@ public:
         MLoopSpeedValueWidget->setIndicatorValue(-1);
         MLoopOffsetValueWidget->setIndicatorValue(-1);
       }
-    }
 
-    else { // ! range
-
-      //MMainProbWidget->setIndicatorValue(-1);
-      MMainSlicesWidget->setIndicatorValue(-1);
-      MMainLoopsWidget->setIndicatorValue(-1);
-      //
-      MRangeSizeWidget->setIndicatorValue(-1);
-      MRangeSpeedWidget->setIndicatorValue(-1);
-      MRangeOffsetWidget->setIndicatorValue(-1);
-      MRangeReverseWidget->setIndicatorValue(-1);
-      //
-      MRangeSizeValueWidget->setIndicatorValue(-1);
-      MRangeSpeedValueWidget->setIndicatorValue(-1);
-      MRangeOffsetValueWidget->setIndicatorValue(-1);
-      //
-      MLoopSizeWidget->setIndicatorValue(-1);
-      MLoopSpeedWidget->setIndicatorValue(-1);
-      MLoopOffsetWidget->setIndicatorValue(-1);
-      MLoopReverseWidget->setIndicatorValue(-1);
-      //
-      MLoopSizeValueWidget->setIndicatorValue(-1);
-      MLoopSpeedValueWidget->setIndicatorValue(-1);
-      MLoopOffsetValueWidget->setIndicatorValue(-1);
-
-    }
-
+    } // page == 0
   }
 
 };

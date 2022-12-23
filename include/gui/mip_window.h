@@ -40,6 +40,9 @@ class MIP_Window
 private:
 //------------------------------
 
+  //test
+  void* MRenderBuffer = nullptr;
+
   /*
   MBackgroundWidget
   MRootWidget
@@ -90,11 +93,13 @@ public:
     MInitialWidth = AWidth;
     MInitialHeight = AHeight;
     MWindowPainter = new MIP_Painter(this);
+//    MRenderBuffer = MWindowPainter->createRenderBuffer(AWidth,AHeight);
   }
 
   //----------
 
   virtual ~MIP_Window() {
+//    MWindowPainter->deleteRenderBuffer(MRenderBuffer);
     delete MWindowPainter;
   }
 
@@ -182,7 +187,8 @@ private:
       final_rect.combine(dirty_rect);
     }
     if (final_rect.isNotEmpty()) {
-      MIP_ImplementedWindow::invalidate(final_rect.x,final_rect.y,final_rect.w,final_rect.h);
+      //MIP_ImplementedWindow::invalidate(final_rect.x,final_rect.y,final_rect.w,final_rect.h);
+      MIP_ImplementedWindow::invalidate(0,0,MWindowWidth,MWindowHeight);
     }
   }
 
@@ -270,9 +276,14 @@ public: // window
 
   void on_window_paint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
     MIP_DRect updaterect = MIP_DRect(AXpos,AYpos,AWidth,AHeight);
+
     if (MRootWidget) {
       MPaintContext.painter = MWindowPainter;
       MPaintContext.updateRect = updaterect;
+
+//MRenderBuffer = MWindowPainter->createRenderBuffer(AWidth,AHeight);
+//MWindowPainter->selectRenderBuffer(MRenderBuffer);
+
       MWindowPainter->beginPaint(0,0,MWindowWidth,MWindowHeight);
       //MWindowPainter->resetClip();
       //MWindowPainter->setClipRect(updaterect);
@@ -285,7 +296,12 @@ public: // window
       MRootWidget->on_widget_paint(&MPaintContext);
       //MWindowPainter->resetClip();
       MWindowPainter->endPaint();
+
+//MWindowPainter->selectRenderBuffer(nullptr);
+//MWindowPainter->deleteRenderBuffer(MRenderBuffer);
+
     }
+
   }
 
   //----------

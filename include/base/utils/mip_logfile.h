@@ -56,9 +56,10 @@ public:
       #endif
 
       if (!MFile.isOpen()) {
-        //printf("Log: couldn't open logfile '%s'\n",MFilename);
+        printf("Log: couldn't open logfile '%s'\n",MFilename);
       }
       else {
+        print("\n----------------------------------------------------------------------\n\n");
         print_header();
         print("\n----------\n\n");
       }

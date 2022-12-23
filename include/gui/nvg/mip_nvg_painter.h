@@ -413,6 +413,7 @@ public:
 //------------------------------
 
   void beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
+
     #ifdef MIP_USE_GLX
       MIP_GlxPainter::beginPaint(AXpos,AYpos,AWidth,AHeight);
     #endif
@@ -616,7 +617,35 @@ public:
   // Updates image data specified by image handle.
   //void nvgUpdateImage(NVGcontext* ctx, int image, const unsigned char* data);
 
+//----------
+//----------
+
+  void* createRenderBuffer(uint32_t AWidth, uint32_t AHeight) override {
+    int flags = 0;
+    NVGLUframebuffer* fb = nvgluCreateFramebuffer(MContext,AWidth,AHeight,flags);
+    return fb;
+  }
+
   //----------
+
+  void deleteRenderBuffer(void* buffer) override {
+    NVGLUframebuffer* fb = (NVGLUframebuffer*)buffer;
+    nvgluDeleteFramebuffer(fb);
+  }
+
+  //----------
+
+  void selectRenderBuffer(void* buffer) override {
+    NVGLUframebuffer* fb = (NVGLUframebuffer*)buffer;
+    nvgluBindFramebuffer(fb);
+  }
+
+  //----------
+
+  int32_t getImageFromRenderBuffer(void* buffer) override {
+    NVGLUframebuffer* fb = (NVGLUframebuffer*)buffer;
+    return fb->image;
+  }
 
 };
 

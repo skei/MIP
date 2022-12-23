@@ -144,6 +144,21 @@ private:
   double rnd_loop_offset_value    = 0.0;
   double rnd_loop_reverse_value   = 0.0;
 
+  //
+
+  bool rnd_slice_on             = false;
+
+  bool rnd_range_size_on        = false;
+  bool rnd_range_speed_on       = false;
+  bool rnd_range_offset_on      = false;
+  bool rnd_range_reverse_on     = false;
+
+  bool rnd_loop_size_on         = false;
+  bool rnd_loop_speed_on        = false;
+  bool rnd_loop_offset_on       = false;
+  bool rnd_loop_reverse_on      = false;
+
+
 //------------------------------
 public:
 //------------------------------
@@ -414,6 +429,7 @@ private:
       // assume off
       MRange = false;
       MLoop = false;
+      rnd_slice_on = true;
       // range
       //if (MIP_RandomRange(0.0, 0.999) < par_range_prob) {
 
@@ -423,7 +439,10 @@ private:
 
       rnd_main_prob = MIP_Random();
 
-      if (rnd_main_prob < par_range_prob) startRange();
+      if (rnd_main_prob < par_range_prob) {
+        rnd_slice_on = true;
+        startRange();
+      }
 
     }
   }
@@ -512,11 +531,17 @@ private:
 
   void handleLoopStarting() {
 
+    rnd_range_size_on = false;
+    rnd_range_speed_on = false;
+    rnd_range_offset_on = false;
+    rnd_range_reverse_on = false;
+
     //float rnd = 0.0;
 
     // size
     rnd_range_size = MIP_Random();
     if (rnd_range_size < par_prob_size_prob_range) {
+      rnd_range_size_on = true;
       double s = par_prob_size_max_range - par_prob_size_min_range;
       rnd_range_size_value = MIP_Random();
       s *= rnd_range_size_value;
@@ -529,6 +554,7 @@ private:
     // speed
     rnd_range_speed = MIP_Random();
     if (rnd_range_speed < par_prob_speed_prob_range) {
+      rnd_range_speed_on = true;
       double s = par_prob_speed_max_range - par_prob_speed_min_range;
       rnd_range_speed_value = MIP_Random();
       s *= rnd_range_speed_value;
@@ -544,6 +570,7 @@ private:
 
     rnd_range_offset = MIP_Random();
     if (rnd_range_offset < par_prob_offset_prob_range) {
+      rnd_range_offset_on = true;
       double s = par_prob_offset_max_range - par_prob_offset_min_range;
       rnd_range_offset_value = MIP_Random();
       s *= rnd_range_offset_value;
@@ -558,6 +585,7 @@ private:
     // reverse
     rnd_range_reverse = MIP_Random();
     if (rnd_range_reverse < par_prob_reverse_prob_range) {
+      rnd_range_reverse_on = true;
       MReadSpeed *= -1.0;
       if (MReadSpeed < 0.0) MReadPos += MLoopLength;
       else MReadPos -= MLoopLength;
@@ -585,9 +613,15 @@ private:
 
     //float rnd = 0.0;
 
+    rnd_loop_size_on = false;
+    rnd_loop_speed_on = false;
+    rnd_loop_offset_on = false;
+    rnd_loop_reverse_on = false;
+
     // size
     rnd_loop_size = MIP_Random();
     if (rnd_loop_size < par_prob_size_prob_loop) {
+      rnd_loop_size_on = true;
       double s = par_prob_size_max_loop - par_prob_size_min_loop;
       rnd_loop_size_value = MIP_Random();
       s *= rnd_loop_size_value;
@@ -600,6 +634,7 @@ private:
     // speed
     rnd_loop_speed = MIP_Random();
     if (rnd_loop_speed < par_prob_speed_prob_loop) {
+      rnd_loop_speed_on = true;
       double s = par_prob_speed_max_loop - par_prob_speed_min_loop;
       rnd_loop_speed_value = MIP_Random();
       s *= rnd_loop_speed_value;
@@ -612,6 +647,7 @@ private:
     // offset
     rnd_loop_offset = MIP_Random();
     if (rnd_loop_offset < par_prob_offset_prob_loop) {
+      rnd_loop_offset_on = true;
       double s = par_prob_offset_max_loop - par_prob_offset_min_loop;
       rnd_loop_offset_value = MIP_Random();
       s *= rnd_loop_offset_value;
@@ -626,6 +662,7 @@ private:
     rnd_loop_reverse = MIP_Random();
     //MIP_Print("rnd %.3f (par_prob_offset_prob_range %.3f)\n",rnd,par_prob_reverse_prob_range);
     if (rnd_loop_reverse < par_prob_reverse_prob_loop) {
+      rnd_loop_reverse_on = true;
       //MIP_Print("Reverse!\n");
       MReadSpeed *= -1.0;
       if (MReadSpeed < 0.0) MReadPos += MLoopLength;
