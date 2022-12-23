@@ -1059,12 +1059,12 @@ public: // note ports
 
   //----------
 
-  MIP_NotePort* appendClapNoteOutput() {
+  //MIP_NotePort* appendClapNoteOutput() {
+  MIP_NotePort* appendNoteOutput() {
     MIP_NotePort* port = new MIP_NotePort();
     MNoteOutputPorts.append(port);
     return port;
   }
-
 
   //----------
 

@@ -59,10 +59,12 @@ public:
     MIP_DRect mrect = getRect();
     MIP_Painter* painter = AContext->painter;
     double value = getValue();
-    //MIP_Parameter* parameter = getParameter();
-    //if (parameter) {
-    //  value = parameter->normalizeValue(value);
-    //}
+
+    MIP_Parameter* parameter = getParameter();
+    if (parameter) {
+      value = parameter->normalizeValue(value);
+    }
+
     if (MIsInteracting) {
       MIP_Color color = MISliderColor;
       if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);

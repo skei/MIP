@@ -145,6 +145,7 @@
 					<Add option="-g" />
 					<Add option="-rdynamic" />
 					<Add option="-Wl,-Bsymbolic" />
+					<Add option="-static" />
 					<Add option="-DMIP_PLUGIN" />
 					<Add option="-DMIP_DEBUG" />
 				</Compiler>
@@ -722,10 +723,32 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="../../source/skei.audio/sa_mini/sa_pitch.h" />
+		<Unit filename="../../source/skei.audio/sa_mini/sa_transpose.h" />
+		<Unit filename="../../source/skei.audio/sa_nity/sa_nity_editor.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_compciter.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_event_horizon.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_exciter.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_exciter2.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_hall_reverb.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_hrtf.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_large_room_reverb.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_limiter.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_saturation.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_small_room_reverb.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_sonic_maximizer.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_tilteq.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_transient_killer.h" />
 		<Unit filename="../../source/skei.audio/sa_tyr.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="../../source/skei.audio/sa_tyr/sa_tyr_editor.h" />
+		<Unit filename="../../source/skei.audio/sa_tyr/sa_tyr_osc.h" />
+		<Unit filename="../../source/skei.audio/sa_tyr/sa_tyr_parameters.h" />
+		<Unit filename="../../source/skei.audio/sa_tyr/sa_tyr_res.h" />
+		<Unit filename="../../source/skei.audio/sa_tyr/sa_tyr_voice.h" />
+		<Unit filename="../../source/skei.audio/sa_tyr/sa_tyr_widgets.h" />
 		<Unit filename="../../source/templates/analyzer.cpp">
 			<Option compile="0" />
 			<Option link="0" />

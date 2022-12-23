@@ -164,6 +164,11 @@ public:
     }
   }
 
+  MIP_Widget* getRootWidget() {
+    if (MWindow) return MWindow->getRootWidget();
+    return nullptr;
+  }
+
   //----------
 
   virtual void connect(MIP_Widget* AWidget, MIP_Parameter* AParameter) {
