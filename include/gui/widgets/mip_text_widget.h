@@ -26,6 +26,8 @@ protected:
   uint32_t    MTextAlignment  = MIP_TEXT_ALIGN_CENTER;
   MIP_DRect   MTextOffset     = MIP_DRect(0);
 
+//  int         MFont           = -1;
+
 //------------------------------
 public:
 //------------------------------
@@ -44,12 +46,13 @@ public:
 public:
 //------------------------------
 
-  virtual void setDrawText(bool ADraw=true)           { MDrawText = ADraw; }
-  virtual void setTextSize(double ASize)              { MTextSize = ASize; }
-  virtual void setTextColor(MIP_Color AColor)         { MTextColor = AColor; }
-  virtual void setText(const char* AText)             { MText = AText; }
-  virtual void setTextAlignment(uint32_t AAlignment)  { MTextAlignment = AAlignment; }
-  virtual void setTextOffset(MIP_DRect AOffset)       { MTextOffset = AOffset; }
+  virtual void        setDrawText(bool ADraw=true)          { MDrawText = ADraw; }
+  virtual void        setTextSize(double ASize)             { MTextSize = ASize; }
+  virtual void        setTextColor(MIP_Color AColor)        { MTextColor = AColor; }
+  virtual void        setText(const char* AText)            { MText = AText; }
+  virtual void        setTextAlignment(uint32_t AAlignment) { MTextAlignment = AAlignment; }
+  virtual void        setTextOffset(MIP_DRect AOffset)      { MTextOffset = AOffset; }
+//  virtual void        setTextFont(int AFont)                { MFont = AFont; }
 
   virtual const char* getText() { return MText; }
 
@@ -79,6 +82,8 @@ public:
     to.scale(S);
     mrect.shrink(to);
 
+//    painter->selectFont(MFont);
+
     MIP_Color color = MTextColor;
     if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
     painter->setTextColor(color);
@@ -86,6 +91,8 @@ public:
     painter->setTextSize(MTextSize * S);
 
     painter->drawTextBox(mrect,txt,MTextAlignment);
+
+//    painter->selectFont(painter->getDefaultFont());
 
   }
 
@@ -102,11 +109,11 @@ public:
 //  }
 
   void on_widget_paint(MIP_PaintContext* AContext) override {
+    //MIP_Painter* painter = AContext->painter;
     if (MFillBackground) fillBackground(AContext);
     if (MDrawText) drawText(AContext);
     paintChildWidgets(AContext);
     if (MDrawBorder) drawBorder(AContext);
-
   }
 
   //----------

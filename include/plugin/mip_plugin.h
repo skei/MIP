@@ -12,17 +12,18 @@
 #include "plugin/mip_process_context.h"
 #include "plugin/clap/mip_clap_plugin.h"
 
+//----------------------------------------------------------------------
+//
+//
+//
+//----------------------------------------------------------------------
+
+#define MIP_PLUGIN_MAX_GUI_EVENTS       32
+#define MIP_PLUGIN_MAX_PARAM_EVENTS     4096
+#define MIP_PLUGIN_GENERIC_EDITOR_WIDTH 500
+
 #include "plugin/mip_editor.h"
 #include "gui/mip_widgets.h"
-
-//----------------------------------------------------------------------
-//
-//
-//
-//----------------------------------------------------------------------
-
-#define MIP_PLUGIN_MAX_GUI_EVENTS   32
-#define MIP_PLUGIN_MAX_PARAM_EVENTS 4096
 
 //----------------------------------------------------------------------
 
@@ -1521,14 +1522,21 @@ public: // generic gui
   //----------
 
   uint32_t getGenericWidth() {
-    return 400;
+    return MIP_PLUGIN_GENERIC_EDITOR_WIDTH;
   }
 
   //----------
 
   uint32_t getGenericHeight() {
     uint32_t numparams = getGenericNumControls();
-    return 80 + 10 + (numparams * 20) + ((numparams-1) * 5) + 10 + 25;
+    //return 80 + 10 + (numparams * 20) + ((numparams-1) * 5) + 10 + 25;
+    return calcGenericHeight(numparams);
+  }
+
+  //----------
+
+  uint32_t calcGenericHeight(uint32_t ANumParams) {
+    return 80 + 10 + (ANumParams * 20) + ((ANumParams-1) * 5) + 10;// + 25;
   }
 
   //----------
@@ -1540,22 +1548,22 @@ public: // generic gui
 
     //----- background -----
 
-    MIP_PanelWidget* editor = new MIP_PanelWidget(MIP_DRect(w,h));
-    //editor->Layout.alignment = MIP_WIDGET_ALIGN_FILL_CLIENT;
-    //editor->Layout.aspectRatio = (double)w / (double)h;
-    editor->setFillBackground(true);
-    editor->setDrawBorder(false);
-    editor->setBackgroundColor(0.55);
+    MIP_PanelWidget* panel = new MIP_PanelWidget(MIP_DRect(w,h));
+    //panel->Layout.alignment = MIP_WIDGET_ALIGN_FILL_CLIENT;
+    //panel->Layout.aspectRatio = (double)w / (double)h;
+    panel->setFillBackground(true);
+    panel->setDrawBorder(false);
+    panel->setBackgroundColor(0.55);
 
     //----- sa header -----
 
     const char* name = getClapDescriptor()->name;
     if ((name[0] == 's') && (name[1] == 'a') && (name[2] == '_')) name += 3;
+    const char* version = getClapDescriptor()->version;
 
-//    const char* version = getClapDescriptor()->version;
+    MIP_SAHeaderWidget* saheader = new MIP_SAHeaderWidget(MIP_DRect(0,0,w,80),name,version);
+    panel->appendChildWidget(saheader);
 
-//    MIP_SAHeaderWidget* saheader = new MIP_SAHeaderWidget(MIP_DRect(0,0,w,80));
-//    editor->appendChildWidget(saheader);
 //    saheader->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
 //    saheader->setPluginName(name);
 //    saheader->setPluginVersion(version);
@@ -1564,7 +1572,7 @@ public: // generic gui
     //----- footer -----
 
 //    MIP_TextWidget* footer_panel = new MIP_TextWidget(MIP_DRect(0,(h-25),w,25), "footer" );
-//    editor->appendChildWidget(footer_panel);
+//    panel->appendChildWidget(footer_panel);
 //    footer_panel->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
 //    footer_panel->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
 //    footer_panel->setFillBackground(true);
@@ -1585,16 +1593,17 @@ public: // generic gui
           const char* name = parameter->getName();
           double value = parameter->getDefValue();
           MIP_SliderWidget* slider = new MIP_SliderWidget( MIP_DRect(10, 90 + (25 * i), w - 20, 20),name,value);
-          editor->appendChildWidget(slider);
+          panel->appendChildWidget(slider);
           //slider->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
-          slider->setTextSize(-0.8);
-          slider->setValueSize(-0.8);
+          //slider->setTextSize(-0.8);
+          //slider->setValueSize(-0.8);
+          slider->setText(name);
           MEditor->connect(slider,parameter);
         }
       }
     }
 
-    return editor;
+    return panel;
 
   }
 

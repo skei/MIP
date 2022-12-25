@@ -8,12 +8,42 @@
 
 //----------
 
-#include "../../../data/sa_img.h"
-//#include "../../../data/botage_img.h"
-#include "../../../data/mip_img.h"
+#include "../../../data/img/sa_img.h"
+//#include "../../../data/img/botage_img.h"
+#include "../../../data/img/mip_img.h"
 
 //#define MIP_SA_HEADER_WIDTH 80
 //#define MIP_SA_HEADER_HEIGHT 20
+
+//----------------------------------------------------------------------
+
+class MIP_HeaderTextWidget
+: public MIP_TextWidget {
+
+public:
+
+  MIP_HeaderTextWidget(MIP_DRect ARect, const char* AText="")
+  : MIP_TextWidget(ARect,AText) {
+  }
+
+  virtual ~MIP_HeaderTextWidget() {
+  }
+
+public:
+
+  void drawText(MIP_PaintContext* AContext) override {
+    MIP_Painter* painter = AContext->painter;
+    int font;
+    font = painter->getHeaderFont();
+    painter->selectFont(font);
+    MIP_TextWidget::drawText(AContext);
+    font = painter->getDefaultFont();
+    painter->selectFont(font);
+  }
+
+
+
+};
 
 //----------------------------------------------------------------------
 
@@ -23,20 +53,22 @@ class MIP_SAHeaderWidget
 private:
 
   int m_sa      = 0;
-  int m_botage  = 0;
+  //int m_botage  = 0;
   int m_mip     = 0;
 
-  MIP_ImageWidget*  MSaImage          = nullptr;
-  MIP_ImageWidget*  MPluginLogoImage  = nullptr;
-  MIP_ImageWidget*  MMipImage         = nullptr;
-  MIP_TextWidget*   MVersionText      = nullptr;
-  MIP_TextWidget*   MClapText         = nullptr;
+  MIP_ImageWidget*      MSaImage          = nullptr;
+  //MIP_ImageWidget*    MPluginLogoImage  = nullptr;
+  MIP_ImageWidget*      MMipImage         = nullptr;
+  MIP_HeaderTextWidget* MNameText         = nullptr;
+  MIP_TextWidget*       MVersionText      = nullptr;
+  MIP_TextWidget*       MClapText         = nullptr;
 
-  char clap_string[32] = {0};
+  char                  clap_string[32]   = {0};
 
 public:
 
-  MIP_SAHeaderWidget(MIP_DRect ARect, const char* AVersion, void* logo, uint32_t logosize)
+  //MIP_SAHeaderWidget(MIP_DRect ARect, const char* AVersion, void* logo, uint32_t logosize)
+  MIP_SAHeaderWidget(MIP_DRect ARect, const char* AName, const char* AVersion)
   : MIP_PanelWidget(ARect) {
 
     setFillBackground(true);
@@ -50,13 +82,21 @@ public:
 
     // plugin logo
 
-    if (logo && (logosize > 0)) {
-      MPluginLogoImage = new MIP_ImageWidget(MIP_DRect(80,0,160,80),logo,logosize);
-      appendChildWidget(MPluginLogoImage);
-      MPluginLogoImage->setHint("sa_botage");
-    }
+//    if (logo && (logosize > 0)) {
+//      MPluginLogoImage = new MIP_ImageWidget(MIP_DRect(80,0,160,80),logo,logosize);
+//      appendChildWidget(MPluginLogoImage);
+//      MPluginLogoImage->setHint("sa_botage");
+//    }
 
-    // sa_botage version
+    MNameText = new MIP_HeaderTextWidget(MIP_DRect(80,7,(MIP_PLUGIN_GENERIC_EDITOR_WIDTH-230),80),AName);
+    appendChildWidget(MNameText);
+    MNameText->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+    MNameText->setTextSize(48);
+    MNameText->setTextColor(1.0);
+    MNameText->setFillBackground(false);
+    MNameText->setDrawBorder(false);
+
+    // version
 
     MVersionText = new MIP_TextWidget(MIP_DRect(84,50,60,20),AVersion);
     appendChildWidget(MVersionText);

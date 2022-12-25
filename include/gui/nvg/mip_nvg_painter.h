@@ -16,6 +16,9 @@
 #include "gui/nvg/mip_nvg_utils.h"
 
 #include "../data/fonts/Roboto/Roboto-Regular.h"
+#include "../data/fonts/Manjari/Manjari-Thin.h"
+
+
 //#include "../data/fonts/Quicksand_ttf.h"
 
 //#include "extern/blendish/blendish.h"
@@ -42,6 +45,7 @@ private:
 
   NVGcontext* MContext        = nullptr;
   int         MDefaultFont    = -1;
+  int         MHeaderFont     = -1;
 
 //  NVGpaint    MImagePaint     = {0};
 //  NVGpaint    MGradientPaint  = {0};
@@ -88,6 +92,8 @@ public:
     // load fint
 
     MDefaultFont = nvgCreateFontMem(MContext,"Roboto-Regular",(unsigned char*)Roboto_Regular,Roboto_Regular_size,0);
+    MHeaderFont = nvgCreateFontMem(MContext,"Manjari-Thin",(unsigned char*)Manjari_Thin,Manjari_Thin_size,0);
+
     nvgFontFaceId(MContext,MDefaultFont);
     nvgFontSize(MContext,MTextSize);
 
@@ -110,7 +116,7 @@ public:
   //----------
 
   /*
-    will nvgDelete... also delete images and fonts?
+    will nvgDelete also delete images and fonts?
   */
 
   virtual ~MIP_NvgPainter() {
@@ -135,6 +141,10 @@ public:
 
   int getDefaultFont() {
     return MDefaultFont;
+  }
+
+  int getHeaderFont() {
+    return MHeaderFont;
   }
 
   //----------

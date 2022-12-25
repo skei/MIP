@@ -2,7 +2,7 @@
 #define sa_bulum_included
 //----------------------------------------------------------------------
 
-#define MIP_PLUGIN_GENERIC_EDITOR
+//#define MIP_PLUGIN_GENERIC_EDITOR
 
 #include "plugin/mip_plugin.h"
 
@@ -11,6 +11,10 @@
 //
 //
 //----------------------------------------------------------------------
+
+#define EDITOR_WIDTH  400
+#define EDITOR_HEIGHT 500
+#define SA_CRED_VERSION "0.0.1"
 
 #define MIP_MAX_GRAINS 1024
 #define MIP_BUFFERSIZE (1024*1024)
@@ -113,6 +117,9 @@ public:
 
   sa_bulum_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
+    uint32_t w = getGenericWidth();
+    uint32_t h = calcGenericHeight(13);
+    setInitialEditorSize(w,h);
   }
 
   //----------
@@ -124,38 +131,22 @@ public:
 public: // plugin
 //------------------------------
 
-    //    appendParameter( new MIP_FloatParameter( "master",     -6,   -60, 6     ));
-    //    appendParameter( new MIP_IntParameter(   "num gr",      10,   1,  100   ));
-    //    appendParameter( new MIP_FloatParameter( "bufsize",     1000, 1,  1000  ));
-    //    appendParameter( new MIP_TextParameter(  "freeze",      0,    2,  freeze_txt )); // text
-    //    appendParameter( new MIP_FloatParameter( "gr dist",     20,   0,  100   ));
-    //    appendParameter( new MIP_FloatParameter( "gr size",     30,   1,  100   ));
-    //    appendParameter( new MIP_FloatParameter( "gr dur",      300,  1,  1000  ));
-    //    appendParameter( new MIP_FloatParameter( "gr pitch",    1,    0,  10    ));
-    //    appendParameter( new MIP_FloatParameter( "grenv",       0               ));
-    //    appendParameter( new MIP_FloatParameter( "dist jit",    0.2             ));
-    //    appendParameter( new MIP_FloatParameter( "pitch jit",   0.2             ));
-    //    appendParameter( new MIP_FloatParameter( "size jit",    0.2             ));
-    //    appendParameter( new MIP_FloatParameter( "dur jit",     0.2             ));
-
   bool init() final {
-    //appendAudioInputPort( &sa_bulum_audio_input_ports[0] );
-    //appendAudioOutputPort(&sa_bulum_audio_output_ports[0]);
     appendStereoInput();
     appendStereoOutput();
-    appendParameter(new MIP_Parameter(      "Master",        -6,   -60,  6    ));
-    appendParameter(new MIP_IntParameter(   "Num Grains",     10,   1,   100  ));
-    appendParameter(new MIP_Parameter(      "Buffer Size",    1000, 1,   1000 ));
-    appendParameter(new MIP_TextParameter(  "Freeze",         0,    0,   1,   freeze_txt ));
-    appendParameter(new MIP_Parameter(      "Grain Dist",     20,   0,   100  ));
-    appendParameter(new MIP_Parameter(      "Grain Size",     30,   1,   100  ));
-    appendParameter(new MIP_Parameter(      "Grain Dur",      300,  1,   1000 ));
-    appendParameter(new MIP_Parameter(      "Grain Pitch",    1,    0,   10   ));
-    appendParameter(new MIP_Parameter(      "Grain Env",      0,    0,   1    ));
-    appendParameter(new MIP_Parameter(      "Dist Jitter",    0.2,  0,   1    ));
-    appendParameter(new MIP_Parameter(      "Pitch Jitter",   0.2,  0,   1    ));
-    appendParameter(new MIP_Parameter(      "Size Jitter",    0.2,  0,   1    ));
-    appendParameter(new MIP_Parameter(      "Dur Jitter",     0.2,  0,   1    ));
+    appendParameter(new MIP_Parameter(      "Master",            -6,   -60,  6    ));
+    appendParameter(new MIP_IntParameter(   "Number of grains",   10,   1,   100  ));
+    appendParameter(new MIP_Parameter(      "Buffer size",        1000, 1,   1000 ));
+    appendParameter(new MIP_TextParameter(  "Freeze",             0,    0,   1,   freeze_txt ));
+    appendParameter(new MIP_Parameter(      "Grain distance",     20,   0,   100  ));
+    appendParameter(new MIP_Parameter(      "Grain size",         30,   1,   100  ));
+    appendParameter(new MIP_Parameter(      "Grain duration",     300,  1,   1000 ));
+    appendParameter(new MIP_Parameter(      "Grain pitch",        1,    0,   10   ));
+    appendParameter(new MIP_Parameter(      "Grain envelope",     0,    0,   1    ));
+    appendParameter(new MIP_Parameter(      "Distance jitter",    0.2,  0,   1    ));
+    appendParameter(new MIP_Parameter(      "Pitch jitter",       0.2,  0,   1    ));
+    appendParameter(new MIP_Parameter(      "Size jitter",        0.2,  0,   1    ));
+    appendParameter(new MIP_Parameter(      "Duration jitter",    0.2,  0,   1    ));
     bool result = MIP_Plugin::init();
     if (result) {
       setDefaultParameterValues();
@@ -170,6 +161,17 @@ public: // plugin
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) final {
     MSampleRate = sample_rate;
     return MIP_Plugin::activate(sample_rate,min_frames_count,max_frames_count);
+  }
+
+  //----------
+
+  bool gui_create(const char *api, bool is_floating) override {
+    bool result = MIP_Plugin::gui_create(api,is_floating);
+    if (result) {
+      MIP_Widget* panel = setupGenericEditor();
+      MEditor->setRootWidget(panel);
+    }
+    return result;
   }
 
 //------------------------------
@@ -324,15 +326,7 @@ private:
 //
 //----------------------------------------------------------------------
 
-//#include "plugin/clap/mip_clap_entry.h"
-//#include "plugin/exe/mip_exe_entry.h"
-//#include "plugin/vst2/mip_vst2_entry.h"
-//#include "plugin/vst3/mip_vst3_entry.h"
-
-//----------
-
 #include "plugin/mip_entry.h"
-
 MIP_DEFAULT_ENTRY(sa_bulum_descriptor,sa_bulum_plugin);
 
 //----------------------------------------------------------------------
