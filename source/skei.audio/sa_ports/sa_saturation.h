@@ -99,6 +99,11 @@ public:
 
   sa_saturation_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
+
+    uint32_t w = getGenericWidth();
+    uint32_t h = calcGenericHeight(3);
+    setInitialEditorSize(w,h);
+
   }
 
   //----------
@@ -204,12 +209,12 @@ public: // plugin
 
   bool init() final {
 
-    appendAudioInputPort(  &myAudioInputPorts[0]  );
-    appendAudioOutputPort( &myAudioOutputPorts[0] );
+    appendStereoInput();
+    appendStereoOutput();
 
-    appendParameter(new MIP_Parameter(     0, "Saturation", "",  0,   1,    0, CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_IntParameter(  1, "Stages",     "",  1,   10,   1, CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_TextParameter( 2, "Function",   "",  0,   1,    0, CLAP_PARAM_IS_AUTOMATABLE, txt_func ));
+    appendParameter(new MIP_Parameter(     "Saturation", 0,  0,   1 ));
+    appendParameter(new MIP_IntParameter(  "Stages",     1,  1,   10 ));
+    appendParameter(new MIP_TextParameter( "Function",   0,  0,   1, txt_func ));
 
     bool result = MIP_Plugin::init();
     if (result) {
@@ -225,6 +230,17 @@ public: // plugin
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) final {
     MSampleRate = sample_rate;
     return MIP_Plugin::activate(sample_rate,min_frames_count,max_frames_count);
+  }
+
+  //----------
+
+  bool gui_create(const char *api, bool is_floating) override {
+    bool result = MIP_Plugin::gui_create(api,is_floating);
+    if (result) {
+      MIP_Widget* panel = setupGenericEditor();
+      MEditor->setRootWidget(panel);
+    }
+    return result;
   }
 
 };
@@ -245,12 +261,7 @@ public: // plugin
 
 #ifndef MIP_NO_ENTRY
 
-  //#include "plugin/mip_registry.h"
-  #include "plugin/clap/mip_clap_entry.h"
-  //#include "plugin/exe/mip_exe_entry.h"
-  //#include "plugin/vst2/mip_vst2_entry.h"
-  #include "plugin/vst3/mip_vst3_entry.h"
-
+  #include "plugin/mip_entry.h"
   MIP_DEFAULT_ENTRY(sa_saturation_descriptor,sa_saturation_plugin)
 
 #endif // MIP_NO_ENTRY

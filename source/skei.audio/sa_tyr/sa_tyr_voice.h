@@ -2,16 +2,16 @@
 #define sa_tyr_voice_incuded
 //----------------------------------------------------------------------
 
-#include "mip.h"
+#include "base/mip.h"
 #include "audio/mip_audio_math.h"
-#include "audio/filters/mip_allpass_filter.h"
-#include "audio/filters/mip_rc_filter.h"
-#include "audio/filters/mip_svf_filter.h"
-#include "audio/processing/mip_delay.h"
-#include "audio/synthesis/mip_oscillator2.h"
-#include "audio/modulation/mip_envelope.h"
-#include "audio/waveforms/mip_polyblep_waveform.h"
-#include "plugin/mip_voice.h"
+#include "audio/old/filters/mip_allpass_filter.h"
+#include "audio/old/filters/mip_rc_filter.h"
+#include "audio/old/filters/mip_svf_filter.h"
+#include "audio/old/processing/mip_delay.h"
+#include "audio/old/synthesis/mip_oscillator2.h"
+#include "audio/old/modulation/mip_envelope.h"
+#include "audio/old/waveforms/mip_polyblep_waveform.h"
+#include "audio/old/mip_voice.h"
 //#include "plugin/mip_voice_manager.h"
 
 //----------------------------------------------------------------------

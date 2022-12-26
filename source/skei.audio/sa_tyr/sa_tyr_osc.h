@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------
 
 #include "base/utils/mip_interpolation.h"
-#include "audio/waveforms/mip_dsf_waveform.h"
+#include "audio/old/waveforms/mip_dsf_waveform.h"
 
 template <class T>
 class sa_tyr_osc {

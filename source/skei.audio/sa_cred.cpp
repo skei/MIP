@@ -165,8 +165,7 @@ public: // plugin
       MIP_PanelWidget* MRoot = new MIP_PanelWidget( MIP_DRect(0,0,EDITOR_WIDTH,EDITOR_HEIGHT) );
       MEditor->setRootWidget(MRoot);
 
-      //MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,EDITOR_WIDTH,80),SA_CRED_VERSION,(void*)botage_img,botage_img_size);
-      MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,EDITOR_WIDTH,80),SA_CRED_VERSION,nullptr,0);
+      MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,EDITOR_WIDTH,80),getClapDescriptor());
       MRoot->appendChildWidget(header);
 
       MIP_SliderWidget* slider1 = new MIP_SliderWidget( MIP_DRect(10,100,380,20), "Value1");

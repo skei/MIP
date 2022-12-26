@@ -3,9 +3,9 @@
 //----------------------------------------------------------------------
 
 //#include "base/utils/mip_interpolation.h"
-#include "audio/filters/mip_rc_filter.h"
-#include "audio/filters/mip_svf_filter.h"
-#include "audio/processing/mip_delay.h"
+#include "audio/old/filters/mip_rc_filter.h"
+#include "audio/old/filters/mip_svf_filter.h"
+#include "audio/old/processing/mip_delay.h"
 
 //----------------------------------------------------------------------
 //

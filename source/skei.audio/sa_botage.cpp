@@ -12,12 +12,7 @@
 #define SA_BOTAGE_EDITOR_WIDTH  640
 #define SA_BOTAGE_EDITOR_HEIGHT 480
 
-#ifdef MIP_DEBUG
-  #define SA_BOTAGE_NAME        "sa_botage (debug)"
-#else
-  #define SA_BOTAGE_NAME        "sa_botage"
-#endif
-
+#define SA_BOTAGE_NAME          "sa_botage"
 #define SA_BOTAGE_VENDOR        "skei.audio"
 #define SA_BOTAGE_VERSION       "0.1.6"
 
@@ -101,7 +96,7 @@ public:
   bool gui_create(const char* api, bool is_floating) final {
     //MIP_Print("\n");
     MIsEditorOpen = false;
-    MEditor = new sa_botage_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
+    MEditor = new sa_botage_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters,getClapDescriptor());
     return (MEditor);
   }
 

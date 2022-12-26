@@ -1,3 +1,5 @@
+// todo: on_timerCallback
+
 
 //#define MIP_NO_GUI
 //#define MIP_NO_PAINTER
@@ -30,8 +32,9 @@
 
 #include "plugin/mip_plugin.h"
 #include "plugin/mip_note.h"
-#include "plugin/mip_voice_manager.h"
-#include "plugin/mip_voice.h"
+
+#include "audio/old/mip_voice_manager.h"
+#include "audio/old/mip_voice.h"
 
 #ifndef MIP_NO_GUI
   #include "plugin/mip_editor.h"
@@ -94,7 +97,7 @@ class sa_tyr_plugin
 private:
 //------------------------------
 
-  __MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
+  //__MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
   //MIP_VoiceManager<sa_tyr_voice<double>,NUM_VOICES> MVoices = {};
   sa_tyr_voice_manager MVoices = {};
 
@@ -147,8 +150,9 @@ public:
 
   sa_tyr_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
-    MEditorWidth = SA_TYR_EDITOR_WIDTH;
-    MEditorHeight = SA_TYR_EDITOR_HEIGHT;
+    //MEditorWidth = SA_TYR_EDITOR_WIDTH;
+    //MEditorHeight = SA_TYR_EDITOR_HEIGHT;
+    setInitialEditorSize(SA_TYR_EDITOR_WIDTH,SA_TYR_EDITOR_HEIGHT);
   }
 
   //----------
@@ -162,12 +166,16 @@ public: // plugin
 
   bool init() final {
     bool result = MIP_Plugin::init();
-    appendAudioInputPort( &gain_audioInputPorts[0] );
-    appendAudioOutputPort(&gain_audioOutputPorts[0]);
-    appendNoteInputPort(  &gain_noteInputPorts[0]  );
-    appendNoteOutputPort( &gain_noteOutputPorts[0] );
+    //appendAudioInputPort( &gain_audioInputPorts[0] );
+    //appendAudioOutputPort(&gain_audioOutputPorts[0]);
+    appendAudioInputPort( new MIP_AudioPort() );
+    appendAudioOutputPort( new MIP_AudioPort() );
+    //appendNoteInputPort(  &gain_noteInputPorts[0]  );
+    //appendNoteOutputPort( &gain_noteOutputPorts[0] );
+    appendNoteInputPort( new MIP_NotePort() );
+    appendNoteOutputPort( new MIP_NotePort() );
     for (uint32_t i=0; i<PARAM_COUNT; i++) {
-      appendParameter( new MIP_Parameter(&sa_tyr_parameters[i]) );
+      appendParameter( new MIP_Parameter( sa_tyr_parameters[i].name, sa_tyr_parameters[i].default_value, sa_tyr_parameters[i].min_value, sa_tyr_parameters[i].max_value  ) );
     }
     setDefaultParameterValues();
     return result;
@@ -191,8 +199,8 @@ public: // gui
 
   bool gui_create(const char *api, bool is_floating) final {
     //MIP_Plugin::gui_create(api,is_floating);
-    MEditor = new sa_tyr_editor(this,this,MEditorWidth,MEditorHeight,MParameters);
-    MEditor->setCanResizeEditor(true);
+    MEditor = new sa_tyr_editor(this,this,SA_TYR_EDITOR_WIDTH,SA_TYR_EDITOR_HEIGHT,&MParameters,getClapDescriptor());
+//    MEditor->setCanResizeEditor(true);
     //MEditor->setResizeProportional(true);
     //MEditor->setProportionalSize(EDITOR_WIDTH,EDITOR_HEIGHT);
     return true;
@@ -202,20 +210,20 @@ public: // gui
 
   //----------
 
-  #ifndef MIP_NO_GUI
-
-  // we read from MProcess directly... :-/
-  void on_timerCallback(MIP_Timer* ATimer) final {
-    //
-    MIP_Plugin::on_timerCallback(ATimer);
-    if (ATimer == &MGuiTimer) {
-      //MIP_Plugin::on_timerCallback(ATimer); // flush queues
-      sa_tyr_editor* editor = (sa_tyr_editor*)MEditor;
-      if (editor) editor->timer_update(&MVoices);//(&MProcess);
-    }
-  }
-
-  #endif
+//  #ifndef MIP_NO_GUI
+//
+//  // we read from MProcess directly... :-/
+//  void on_timerCallback(MIP_Timer* ATimer) final {
+//    //
+//    MIP_Plugin::on_timerCallback(ATimer);
+//    if (ATimer == &MGuiTimer) {
+//      //MIP_Plugin::on_timerCallback(ATimer); // flush queues
+//      sa_tyr_editor* editor = (sa_tyr_editor*)MEditor;
+//      if (editor) editor->timer_update(&MVoices);//(&MProcess);
+//    }
+//  }
+//
+//  #endif
 
 #endif
 
@@ -389,11 +397,5 @@ public: // process
 //
 //----------------------------------------------------------------------
 
-#include "plugin/clap/mip_clap_entry.h"
-//#include "plugin/exe/mip_exe_entry.h"
-//#include "plugin/vst2/mip_vst2_entry.h"
-#include "plugin/vst3/mip_vst3_entry.h"
-
-//----------
-
+#include "plugin/mip_entry.h"
 MIP_DEFAULT_ENTRY(sa_tyr_descriptor,sa_tyr_plugin);

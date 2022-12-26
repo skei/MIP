@@ -2,8 +2,8 @@
 #define sa_tyr_widgets_included
 //----------------------------------------------------------------------
 
-#include "mip.h"
-#include "gui/widgets/mip_widgets.h"
+#include "base/mip.h"
+#include "gui/mip_widgets.h"
 
 //----------------------------------------------------------------------
 //
@@ -31,14 +31,15 @@ public:
   //----------
 
   void on_widget_paint(MIP_PaintContext* AContext) final {
+    MIP_DRect mrect = getRect();
     MIP_Painter* painter = AContext->painter;
-    float w = MRect.w / SA_TYR_NUM_VOICES;
-    MIP_DRect rect = MIP_DRect(MRect.x,MRect.y,w, MRect.h);
+    float w = mrect.w / SA_TYR_NUM_VOICES;
+    MIP_DRect rect = MIP_DRect(mrect.x,mrect.y,w, mrect.h);
     MIP_Color color = MIP_COLOR_DARK_GRAY;
     for (uint32_t i=0; i<SA_TYR_NUM_VOICES; i++) {
 
-      painter->beginPath();
-      painter->rectangle(rect);
+//      painter->beginPath();
+//      painter->rectangle(rect);
 
       switch (voice_state[i]) {
         case MIP_VOICE_OFF:       color = MIP_COLOR_BLACK;        break;
@@ -48,8 +49,11 @@ public:
         case MIP_VOICE_FINISHED:  color = MIP_COLOR_WHITE;        break;
       }
 
-      painter->fillColor(color);
-      painter->fill();
+//      painter->fillColor(color);
+//      painter->fill();
+
+      painter->setFillColor(color);
+      painter->fillRect(rect.x,rect.y,rect.w,rect.h);
 
       rect.x += w; // 8
     }
@@ -73,7 +77,7 @@ public:
 
     for (uint32_t i=0; i<ACount; i++) {
       MIP_MenuItemWidget* w = new MIP_MenuItemWidget( MIP_DRect(0, i*AHeight, AWidth, AHeight ), AText[i] );
-      w->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
+      //w->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
       w->setTextSize(-0.7);
       appendChildWidget(w);
     }
@@ -195,10 +199,10 @@ public:
   sa_tyr_BigKnobWidget(MIP_DRect ARect, const char* AText, double AValue=0.0, bool ABipolar=false, double ASnapPos=0.5, double ASnapDist=0.05)
   : MIP_Knob2Widget(ARect,AText,AValue) {
     if (ABipolar) {
-      MKnobWidget->setSnap(true);
-      MKnobWidget->setSnapPos(ASnapPos);
-      MKnobWidget->setSnapDist(ASnapDist);
-      MKnobWidget->setBipolar(true);
+      //MKnobWidget->setSnap(true);
+      //MKnobWidget->setSnapPos(ASnapPos);
+      //MKnobWidget->setSnapDist(ASnapDist);
+      //MKnobWidget->setBipolar(true);
     }
   }
 
@@ -214,10 +218,10 @@ public:
   sa_tyr_SmallKnobWidget(MIP_DRect ARect, const char* AText, double AValue=0.0, bool ABipolar=false, double ASnapPos=0.5, double ASnapDist=0.05)
   : MIP_Knob2Widget(ARect,AText,AValue) {
     if (ABipolar) {
-      MKnobWidget->setSnap(true);
-      MKnobWidget->setSnapPos(ASnapPos);
-      MKnobWidget->setSnapDist(ASnapDist);
-      MKnobWidget->setBipolar(true);
+      //MKnobWidget->setSnap(true);
+      //MKnobWidget->setSnapPos(ASnapPos);
+      //MKnobWidget->setSnapDist(ASnapDist);
+      //MKnobWidget->setBipolar(true);
     }
   }
 

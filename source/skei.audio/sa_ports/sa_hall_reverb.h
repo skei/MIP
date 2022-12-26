@@ -122,6 +122,11 @@ public:
     tmp2 = 0;
     memset(&BUF,0,sizeof(BUF));
     need_recalc = true;;
+
+    uint32_t w = getGenericWidth();
+    uint32_t h = calcGenericHeight(4);
+    setInitialEditorSize(w,h);
+
   }
 
   //----------
@@ -289,13 +294,13 @@ public: // plugin
 
   bool init() final {
 
-    appendAudioInputPort(  &myAudioInputPorts[0]  );
-    appendAudioOutputPort( &myAudioOutputPorts[0] );
+    appendStereoInput();
+    appendStereoOutput();
 
-    appendParameter(new MIP_Parameter( 0, "Dry",      "", -48,   0,    0,  CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_Parameter( 1, "Wet",      "", -48,   0,   -12, CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_Parameter( 2, "Length",   "",  0.01, 3,    1,  CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_Parameter( 3, "PreDelay", "",  0,    100,  10, CLAP_PARAM_IS_AUTOMATABLE ));
+    appendParameter(new MIP_Parameter( "Dry",      0,   -48,   0 ));
+    appendParameter(new MIP_Parameter( "Wet",     -12,  -48,   0 ));
+    appendParameter(new MIP_Parameter( "Length",   1,    0.01, 3 ));
+    appendParameter(new MIP_Parameter( "PreDelay", 10,   0,    100 ));
 
     bool result = MIP_Plugin::init();
     if (result) {
@@ -313,6 +318,17 @@ public: // plugin
     return MIP_Plugin::activate(sample_rate,min_frames_count,max_frames_count);
   }
 
+  //----------
+
+  bool gui_create(const char *api, bool is_floating) override {
+    bool result = MIP_Plugin::gui_create(api,is_floating);
+    if (result) {
+      MIP_Widget* panel = setupGenericEditor();
+      MEditor->setRootWidget(panel);
+    }
+    return result;
+  }
+
 };
 
 //----------------------------------------------------------------------
@@ -323,12 +339,7 @@ public: // plugin
 
 #ifndef MIP_NO_ENTRY
 
-  //#include "plugin/mip_registry.h"
-  #include "plugin/clap/mip_clap_entry.h"
-  //#include "plugin/exe/mip_exe_entry.h"
-  //#include "plugin/vst2/mip_vst2_entry.h"
-  #include "plugin/vst3/mip_vst3_entry.h"
-
+  #include "plugin/mip_entry.h"
   MIP_DEFAULT_ENTRY(sa_hall_reverb_descriptor,sa_hall_reverb_plugin)
 
 #endif // MIP_NO_ENTRY

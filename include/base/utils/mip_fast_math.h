@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------
 
 #include <math.h> // expf, log2
-#include "mip.h"
+#include "base/mip.h"
 
 //#define MIP_MATH_EXTRA_PRECISION
 

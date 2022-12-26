@@ -34,7 +34,7 @@
 
 //----------
 
-#include "mip.h"
+#include "base/mip.h"
 #include "plugin/mip_plugin.h"
 #include "plugin/mip_parameter.h"
 #include <math.h>
@@ -140,6 +140,11 @@ public:
 
   sa_sonic_maximizer_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
+
+    uint32_t w = getGenericWidth();
+    uint32_t h = calcGenericHeight(3);
+    setInitialEditorSize(w,h);
+
   }
 
   //----------
@@ -239,12 +244,12 @@ public: // plugin
   bool init() final {
     //setupParameters(myParameters,NUM_PARAMS);
 
-    appendAudioInputPort(  &myAudioInputPorts[0]  );
-    appendAudioOutputPort( &myAudioOutputPorts[0] );
+    appendStereoInput();
+    appendStereoOutput();
 
-    appendParameter(new MIP_Parameter( 0, "Low Cont", "Params",   0.0, 10.0,  1.0, CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_Parameter( 1, "Process",  "Params",   0.0, 10.0,  1.0, CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_Parameter( 2, "Output",   "Params", -30.0,  0.0, -3.0, CLAP_PARAM_IS_AUTOMATABLE ));
+    appendParameter(new MIP_Parameter( "Low Cont",  1.0,   0.0, 10.0 ));
+    appendParameter(new MIP_Parameter( "Process",   1.0,   0.0, 10.0 ));
+    appendParameter(new MIP_Parameter( "Output",   -3.0, -30.0,  0.0 ));
     bool result = MIP_Plugin::init();
     if (result) {
       setDefaultParameterValues();
@@ -258,6 +263,17 @@ public: // plugin
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) final {
     MSampleRate = sample_rate;
     return MIP_Plugin::activate(sample_rate,min_frames_count,max_frames_count);
+  }
+
+  //----------
+
+  bool gui_create(const char *api, bool is_floating) override {
+    bool result = MIP_Plugin::gui_create(api,is_floating);
+    if (result) {
+      MIP_Widget* panel = setupGenericEditor();
+      MEditor->setRootWidget(panel);
+    }
+    return result;
   }
 
 };
@@ -283,12 +299,7 @@ public: // plugin
 
 #ifndef MIP_NO_ENTRY
 
-  //#include "plugin/mip_registry.h"
-  #include "plugin/clap/mip_clap_entry.h"
-  //#include "plugin/exe/mip_exe_entry.h"
-  //#include "plugin/vst2/mip_vst2_entry.h"
-  #include "plugin/vst3/mip_vst3_entry.h"
-
+  #include "plugin/mip_entry.h"
   MIP_DEFAULT_ENTRY(sa_sonic_maximizer_descriptor,sa_sonic_maximizer_plugin)
 
 #endif // MIP_NO_ENTRY

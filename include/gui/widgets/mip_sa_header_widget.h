@@ -68,7 +68,9 @@ private:
 public:
 
   //MIP_SAHeaderWidget(MIP_DRect ARect, const char* AVersion, void* logo, uint32_t logosize)
-  MIP_SAHeaderWidget(MIP_DRect ARect, const char* AName, const char* AVersion)
+
+  //MIP_SAHeaderWidget(MIP_DRect ARect, const char* AName, const char* AVersion)
+  MIP_SAHeaderWidget(MIP_DRect ARect, const clap_plugin_descriptor_t* descriptor)
   : MIP_PanelWidget(ARect) {
 
     setFillBackground(true);
@@ -88,7 +90,11 @@ public:
 //      MPluginLogoImage->setHint("sa_botage");
 //    }
 
-    MNameText = new MIP_HeaderTextWidget(MIP_DRect(80,7,(MIP_PLUGIN_GENERIC_EDITOR_WIDTH-230),80),AName);
+    const char* name = descriptor->name;
+    if ((name[0] == 's') && (name[1] == 'a') && (name[2] == '_')) name += 3;
+
+    //MNameText = new MIP_HeaderTextWidget(MIP_DRect(80,7,(MIP_PLUGIN_GENERIC_EDITOR_WIDTH-230),80),AName);
+    MNameText = new MIP_HeaderTextWidget(MIP_DRect(80,7,(MIP_PLUGIN_GENERIC_EDITOR_WIDTH-210),80),name);
     appendChildWidget(MNameText);
     MNameText->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     MNameText->setTextSize(48);
@@ -98,7 +104,8 @@ public:
 
     // version
 
-    MVersionText = new MIP_TextWidget(MIP_DRect(84,50,60,20),AVersion);
+    //MVersionText = new MIP_TextWidget(MIP_DRect(84,50,60,20),AVersion);
+    MVersionText = new MIP_TextWidget(MIP_DRect(84,50,60,20),descriptor->version);
     appendChildWidget(MVersionText);
     MVersionText->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     MVersionText->setTextSize(8);

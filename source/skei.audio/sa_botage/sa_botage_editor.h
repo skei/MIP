@@ -86,7 +86,7 @@ private:
 public:
 //------------------------------
 
-  sa_botage_editor(MIP_EditorListener* AListener, uint32_t AWidth, uint32_t AHeight, MIP_ParameterArray* AParameters)
+  sa_botage_editor(MIP_EditorListener* AListener, uint32_t AWidth, uint32_t AHeight, MIP_ParameterArray* AParameters, const clap_plugin_descriptor_t* descriptor)
   : MIP_Editor(AListener,AWidth,AHeight,AParameters) {
 
     //MIP_Print("%i,%i\n",AWidth,AHeight);
@@ -102,7 +102,7 @@ public:
 //------------------------------
 
     //MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,width,80),SA_BOTAGE_VERSION,(void*)botage_img,botage_img_size);
-    MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,width,80),"botage",SA_BOTAGE_VERSION);
+    MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,width,80),descriptor);
     MRootWidget->appendChildWidget(header);
 
     // icons

@@ -562,7 +562,7 @@ public:
   //----------
 
   void startTimer(uint32_t ms, uintptr_t id) override {
-    MIP_PRINT;
+    //MIP_PRINT;
     if (MGuiTimer) {
       MGuiTimer->start(ms);
     }
@@ -571,7 +571,7 @@ public:
   //----------
 
   void stopTimer(uintptr_t id) override {
-    MIP_PRINT;
+    //MIP_PRINT;
     if (MGuiTimer) {
       MGuiTimer->stop();
     }

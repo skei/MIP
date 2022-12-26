@@ -120,6 +120,9 @@ public:
 
   sa_exciter_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
+    uint32_t w = getGenericWidth();
+    uint32_t h = calcGenericHeight(4);
+    setInitialEditorSize(w,h);
   }
 
   //----------
@@ -212,12 +215,12 @@ public: // plugin
 //------------------------------
 
   bool init() final {
-    appendAudioInputPort(  &myAudioInputPorts[0]  );
-    appendAudioOutputPort( &myAudioOutputPorts[0] );
-    appendParameter(new MIP_Parameter( 0, "Freq",  "",  100, 18000, 2000, CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_Parameter( 1, "Boost", "",  0,   6,     0,    CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_Parameter( 2, "Harm",  "",  0,   100,   0,    CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_Parameter( 3, "Mix",   "", -120, 0,     -6,   CLAP_PARAM_IS_AUTOMATABLE ));
+    appendStereoInput();
+    appendStereoOutput();
+    appendParameter(new MIP_Parameter( "Freq",   2000,  100, 18000 ));
+    appendParameter(new MIP_Parameter( "Boost",  0,     0,   6     ));
+    appendParameter(new MIP_Parameter( "Harm",   0,     0,   100   ));
+    appendParameter(new MIP_Parameter( "Mix",   -6,    -120, 0     ));
     bool result = MIP_Plugin::init();
     if (result) {
       setDefaultParameterValues();
@@ -234,6 +237,17 @@ public: // plugin
     return MIP_Plugin::activate(sample_rate,min_frames_count,max_frames_count);
   }
 
+  //----------
+
+  bool gui_create(const char *api, bool is_floating) override {
+    bool result = MIP_Plugin::gui_create(api,is_floating);
+    if (result) {
+      MIP_Widget* panel = setupGenericEditor();
+      MEditor->setRootWidget(panel);
+    }
+    return result;
+  }
+
 };
 
 //----------------------------------------------------------------------
@@ -244,12 +258,7 @@ public: // plugin
 
 #ifndef MIP_NO_ENTRY
 
-  //#include "plugin/mip_registry.h"
-  #include "plugin/clap/mip_clap_entry.h"
-  //#include "plugin/exe/mip_exe_entry.h"
-  //#include "plugin/vst2/mip_vst2_entry.h"
-  #include "plugin/vst3/mip_vst3_entry.h"
-
+  #include "plugin/mip_entry.h"
   MIP_DEFAULT_ENTRY(sa_exciter_descriptor,sa_exciter_plugin)
 
 #endif // MIP_NO_ENTRY

@@ -1557,11 +1557,12 @@ public: // generic gui
 
     //----- sa header -----
 
-    const char* name = getClapDescriptor()->name;
-    if ((name[0] == 's') && (name[1] == 'a') && (name[2] == '_')) name += 3;
-    const char* version = getClapDescriptor()->version;
+    //const char* name = getClapDescriptor()->name;
+    //if ((name[0] == 's') && (name[1] == 'a') && (name[2] == '_')) name += 3;
+    //const char* version = getClapDescriptor()->version;
 
-    MIP_SAHeaderWidget* saheader = new MIP_SAHeaderWidget(MIP_DRect(0,0,w,80),name,version);
+    //MIP_SAHeaderWidget* saheader = new MIP_SAHeaderWidget(MIP_DRect(0,0,w,80),name,version);
+    MIP_SAHeaderWidget* saheader = new MIP_SAHeaderWidget(MIP_DRect(0,0,w,80),getClapDescriptor());
     panel->appendChildWidget(saheader);
 
 //    saheader->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
