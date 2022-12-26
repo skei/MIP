@@ -214,6 +214,10 @@ public:
     if (ARedraw) do_widget_redraw(this);
   }
 
+  virtual MIP_Widget* getConnection(uint32_t AIndex) {
+    return this;
+  }
+
 //------------------------------
 public:
 //------------------------------

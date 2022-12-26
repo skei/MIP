@@ -30,6 +30,8 @@ protected:
   uint32_t    MValueAlignment = MIP_TEXT_ALIGN_RIGHT;
   MIP_DRect   MValueOffset    = MIP_DRect(0,0,5,0);
 
+  int32_t     MNumDigits      = 2;
+
 //------------------------------
 public:
 //------------------------------
@@ -54,19 +56,22 @@ public:
 public:
 //------------------------------
 
-  virtual void setDrawValue(bool ADraw=true)           { MDrawValue = ADraw; }
-  virtual void setValueSize(double ASize)              { MValueSize = ASize; }
-  virtual void setValueColor(MIP_Color AColor)         { MValueColor = AColor; }
-  virtual void setIValueColor(MIP_Color AColor)        { MIValueColor = AColor; }
-  //virtual void setValue(double AValue)                 { MValue = AValue; }
-  virtual void setValueAlignment(uint32_t AAlignment)  { MValueAlignment = AAlignment; }
-  virtual void setValueOffset(MIP_DRect AOffset)       { MValueOffset = AOffset; }
+  virtual void setDrawValue(bool ADraw=true)          { MDrawValue = ADraw; }
+  virtual void setValueSize(double ASize)             { MValueSize = ASize; }
+  virtual void setValueColor(MIP_Color AColor)        { MValueColor = AColor; }
+  virtual void setIValueColor(MIP_Color AColor)       { MIValueColor = AColor; }
+  //virtual void setValue(double AValue)                { MValue = AValue; }
+  virtual void setValueAlignment(uint32_t AAlignment) { MValueAlignment = AAlignment; }
+  virtual void setValueOffset(MIP_DRect AOffset)      { MValueOffset = AOffset; }
+
+  virtual void setNumDigits(int32_t ANum)             { MNumDigits = ANum; }
 
 //------------------------------
 public:
 //------------------------------
 
   virtual void drawValue(MIP_PaintContext* AContext) {
+    char fmt[16] = {0};
 
     MIP_Window* window = (MIP_Window*)getOwnerWindow();
     double S = window->getWindowScale();
@@ -82,7 +87,11 @@ public:
       parameter->valueToText(value,value_txt,32);
     }
     else {
-      sprintf(value_txt,"%.2f",value);
+      fmt[0] = '%';
+      fmt[1] = '.';
+      fmt[2] = '0' + MNumDigits;
+      fmt[3] = 'f';
+      sprintf(value_txt,fmt/*"%.2f"*/,value);
     }
 
     MIP_DRect vo = MValueOffset;

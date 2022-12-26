@@ -49,7 +49,7 @@
 #define SA_TYR_NUM_VOICES     32
 
 #define SA_TYR_PLUGIN_NAME    "sa_tyr"
-#define SA_TYR_PLUGIN_VERSION "0.0.10"
+#define SA_TYR_PLUGIN_VERSION "0.0.11"
 
 
 
@@ -74,7 +74,7 @@ typedef MIP_VoiceManager<sa_tyr_voice<float>,SA_TYR_NUM_VOICES> sa_tyr_voice_man
 const clap_plugin_descriptor_t sa_tyr_descriptor = {
   .clap_version  = CLAP_VERSION,
   .id            = "skei.audio/sa_tyr/0.0.9",
-  .name          = "sa_tyr",//SA_TYR_PLUGIN_NAME,
+  .name          = SA_TYR_PLUGIN_NAME,
   .vendor        = "skei.audio",
   .url           = "https://torhelgeskei.com",
   .manual_url    = "",
@@ -122,21 +122,21 @@ private:
   // ports
   //---------------
 
-  const clap_audio_port_info_t gain_audioInputPorts[1] = {
-    { 0, "audio in 1", CLAP_AUDIO_PORT_IS_MAIN, 2, CLAP_PORT_STEREO, CLAP_INVALID_ID }
-  };
-
-  const clap_audio_port_info_t gain_audioOutputPorts[1] = {
-    { 0, "audio out 1", CLAP_AUDIO_PORT_IS_MAIN, 2, CLAP_PORT_STEREO, CLAP_INVALID_ID }
-  };
-
-  const clap_note_port_info_t gain_noteInputPorts[1] = {
-    { 0, CLAP_NOTE_DIALECT_CLAP, CLAP_NOTE_DIALECT_CLAP, "note in 1" }
-  };
-
-  const clap_note_port_info_t gain_noteOutputPorts[1] = {
-    { 0, CLAP_NOTE_DIALECT_CLAP, CLAP_NOTE_DIALECT_CLAP, "note out 1" }
-  };
+//  const clap_audio_port_info_t gain_audioInputPorts[1] = {
+//    { 0, "audio in 1", CLAP_AUDIO_PORT_IS_MAIN, 2, CLAP_PORT_STEREO, CLAP_INVALID_ID }
+//  };
+//
+//  const clap_audio_port_info_t gain_audioOutputPorts[1] = {
+//    { 0, "audio out 1", CLAP_AUDIO_PORT_IS_MAIN, 2, CLAP_PORT_STEREO, CLAP_INVALID_ID }
+//  };
+//
+//  const clap_note_port_info_t gain_noteInputPorts[1] = {
+//    { 0, CLAP_NOTE_DIALECT_CLAP, CLAP_NOTE_DIALECT_CLAP, "note in 1" }
+//  };
+//
+//  const clap_note_port_info_t gain_noteOutputPorts[1] = {
+//    { 0, CLAP_NOTE_DIALECT_CLAP, CLAP_NOTE_DIALECT_CLAP, "note out 1" }
+//  };
 
   //---------------
   //
@@ -168,14 +168,23 @@ public: // plugin
     bool result = MIP_Plugin::init();
     //appendAudioInputPort( &gain_audioInputPorts[0] );
     //appendAudioOutputPort(&gain_audioOutputPorts[0]);
-    appendAudioInputPort( new MIP_AudioPort() );
-    appendAudioOutputPort( new MIP_AudioPort() );
     //appendNoteInputPort(  &gain_noteInputPorts[0]  );
     //appendNoteOutputPort( &gain_noteOutputPorts[0] );
+    appendAudioInputPort( new MIP_AudioPort() );
+    appendAudioOutputPort( new MIP_AudioPort() );
     appendNoteInputPort( new MIP_NotePort() );
     appendNoteOutputPort( new MIP_NotePort() );
     for (uint32_t i=0; i<PARAM_COUNT; i++) {
-      appendParameter( new MIP_Parameter( sa_tyr_parameters[i].name, sa_tyr_parameters[i].default_value, sa_tyr_parameters[i].min_value, sa_tyr_parameters[i].max_value  ) );
+      const char* name = sa_tyr_parameters[i].name;
+      double val       = sa_tyr_parameters[i].default_value;
+      double minval    = sa_tyr_parameters[i].min_value;
+      double maxval    = sa_tyr_parameters[i].max_value;
+      uint32_t flags   = sa_tyr_parameters[i].flags;
+      MIP_Parameter* parameter = nullptr;
+      if (flags & CLAP_PARAM_IS_STEPPED) parameter = new MIP_IntParameter(name,val,minval,maxval);
+      else parameter = new MIP_Parameter(name,val,minval,maxval);
+      parameter->setFlags(flags);
+      appendParameter(parameter);
     }
     setDefaultParameterValues();
     return result;
@@ -184,6 +193,7 @@ public: // plugin
   //----------
 
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) final {
+    MIP_Plugin::activate(sample_rate,min_frames_count,max_frames_count);
     MVoices.setup(sample_rate,min_frames_count,max_frames_count,&MParameters);
     return true;
   }
@@ -194,19 +204,21 @@ public: // gui
 
 #ifndef MIP_NO_GUI
 
-
-  #ifndef MIP_PLUGIN_GENERIC_EDITOR
+  //#ifndef MIP_PLUGIN_GENERIC_EDITOR
 
   bool gui_create(const char *api, bool is_floating) final {
     //MIP_Plugin::gui_create(api,is_floating);
-    MEditor = new sa_tyr_editor(this,this,SA_TYR_EDITOR_WIDTH,SA_TYR_EDITOR_HEIGHT,&MParameters,getClapDescriptor());
-//    MEditor->setCanResizeEditor(true);
+    MIsEditorOpen = false;
+    MEditor = new sa_tyr_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters,getClapDescriptor());
+    return (MEditor);
+
+    //MEditor->setCanResizeEditor(true);
     //MEditor->setResizeProportional(true);
     //MEditor->setProportionalSize(EDITOR_WIDTH,EDITOR_HEIGHT);
     return true;
   }
 
-  #endif
+  //#endif
 
   //----------
 
@@ -224,6 +236,18 @@ public: // gui
 //  }
 //
 //  #endif
+
+  //----------
+
+  void on_timer_callback(MIP_Timer* ATimer) override {
+    if (MEditor && MEditor->isEditorOpen()) {
+      sa_tyr_editor* editor = (sa_tyr_editor*)MEditor;
+      editor->timer_update(&MVoices);
+      //editor->updateWaveformWidget(&MProcessor);
+      //editor->updateProbIndicators(&MProcessor);
+    }
+    MIP_Plugin::on_timer_callback(ATimer);
+  }
 
 #endif
 
@@ -325,6 +349,7 @@ public: // events
             double value = event->value;
             setParameterValue(index,value);
             #ifndef MIP_NO_GUI
+            MIP_Print("%i = %f\n",index,value);
             queueGuiParam(index,value);
             #endif
             break;

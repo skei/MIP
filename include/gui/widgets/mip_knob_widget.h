@@ -30,6 +30,8 @@ protected:
   MIP_Color MIArcValueColor = MIP_COLOR_WHITE;
   double    MArcThickness   = 10.0;
 
+  bool      MDrawIndicator  = false;//true;
+
 //------------------------------
 public:
 //------------------------------
@@ -37,6 +39,7 @@ public:
   MIP_KnobWidget(MIP_DRect ARect, const char* AText="%", double AValue=0.0)
   : MIP_DragValueWidget(ARect,AText,AValue) {
 
+    setFillBackground(false);
     setDrawBorder(false);
 
     //setDrawValue(false);
@@ -66,6 +69,8 @@ public:
   virtual void setArcBackColor(MIP_Color AColor)   { MArcBackColor = AColor; }
   virtual void setArcValueColor(MIP_Color AColor)  { MArcValueColor = AColor; }
   virtual void setArcThickness(double AThickness)  { MArcThickness = AThickness; }
+
+  virtual void setDrawIndicator(bool ADraw=true)   { MDrawIndicator = ADraw; }
 
 //------------------------------
 public:
@@ -119,16 +124,18 @@ public:
 
     // draw indicator
 
-    if (!isDisabled()) {
-      if (MIndicatorValue >= 0.0) {
-        a1 = 0.35 + (MIndicatorValue * 0.8);
-        a2 = 0.02;//       (MIndicatorValue * 0.8);
-        a1 *= MIP_PI2;
-        a2 *= MIP_PI2;
-        painter->setLineWidth(thick);
-        color = MIndicatorColor;
-        painter->setDrawColor(color);
-        painter->drawArc(cx,cy,r,a1,a2);
+    if (MDrawIndicator) {
+      if (!isDisabled()) {
+        if (MIndicatorValue >= 0.0) {
+          a1 = 0.35 + (MIndicatorValue * 0.8);
+          a2 = 0.02;//       (MIndicatorValue * 0.8);
+          a1 *= MIP_PI2;
+          a2 *= MIP_PI2;
+          painter->setLineWidth(thick);
+          color = MIndicatorColor;
+          painter->setDrawColor(color);
+          painter->drawArc(cx,cy,r,a1,a2);
+        }
       }
     }
 

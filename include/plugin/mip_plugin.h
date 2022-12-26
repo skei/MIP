@@ -117,7 +117,7 @@ public: // plugin
 //------------------------------
 
   bool init() override {
-    MIP_Assert(!MIsActivated);
+    MIP_Assert(!MIsInitialized);
     MIsInitialized = true;
     return true;
   }
@@ -856,11 +856,12 @@ public: // timer listener
     if (ATimer == &MGuiTimer) {
       if (MIsEditorOpen) { //  && !MIsEditorBusy) {
 
-//          MEditor->updateTimer();
+//        MEditor->updateTimer();
 //        MEditor.updateWaveformWidget(sa_botage_processor* process) {
 
         flushGuiParams();
         flushGuiMods();
+
       }
     }
     //MIP_PRINT;
@@ -1218,6 +1219,7 @@ public: // queues
   */
 
   void queueGuiParam(uint32_t AIndex, double AValue) {
+    //MIP_Print("%i = %.3f\n",AIndex,AValue);
     MQueuedGuiParamValues.write(AValue);
     MGuiParamQueue.write(AIndex);
   }
@@ -1398,6 +1400,7 @@ public: // process events
     double value = event->value;
     setParameterValue(index,value);
     #ifndef MIP_NO_GUI
+    //MIP_Print("%i = %f\n",index,value);
     if (MIsEditorOpen) queueGuiParam(index,value);
     #endif
     processParamValue(event);

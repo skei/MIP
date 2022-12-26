@@ -78,7 +78,7 @@ public:
     for (uint32_t i=0; i<ACount; i++) {
       MIP_MenuItemWidget* w = new MIP_MenuItemWidget( MIP_DRect(0, i*AHeight, AWidth, AHeight ), AText[i] );
       //w->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
-      w->setTextSize(-0.7);
+      //w->setTextSize(-0.7);
       appendChildWidget(w);
     }
   }
@@ -102,10 +102,10 @@ public:
     setFillBackground(true);
     setBackgroundColor(0.55);
 
-    MIP_TextWidget* text = new MIP_TextWidget(MIP_DRect(0,0,ARect.w,AHeaderHeight),AText);
+    MIP_TextWidget* text = new MIP_TextWidget(MIP_DRect(ARect.x,ARect.y,ARect.w,AHeaderHeight),AText);
     appendChildWidget(text);
     text->setTextAlignment(MIP_TEXT_ALIGN_CENTER);
-    text->setTextSize(-0.8);
+    text->setTextSize(15);
     text->setDrawBorder(true);
     text->setTextColor(MIP_COLOR_LIGHT_GRAY);
     text->setDrawBorder(false);
@@ -129,8 +129,8 @@ public:
 
   sa_tyr_SelectorWidget(MIP_DRect ARect, const char* AText, MIP_MenuWidget* AMenu)
   : MIP_SelectorWidget(ARect,AText,AMenu) {
-    setTextSize(-0.7);
-    setSelected(0);
+    //setTextSize(-0.7);
+    //setSelected(0);
   }
 
 };
@@ -197,13 +197,17 @@ class sa_tyr_BigKnobWidget
 public:
 
   sa_tyr_BigKnobWidget(MIP_DRect ARect, const char* AText, double AValue=0.0, bool ABipolar=false, double ASnapPos=0.5, double ASnapDist=0.05)
-  : MIP_Knob2Widget(ARect,AText,AValue) {
+  : MIP_Knob2Widget(ARect,AText,AValue,true,false) {
     if (ABipolar) {
-      //MKnobWidget->setSnap(true);
-      //MKnobWidget->setSnapPos(ASnapPos);
-      //MKnobWidget->setSnapDist(ASnapDist);
-      //MKnobWidget->setBipolar(true);
+      MKnobWidget->setSnap(true);
+      MKnobWidget->setSnapPos(ASnapPos);
+      MKnobWidget->setSnapDist(ASnapDist);
+      MKnobWidget->setBipolar(true);
     }
+    MKnobWidget->setArcThickness(10);
+    MKnobWidget->setValueSize(12);
+    MLabelWidget->setTextSize(15);
+    //MValueWidget->setTextSize(12);
   }
 
 };
@@ -216,13 +220,18 @@ class sa_tyr_SmallKnobWidget
 public:
 
   sa_tyr_SmallKnobWidget(MIP_DRect ARect, const char* AText, double AValue=0.0, bool ABipolar=false, double ASnapPos=0.5, double ASnapDist=0.05)
-  : MIP_Knob2Widget(ARect,AText,AValue) {
+  : MIP_Knob2Widget(ARect,AText,AValue,true,false) {
     if (ABipolar) {
-      //MKnobWidget->setSnap(true);
-      //MKnobWidget->setSnapPos(ASnapPos);
-      //MKnobWidget->setSnapDist(ASnapDist);
-      //MKnobWidget->setBipolar(true);
+      MKnobWidget->setSnap(true);
+      MKnobWidget->setSnapPos(ASnapPos);
+      MKnobWidget->setSnapDist(ASnapDist);
+      MKnobWidget->setBipolar(true);
     }
+    MKnobWidget->setArcThickness(5);
+    MKnobWidget->setValueSize(8);
+    MLabelWidget->setTextSize(12);
+    //MValueWidget->setTextSize(10);
+
   }
 
 };

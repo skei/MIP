@@ -17,13 +17,16 @@ class MIP_Knob2Widget
 : public MIP_PanelWidget {
 
 //------------------------------
-private:
+protected:
 //------------------------------
 
   MIP_TextWidget* MLabelWidget      = nullptr;
   MIP_KnobWidget* MKnobWidget       = nullptr;
   MIP_TextWidget* MValueWidget      = nullptr;
   char            MValueString[32]  = {0};
+
+  bool MDrawLabel = true;
+  bool MDrawValue = true;
 
 //------------------------------
 protected:
@@ -36,42 +39,48 @@ protected:
 public:
 //------------------------------
 
-  MIP_Knob2Widget(MIP_DRect ARect, const char* AText="", double AValue=0.0)
+  MIP_Knob2Widget(MIP_DRect ARect, const char* AText="", double AValue=0.0, bool ADrawLabel=true, bool ADrawValue=true)
   : MIP_PanelWidget(ARect) {
+
+    setDrawBorder(false);
+    setFillBackground(false);
+
+    MDrawLabel = ADrawLabel;
+    MDrawValue = ADrawValue;
 
     double x = ARect.x;
     double y = ARect.y;
     double w = ARect.w;
     double h = ARect.h;
 
-    //if (h > w) { // 'vertical'
-      double kw = w;          // knob height
-      double kh = w;          // knob height
-      double th = (h - kh) / 2.0;  // text(s) height
-      MLabelWidget = new MIP_TextWidget(MIP_DRect( x,y,       kw,th ), AText      );
-      MKnobWidget  = new MIP_KnobWidget(MIP_DRect( x,y+th,    kw,kh ), "", AValue );
-      MValueWidget = new MIP_TextWidget(MIP_DRect( x,y+th+kh, kw,th ), "0.0"      );
-    //}
-    //else { // 'horizontal'
-    //}
+    double kw = w;          // knob height
+    double kh = w;          // knob height
+    double th = (h - kh);   // text(s) height
+    if (ADrawLabel && ADrawValue) th *= 0.5;
 
-    appendChildWidget(MLabelWidget);
+    if (ADrawLabel) {
+      MLabelWidget = new MIP_TextWidget(MIP_DRect( x,y, kw,th ), AText );
+      appendChildWidget(MLabelWidget);
+      MLabelWidget->setDrawBorder(false);
+      MLabelWidget->setFillBackground(false);
+    }
+
+    y += th;
+
+    MKnobWidget  = new MIP_KnobWidget(MIP_DRect( x,y,    kw,kh ), "", AValue );
     appendChildWidget(MKnobWidget);
-    appendChildWidget(MValueWidget);
-
-    setDrawBorder(false);
-    setFillBackground(false);
-
-    MLabelWidget->setDrawBorder(false);
-    MLabelWidget->setFillBackground(false);
-
     MKnobWidget->setArcThickness(12);
 
-    sprintf(MValueString,"%.3f",AValue);
+    y += kh;
 
-    MValueWidget->setDrawBorder(false);
-    MValueWidget->setFillBackground(false);
-    MValueWidget->setText(MValueString);
+    if (ADrawValue) {
+      MValueWidget = new MIP_TextWidget(MIP_DRect( x,y, kw,th ), "0.0"      );
+      appendChildWidget(MValueWidget);
+      sprintf(MValueString,"%.3f",AValue);
+      MValueWidget->setDrawBorder(false);
+      MValueWidget->setFillBackground(false);
+      MValueWidget->setText(MValueString);
+    }
 
   }
 
@@ -92,6 +101,12 @@ public:
 public:
 //------------------------------
 
+  MIP_Widget* getConnection(uint32_t AIndex) override {
+    return MKnobWidget;
+  }
+
+  //----------
+
   void setValue(double AValue) override {
     MIP_PanelWidget::setValue(AValue);
     MKnobWidget->setValue(AValue);
@@ -103,13 +118,14 @@ public:
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
     //if (MListener) MListener->do_widget_update(AWidget,AMode);
     MIP_PanelWidget::do_widget_update(AWidget,AMode);
-    if (AWidget == MKnobWidget) {
-      double value = MKnobWidget->getValue();
-      sprintf(MValueString,"%.3f",value);
-      MValueWidget->setText(MValueString);
-      MValueWidget->redraw();
+    if (MDrawValue) {
+      if (AWidget == MKnobWidget) {
+        double value = MKnobWidget->getValue();
+        sprintf(MValueString,"%.3f",value);
+        MValueWidget->setText(MValueString);
+        MValueWidget->redraw();
+      }
     }
-
   }
 
 };

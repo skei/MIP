@@ -2,43 +2,6 @@
 #define mip_editor_included
 //----------------------------------------------------------------------
 
-/*
-
-  open
-
-   1. clap_plugin_gui->is_api_supported(), check what can work
-   2. clap_plugin_gui->create(), allocates gui resources
-   3. if the plugin window is floating
-   4.    -> clap_plugin_gui->set_transient()
-   5.    -> clap_plugin_gui->suggest_title()
-   6. else
-   7.    -> clap_plugin_gui->set_scale()
-   8.    -> clap_plugin_gui->can_resize()
-   9.    -> if resizable and has known size from previous session, clap_plugin_gui->set_size()
-  10.    -> else clap_plugin_gui->get_size(), gets initial size
-  11.    -> clap_plugin_gui->set_parent()
-  12. clap_plugin_gui->show()
-  13. clap_plugin_gui->hide()/show() ...
-  14. clap_plugin_gui->destroy() when done with the gui
-
-  resize (drag, if embedded)):
-
-  1. Only possible if clap_plugin_gui->can_resize() returns true
-  2. Mouse drag -> new_size
-  3. clap_plugin_gui->adjust_size(new_size) -> working_size
-  4. clap_plugin_gui->set_size(working_size)
-
-  resize (initiated by the plugin, if embedded):
-
-  1. Plugins calls clap_host_gui->request_resize()
-  2. If the host returns true the new size is accepted,
-     the host doesn't have to call clap_plugin_gui->set_size().
-     If the host returns false, the new size is rejected.
-
-*/
-
-//----------------------------------------------------------------------
-
 #include "base/mip.h"
 #include "plugin/clap/mip_clap.h"
 //#include "plugin/mip_editor_window.h"
@@ -172,27 +135,31 @@ public:
   //----------
 
   virtual void connect(MIP_Widget* AWidget, MIP_Parameter* AParameter) {
+
+    MIP_Widget* connection = AWidget->getConnection(0);
+
     //MIP_Print("AWidget %p AParameter %p\n",AWidget,AParameter);
-    AWidget->setParameter(AParameter);
-    AParameter->setWidget(AWidget);
+    /*AWidget*/connection->setParameter(AParameter);
+    AParameter->setWidget(/*AWidget*/connection);
     double value = AParameter->getValue();
-    AWidget->setValue(value);
-    AWidget->on_widget_connect(AParameter);
+    /*AWidget*/connection->setValue(value);
+    /*AWidget*/connection->on_widget_connect(AParameter);
     //double nv = AParameter->normalizeValue(v);
     //AWidget->setValue(nv);
+    //connect(AWidget,0,AParameter);
   }
 
   //----------
 
   virtual void connect(MIP_Widget* AWidget, uint32_t AIndex, MIP_Parameter* AParameter) {
     //MIP_Print("AWidget %p AIndex %i AParameter %p\n",AWidget,AIndex,AParameter);
-
+    MIP_Widget* connection = AWidget->getConnection(AIndex);
     //AWidget->setNumParameters(AIndex);
-    AWidget->setParameter(AIndex,AParameter);
-    AParameter->setWidget(AWidget);
+    /*AWidget*/connection->setParameter(AIndex,AParameter);
+    AParameter->setWidget(/*AWidget*/connection);
     double value = AParameter->getValue();
-    AWidget->setValue(AIndex,value);
-    AWidget->on_widget_connect(AParameter);
+    /*AWidget*/connection->setValue(AIndex,value);
+    /*AWidget*/connection->on_widget_connect(AParameter);
     //double nv = AParameter->normalizeValue(v);
     //AWidget->setValue(nv);
   }
@@ -479,7 +446,6 @@ public: // widget listener
 
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
     uint32_t num = AWidget->getNumParameters();
-    //MIP_Print("num %i\n",num);
     for (uint32_t i=0; i<num; i++) {
       MIP_Parameter* parameter = AWidget->getParameter(i);
       if (parameter) {
@@ -487,7 +453,7 @@ public: // widget listener
         //double value = parameter->getValue();
         double value = AWidget->getValue(i);
         if (MListener) {
-//          MIP_Print("%i = %f\n",index,value);
+          //MIP_Print("%i = %f\n",index,value);
           MListener->on_editor_parameter_change(index,value);
         }
       }

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1672053825 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+1672056111 source:/DISKS/sda2/code/git/MIP/build/build.cpp
 	"../source/skei.audio/sa_tyr.cpp"
 
 1670414796 /DISKS/sda2/code/git/MIP/build/test/test1.cpp
@@ -645,7 +645,7 @@
 	"gui/mip_paint_source.h"
 	"gui/mip_paint_target.h"
 
-1671750793 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
+1672083928 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
 	"base/mip.h"
 	"gui/base/mip_base_window.h"
 	"gui/mip_paint_context.h"
@@ -708,7 +708,7 @@
 	"base/mip.h"
 	"gui/mip_widget.h"
 
-1671618160 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob_widget.h
+1672088294 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_drag_value_widget.h"
 
@@ -722,7 +722,7 @@
 	"gui/mip_widgets.h"
 	"plugin/mip_entry.h"
 
-1672043088 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
+1672080877 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
 	"base/mip.h"
 	"base/system/mip_timer.h"
 	"plugin/mip_parameter.h"
@@ -748,7 +748,7 @@
 1671709135 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_plugin.h
 	"plugin/clap/mip_clap.h"
 
-1671794382 /DISKS/sda2/code/git/MIP/include/plugin/mip_editor.h
+1672084000 /DISKS/sda2/code/git/MIP/include/plugin/mip_editor.h
 	"base/mip.h"
 	"plugin/clap/mip_clap.h"
 	"gui/mip_window.h"
@@ -829,7 +829,7 @@
 	"base/mip.h"
 	"gui/widgets/mip_text_widget.h"
 
-1670681010 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_selector_widget.h
+1672087305 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_selector_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_panel_widget.h"
 
@@ -880,7 +880,7 @@
 1670549407 /DISKS/sda2/code/git/MIP/include/base/utils/mip_tcc2.h
 	<dlfcn.h>
 
-1670784694 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob2_widget.h
+1672084051 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob2_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_panel_widget.h"
 	"gui/widgets/mip_knob_widget.h"
@@ -1013,7 +1013,7 @@
 	"plugin/mip_plugin.h"
 	"plugin/mip_entry.h"
 
-1672054157 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr.cpp
+1672086977 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr.cpp
 	"audio/mip_audio_utils.h"
 	"plugin/mip_plugin.h"
 	"plugin/mip_note.h"
@@ -1100,13 +1100,13 @@
 	"audio/old/filters/mip_svf_filter.h"
 	"audio/old/processing/mip_delay.h"
 
-1672052686 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr/sa_tyr_editor.h
+1672087957 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr/sa_tyr_editor.h
 	"base/mip.h"
 	"gui/mip_widgets.h"
 	"plugin/mip_editor.h"
 	"sa_tyr_widgets.h"
 
-1672052376 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr/sa_tyr_widgets.h
+1672088258 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr/sa_tyr_widgets.h
 	"base/mip.h"
 	"gui/mip_widgets.h"
 

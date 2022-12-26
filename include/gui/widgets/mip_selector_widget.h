@@ -35,6 +35,7 @@ public:
     MMenu = AMenu;
     setCursor(MIP_CURSOR_FINGER);
     MTextAlignment = MIP_TEXT_ALIGN_LEFT;
+    setNumParameters(1);
   }
 
   //----------
@@ -47,17 +48,30 @@ public:
 //------------------------------
 
   void setValue(double AValue) override {
-    setValue(AValue);
+    MIP_Widget::setValue(AValue);
     MSelected = AValue;
     //do_widget_update(this);
     //do_widget_redraw(this);
   }
 
+  //----------
+
+  void setValue(uint32_t AIndex, double AValue) override {
+    MIP_Widget::setValue(AIndex,AValue);
+    MSelected = AValue;
+    //do_widget_update(this);
+    //do_widget_redraw(this);
+  }
+
+  //----------
+
   double getValue(uint32_t AIndex=0) override {
-    double value = getValue();
+    double value = MIP_Widget::getValue(AIndex);
     //MIP_Print("%.3f\n",value);
     return value;
   }
+
+  //----------
 
   virtual void setSelected(int32_t AIndex) {
     //if (AIndex >= MChildren.size()) return;
