@@ -108,8 +108,12 @@ protected:
   MIP_Color           MDisabledColor    = MIP_Color(0.5);
   double              MDisabledAlpha    = 0.5;
 
+  bool                MDrawIndicator    = false;
   double              MIndicatorValue   = 0.0;
   MIP_Color           MIndicatorColor   = MIP_Color(1,0,0,0.8);
+
+  bool                MDrawModulation   = true;
+  MIP_Color           MModulationColor  = MIP_Color(1,0,0,0.8);
 
 //------------------------------
 public:
@@ -208,11 +212,17 @@ public:
   virtual void setDisabledColor(MIP_Color AColor) { MDisabledColor = AColor; }
   virtual void setDisabledAlpha(double AAlpha)      { MDisabledAlpha = AAlpha; }
 
+  virtual void setDrawIndicator(bool ADraw=true)   { MDrawIndicator = ADraw; }
+  virtual void setIndicatorColor(MIP_Color AColor) { MIndicatorColor = AColor; }
 
   virtual void setIndicatorValue(double AValue, bool ARedraw=true) {
     MIndicatorValue = AValue;
     if (ARedraw) do_widget_redraw(this);
   }
+
+  virtual void setDrawModulation(bool ADraw=true)   { MDrawModulation = ADraw; }
+  virtual void setModulationColor(MIP_Color AColor) { MModulationColor = AColor; }
+
 
   virtual MIP_Widget* getConnection(uint32_t AIndex) {
     return this;

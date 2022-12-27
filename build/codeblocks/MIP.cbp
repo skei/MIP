@@ -628,6 +628,7 @@
 		<Unit filename="../../include/gui/widgets/mip_menu_item_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_menu_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_panel_widget.h" />
+		<Unit filename="../../include/gui/widgets/mip_sa_header_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_selector_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_slider_widget.h" />
 		<Unit filename="../../include/gui/widgets/mip_test_widget.h" />

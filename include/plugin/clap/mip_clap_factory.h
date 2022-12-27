@@ -7,8 +7,6 @@
 #include "plugin/mip_registry.h"
 #include "plugin/mip_plugin.h"
 
-extern MIP_Plugin* MIP_CreatePlugin(uint32_t AIndex, const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost) __MIP_WEAK;
-
 //----------------------------------------------------------------------
 
 uint32_t clap_plugin_factory_get_plugin_count_callback(const struct clap_plugin_factory *factory) {

@@ -10,12 +10,11 @@
 
 //----------------------------------------------------------------------
 
-class MIP_Registry;
+class       MIP_Plugin;
+extern void MIP_Register() __MIP_WEAK;
+extern void MIP_Unregister() __MIP_WEAK;
+extern      MIP_Plugin* MIP_CreatePlugin(uint32_t AIndex, const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost) __MIP_WEAK;
 
-extern void         MIP_Register() __MIP_WEAK;
-extern void         MIP_Unregister() __MIP_WEAK;
-
-//extern MIP_Plugin*  MIP_CreatePlugin(uint32_t AIndex, const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost) __MIP_WEAK;
 
 //----------------------------------------------------------------------
 //

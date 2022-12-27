@@ -30,7 +30,7 @@ protected:
   MIP_Color MIArcValueColor = MIP_COLOR_WHITE;
   double    MArcThickness   = 10.0;
 
-  bool      MDrawIndicator  = false;//true;
+
 
 //------------------------------
 public:
@@ -69,8 +69,6 @@ public:
   virtual void setArcBackColor(MIP_Color AColor)   { MArcBackColor = AColor; }
   virtual void setArcValueColor(MIP_Color AColor)  { MArcValueColor = AColor; }
   virtual void setArcThickness(double AThickness)  { MArcThickness = AThickness; }
-
-  virtual void setDrawIndicator(bool ADraw=true)   { MDrawIndicator = ADraw; }
 
 //------------------------------
 public:
@@ -121,6 +119,23 @@ public:
     }
 
     painter->drawArc(cx,cy,r,a1,a2);
+
+    // draw modulation
+
+    if (MDrawModulation) {
+      if (!isDisabled()) {
+        double v = value + MModulations[0];
+        v = MIP_Clamp(v,0,1);
+        a1 = 0.35 + (v * 0.8);
+        a2 = 0.02;//       (MIndicatorValue * 0.8);
+        a1 *= MIP_PI2;
+        a2 *= MIP_PI2;
+        painter->setLineWidth(thick);
+        color = MModulationColor;
+        painter->setDrawColor(color);
+        painter->drawArc(cx,cy,r,a1,a2);
+      }
+    }
 
     // draw indicator
 

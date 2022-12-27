@@ -1,5 +1,8 @@
-// todo: on_timerCallback
 
+
+#define MIP_PLUGIN_CLAP
+#define MIP_PLUGIN_VST2
+#define MIP_PLUGIN_VST3
 
 //#define MIP_NO_GUI
 //#define MIP_NO_PAINTER
@@ -349,7 +352,7 @@ public: // events
             double value = event->value;
             setParameterValue(index,value);
             #ifndef MIP_NO_GUI
-            MIP_Print("%i = %f\n",index,value);
+            //MIP_Print("%i = %f\n",index,value);
             queueGuiParam(index,value);
             #endif
             break;

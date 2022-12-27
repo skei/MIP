@@ -112,53 +112,65 @@ public:
     //MEditor.setInitialSize(AWidth,AHeight); // ->gui_create
   }
 
+  virtual MIP_Editor* getEditor() { return MEditor; }
+
 //------------------------------
 public: // plugin
 //------------------------------
 
   bool init() override {
-    MIP_Assert(!MIsInitialized);
-    MIsInitialized = true;
+    //MIP_Assert(!MIsInitialized);
+    if (!MIsInitialized) {
+      MIsInitialized = true;
+    }
     return true;
   }
 
   //----------
 
   void destroy() override {
-    MIP_Assert(MIsInitialized);
+    //MIP_Assert(MIsInitialized);
+    //if (MIsInitialized)
     MIsInitialized = false;
   }
 
   //----------
 
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) override {
-    MIP_Assert(!MIsActivated);
-    setDefaultParameterValues();
-    MProcessContext.samplerate = sample_rate;
-    MIsActivated = true;
+    //MIP_PRINT;
+    //MIP_Assert(!MIsActivated);
+    if (!MIsActivated) {
+      setDefaultParameterValues();
+      MProcessContext.samplerate = sample_rate;
+      MIsActivated = true;
+    }
     return true;
   }
 
   //----------
 
   void deactivate() override {
-    MIP_Assert(MIsActivated);
+    //MIP_Assert(MIsActivated);
+    //if (MIsActivated)
     MIsActivated = false;
   }
 
   //----------
 
   bool start_processing() override {
-    MIP_Assert(!MIsProcessing);
-    MProcessContext.counter = 0;
-    MIsProcessing = true;
+    //MIP_Assert(!MIsProcessing);
+    if (!MIsProcessing) {
+      MProcessContext.counter = 0;
+      MIsProcessing = true;
+    }
     return true;
   }
 
   //----------
 
   void stop_processing() override {
-    MIP_Assert(MIsProcessing);
+    //MIP_Assert(MIsProcessing);
+    //if (MIsProcessing)
     MIsProcessing = false;
   }
 
@@ -380,46 +392,60 @@ public: // ext gui
 
   void gui_destroy() override {
     //MIP_Print("\n");
-    MIP_Assert(MEditor);
-    if (MIsEditorOpen) gui_hide();
-    MIsEditorOpen = false;
-    if (MIsEditorOpen) {
-      MEditor->hide();
+    //MIP_Assert(MEditor);
+    if (MEditor) {
+      if (MIsEditorOpen) gui_hide();
+      MIsEditorOpen = false;
+      if (MIsEditorOpen) {
+        MEditor->hide();
+      }
+      delete MEditor;
     }
-    delete MEditor;
   }
 
   //----------
 
   bool gui_set_scale(double scale) override {
     //MIP_Print("%f\n",scale);
-    MIP_Assert(MEditor);
-    return MEditor->setScale(scale);
+    //MIP_Assert(MEditor);
+    if (MEditor) return MEditor->setScale(scale);
+    else return 1.0;
   }
 
   //----------
 
   bool gui_get_size(uint32_t *width, uint32_t *height) override {
-    MIP_Assert(MEditor);
-    bool result = MEditor->getSize(width,height);
-    //MIP_Print("-> %i,%i\n",*width,*height);
-    return result;
+    //MIP_Assert(MEditor);
+    if (MEditor) {
+      bool result = MEditor->getSize(width,height);
+      //MIP_Print("-> %i,%i\n",*width,*height);
+      return result;
+    }
+    else {
+      *width = MInitialEditorWidth;
+      *height = MInitialEditorHeight;
+      return true;
+    }
   }
 
   //----------
 
   bool gui_can_resize() override {
     //MIP_Print("\n");
-    MIP_Assert(MEditor);
-    return MEditor->canResize();
+    //MIP_Assert(MEditor);
+    if (MEditor) return MEditor->canResize();
+    else return false;
   }
 
   //----------
 
   bool gui_get_resize_hints(clap_gui_resize_hints_t *hints) override {
     //MIP_Print("\n");
-    MIP_Assert(MEditor);
-    return MEditor->getResizeHints(hints);
+    //MIP_Assert(MEditor);
+    if (MEditor) return MEditor->getResizeHints(hints);
+    else {
+      return false;
+    }
   }
 
   //----------

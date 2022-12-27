@@ -12,7 +12,13 @@
 
 #ifdef MIP_PLUGIN_EXE
   #include "plugin/exe/mip_exe_entry.h"
+#else
+  // ugly..
+  #ifdef MIP_EXE
+    #include "plugin/exe/mip_exe_entry.h"
+  #endif
 #endif
+
 
 #ifdef MIP_PLUGIN_VST2
   #include "plugin/vst2/mip_vst2_entry.h"

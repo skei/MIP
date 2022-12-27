@@ -34,7 +34,7 @@
 	"base/mip_test.h"
 	"plugin/mip_registry.h"
 
-1671732472 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
+1672179329 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
 
 1641519085 /DISKS/sda2/code/git/MIP/include/base/mip_attributes.h
 
@@ -645,7 +645,7 @@
 	"gui/mip_paint_source.h"
 	"gui/mip_paint_target.h"
 
-1672083928 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
+1672174758 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
 	"base/mip.h"
 	"gui/base/mip_base_window.h"
 	"gui/mip_paint_context.h"
@@ -692,7 +692,7 @@
 	"base/mip.h"
 	"gui/widgets/mip_panel_widget.h"
 
-1671228594 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_value_widget.h
+1672095630 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_value_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_text_widget.h"
 
@@ -708,7 +708,7 @@
 	"base/mip.h"
 	"gui/mip_widget.h"
 
-1672088294 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob_widget.h
+1672174469 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_drag_value_widget.h"
 
@@ -722,7 +722,7 @@
 	"gui/mip_widgets.h"
 	"plugin/mip_entry.h"
 
-1672080877 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
+1672179240 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
 	"base/mip.h"
 	"base/system/mip_timer.h"
 	"plugin/mip_parameter.h"
@@ -748,7 +748,7 @@
 1671709135 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_plugin.h
 	"plugin/clap/mip_clap.h"
 
-1672084000 /DISKS/sda2/code/git/MIP/include/plugin/mip_editor.h
+1672094794 /DISKS/sda2/code/git/MIP/include/plugin/mip_editor.h
 	"base/mip.h"
 	"plugin/clap/mip_clap.h"
 	"gui/mip_window.h"
@@ -758,9 +758,10 @@
 	"base/mip.h"
 	"base/utils/mip_math.h"
 
-1670435258 /DISKS/sda2/code/git/MIP/include/plugin/mip_entry.h
+1672179401 /DISKS/sda2/code/git/MIP/include/plugin/mip_entry.h
 	"base/mip.h"
 	"plugin/clap/mip_clap_entry.h"
+	"plugin/exe/mip_exe_entry.h"
 	"plugin/exe/mip_exe_entry.h"
 	"plugin/vst2/mip_vst2_entry.h"
 	"plugin/vst3/mip_vst3_entry.h"
@@ -782,9 +783,24 @@
 	"base/utils/mip_arguments.h"
 	"plugin/exe/mip_exe_window.h"
 
-1668352915 /DISKS/sda2/code/git/MIP/include/plugin/vst2/mip_vst2_entry.h
+1672178726 /DISKS/sda2/code/git/MIP/include/plugin/vst2/mip_vst2_entry.h
+	"base/mip.h"
+	"base/system/mip_paths.h"
+	"plugin/mip_registry.h"
+	"plugin/clap/mip_clap.h"
+	"plugin/vst2/mip_vst2.h"
+	"plugin/vst2/mip_vst2_host_implementation.h"
+	"plugin/vst2/mip_vst2_plugin.h"
+	"plugin/vst2/mip_vst2_utils.h"
 
-1668352915 /DISKS/sda2/code/git/MIP/include/plugin/vst3/mip_vst3_entry.h
+1672175533 /DISKS/sda2/code/git/MIP/include/plugin/vst3/mip_vst3_entry.h
+	"base/mip.h"
+	"plugin/clap/mip_clap.h"
+	"plugin/vst3/mip_vst3.h"
+	"plugin/vst3/mip_vst3_host_implementation.h"
+	"plugin/vst3/mip_vst3_plugin.h"
+	"plugin/vst3/mip_vst3_utils.h"
+	"plugin/mip_plugin.h"
 
 1670346396 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_grid_widget.h
 	"base/mip.h"
@@ -819,7 +835,7 @@
 	"gui/widgets/mip_value_widget.h"
 	"gui/widgets/mip_waveform_widget.h"
 
-1670259471 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_menu_widget.h
+1672093739 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_menu_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_panel_widget.h"
 	"gui/widgets/mip_menu_item_widget.h"
@@ -829,7 +845,7 @@
 	"base/mip.h"
 	"gui/widgets/mip_text_widget.h"
 
-1672087305 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_selector_widget.h
+1672094088 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_selector_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_panel_widget.h"
 
@@ -842,7 +858,7 @@
 	"plugin/exe/mip_exe.h"
 	"gui/mip_window.h"
 
-1668352915 /DISKS/sda2/code/git/MIP/include/plugin/exe/mip_exe.h
+1672175500 /DISKS/sda2/code/git/MIP/include/plugin/exe/mip_exe.h
 
 1672043315 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
 	"plugin/mip_plugin.h"
@@ -863,7 +879,7 @@
 
 1670527716 /DISKS/sda2/code/git/MIP/source/skei.audio/img/mip_img.h
 
-1670628483 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_image_widget.h
+1672173822 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_image_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_panel_widget.h"
 
@@ -1013,7 +1029,7 @@
 	"plugin/mip_plugin.h"
 	"plugin/mip_entry.h"
 
-1672086977 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr.cpp
+1672175049 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr.cpp
 	"audio/mip_audio_utils.h"
 	"plugin/mip_plugin.h"
 	"plugin/mip_note.h"
@@ -1100,13 +1116,221 @@
 	"audio/old/filters/mip_svf_filter.h"
 	"audio/old/processing/mip_delay.h"
 
-1672087957 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr/sa_tyr_editor.h
+1672095643 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr/sa_tyr_editor.h
 	"base/mip.h"
 	"gui/mip_widgets.h"
 	"plugin/mip_editor.h"
 	"sa_tyr_widgets.h"
 
-1672088258 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr/sa_tyr_widgets.h
+1672095205 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr/sa_tyr_widgets.h
 	"base/mip.h"
 	"gui/mip_widgets.h"
+
+1672178714 /DISKS/sda2/code/git/MIP/include/plugin/vst2/mip_vst2.h
+	"base/mip.h"
+	"extern/vst2/vst2sdk/aeffect.h"
+	"extern/vst2/vst2sdk/aeffectx.h"
+
+1486980847 /DISKS/sda2/code/git/MIP/include/extern/vst2/vst2sdk/aeffect.h
+	<string.h>
+	<stdint.h>
+
+1440689074 /DISKS/sda2/code/git/MIP/include/extern/vst2/vst2sdk/aeffectx.h
+	"aeffect.h"
+
+1656867483 /DISKS/sda2/code/git/MIP/include/plugin/vst2/mip_vst2_host_implementation.h
+	"plugin/clap/mip_clap_host_implementation.h"
+
+1669323619 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_host_implementation.h
+	"base/mip.h"
+	"plugin/clap/mip_clap.h"
+
+1672178971 /DISKS/sda2/code/git/MIP/include/plugin/vst2/mip_vst2_plugin.h
+	"base/mip.h"
+	"base/types/mip_queue.h"
+	"plugin/clap/mip_clap.h"
+	"plugin/vst2/mip_vst2.h"
+	"plugin/vst2/mip_vst2_host_implementation.h"
+	"plugin/vst2/mip_vst2_utils.h"
+
+1666455147 /DISKS/sda2/code/git/MIP/include/plugin/vst2/mip_vst2_utils.h
+	"plugin/vst2/mip_vst2.h"
+
+1672175537 /DISKS/sda2/code/git/MIP/include/plugin/vst3/mip_vst3.h
+	"base/mip.h"
+	"pluginterfaces/base/coreiids.cpp"
+	"pluginterfaces/base/ustring.cpp"
+	"pluginterfaces/base/ipluginbase.h"
+	"pluginterfaces/gui/iplugview.h"
+	"pluginterfaces/vst/ivstaudioprocessor.h"
+	"pluginterfaces/vst/ivstcomponent.h"
+	"pluginterfaces/vst/ivsteditcontroller.h"
+	"pluginterfaces/vst/ivstevents.h"
+	"pluginterfaces/vst/ivsthostapplication.h"
+	"pluginterfaces/vst/ivstmessage.h"
+	"pluginterfaces/vst/ivstmidicontrollers.h"
+	"pluginterfaces/vst/ivstnoteexpression.h"
+	"pluginterfaces/vst/ivstparameterchanges.h"
+	"pluginterfaces/vst/ivstunits.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/coreiids.cpp
+	"pluginterfaces/base/funknown.h"
+	"pluginterfaces/base/iupdatehandler.h"
+	"pluginterfaces/base/icloneable.h"
+	"pluginterfaces/base/ibstream.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/funknown.h
+	"pluginterfaces/base/fplatform.h"
+	"pluginterfaces/base/ftypes.h"
+	"pluginterfaces/base/smartpointer.h"
+	<string.h>
+
+1566922973 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/fplatform.h
+	<endian.h>
+	<cstddef>
+	<TargetConditionals.h>
+	<cstddef>
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/ftypes.h
+	"fplatform.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/smartpointer.h
+	"pluginterfaces/base/fplatform.h"
+	<utility>
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/iupdatehandler.h
+	"pluginterfaces/base/funknown.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/icloneable.h
+	"funknown.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/ibstream.h
+	"funknown.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/ustring.cpp
+	"ustring.h"
+	<stdio.h>
+	<CoreFoundation/CoreFoundation.h>
+	<cstring>
+	<string>
+	<codecvt>
+	<sstream>
+	<locale>
+	<wctype.h>
+	<wchar.h>
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/ustring.h
+	"ftypes.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/ipluginbase.h
+	"funknown.h"
+	"fstrdefs.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/fstrdefs.h
+	"ftypes.h"
+	"conststringtable.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/conststringtable.h
+	"ftypes.h"
+
+1566923049 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/gui/iplugview.h
+	"pluginterfaces/base/funknown.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivstaudioprocessor.h
+	"ivstcomponent.h"
+	"vstspeaker.h"
+	"pluginterfaces/base/falignpush.h"
+	"pluginterfaces/base/falignpop.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivstcomponent.h
+	"pluginterfaces/base/ipluginbase.h"
+	"vsttypes.h"
+	"pluginterfaces/base/falignpush.h"
+	"pluginterfaces/base/falignpop.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/vsttypes.h
+	"pluginterfaces/base/fstrdefs.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/falignpush.h
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/base/falignpop.h
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/vstspeaker.h
+	"vsttypes.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivsteditcontroller.h
+	"pluginterfaces/base/ipluginbase.h"
+	"vsttypes.h"
+	"pluginterfaces/base/falignpush.h"
+	"pluginterfaces/base/falignpop.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivstevents.h
+	"pluginterfaces/vst/ivstprocesscontext.h"
+	"pluginterfaces/vst/ivstnoteexpression.h"
+	"pluginterfaces/base/falignpush.h"
+	"pluginterfaces/base/falignpop.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivstprocesscontext.h
+	"pluginterfaces/base/funknown.h"
+	"vsttypes.h"
+	"pluginterfaces/base/falignpush.h"
+	"pluginterfaces/base/falignpop.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivstnoteexpression.h
+	"pluginterfaces/base/funknown.h"
+	"vsttypes.h"
+	"pluginterfaces/base/falignpush.h"
+	"pluginterfaces/vst/vstpshpack4.h"
+	"pluginterfaces/base/falignpop.h"
+	"pluginterfaces/base/falignpop.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/vstpshpack4.h
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivsthostapplication.h
+	"pluginterfaces/vst/ivstmessage.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivstmessage.h
+	"pluginterfaces/vst/ivstattributes.h"
+	"pluginterfaces/base/falignpush.h"
+	"pluginterfaces/base/falignpop.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivstattributes.h
+	"pluginterfaces/base/funknown.h"
+	"pluginterfaces/vst/vsttypes.h"
+	"pluginterfaces/base/falignpush.h"
+	"pluginterfaces/base/ustring.h"
+	"pluginterfaces/vst/vstpresetkeys.h"
+	"pluginterfaces/base/falignpop.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/vstpresetkeys.h
+	"vsttypes.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivstmidicontrollers.h
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivstparameterchanges.h
+	"pluginterfaces/base/funknown.h"
+	"vsttypes.h"
+	"pluginterfaces/base/falignpush.h"
+	"pluginterfaces/base/falignpop.h"
+
+1528710486 /DISKS/sda2/code/git/MIP/include/extern/vst3/vst3sdk/pluginterfaces/vst/ivstunits.h
+	"pluginterfaces/base/funknown.h"
+	"vsttypes.h"
+	"pluginterfaces/base/falignpush.h"
+	"pluginterfaces/base/falignpop.h"
+
+1655451196 /DISKS/sda2/code/git/MIP/include/plugin/vst3/mip_vst3_host_implementation.h
+	"plugin/clap/mip_clap_host_implementation.h"
+
+1672176288 /DISKS/sda2/code/git/MIP/include/plugin/vst3/mip_vst3_plugin.h
+	"base/mip.h"
+	"plugin/clap/mip_clap.h"
+	"plugin/vst3/mip_vst3.h"
+	"plugin/vst3/mip_vst3_utils.h"
+
+1642767717 /DISKS/sda2/code/git/MIP/include/plugin/vst3/mip_vst3_utils.h
+	"plugin/vst3/mip_vst3.h"
+	<string>
+	<locale>
+	<codecvt>
 
