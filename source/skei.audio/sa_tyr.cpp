@@ -1,8 +1,8 @@
 
 
 #define MIP_PLUGIN_CLAP
-#define MIP_PLUGIN_VST2
-#define MIP_PLUGIN_VST3
+//#define MIP_PLUGIN_VST2
+//#define MIP_PLUGIN_VST3
 
 //#define MIP_NO_GUI
 //#define MIP_NO_PAINTER
@@ -52,7 +52,7 @@
 #define SA_TYR_NUM_VOICES     32
 
 #define SA_TYR_PLUGIN_NAME    "sa_tyr"
-#define SA_TYR_PLUGIN_VERSION "0.0.11"
+#define SA_TYR_PLUGIN_VERSION "0.0.12"
 
 
 

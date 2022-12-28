@@ -24,10 +24,17 @@ public:
 
     MIP_RcFilter<T> filter  = {};
     T               rough   = 0.0;
+    T               shape   = 0.0;
 
     T process(T x) {
       T r = MIP_Random();
       if (r >= rough) x = -x;
+
+//      T s = (shape*shape*shape*shape);
+//      x *= (1.0 + s);
+//      x = atan(x);
+//      x = MIP_Clamp(x,-1,1);
+
       return filter.process(x);
     }
 
@@ -48,7 +55,7 @@ private:
   //MIP_SvfFilter MInputShaper  = {};
 
   T             MHz           = 0.0;
-  //T             MShape        = 0.0;
+  T             MShape        = 0.0;
   T             MFeedback     = 0.0;
   T             MDamp         = 0.0;
   T             MRough        = 0.0;
@@ -87,7 +94,7 @@ public:
     MHz = AHz;
   }
 
-  //void setShape(T s)        { MShape = s; }
+  void setShape(T s)        { MShape = s; }
   void setFeedback(T f)     { MFeedback = f; }
   void setDamp(T d)         { MDamp = d; }
   void setRough(T r)        { MRough = r; }
@@ -120,7 +127,10 @@ public:
     T fb = MFeedback;
     //fb = 1.0 - fb;
     //fb = fb * fb * fb;
-    fb = MIP_Curve(fb,0.95);
+
+    //fb = MIP_Curve(fb,0.95);
+fb = MIP_Curve(fb,0.98);
+
     //fb = 1.0 - fb;
 
     // damp
@@ -153,6 +163,8 @@ public:
 
     T _in = in;
 
+    //_in *= (MShape * 2.0);
+
     switch (MMode) {
 
       case SA_TYR_RES_TYPE_PLUCK: {
@@ -164,18 +176,34 @@ public:
       }
 
       case SA_TYR_RES_TYPE_REP: {
-//        if (MDelay.hasWrapped()) {
-//          MSpeedCounter += 1;
-//          if (MSpeedCounter >= MSpeed) {
-//            MSpeedCounter = 0;
-//            MDelay.start();
-//          }
-//          else {
-//            _in = 0.0;
-//            //_in *= fabs( MImpulse );
-//            //_in += (_in * MImpulse);
-//          }
-//        }
+
+        /*
+        if (MDelay.hasWrapped()) {
+          MSpeedCounter += 1;
+          if (MSpeedCounter >= MSpeed) {
+            MSpeedCounter = 0;
+            MDelay.start();
+          }
+          else {
+            _in = 0.0;
+            //_in *= fabs( MImpulse );
+            //_in += (_in * MImpulse);
+          }
+        }
+        */
+
+        //float ph = MDelay.getPhase();
+        //if (ph < 0.5) {
+        //  float p = ph * 2.0;
+        //  //_in *= p;
+        //  _in = p;
+        //}
+        //else {
+        //  float p = 1.0 - ((ph - 0.5) * 2.0);
+        //  //_in *= p;
+        //  _in = p;
+        //}
+
         break;
       }
 
@@ -184,6 +212,8 @@ public:
       }
 
     }
+
+    MDelay.getFeedbackFX()->shape = MShape;
 
     out = MDelay.process(_in,fb,delay);
     return _in + out;

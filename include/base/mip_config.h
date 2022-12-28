@@ -121,7 +121,7 @@
 //#define MIP_NO_ENTRY
 //#define MIP_NO_PLUGIN
 //#define MIP_NO_REGISTRY
-//#define MIP_PLUGIN_CLAP
+  #define MIP_PLUGIN_CLAP
 //#define MIP_PLUGIN_EXE
 //#define MIP_PLUGIN_VST2
 //#define MIP_PLUGIN_VST3

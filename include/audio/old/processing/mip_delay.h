@@ -26,10 +26,12 @@ class MIP_InterpolatedDelay {
 
     float       MBuffer[MAX_DELAY]  = {0};
     int         MCounter            = 0;
-    float       MPhase              = 0.0f;
+    float       /*MPhase*/MDelayPos = 0.0f;
     bool        MWrapped            = false;
     FBLOOPFX    MFBLoopFX           = {};
     //MIP_DcFilter  MDC;
+
+    float MPhase = 0.0;
 
   public:
 
@@ -50,6 +52,8 @@ class MIP_InterpolatedDelay {
       return MWrapped;
     }
 
+    float getPhase() { return MPhase; }
+
     void reset() {
       MCounter = 0;
       MWrapped = false;
@@ -62,13 +66,13 @@ class MIP_InterpolatedDelay {
 
     void start() {
       MWrapped = false;
-      MPhase = 0.0f;
+      /*MPhase*/MDelayPos = 0.0f;
     }
 
     //void restart() {
     //  MCounter = 0;
     //  MWrapped = false;
-    //  //MPhase = 0.0f;
+    //  ///*MPhase*/MDelayPos = 0.0f;
     //}
 
     float process(float AInput, float AFeedback, float ADelay) {
@@ -121,8 +125,8 @@ class MIP_InterpolatedDelay {
       MIP_Assert( MCounter < MAX_DELAY );
 
       // if only part of next sample 'fits' inside delay length...
-      //if ((MPhase + 1.0) >= ADelay) {
-      //  float diff = ADelay - MPhase;
+      //if ((/*MPhase*/MDelayPos + 1.0) >= ADelay) {
+      //  float diff = ADelay - /*MPhase*/MDelayPos;
       //  out *= diff;
       //}
 
@@ -133,11 +137,13 @@ class MIP_InterpolatedDelay {
         MCounter -= MAX_DELAY;// 0;
       }
 
-      MPhase += 1.0f;
-      if (MPhase >= ADelay) {
+      /*MPhase*/MDelayPos += 1.0f;
+      if (/*MPhase*/MDelayPos >= ADelay) {
         MWrapped = true;
-        while (MPhase >= ADelay) MPhase -= ADelay;
+        while (/*MPhase*/MDelayPos >= ADelay) /*MPhase*/MDelayPos -= ADelay;
       }
+
+      MPhase = MDelayPos / ADelay;
 
       return output;
     }

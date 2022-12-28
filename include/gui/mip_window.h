@@ -36,6 +36,9 @@ class MIP_Window
 : public MIP_ImplementedWindow
 , public MIP_WidgetListener {
 
+  // hack
+  friend class MIP_Editor;
+
 //------------------------------
 private:
 //------------------------------
@@ -61,6 +64,7 @@ private:
 //MIP_Widget*       MCapturedKeysWidget   = nullptr;
   MIP_Widget*       MCapturedWidget       = nullptr;
   MIP_Widget*       MMouseLockedWidget    = nullptr;
+  MIP_Widget*       MModalWidget          = nullptr;
 
   int32_t           MMouseClickedX        = 0;
   int32_t           MMouseClickedY        = 0;
@@ -253,23 +257,23 @@ public: // window
   */
 
   void on_window_resize(int32_t AWidth, int32_t AHeight) override {
+    //    exe_window overrides this..
+    //    if (MModalWidget) {
+    //      MModalWidget->on_widget_cancel(0);
+    //    }
     MWindowPainter->setClipRect(MIP_DRect(0,0,AWidth,AHeight));
-
     //double scale = 1.0;
     //double aspect = (double)AWidth / (double)AHeight;
     //if (aspect >= MAspectRatio) scale = (double)AHeight / (double)MInitialHeight;
     //else scale = (double)AWidth / (double)MInitialWidth;
     //MWindow->setWindowScale(scale);
-
     if (MInitialWidth > 0) {
       double s = (double)AWidth / (double)MInitialWidth;
       setWindowScale(s);
     }
-
     if (MRootWidget) {
       MRootWidget->setSize(AWidth,AHeight);
     }
-
   }
 
   //----------
@@ -323,11 +327,16 @@ public: // window
     MMouseClickedY = AYpos;
     MMouseDragX = AXpos;
     MMouseDragY = AYpos;
+    if (MModalWidget) {
+      if (AButton == MIP_BUTTON_RIGHT) {
+        MIP_PRINT;
+        MModalWidget->on_widget_cancel(0);
+      }
+    }
     if (MHoverWidget) {
       //MMouseLockedWidget = MHoverWidget;
       MCapturedWidget = MHoverWidget;
       MHoverWidget->on_widget_mouse_click(AButton,AState,AXpos,AYpos,ATime);
-
     }
   }
 
@@ -476,12 +485,14 @@ public: // widget listener
 
   //----------
 
-  void do_widget_set_capture(MIP_Widget* AWidget, uint32_t AMode) override {
+  void do_widget_set_capture(MIP_Widget* AWidget, uint32_t AMode=0) override {
+    //MCapturedWidget = AWidget;
   }
 
   //----------
 
-  void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode) override {
+  void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode=0) override {
+    MModalWidget = AWidget;
   }
 
   //----------

@@ -47,8 +47,8 @@ public:
   virtual void do_widget_set_cursor(MIP_Widget* AWidget, int32_t ACursor) {}
   virtual void do_widget_set_cursor_pos(MIP_Widget* AWidget, int32_t AXpos, int32_t AYpos) {}
   //virtual void do_widget_set_key_capture(MIP_Widget* AWidget, uint32_t AMode) {}
-  virtual void do_widget_set_capture(MIP_Widget* AWidget, uint32_t AMode) {}
-  virtual void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode) {}
+  virtual void do_widget_set_capture(MIP_Widget* AWidget, uint32_t AMode=0) {}
+  virtual void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode=0) {}
   virtual void do_widget_set_hint(MIP_Widget* AWidget, const char* AHint) {}
   //virtual void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) {}
   virtual void do_widget_notify(MIP_Widget* AWidget, int32_t AValue) {}
@@ -305,6 +305,10 @@ public:
     if (AListener) AWidget->MListener = AListener;
     else AWidget->MListener = this;
     AWidget->MIndex = index;
+
+//    MWidget->MRect.x += MRect.x;
+//    MWidget->MRect.y += MRect.y;
+
     MChildren.append(AWidget);
     //return index;
     return AWidget;
@@ -506,6 +510,9 @@ public:
     }
   }
 
+  virtual void on_widget_cancel(uint32_t AReason=0) {
+  }
+
 
 //------------------------------
 public:
@@ -527,11 +534,11 @@ public:
     if (MListener) MListener->do_widget_set_cursor_pos(AWidget,AXpos,AYpos);
   }
 
-  void do_widget_set_capture(MIP_Widget* AWidget, uint32_t AMode) override {
+  void do_widget_set_capture(MIP_Widget* AWidget, uint32_t AMode=0) override {
     if (MListener) MListener->do_widget_set_capture(AWidget,AMode);
   }
 
-  void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode) override {
+  void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode=0) override {
     if (MListener) MListener->do_widget_set_modal(AWidget,AMode);
   }
 

@@ -14,7 +14,7 @@
 
 #define SA_BOTAGE_NAME          "sa_botage"
 #define SA_BOTAGE_VENDOR        "skei.audio"
-#define SA_BOTAGE_VERSION       "0.1.6"
+#define SA_BOTAGE_VERSION       "0.1.7"
 
 //----------------------------------------------------------------------
 

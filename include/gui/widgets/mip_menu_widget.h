@@ -85,6 +85,12 @@ public: // parent to child
 //    close(true);
 //  }
 
+  void on_widget_cancel(uint32_t AReason=0) override {
+    //MIP_Print("unmodal\n");
+    close(true);
+  }
+
+
 //------------------------------
 public: // child to parent
 //------------------------------
@@ -130,7 +136,7 @@ public:
     setActive(true);
     setVisible(true);
     do_widget_redraw(this);
-//    if (AModal) do_widget_modal(this);
+    if (AModal) do_widget_set_modal(this);
   }
 
   //----------
@@ -140,7 +146,7 @@ public:
     if (isVisible()) {
       setVisible(false);
       do_widget_redraw(this);
-//    if (AModal) do_widget_modal(nullptr);
+    if (AModal) do_widget_set_modal(nullptr);
     }
   }
 

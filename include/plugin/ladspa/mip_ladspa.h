@@ -2,7 +2,7 @@
 #define mip_ladspa_included
 //----------------------------------------------------------------------
 
-#include "mip.h"
+#include "base/mip.h"
 
 #include <ladspa.h>
 

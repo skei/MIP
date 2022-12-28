@@ -433,12 +433,12 @@ public:
       res1_hz = MIP_Clamp(res1_hz,20,20000);
       MResonator1.setHz(res1_hz);
 
-    //T r1_shape  = MIP_Clamp( MParMod[PAR_RES1_SHAPE], 0, 1 );
+      T r1_shape  = MIP_Clamp( MParMod[PAR_RES1_SHAPE], 0, 1 );
       T r1_fb     = MIP_Clamp( MParMod[PAR_RES1_FB], 0, 1 );
       T r1_damp   = MIP_Clamp( MParMod[PAR_RES1_DAMP], 0, 1 );
       T r1_rough  = MIP_Clamp( MParMod[PAR_RES1_ROUGH], 0, 1 );
 
-      //MResonator1.setShape(r1_shape);
+      MResonator1.setShape(r1_shape);
       MResonator1.setFeedback(r1_fb);
       MResonator1.setDamp(r1_damp);
       MResonator1.setRough(r1_rough);
@@ -453,7 +453,7 @@ public:
       MResonator1.setMode(r1_mode);
 
       T imp1 = MIP_Clamp( MParMod[PAR_RES1_IN_I], 0, 1 );
-      imp1 = (imp1 * imp1 * imp1 * imp1 * imp1);
+      //imp1 = (imp1 * imp1 * imp1 * imp1 * imp1);
       MResonator1.setImpulse(imp1);
 
       T r1_spd = 1.0 - MIP_Clamp(MParMod[PAR_RES1_SPEED],0,1);
@@ -470,12 +470,12 @@ public:
       res2_hz = MIP_Clamp(res2_hz,20,20000);
       MResonator2.setHz(res2_hz);
 
-      //T r2_shape  = MIP_Clamp( MParMod[PAR_RES2_SHAPE], 0, 1 );
+      T r2_shape  = MIP_Clamp( MParMod[PAR_RES2_SHAPE], 0, 1 );
       T r2_fb     = MIP_Clamp( MParMod[PAR_RES2_FB], 0, 1 );
       T r2_damp   = MIP_Clamp( MParMod[PAR_RES2_DAMP], 0, 1 );
       T r2_rough  = MIP_Clamp( MParMod[PAR_RES2_ROUGH], 0, 1 );
 
-      //MResonator2.setShape(r2_shape);
+      MResonator2.setShape(r2_shape);
       MResonator2.setFeedback(r2_fb);
       MResonator2.setDamp(r2_damp);
       MResonator2.setRough(r2_rough);
@@ -490,7 +490,7 @@ public:
       MResonator2.setMode( r2_mode );
 
       T imp2 = MIP_Clamp( MParMod[PAR_RES2_IN_I], 0,1 );;
-      imp2 = (imp2 * imp2 * imp2 * imp2 * imp2);
+      //imp2 = (imp2 * imp2 * imp2 * imp2 * imp2);
       MResonator2.setImpulse(imp2);
 
       T r2_spd = 1.0 - MIP_Clamp( MParMod[PAR_RES2_SPEED], 0,1 );

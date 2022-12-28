@@ -48,6 +48,13 @@ public:
     // adjust_size
     // etc..
 
+//    if (MModalWidget) {
+//      MModalWidget->on_widget_cancel(0);
+//    }
+
+    // can we safely do this?
+    //MWindow->on_window_resize(AWidth,AHeight);
+
     // let our plugin know..
     gui->set_size(plugin,AWidth,AHeight);
 

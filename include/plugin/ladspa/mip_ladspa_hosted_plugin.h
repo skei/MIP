@@ -4,7 +4,7 @@
 
 // ladspa-as-clap
 
-#include "mip.h"
+#include "base/mip.h"
 #include "plugin/ladspa/mip_ladspa.h"
 //#include "gui/widgets/mip_widgets.h"
 

@@ -146,6 +146,9 @@ public:
 
         sa_tyr_SmallKnobWidget* osc1_in_i = new sa_tyr_SmallKnobWidget( MIP_DRect(190+10,HH+180,27,45),"I");
         osc1_panel->appendChildWidget(osc1_in_i);
+        //osc1_in_i->getKnobWidget()->setSnap(true);
+        //osc1_in_i->getKnobWidget()->setSnapPos(0.5);
+        //osc1_in_i->getKnobWidget()->setSnapDist(0.05);
         connect(osc1_in_i,AParameters->getItem(PAR_OSC1_IN_I));
 
         sa_tyr_SmallKnobWidget* osc1_in_s = new sa_tyr_SmallKnobWidget( MIP_DRect(220+10,HH+180,27,45),"S");
@@ -211,6 +214,9 @@ public:
 
         sa_tyr_SmallKnobWidget* res1_in_i = new sa_tyr_SmallKnobWidget( MIP_DRect(190+10,HH+310+60+10,27,45),"I");
         res1_panel->appendChildWidget(res1_in_i);
+        //res1_in_i->getKnobWidget()->setSnap(true);
+        //res1_in_i->getKnobWidget()->setSnapPos(0.5);
+        //res1_in_i->getKnobWidget()->setSnapDist(0.05);
         connect(res1_in_i,AParameters->getItem(PAR_RES1_IN_I));
 
         sa_tyr_SmallKnobWidget* res1_in_s = new sa_tyr_SmallKnobWidget( MIP_DRect(220+10,HH+310+60+10,27,45),"S");
@@ -341,6 +347,9 @@ public:
 
         sa_tyr_SmallKnobWidget* osc2_in_i = new sa_tyr_SmallKnobWidget( MIP_DRect(280+190,HH+180,27,45),"I");
         osc2_panel->appendChildWidget(osc2_in_i);
+        //osc2_in_i->getKnobWidget()->setSnap(true);
+        //osc2_in_i->getKnobWidget()->setSnapPos(0.5);
+        //osc2_in_i->getKnobWidget()->setSnapDist(0.05);
         connect(osc2_in_i,AParameters->getItem(PAR_OSC2_IN_I));
 
         sa_tyr_SmallKnobWidget* osc2_in_s = new sa_tyr_SmallKnobWidget( MIP_DRect(280+220,HH+180,27,45),"S");
@@ -406,6 +415,9 @@ public:
 
         sa_tyr_SmallKnobWidget* res2_in_i = new sa_tyr_SmallKnobWidget( MIP_DRect(280+190,HH+310+60+10,27,45),"I");
         res2_panel->appendChildWidget(res2_in_i);
+        //res2_in_i->getKnobWidget()->setSnap(true);
+        //res2_in_i->getKnobWidget()->setSnapPos(0.5);
+        //res2_in_i->getKnobWidget()->setSnapDist(0.05);
         connect(res2_in_i,AParameters->getItem(PAR_RES2_IN_I));
 
         sa_tyr_SmallKnobWidget* res2_in_s = new sa_tyr_SmallKnobWidget( MIP_DRect(280+220,HH+310+60+10,27,45),"S");

@@ -15,6 +15,9 @@ class MIP_SelectorWidget
 : public MIP_TextWidget
 , public MIP_MenuListener {
 
+  // hack?
+  friend class MIP_MenuWidget;
+
 //------------------------------
 protected:
 //------------------------------
@@ -22,8 +25,8 @@ protected:
   bool            MDrawArrow    = true;
   MIP_Color       MArrowColor   = MIP_Color(0.25);//MIP_COLOR_DARK_GRAY;
   MIP_MenuWidget* MMenu         = nullptr;
-
   int32_t         MSelected     = -1;
+  bool            MMenuIsOpen   = false;
 
 //------------------------------
 public:
@@ -100,6 +103,7 @@ public: // parent to child
     if (AButton == MIP_BUTTON_LEFT) {
       MMenu->setListener(this);
       MMenu->open(AXpos,AYpos,true);
+      MMenuIsOpen = true;
     }
   }
 
