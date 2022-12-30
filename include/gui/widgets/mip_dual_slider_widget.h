@@ -21,8 +21,9 @@ protected:
   double    MLastMouseX   = 0.0;
   double    MLastMouseY   = 0.0;
   uint32_t  MSelectedEdge = 0;
-  MIP_Color MEdgeColor    = MIP_COLOR_WHITE;
-  MIP_Color MIEdgeColor   = MIP_COLOR_LIGHT_GREEN;
+
+  MIP_Color MEdgeColor            = MIP_Color(1,1,1,0.5);
+  MIP_Color MInteractiveEdgeColor = MIP_Color(1,1,1,0.7);
 
 //  double    MDragValue2   = 0.0;
 
@@ -49,8 +50,7 @@ public:
     setValueOffset(MIP_DRect(5,0,5,0));
     setTextSize(10);
     setTextAlignment(MIP_TEXT_ALIGN_CENTER);
-
-    setIValueColor(MIP_COLOR_BLACK);
+    setInteractiveValueColor(MIP_COLOR_BLACK);
 
   }
 
@@ -100,7 +100,7 @@ public:
     MIP_DRect mrect = getRect();
     double S5 = S * 5.0;
     if (MIsInteracting) {
-      MIP_Color color = MISliderColor;
+      MIP_Color color = MInteractiveSliderColor;
       if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
       painter->setFillColor(color);
     }
@@ -148,7 +148,7 @@ public:
     painter->fillRect(p1,y,w,h);
 
     MIP_Color color;
-    if (MIsInteracting) color = MIEdgeColor;
+    if (MIsInteracting) color = MInteractiveEdgeColor;
     else color = MEdgeColor;
     if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
     painter->setFillColor(color);
@@ -192,7 +192,7 @@ public:
     vo.scale(S);
     mrect.shrink(vo);
     MIP_Color color;
-    if (MIsInteracting && (MSelectedEdge==1)) color = MIValueColor;
+    if (MIsInteracting && (MSelectedEdge==1)) color = MInteractiveValueColor;
     else color = MValueColor;
     if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
     painter->setTextColor(color);
@@ -212,7 +212,7 @@ public:
     y += ((mrect.h - h) * 0.5);
     painter->drawText(x,y,value_txt);
     // value 2
-    if (MIsInteracting && (MSelectedEdge==2)) color = MIValueColor;
+    if (MIsInteracting && (MSelectedEdge==2)) color = MInteractiveValueColor;
     else color = MValueColor;
     if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
     painter->setTextColor(color);

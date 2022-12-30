@@ -26,7 +26,7 @@ protected:
 
   bool      MDrawSlider   = true;
   MIP_Color MSliderColor  = MIP_Color(0.6);//MIP_COLOR_LIGHT_GRAY;
-  MIP_Color MISliderColor = MIP_Color(1.0);//MIP_COLOR_WHITE;
+  MIP_Color MInteractiveSliderColor = MIP_Color(1.0);//MIP_COLOR_WHITE;
 
 
 //------------------------------
@@ -48,6 +48,7 @@ public:
 
   virtual void setDrawSlider(bool ADraw=true)   { MDrawSlider = ADraw; }
   virtual void setSliderColor(MIP_Color AColor) { MSliderColor = AColor; }
+  virtual void setInteractiveSliderColor(MIP_Color AColor) { MInteractiveSliderColor = AColor; }
 
 //------------------------------
 public:
@@ -66,7 +67,7 @@ public:
     }
 
     if (MIsInteracting) {
-      MIP_Color color = MISliderColor;
+      MIP_Color color = MInteractiveSliderColor;
       if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
       painter->setFillColor(color);
     }

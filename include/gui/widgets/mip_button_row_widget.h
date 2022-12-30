@@ -77,6 +77,15 @@ public:
 public:
 //------------------------------
 
+  virtual void setTextColor(MIP_Color AColor)           { MTextColor = AColor; }
+  virtual void setActiveTextColor(MIP_Color AColor)     { MActiveTextColor = AColor; }
+  virtual void setBackgroundCellColor(MIP_Color AColor) { MBackgroundCellColor = AColor; }
+  virtual void setActiveCellColor(MIP_Color AColor)     { MActiveCellColor = AColor; }
+
+//------------------------------
+public:
+//------------------------------
+
   int32_t getSelected(void) {
     return MSelected;
   }

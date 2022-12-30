@@ -27,7 +27,7 @@ protected:
   bool      MDrawArc        = true;
   MIP_Color MArcBackColor   = MIP_COLOR_DARK_GRAY;
   MIP_Color MArcValueColor  = MIP_COLOR_LIGHT_GRAY;
-  MIP_Color MIArcValueColor = MIP_COLOR_WHITE;
+  MIP_Color MInteractiveArcValueColor = MIP_COLOR_WHITE;
   double    MArcThickness   = 10.0;
 
 
@@ -70,6 +70,7 @@ public:
   virtual void setDrawArc(bool ADraw=true)         { MDrawArc = ADraw; }
   virtual void setArcBackColor(MIP_Color AColor)   { MArcBackColor = AColor; }
   virtual void setArcValueColor(MIP_Color AColor)  { MArcValueColor = AColor; }
+  virtual void setInteractiveArcValueColor(MIP_Color AColor)  { MInteractiveArcValueColor = AColor; }
   virtual void setArcThickness(double AThickness)  { MArcThickness = AThickness; }
 
 //------------------------------
@@ -110,7 +111,7 @@ public:
     painter->setLineWidth(thick);
 
     if (MIsInteracting) {
-      MIP_Color color = MIArcValueColor;
+      MIP_Color color = MInteractiveArcValueColor;
       if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
       painter->setDrawColor(color);
     }

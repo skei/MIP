@@ -45,7 +45,7 @@ public:
     MIP_DRect mrect = getRect();
     double S5 = S * 5.0;
     if (MIsInteracting) {
-      MIP_Color color = MISliderColor;
+      MIP_Color color = MInteractiveSliderColor;
       if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
       painter->setFillColor(color);
     }
@@ -93,7 +93,7 @@ public:
     painter->fillRect(p1,y,w,h);
 
     MIP_Color color;
-    if (MIsInteracting) color = MIEdgeColor;
+    if (MIsInteracting) color = MInteractiveEdgeColor;
     else color = MEdgeColor;
     if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
     painter->setFillColor(color);

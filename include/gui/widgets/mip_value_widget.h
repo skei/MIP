@@ -24,7 +24,7 @@ protected:
   double      MIValueSize     = 16.0;
 
   MIP_Color   MValueColor     = MIP_Color(0);//MIP_COLOR_DARK_GRAY;
-  MIP_Color   MIValueColor    = MIP_COLOR_WHITE;
+  MIP_Color   MInteractiveValueColor    = MIP_COLOR_WHITE;
 
   //double      MValue          = 0.0;
   uint32_t    MValueAlignment = MIP_TEXT_ALIGN_RIGHT;
@@ -59,7 +59,7 @@ public:
   virtual void setDrawValue(bool ADraw=true)          { MDrawValue = ADraw; }
   virtual void setValueSize(double ASize)             { MValueSize = ASize; }
   virtual void setValueColor(MIP_Color AColor)        { MValueColor = AColor; }
-  virtual void setIValueColor(MIP_Color AColor)       { MIValueColor = AColor; }
+  virtual void setInteractiveValueColor(MIP_Color AColor)       { MInteractiveValueColor = AColor; }
   //virtual void setValue(double AValue)                { MValue = AValue; }
   virtual void setValueAlignment(uint32_t AAlignment) { MValueAlignment = AAlignment; }
   virtual void setValueOffset(MIP_DRect AOffset)      { MValueOffset = AOffset; }
@@ -99,7 +99,7 @@ public:
     mrect.shrink(vo);
 
     MIP_Color color;
-    if (MIsInteracting) color = MIValueColor;
+    if (MIsInteracting) color = MInteractiveValueColor;
     else color = MValueColor;
     if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
 

@@ -165,13 +165,13 @@ public:
     MNumBeatsWidget = new MIP_DragValueWidget( MIP_DRect(10,330,110,16),"Beats");
     MRootWidget->appendChildWidget(MNumBeatsWidget);
     MNumBeatsWidget->setFillBackground(true);
-    MNumBeatsWidget->setBackgroundColor(0.4);
+    MNumBeatsWidget->setBackgroundColor( 0.5 );
     MNumBeatsWidget->setTextColor(MIP_COLOR_BLACK);
     MNumBeatsWidget->setTextSize(11);
     MNumBeatsWidget->setValueColor(MIP_COLOR_BLACK);
     MNumBeatsWidget->setValueSize(11);
     MNumBeatsWidget->setHint("Number of beats in buffer");
-    MNumBeatsWidget->setIValueColor(MIP_COLOR_WHITE);
+    MNumBeatsWidget->setInteractiveValueColor(MIP_COLOR_WHITE);
 
   connect( MNumBeatsWidget,  AParameters->getItem(PAR_NUM_BEATS) );
 
@@ -180,13 +180,13 @@ public:
     MNumSlicesWidget = new MIP_DragValueWidget( MIP_DRect(130,330,110,16),"Slices");
     MRootWidget->appendChildWidget(MNumSlicesWidget);
     MNumSlicesWidget->setFillBackground(true);
-    MNumSlicesWidget->setBackgroundColor(0.4);
+    MNumSlicesWidget->setBackgroundColor( 0.5 );
     MNumSlicesWidget->setTextColor(MIP_COLOR_BLACK);
     MNumSlicesWidget->setTextSize(11);
     MNumSlicesWidget->setValueColor(MIP_COLOR_BLACK);
     MNumSlicesWidget->setValueSize(11);
     MNumSlicesWidget->setHint("Number of slices per beat");
-    MNumSlicesWidget->setIValueColor(MIP_COLOR_WHITE);
+    MNumSlicesWidget->setInteractiveValueColor(MIP_COLOR_WHITE);
 
   connect( MNumSlicesWidget, AParameters->getItem(PAR_NUM_SLICES) );
 
@@ -203,6 +203,11 @@ public:
     env1_slider->setValueColor(0.2);
     //env1_slider->setTextSize(11);
 
+    env1_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
+    env1_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
+    env1_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
+
+
   connect( env1_slider, 0, AParameters->getItem(PAR_LOOP_ENV_ATTACK) );
   connect( env1_slider, 1, AParameters->getItem(PAR_LOOP_ENV_DECAY) );
 
@@ -215,6 +220,10 @@ public:
     env2_slider->setTextColor(0.2);
     env2_slider->setTextSize(9);
     env2_slider->setValueColor(0.2);
+
+    env2_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
+    env2_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
+    env2_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
 
   connect( env2_slider, 0, AParameters->getItem(PAR_SLICE_ENV_ATTACK) );
   connect( env2_slider, 1, AParameters->getItem(PAR_SLICE_ENV_DECAY) );
@@ -320,6 +329,9 @@ public:
     MMainProbWidget->setValueSize(25);
     MMainProbWidget->setValueColor(0.7);
     MMainProbWidget->setHint("Main probability");
+    MMainProbWidget->setArcBackColor( MIP_Color(0.0, 0.3, 0.6) );
+    MMainProbWidget->setArcValueColor( MIP_Color(0.0, 0.5, 1.0) );
+    MMainProbWidget->setInteractiveArcValueColor( MIP_Color(0.5, 0.75, 1.0) );
 
   connect( MMainProbWidget, AParameters->getItem(PAR_RANGE_PROB) );
 
@@ -340,6 +352,14 @@ public:
     MMainSlicesWidget->setValueIsBits(true,8);
     MMainSlicesWidget->setHint("Number of slices in range");
     MMainSlicesWidget->setDrawBorder(false);
+    MMainSlicesWidget->setBackgroundCellColor( MIP_Color(0.0, 0.3, 0.6) );
+    MMainSlicesWidget->setActiveCellColor( MIP_Color(0.0, 0.5, 1.0) );
+
+//  virtual void setTextSize(double ASize)                { MTextSize = ASize; }
+//  virtual void setTextColor(MIP_Color AColor)           { MTextColor = AColor; }
+//  virtual void setActiveTextColor(MIP_Color AColor)     { MActiveTextColor = AColor; }
+//  virtual void setBackgroundCellColor(MIP_Color AColor) { MBackgroundCellColor = AColor; }
+//  virtual void setActiveCellColor(MIP_Color AColor)     { MActiveCellColor = AColor; }
 
   connect( MMainSlicesWidget,  AParameters->getItem(PAR_RANGE_SLICE_COUNT) );
 
@@ -360,6 +380,8 @@ public:
     MMainLoopsWidget->setValueIsBits(true,8);
     MMainLoopsWidget->setHint("Range subdivision");
     MMainLoopsWidget->setDrawBorder(false);
+    MMainLoopsWidget->setBackgroundCellColor( MIP_Color(0.0, 0.3, 0.6) );
+    MMainLoopsWidget->setActiveCellColor( MIP_Color(0.0, 0.5, 1.0) );
 
   connect( MMainLoopsWidget,  AParameters->getItem(PAR_RANGE_LOOP_COUNT) );
 
@@ -377,6 +399,8 @@ public:
     c1_header->setTextColor(0.8);
     c1_header->setTextSize(11);
 
+//----------
+
     // range length
 
     MRangeSizeWidget = new MIP_KnobWidget(MIP_DRect(255,205,33,33),"%", 0.0);
@@ -385,6 +409,9 @@ public:
     MRangeSizeWidget->setHint("Loop length");
     MRangeSizeWidget->setTextColor(0.6);
     MRangeSizeWidget->setValueColor(0.8);
+    MRangeSizeWidget->setArcBackColor( MIP_Color(0.5, 0.0, 0.0) );
+    MRangeSizeWidget->setArcValueColor( MIP_Color(0.7, 0.0, 0.0) );
+    MRangeSizeWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.0, 0.0) );
 
   connect( MRangeSizeWidget, AParameters->getItem(PAR_PROB_SIZE_PROB_RANGE) );
 
@@ -400,6 +427,9 @@ public:
     page1->appendChildWidget(MRangeSizeValueWidget);
     MRangeSizeValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     MRangeSizeValueWidget->setHint("Loop min/max");
+    MRangeSizeValueWidget->setBackgroundColor( MIP_Color(0.5, 0.0, 0.0) );
+    MRangeSizeValueWidget->setSliderColor( MIP_Color(0.7, 0.0, 0.0) );
+    MRangeSizeValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.0, 0.0) );
 
   connect( MRangeSizeValueWidget, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_RANGE) );
   connect( MRangeSizeValueWidget, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_RANGE) );
@@ -411,6 +441,9 @@ public:
     MRangeSpeedWidget->setArcThickness(7);
     MRangeSpeedWidget->setValueColor(0.8);
     MRangeSpeedWidget->setTextColor(0.6);
+    MRangeSpeedWidget->setArcBackColor( MIP_Color(0.5, 0.25, 0.0) );
+    MRangeSpeedWidget->setArcValueColor( MIP_Color(0.7, 0.35, 0.0) );
+    MRangeSpeedWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.45, 0.0) );
 
   connect( MRangeSpeedWidget, AParameters->getItem(PAR_PROB_SPEED_PROB_RANGE) );
 
@@ -425,6 +458,9 @@ public:
     MRangeSpeedValueWidget= new MIP_DualSliderWidget( MIP_DRect(292,251,66,16), "%", 0.5, 0.5 );
     page1->appendChildWidget(MRangeSpeedValueWidget);
     MRangeSpeedValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    MRangeSpeedValueWidget->setBackgroundColor( MIP_Color(0.5, 0.25, 0.0) );
+    MRangeSpeedValueWidget->setSliderColor( MIP_Color(0.7, 0.35, 0.0) );
+    MRangeSpeedValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.45, 0.0) );
 
   connect( MRangeSpeedValueWidget, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_RANGE) );
   connect( MRangeSpeedValueWidget, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_RANGE) );
@@ -436,6 +472,9 @@ public:
     MRangeOffsetWidget->setArcThickness(7);
     MRangeOffsetWidget->setValueColor(0.8);
     MRangeOffsetWidget->setTextColor(0.6);
+    MRangeOffsetWidget->setArcBackColor( MIP_Color(0.5, 0.5, 0.0) );
+    MRangeOffsetWidget->setArcValueColor( MIP_Color(0.7, 0.7, 0.0) );
+    MRangeOffsetWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.0) );
 
   connect( MRangeOffsetWidget, AParameters->getItem(PAR_PROB_OFFSET_PROB_RANGE) );
 
@@ -450,6 +489,9 @@ public:
     MRangeOffsetValueWidget = new MIP_DualSliderWidget( MIP_DRect(292,286,66,16), "sl", 0.5, 0.5 );
     page1->appendChildWidget(MRangeOffsetValueWidget);
     MRangeOffsetValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    MRangeOffsetValueWidget->setBackgroundColor( MIP_Color(0.5, 0.5, 0.0) );
+    MRangeOffsetValueWidget->setSliderColor( MIP_Color(0.7, 0.7, 0.0) );
+    MRangeOffsetValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.9, 0.0) );
 
   connect( MRangeOffsetValueWidget, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_RANGE) );
   connect( MRangeOffsetValueWidget, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_RANGE) );
@@ -461,6 +503,9 @@ public:
     MRangeReverseWidget->setArcThickness(7);
     MRangeReverseWidget->setValueColor(0.8);
     MRangeReverseWidget->setTextColor(0.6);
+    MRangeReverseWidget->setArcBackColor( MIP_Color(0.25, 0.5, 0.0) );
+    MRangeReverseWidget->setArcValueColor( MIP_Color(0.35, 0.7, 0.0) );
+    MRangeReverseWidget->setInteractiveArcValueColor( MIP_Color(0.45, 0.9, 0.0) );
 
   connect( MRangeReverseWidget, AParameters->getItem(PAR_PROB_REVERSE_PROB_RANGE) );
 
@@ -482,6 +527,9 @@ public:
     range_fx_knob->setActive(false);
     range_fx_knob->setValueColor(0.8);
     range_fx_knob->setTextColor(0.6);
+    range_fx_knob->setArcBackColor( MIP_Color(0.25, 0.5, 0.0) );
+    range_fx_knob->setArcValueColor( MIP_Color(0.35, 0.7, 0.0) );
+    range_fx_knob->setInteractiveArcValueColor( MIP_Color(0.45, 0.9, 0.0) );
 
   connect( range_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_RANGE) );
 
@@ -502,6 +550,9 @@ public:
     range_fx_range_slider->setDisabled(true);
     range_fx_range_slider->setDisabledColor(BACKGROUNDCOLOR);
     range_fx_range_slider->setActive(false);
+    range_fx_range_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.0) );
+    range_fx_range_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.0) );
+    range_fx_range_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.0) );
 
   connect( range_fx_range_slider, 0, AParameters->getItem(PAR_PROB_FX_MIN_RANGE) );
   connect( range_fx_range_slider, 1, AParameters->getItem(PAR_PROB_FX_MAX_RANGE) );
@@ -520,6 +571,8 @@ public:
     c2_header->setTextColor(0.8);
     c2_header->setTextSize(11);
 
+//----------
+
     // loop length
 
     MLoopSizeWidget = new MIP_KnobWidget(MIP_DRect(377,205,33,33),"%", 0.0);
@@ -527,6 +580,9 @@ public:
     MLoopSizeWidget->setArcThickness(7);
     MLoopSizeWidget->setValueColor(0.8);
     MLoopSizeWidget->setTextColor(0.6);
+    MLoopSizeWidget->setArcBackColor( MIP_Color(0.5, 0.0, 0.0) );
+    MLoopSizeWidget->setArcValueColor( MIP_Color(0.7, 0.0, 0.0) );
+    MLoopSizeWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.0, 0.0) );
 
   connect( MLoopSizeWidget, AParameters->getItem(PAR_PROB_SIZE_PROB_LOOP) );
 
@@ -541,6 +597,9 @@ public:
     MLoopSizeValueWidget = new MIP_DualSliderWidget( MIP_DRect(414,216,66,16), "%", 0.5, 0.5 );
     page1->appendChildWidget(MLoopSizeValueWidget);
     MLoopSizeValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    MLoopSizeValueWidget->setBackgroundColor( MIP_Color(0.5, 0.0, 0.0) );
+    MLoopSizeValueWidget->setSliderColor( MIP_Color(0.7, 0.0, 0.0) );
+    MLoopSizeValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.0, 0.0) );
 
   connect( MLoopSizeValueWidget, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_LOOP) );
   connect( MLoopSizeValueWidget, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_LOOP) );
@@ -552,6 +611,9 @@ public:
     MLoopSpeedWidget->setArcThickness(7);
     MLoopSpeedWidget->setValueColor(0.8);
     MLoopSpeedWidget->setTextColor(0.6);
+    MLoopSpeedWidget->setArcBackColor( MIP_Color(0.5, 0.25, 0.0) );
+    MLoopSpeedWidget->setArcValueColor( MIP_Color(0.7, 0.35, 0.0) );
+    MLoopSpeedWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.45, 0.0) );
 
   connect( MLoopSpeedWidget, AParameters->getItem(PAR_PROB_SPEED_PROB_LOOP) );
 
@@ -566,6 +628,9 @@ public:
     MLoopSpeedValueWidget = new MIP_DualSliderWidget( MIP_DRect(414,251,66,16), "%", 0.5, 0.5 );
     page1->appendChildWidget(MLoopSpeedValueWidget);
     MLoopSpeedValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    MLoopSpeedValueWidget->setBackgroundColor( MIP_Color(0.5, 0.25, 0.0) );
+    MLoopSpeedValueWidget->setSliderColor( MIP_Color(0.7, 0.35, 0.0) );
+    MLoopSpeedValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.45, 0.0) );
 
   connect( MLoopSpeedValueWidget, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_LOOP) );
   connect( MLoopSpeedValueWidget, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_LOOP) );
@@ -577,6 +642,9 @@ public:
     MLoopOffsetWidget->setArcThickness(7);
     MLoopOffsetWidget->setValueColor(0.8);
     MLoopOffsetWidget->setTextColor(0.6);
+    MLoopOffsetWidget->setArcBackColor( MIP_Color(0.5, 0.5, 0.0) );
+    MLoopOffsetWidget->setArcValueColor( MIP_Color(0.7, 0.7, 0.0) );
+    MLoopOffsetWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.0) );
 
   connect( MLoopOffsetWidget, AParameters->getItem(PAR_PROB_OFFSET_PROB_LOOP) );
 
@@ -591,6 +659,9 @@ public:
     MLoopOffsetValueWidget = new MIP_DualSliderWidget( MIP_DRect(414,286,66,16), "sl", 0.5, 0.5 );
     page1->appendChildWidget(MLoopOffsetValueWidget);
     MLoopOffsetValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    MLoopOffsetValueWidget->setBackgroundColor( MIP_Color(0.5, 0.5, 0.0) );
+    MLoopOffsetValueWidget->setSliderColor( MIP_Color(0.7, 0.7, 0.0) );
+    MLoopOffsetValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.9, 0.0) );
 
   connect( MLoopOffsetValueWidget, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_LOOP) );
   connect( MLoopOffsetValueWidget, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_LOOP) );
@@ -602,6 +673,9 @@ public:
     MLoopReverseWidget->setArcThickness(7);
     MLoopReverseWidget->setValueColor(0.8);
     MLoopReverseWidget->setTextColor(0.6);
+    MLoopReverseWidget->setArcBackColor( MIP_Color(0.25, 0.5, 0.0) );
+    MLoopReverseWidget->setArcValueColor( MIP_Color(0.35, 0.7, 0.0) );
+    MLoopReverseWidget->setInteractiveArcValueColor( MIP_Color(0.45, 0.9, 0.0) );
 
   connect( MLoopReverseWidget, AParameters->getItem(PAR_PROB_REVERSE_PROB_LOOP) );
 
@@ -623,6 +697,9 @@ public:
     loop_fx_knob->setActive(false);
     loop_fx_knob->setValueColor(0.8);
     loop_fx_knob->setTextColor(0.6);
+    loop_fx_knob->setArcBackColor( MIP_Color(0.0, 0.5, 0.0) );
+    loop_fx_knob->setArcValueColor( MIP_Color(0.0, 0.7, 0.0) );
+    loop_fx_knob->setInteractiveArcValueColor( MIP_Color(0.0, 0.9, 0.0) );
 
   connect( loop_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_LOOP) );
 
@@ -643,6 +720,9 @@ public:
     loop_fx_range_slider->setDisabled(true);
     loop_fx_range_slider->setDisabledColor(BACKGROUNDCOLOR);
     loop_fx_range_slider->setActive(false);
+    loop_fx_range_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.0) );
+    loop_fx_range_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.0) );
+    loop_fx_range_slider->setSliderColor( MIP_Color(0.0, 0.9, 0.0) );
 
   connect( loop_fx_range_slider, 0, AParameters->getItem(PAR_PROB_FX_MIN_LOOP) );
   connect( loop_fx_range_slider, 1, AParameters->getItem(PAR_PROB_FX_MAX_LOOP) );
@@ -805,13 +885,13 @@ public:
 
       // marker 0 write pos
       MWaveformWidget->setMarkerActive(0, true);
-      MWaveformWidget->setMarkerPos(   0, (double)processor->MWritePos/buflen, 0.001);
+      MWaveformWidget->setMarkerPos(   0, (double)processor->MWritePos/buflen, 0.0025);
       MWaveformWidget->setMarkerColor( 0, MWritePosColor);
       //MWaveformWidget->setMarkerWidth( 0, MWritePosWidth);
 
       // marker 1 read pos
       MWaveformWidget->setMarkerActive(1, true);
-      MWaveformWidget->setMarkerPos(   1, processor->MReadPos/buflen, 0.001);
+      MWaveformWidget->setMarkerPos(   1, processor->MReadPos/buflen, 0.0025);
       MWaveformWidget->setMarkerColor( 1, MReadPosColor);
       //MWaveformWidget->setMarkerWidth( 1,MReadPosWidth);
 
