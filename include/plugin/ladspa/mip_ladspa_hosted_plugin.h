@@ -6,6 +6,7 @@
 
 #include "base/mip.h"
 #include "plugin/ladspa/mip_ladspa.h"
+#include "plugin/clap/mip_clap_host.h"
 //#include "gui/widgets/mip_widgets.h"
 
 //#include "base/utils/mip_inifile.h"
@@ -89,6 +90,8 @@ private:
 //  MIP_IniFile               MIniFile = {};
 //  MIP_IniSection*           MIniSection = nullptr;
 
+  MIP_PanelWidget* MRootWidget = nullptr;
+
 //------------------------------
 public:
 //------------------------------
@@ -105,6 +108,10 @@ public:
 //      MIP_PRINT;
 //    }
 
+    //MEditorWidth = 250;
+    //MEditorHeight = 500;
+    setInitialEditorSize(250,250);
+
     MHost = new MIP_ClapHost(AHost);
     const char* ptr = strstr(MPath,"#");  // find #
     if (ptr) {
@@ -114,8 +121,6 @@ public:
       loadLadspaPlugin(MPath,index);
     }
 
-    MEditorWidth = 250;
-    MEditorHeight = 500;
 
   }
 
@@ -426,20 +431,54 @@ private: // state
 private: // gui
 //------------------------------
 
-//  bool gui_create(const char *api, bool is_floating) override {
-//    bool result = MIP_Plugin::gui_create(api,is_floating);
-//    MEditor->setWindowFillBackground(true);
-//    MEditor->Layout.border = MIP_DRect(10,10,10,10);
-//    if (result) {
-//      for (uint32_t i=0; i<MParameters.size(); i++) {
-//        MIP_SliderWidget* slider = new MIP_SliderWidget( 20, MParameters[i]->getName(), MParameters[i]->getValue() );
-//        slider->Layout.alignment = MIP_WIDGET_ALIGN_FILL_TOP;
-//        MEditor->appendChildWidget(slider);
-//        MEditor->connectWidget(MParameters[i],slider);
-//      }
-//    }
-//    return result;
-//  }
+  bool gui_create(const char *api, bool is_floating) override {
+    bool result = MIP_Plugin::gui_create(api,is_floating);
+    //MEditor->setWindowFillBackground(true);
+    //MEditor->Layout.border = MIP_DRect(10,10,10,10);
+    if (result && MEditor) {
+
+      uint32_t width = MEditor->getWidth();
+      uint32_t height = MEditor->getHeight();
+      MIP_Print("%i,%i\n",width,height);
+
+      MRootWidget = new MIP_PanelWidget(MIP_DRect(0,0,width,height));
+      MEditor->setRootWidget(MRootWidget);
+
+      MRootWidget->setFillBackground(true);
+      MRootWidget->setBackgroundColor(0.3);
+      MRootWidget->setDrawBorder(true);
+      MRootWidget->setBorderColor(0.4);
+
+      // header
+
+      //MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,width,80),descriptor);
+      //MRootWidget->appendChildWidget(header);
+
+      uint32_t num_params = MNumControlInputs;//MParams.count(&MPlugin);
+      for (uint32_t i=0; i<num_params; i++) {
+        int32_t port = MControlInputIndex[i];
+        if (port >= 0) {
+
+          MIP_LadspaPort* ladspaport = &MLadspaPorts[port];
+          if (ladspaport) {
+            const char* name = ladspaport->name;
+            float value = ladspaport->defval;
+            //MIP_Print("param %i port %i\n",i,port);
+            //ladspa_connect_port(port,&MParamValues[port]);
+            MIP_DRect rect = MIP_DRect( 10, 10 + (i * 20), MInitialEditorWidth - 20, 16 );
+            MIP_Print("parameter: %s = %f (%.1f,%.1f,%.1f,%.1f)\n",name,value,rect.x,rect.y,rect.w,rect.h);
+            MIP_SliderWidget* slider = new MIP_SliderWidget( rect, name, value );
+            MRootWidget->appendChildWidget(slider);
+
+            // ladspa doesn't have 'real' parameters.. :-/
+            //MEditor->connect( slider, MParameters[i] );
+
+          }
+        }
+      }
+    }
+    return result;
+  }
 
 //------------------------------
 private: // events

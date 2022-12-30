@@ -128,21 +128,25 @@ private:
   double rnd_range_speed          = 0.0;
   double rnd_range_offset         = 0.0;
   double rnd_range_reverse        = 0.0;
+  double rnd_range_fx             = 0.0;
 
   double rnd_loop_size            = 0.0;
   double rnd_loop_speed           = 0.0;
   double rnd_loop_offset          = 0.0;
   double rnd_loop_reverse         = 0.0;
+  double rnd_loop_fx              = 0.0;
 
   double rnd_range_size_value     = 0.0;
   double rnd_range_speed_value    = 0.0;
   double rnd_range_offset_value   = 0.0;
   double rnd_range_reverse_value  = 0.0;
+  double rnd_range_fx_value       = 0.0;
 
   double rnd_loop_size_value      = 0.0;
   double rnd_loop_speed_value     = 0.0;
   double rnd_loop_offset_value    = 0.0;
   double rnd_loop_reverse_value   = 0.0;
+  double rnd_loop_fx_value        = 0.0;
 
   //
 
@@ -152,12 +156,13 @@ private:
   bool rnd_range_speed_on       = false;
   bool rnd_range_offset_on      = false;
   bool rnd_range_reverse_on     = false;
+  bool rnd_range_fx_on          = false;
 
   bool rnd_loop_size_on         = false;
   bool rnd_loop_speed_on        = false;
   bool rnd_loop_offset_on       = false;
   bool rnd_loop_reverse_on      = false;
-
+  bool rnd_loop_fx_on           = false;
 
 //------------------------------
 public:
@@ -592,6 +597,17 @@ private:
     }
 
     // fx
+    rnd_range_fx = MIP_Random();
+    if (rnd_range_fx < par_prob_fx_prob_range) {
+      rnd_range_fx_on = true;
+      rnd_range_fx_value = MIP_Random();
+      //double s = par_prob_fx_max_range - par_prob_fx_min_range;
+      //s *= rnd_range_fx_value;
+      //s += par_prob_fx_min_range;
+      //float n = powf(0.5,-s);
+      //MLoopLength *= n;
+      //MLoopLength = MIP_MaxI(MLoopLength,MIN_LOOP_LENGTH);
+    }
 
   }
 
@@ -671,6 +687,17 @@ private:
     }
 
     // fx
+    rnd_loop_fx = MIP_Random();
+    if (rnd_loop_fx < par_prob_fx_prob_loop) {
+      rnd_loop_fx_on = true;
+      rnd_loop_fx_value = MIP_Random();
+      //double s = par_prob_fx_max_loop - par_prob_fx_min_loop;
+      //s *= rnd_loop_fx_value;
+      //s += par_prob_fx_min_loop;
+      //float n = powf(0.5,-s);
+      //MLoopLength *= n;
+      //MLoopLength = MIP_MaxI(MLoopLength,MIN_LOOP_LENGTH);
+    }
 
   }
 

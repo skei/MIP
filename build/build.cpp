@@ -93,8 +93,11 @@
 #include "../source/skei.audio/sa_botage.cpp"
 //#include "../source/skei.audio/sa_bulum.cpp"
 //#include "../source/skei.audio/sa_cred.cpp"
-//#include "../source/skei.audio/sa_lad.cpp"        // !
 //#include "../source/skei.audio/sa_tyr.cpp"
+
+//
+
+//#include "../source/skei.audio/sa_lad.cpp"      // todo: parameters
 
 
 

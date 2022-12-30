@@ -8,9 +8,6 @@
 
 //----------
 
-//#include "sa_botage_widgets.h"
-//#include "../../../data/img/botage_img.h"
-
 #define BACKGROUNDCOLOR 0.2
 
 //----------------------------------------------------------------------
@@ -30,60 +27,63 @@ class sa_botage_editor
 private:
 //------------------------------
 
-  MIP_PanelWidget*      MRootWidget       = nullptr;
-  //MIP_WaveformWidget*   MWaveformWidget   = nullptr;
-  MIP_CircularWaveformWidget*   MWaveformWidget   = nullptr;
-  MIP_DragValueWidget*  MNumBeatsWidget   = nullptr;
-  MIP_DragValueWidget*  MNumSlicesWidget  = nullptr;
-  MIP_TextWidget*       MHintWidget       = nullptr;
+  MIP_PanelWidget*            MRootWidget       = nullptr;
+  MIP_CircularWaveformWidget* MWaveformWidget   = nullptr;
+  MIP_DragValueWidget*        MNumBeatsWidget   = nullptr;
+  MIP_DragValueWidget*        MNumSlicesWidget  = nullptr;
+  MIP_TextWidget*             MHintWidget       = nullptr;
 
-  MIP_PagesWidget*      MPages            = nullptr;
+  MIP_PagesWidget*            MPages            = nullptr;
 
-  MIP_ButtonWidget*     prob_page_button  = nullptr;
-  MIP_ButtonWidget*     fx_page_button    = nullptr;
-  MIP_ButtonWidget*     seq_page_button   = nullptr;
-  MIP_ButtonWidget*     perf_page_button  = nullptr;
+  MIP_ButtonWidget*           prob_page_button  = nullptr;
+  MIP_ButtonWidget*           fx_page_button    = nullptr;
+  MIP_ButtonWidget*           seq_page_button   = nullptr;
+  MIP_ButtonWidget*           perf_page_button  = nullptr;
 
-  uint32_t MCurrentPage = 0;
-
-  //
-
-  MIP_Color MReadPosColor   = MIP_Color( 0.0, 1.0, 0.0, 0.8 );
-  MIP_Color MWritePosColor  = MIP_Color( 1.0, 0.0, 0.0, 1.0 );
-
-  double    MReadPosWidth   = 2.0;
-  double    MWritePosWidth  = 2.5;
-
-  MIP_Color MRangeColor     = MIP_Color( 0.0, 0.4, 0.0, 0.5 );
-  MIP_Color MLoopColor      = MIP_Color( 0.2, 0.6, 0.2, 0.7 );
-  MIP_Color MSliceColor     = MIP_Color( 0.4, 0.4, 0.4, 0.5 );
+  uint32_t                    MCurrentPage = 0;
 
   //
 
-  MIP_KnobWidget*       MMainProbWidget           = nullptr;
+  MIP_Color                   MReadPosColor   = MIP_Color( 0.0, 1.0, 0.0, 0.8 );
+  MIP_Color                   MWritePosColor  = MIP_Color( 1.0, 0.0, 0.0, 1.0 );
 
-  MIP_ButtonRowWidget*  MMainSlicesWidget         = nullptr;
-  MIP_ButtonRowWidget*  MMainLoopsWidget          = nullptr;
+  double                      MReadPosWidth   = 2.0;
+  double                      MWritePosWidth  = 2.5;
 
-  MIP_KnobWidget*       MRangeSizeWidget          = nullptr;
-  MIP_KnobWidget*       MRangeSpeedWidget         = nullptr;
-  MIP_KnobWidget*       MRangeOffsetWidget        = nullptr;
-  MIP_KnobWidget*       MRangeReverseWidget       = nullptr;
+  MIP_Color                   MRangeColor     = MIP_Color( 0.0, 0.4, 0.0, 0.5 );
+  MIP_Color                   MLoopColor      = MIP_Color( 0.2, 0.6, 0.2, 0.7 );
+  MIP_Color                   MSliceColor     = MIP_Color( 0.4, 0.4, 0.4, 0.5 );
 
-  MIP_KnobWidget*       MLoopSizeWidget           = nullptr;
-  MIP_KnobWidget*       MLoopSpeedWidget          = nullptr;
-  MIP_KnobWidget*       MLoopOffsetWidget         = nullptr;
-  MIP_KnobWidget*       MLoopReverseWidget        = nullptr;
+  //
 
-  MIP_DualSliderWidget* MRangeSizeValueWidget     = nullptr;
-  MIP_DualSliderWidget* MRangeSpeedValueWidget    = nullptr;
-  MIP_DualSliderWidget* MRangeOffsetValueWidget   = nullptr;
-  //MIP_DualSliderWidget* MRangeReverseValueWidget  = nullptr;
+  MIP_KnobWidget*             MMainProbWidget           = nullptr;
 
-  MIP_DualSliderWidget* MLoopSizeValueWidget      = nullptr;
-  MIP_DualSliderWidget* MLoopSpeedValueWidget     = nullptr;
-  MIP_DualSliderWidget* MLoopOffsetValueWidget    = nullptr;
-  //MIP_DualSliderWidget* MLoopReverseValueWidget   = nullptr;
+  MIP_ButtonRowWidget*        MMainSlicesWidget         = nullptr;
+  MIP_ButtonRowWidget*        MMainLoopsWidget          = nullptr;
+
+  MIP_KnobWidget*             MRangeSizeWidget          = nullptr;
+  MIP_KnobWidget*             MRangeSpeedWidget         = nullptr;
+  MIP_KnobWidget*             MRangeOffsetWidget        = nullptr;
+  MIP_KnobWidget*             MRangeReverseWidget       = nullptr;
+  MIP_KnobWidget*             MRangeFXWidget            = nullptr;
+
+  MIP_KnobWidget*             MLoopSizeWidget           = nullptr;
+  MIP_KnobWidget*             MLoopSpeedWidget          = nullptr;
+  MIP_KnobWidget*             MLoopOffsetWidget         = nullptr;
+  MIP_KnobWidget*             MLoopReverseWidget        = nullptr;
+  MIP_KnobWidget*             MLoopFXWidget             = nullptr;
+
+  MIP_DualSliderWidget*       MRangeSizeValueWidget     = nullptr;
+  MIP_DualSliderWidget*       MRangeSpeedValueWidget    = nullptr;
+  MIP_DualSliderWidget*       MRangeOffsetValueWidget   = nullptr;
+//MIP_DualSliderWidget*       MRangeReverseValueWidget  = nullptr;
+  MIP_DualSliderWidget*       MRangeFXValueWidget       = nullptr;
+
+  MIP_DualSliderWidget*       MLoopSizeValueWidget      = nullptr;
+  MIP_DualSliderWidget*       MLoopSpeedValueWidget     = nullptr;
+  MIP_DualSliderWidget*       MLoopOffsetValueWidget    = nullptr;
+//MIP_DualSliderWidget*       MLoopReverseValueWidget   = nullptr;
+  MIP_DualSliderWidget*       MLoopFXValueWidget        = nullptr;
 
 //------------------------------
 public:
@@ -91,11 +91,6 @@ public:
 
   sa_botage_editor(MIP_EditorListener* AListener, uint32_t AWidth, uint32_t AHeight, MIP_ParameterArray* AParameters, const clap_plugin_descriptor_t* descriptor)
   : MIP_Editor(AListener,AWidth,AHeight,AParameters) {
-
-    //MIP_Print("%i,%i\n",AWidth,AHeight);
-
-    double __MIP_UNUSED x,y,w,h = 0;
-    double width  = AWidth;
 
     // root
 
@@ -108,7 +103,7 @@ public:
 
     // header
 
-    MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,width,80),descriptor);
+    MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,AWidth,80),descriptor);
     MRootWidget->appendChildWidget(header);
 
     // c
@@ -302,18 +297,12 @@ public:
   bool show() override {
     uint32_t beats = MParameters->getItem(0)->getValue();
     uint32_t slices = MParameters->getItem(1)->getValue();
-
-    //MWaveformWidget->setNumGrid(beats);
-    //MWaveformWidget->setNumSubGrid(slices);
     MWaveformWidget->setGrid(beats,slices);
-
-    //  double scale = 1.0;
-    //  double aspect = (double)MEditorWidth / (double)MEditorHeight;
-    //  if (aspect >= MAspectRatio) scale = (double)MEditorHeight / (double)MInitialHeight;
-    //  else scale = (double)MEditorWidth / (double)MInitialWidth;
-    //  MWindow->setWindowScale(scale);
-
-    //MIP_Print("%i,%i\n",MEditorWidth,MEditorHeight);
+    //double scale = 1.0;
+    //double aspect = (double)MEditorWidth / (double)MEditorHeight;
+    //if (aspect >= MAspectRatio) scale = (double)MEditorHeight / (double)MInitialHeight;
+    //else scale = (double)MEditorWidth / (double)MInitialWidth;
+    //MWindow->setWindowScale(scale);
     return MIP_Editor::show();
   }
 
@@ -398,16 +387,6 @@ public:
 public:
 //------------------------------
 
-  //  void timer_update(sa_botage_processor* processor) {
-  //    //MIP_Assert(MWaveformWidget);
-  //    if (MIsEditorOpen) {
-  //      updateWaveformWidget(processor);
-  //      MWaveformWidget->redraw(); // do_widget_redraw(MWaveformWidget);
-  //    }
-  //  }
-
-  //----------
-
   void updateWaveformWidget(sa_botage_processor* processor) {
 
     uint32_t buflen = processor->MBufferLength;
@@ -417,29 +396,36 @@ public:
       MWaveformWidget->setGrid(processor->par_num_beats, processor->par_num_slices);
 
       // marker 0 write pos
+
       MWaveformWidget->setMarkerActive(0, true);
       MWaveformWidget->setMarkerPos(   0, (double)processor->MWritePos/buflen, 0.0025);
       MWaveformWidget->setMarkerColor( 0, MWritePosColor);
       //MWaveformWidget->setMarkerWidth( 0, MWritePosWidth);
 
       // marker 1 read pos
+
       MWaveformWidget->setMarkerActive(1, true);
       MWaveformWidget->setMarkerPos(   1, processor->MReadPos/buflen, 0.0025);
       MWaveformWidget->setMarkerColor( 1, MReadPosColor);
       //MWaveformWidget->setMarkerWidth( 1,MReadPosWidth);
 
       if (processor->MRange) {
-        MWaveformWidget->setAreaActive(0, false);
+
         // area 1 range
+
+        MWaveformWidget->setAreaActive(0, false);
         MWaveformWidget->setAreaActive(1, true);
         MWaveformWidget->setAreaPos(   1, processor->MRangeStart/buflen, processor->MRangeLength/buflen);
         MWaveformWidget->setAreaColor( 1, MRangeColor);
 
         if (processor->MLoop) {
+
           // area 2 loop
+
           MWaveformWidget->setAreaActive(2, true);
           MWaveformWidget->setAreaPos(   2, processor->MLoopStart/buflen, processor->MLoopLength/buflen);
           MWaveformWidget->setAreaColor( 2, MLoopColor);
+
         }
         else {
           MWaveformWidget->setAreaActive(2, false);
@@ -451,6 +437,7 @@ public:
         MWaveformWidget->setAreaActive(2, false);
 
         // area 0 current slice
+
         if (processor->MIsPlaying) {
           MWaveformWidget->setAreaActive(0, true);
           MWaveformWidget->setAreaPos(   0, processor->MSliceStart/buflen, processor->MSliceLength/buflen);
@@ -472,72 +459,87 @@ public:
 
   void updateProbIndicators(sa_botage_processor* processor) {
 
+    // only if page is visible
     if (MCurrentPage == 0) {
 
       MMainProbWidget->setIndicatorValue(processor->rnd_main_prob);
       if (processor->MRange) {
+
         //MMainProbWidget->setIndicatorValue(processor->rnd_main_prob);
         MMainSlicesWidget->setIndicatorValue(processor->rnd_main_slices);
         MMainLoopsWidget->setIndicatorValue(processor->rnd_main_subdiv);
-        //
+
         MRangeSizeWidget->setIndicatorValue(processor->rnd_range_size);
         MRangeSpeedWidget->setIndicatorValue(processor->rnd_range_speed);
         MRangeOffsetWidget->setIndicatorValue(processor->rnd_range_offset);
         MRangeReverseWidget->setIndicatorValue(processor->rnd_range_reverse);
-        //
+        MRangeFXWidget->setIndicatorValue(processor->rnd_range_fx);
+
         if (processor->rnd_range_size_on) MRangeSizeValueWidget->setIndicatorValue(processor->rnd_range_size_value);
         else MRangeSizeValueWidget->setIndicatorValue(-1);
         if (processor->rnd_range_speed_on) MRangeSpeedValueWidget->setIndicatorValue(processor->rnd_range_speed_value);
         else MRangeSpeedValueWidget->setIndicatorValue(-1);
         if (processor->rnd_range_offset_on) MRangeOffsetValueWidget->setIndicatorValue(processor->rnd_range_offset_value);
         else MRangeOffsetValueWidget->setIndicatorValue(-1);
-        //
+        if (processor->rnd_range_fx_on) MRangeFXValueWidget->setIndicatorValue(processor->rnd_range_fx_value);
+        else MRangeFXValueWidget->setIndicatorValue(-1);
+
         if (processor->MLoopWrapped) {
           MLoopSizeWidget->setIndicatorValue(processor->rnd_loop_size);
           MLoopSpeedWidget->setIndicatorValue(processor->rnd_loop_speed);
           MLoopOffsetWidget->setIndicatorValue(processor->rnd_loop_offset);
           MLoopReverseWidget->setIndicatorValue(processor->rnd_loop_reverse);
-          //
+          MLoopFXWidget->setIndicatorValue(processor->rnd_loop_fx);
+
           if (processor->rnd_loop_size_on) MLoopSizeValueWidget->setIndicatorValue(processor->rnd_loop_size_value);
           else MLoopSizeValueWidget->setIndicatorValue(-1);
           if (processor->rnd_loop_speed_on) MLoopSpeedValueWidget->setIndicatorValue(processor->rnd_loop_speed_value);
           else MLoopSpeedValueWidget->setIndicatorValue(-1);
           if (processor->rnd_loop_offset_on) MLoopOffsetValueWidget->setIndicatorValue(processor->rnd_loop_offset_value);
           else MLoopOffsetValueWidget->setIndicatorValue(-1);
+          if (processor->rnd_loop_fx_on) MLoopFXValueWidget->setIndicatorValue(processor->rnd_loop_fx_value);
+          else MLoopFXValueWidget->setIndicatorValue(-1);
         }
         else {
           MLoopSizeWidget->setIndicatorValue(-1);
           MLoopSpeedWidget->setIndicatorValue(-1);
           MLoopOffsetWidget->setIndicatorValue(-1);
           MLoopReverseWidget->setIndicatorValue(-1);
-          //
+          MLoopFXWidget->setIndicatorValue(-1);
+
           MLoopSizeValueWidget->setIndicatorValue(-1);
           MLoopSpeedValueWidget->setIndicatorValue(-1);
           MLoopOffsetValueWidget->setIndicatorValue(-1);
+          MLoopFXValueWidget->setIndicatorValue(-1);
         }
       }
       else { // ! range
+
         //MMainProbWidget->setIndicatorValue(-1);
         MMainSlicesWidget->setIndicatorValue(-1);
         MMainLoopsWidget->setIndicatorValue(-1);
-        //
+
         MRangeSizeWidget->setIndicatorValue(-1);
         MRangeSpeedWidget->setIndicatorValue(-1);
         MRangeOffsetWidget->setIndicatorValue(-1);
         MRangeReverseWidget->setIndicatorValue(-1);
-        //
+        MRangeFXWidget->setIndicatorValue(-1);
+
         MRangeSizeValueWidget->setIndicatorValue(-1);
         MRangeSpeedValueWidget->setIndicatorValue(-1);
         MRangeOffsetValueWidget->setIndicatorValue(-1);
-        //
+        MRangeFXValueWidget->setIndicatorValue(-1);
+
         MLoopSizeWidget->setIndicatorValue(-1);
         MLoopSpeedWidget->setIndicatorValue(-1);
         MLoopOffsetWidget->setIndicatorValue(-1);
         MLoopReverseWidget->setIndicatorValue(-1);
-        //
+        MLoopFXWidget->setIndicatorValue(-1);
+
         MLoopSizeValueWidget->setIndicatorValue(-1);
         MLoopSpeedValueWidget->setIndicatorValue(-1);
         MLoopOffsetValueWidget->setIndicatorValue(-1);
+        MLoopFXValueWidget->setIndicatorValue(-1);
       }
 
     } // page == 0

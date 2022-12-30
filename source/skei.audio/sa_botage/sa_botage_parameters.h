@@ -90,7 +90,7 @@ public:
 
 };
 
-//----------
+//----------------------------------------------------------------------
 
 class MIP_SA_PercentParameter
 : public MIP_Parameter {
@@ -114,7 +114,7 @@ public:
 
 };
 
-//----------
+//----------------------------------------------------------------------
 
 class MIP_SA_OffsetParameter
 : public MIP_Parameter {
@@ -192,16 +192,12 @@ void sa_botage_init_parameters(MIP_Plugin* APlugin) {
   // ----- loop offset
 
   /* PAR_PROB_OFFSET_PROB_RANGE */  APlugin->appendParameter(new MIP_SA_PercentParameter(       "Offset Prob Range",    0.25,       0, 1 ));
-//  /* PAR_PROB_OFFSET_MIN_RANGE */   APlugin->appendParameter(new MIP_SA_ScalePercentParameter(  "Offset Min Range",    -0.5,       -1, 1 ));
-//  /* PAR_PROB_OFFSET_MAX_RANGE */   APlugin->appendParameter(new MIP_SA_ScalePercentParameter(  "Offset Max Range",     0.5,       -1, 1 ));
-  /* PAR_PROB_OFFSET_MIN_RANGE */   APlugin->appendParameter(new MIP_SA_OffsetParameter(       "Offset Min Range",    -0.5,       -1, 1 ));
-  /* PAR_PROB_OFFSET_MAX_RANGE */   APlugin->appendParameter(new MIP_SA_OffsetParameter(       "Offset Max Range",     0.5,       -1, 1 ));
+  /* PAR_PROB_OFFSET_MIN_RANGE */   APlugin->appendParameter(new MIP_SA_OffsetParameter(        "Offset Min Range",    -0.5,       -1, 1 ));
+  /* PAR_PROB_OFFSET_MAX_RANGE */   APlugin->appendParameter(new MIP_SA_OffsetParameter(        "Offset Max Range",     0.5,       -1, 1 ));
 
   /* PAR_PROB_OFFSET_PROB_LOOP */   APlugin->appendParameter(new MIP_SA_PercentParameter(       "Offset Prob Loop",     0.25,       0, 1 ));
-//  /* PAR_PROB_OFFSET_MIN_LOOP */    APlugin->appendParameter(new MIP_SA_ScalePercentParameter(  "Offset Min Loop",     -0.5,       -1, 1 ));
-//  /* PAR_PROB_OFFSET_MAX_LOOP */    APlugin->appendParameter(new MIP_SA_ScalePercentParameter(  "Offset Max Loop",      0.5,       -1, 1 ));
-  /* PAR_PROB_OFFSET_MIN_LOOP */    APlugin->appendParameter(new MIP_SA_OffsetParameter(  "Offset Min Loop",     -0.5,       -1, 1 ));
-  /* PAR_PROB_OFFSET_MAX_LOOP */    APlugin->appendParameter(new MIP_SA_OffsetParameter(  "Offset Max Loop",      0.5,       -1, 1 ));
+  /* PAR_PROB_OFFSET_MIN_LOOP */    APlugin->appendParameter(new MIP_SA_OffsetParameter(        "Offset Min Loop",     -0.5,       -1, 1 ));
+  /* PAR_PROB_OFFSET_MAX_LOOP */    APlugin->appendParameter(new MIP_SA_OffsetParameter(        "Offset Max Loop",      0.5,       -1, 1 ));
 
   // ----- loop reverse
 
@@ -217,6 +213,8 @@ void sa_botage_init_parameters(MIP_Plugin* APlugin) {
   /* PAR_PROB_FX_PROB_LOOP */       APlugin->appendParameter(new MIP_SA_PercentParameter(       "FX Prob Loop",         0.25,       0, 1 ));
   /* PAR_PROB_FX_MIN_LOOP */        APlugin->appendParameter(new MIP_SA_ScalePercentParameter(  "FX Min Loop",         -0.5,       -1, 1 ));
   /* PAR_PROB_FX_MAX_LOOP */        APlugin->appendParameter(new MIP_SA_ScalePercentParameter(  "FX Max Loop",          0.5,       -1, 1 ));
+
+  MIP_Assert( APlugin->getParameterCount() == SA_BOTAGE_PARAM_COUNT );
 
 }
 

@@ -338,37 +338,37 @@
     range_fx_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     range_fx_text->setTextColor(0.6);
     range_fx_text->setTextSize(10);
-    range_fx_text->setDisabled(true);
-    range_fx_text->setDisabledColor(BACKGROUNDCOLOR);
-    range_fx_text->setActive(false);
+    //range_fx_text->setDisabled(true);
+    //range_fx_text->setDisabledColor(BACKGROUNDCOLOR);
+    //range_fx_text->setActive(false);
 
-    MIP_KnobWidget* range_fx_knob = new MIP_KnobWidget(MIP_DRect(255,345,33,33),"%", 0.0);
-    page_prob->appendChildWidget(range_fx_knob);
-    range_fx_knob->setArcThickness(7);
-    range_fx_knob->setDisabled(true);
-    range_fx_knob->setDisabledColor(BACKGROUNDCOLOR);
-    range_fx_knob->setActive(false);
-    range_fx_knob->setValueColor(0.8);
-    range_fx_knob->setTextColor(0.6);
-    range_fx_knob->setArcBackColor(             MIP_Color(0.25, 0.5, 0.0) );
-    range_fx_knob->setArcValueColor(            MIP_Color(0.35, 0.7, 0.0) );
-    range_fx_knob->setInteractiveArcValueColor( MIP_Color(0.45, 0.9, 0.0) );
+    MRangeFXWidget = new MIP_KnobWidget(MIP_DRect(255,345,33,33),"%", 0.0);
+    page_prob->appendChildWidget(MRangeFXWidget);
+    MRangeFXWidget->setArcThickness(7);
+    MRangeFXWidget->setValueColor(0.8);
+    MRangeFXWidget->setTextColor(0.6);
+    MRangeFXWidget->setArcBackColor(             MIP_Color(0.0, 0.5, 0.0) );
+    MRangeFXWidget->setArcValueColor(            MIP_Color(0.0, 0.7, 0.0) );
+    MRangeFXWidget->setInteractiveArcValueColor( MIP_Color(0.0, 0.9, 0.0) );
+    //MRangeFXWidget->setDisabled(true);
+    //MRangeFXWidget->setDisabledColor(BACKGROUNDCOLOR);
+    //MRangeFXWidget->setActive(false);
 
-    connect( range_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_RANGE) );
+    connect( MRangeFXWidget, AParameters->getItem(PAR_PROB_FX_PROB_RANGE) );
 
-    MIP_DualSliderWidget* range_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(292,356,66,16), "%", 0.5, 0.5 );
-    page_prob->appendChildWidget(range_fx_range_slider);
-    range_fx_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    range_fx_range_slider->setDisabled(true);
-    range_fx_range_slider->setDisabledColor(BACKGROUNDCOLOR);
-    range_fx_range_slider->setActive(false);
-    range_fx_range_slider->setBackgroundColor(        MIP_Color(0.0, 0.5, 0.0) );
-    range_fx_range_slider->setSliderColor(            MIP_Color(0.0, 0.7, 0.0) );
-    range_fx_range_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.0) );
-    range_fx_range_slider->setTextColor(              MIP_Color(0, 0, 0, 0.5));
+    MRangeFXValueWidget = new MIP_DualSliderWidget( MIP_DRect(292,356,66,16), "%", 0.5, 0.5 );
+    page_prob->appendChildWidget(MRangeFXValueWidget);
+    MRangeFXValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    MRangeFXValueWidget->setBackgroundColor(        MIP_Color(0.0, 0.5, 0.0) );
+    MRangeFXValueWidget->setSliderColor(            MIP_Color(0.0, 0.7, 0.0) );
+    MRangeFXValueWidget->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.0) );
+    MRangeFXValueWidget->setTextColor(              MIP_Color(0, 0, 0, 0.5));
+    //MRangeFXValueWidget->setDisabled(true);
+    //MRangeFXValueWidget->setDisabledColor(BACKGROUNDCOLOR);
+    //MRangeFXValueWidget->setActive(false);
 
-    connect( range_fx_range_slider, 0, AParameters->getItem(PAR_PROB_FX_MIN_RANGE) );
-    connect( range_fx_range_slider, 1, AParameters->getItem(PAR_PROB_FX_MAX_RANGE) );
+    connect( MRangeFXValueWidget, 0, AParameters->getItem(PAR_PROB_FX_MIN_RANGE) );
+    connect( MRangeFXValueWidget, 1, AParameters->getItem(PAR_PROB_FX_MAX_RANGE) );
 
     // loop fx
 
@@ -379,35 +379,35 @@
     loop_fx_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     loop_fx_text->setTextColor(0.6);
     loop_fx_text->setTextSize(10);
-    loop_fx_text->setDisabled(true);
-    loop_fx_text->setDisabledColor(BACKGROUNDCOLOR);
-    loop_fx_text->setActive(false);
+    //loop_fx_text->setDisabled(true);
+    //loop_fx_text->setDisabledColor(BACKGROUNDCOLOR);
+    //loop_fx_text->setActive(false);
 
-    MIP_KnobWidget* loop_fx_knob = new MIP_KnobWidget(MIP_DRect(377,345,33,33),"%", 0.0);
-    page_prob->appendChildWidget(loop_fx_knob);
-    loop_fx_knob->setArcThickness(7);
-    loop_fx_knob->setDisabled(true);
-    loop_fx_knob->setDisabledColor(BACKGROUNDCOLOR);
-    loop_fx_knob->setActive(false);
-    loop_fx_knob->setValueColor(0.8);
-    loop_fx_knob->setTextColor(0.6);
-    loop_fx_knob->setArcBackColor(            MIP_Color(0.0, 0.5, 0.0) );
-    loop_fx_knob->setArcValueColor(           MIP_Color(0.0, 0.7, 0.0) );
-    loop_fx_knob->setInteractiveArcValueColor(MIP_Color(0.0, 0.9, 0.0) );
+    MLoopFXWidget = new MIP_KnobWidget(MIP_DRect(377,345,33,33),"%", 0.0);
+    page_prob->appendChildWidget(MLoopFXWidget);
+    MLoopFXWidget->setArcThickness(7);
+    MLoopFXWidget->setValueColor(0.8);
+    MLoopFXWidget->setTextColor(0.6);
+    MLoopFXWidget->setArcBackColor(            MIP_Color(0.0, 0.5, 0.0) );
+    MLoopFXWidget->setArcValueColor(           MIP_Color(0.0, 0.7, 0.0) );
+    MLoopFXWidget->setInteractiveArcValueColor(MIP_Color(0.0, 0.9, 0.0) );
+    //MLoopFXWidget->setDisabled(true);
+    //MLoopFXWidget->setDisabledColor(BACKGROUNDCOLOR);
+    //MLoopFXWidget->setActive(false);
 
-    connect( loop_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_LOOP) );
+    connect( MLoopFXWidget, AParameters->getItem(PAR_PROB_FX_PROB_LOOP) );
 
-    MIP_DualSliderWidget* loop_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(414,356,66,16), "%", 0.5, 0.5 );
-    page_prob->appendChildWidget(loop_fx_range_slider);
-    loop_fx_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    loop_fx_range_slider->setDisabled(true);
-    loop_fx_range_slider->setDisabledColor(BACKGROUNDCOLOR);
-    loop_fx_range_slider->setActive(false);
-    loop_fx_range_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.0) );
-    loop_fx_range_slider->setSliderColor(     MIP_Color(0.0, 0.7, 0.0) );
-    loop_fx_range_slider->setSliderColor(     MIP_Color(0.0, 0.9, 0.0) );
-    loop_fx_range_slider->setTextColor(       MIP_Color(0, 0, 0, 0.5));
+    MLoopFXValueWidget = new MIP_DualSliderWidget( MIP_DRect(414,356,66,16), "%", 0.5, 0.5 );
+    page_prob->appendChildWidget(MLoopFXValueWidget);
+    MLoopFXValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+    MLoopFXValueWidget->setBackgroundColor(       MIP_Color(0.0, 0.5, 0.0) );
+    MLoopFXValueWidget->setSliderColor(           MIP_Color(0.0, 0.7, 0.0) );
+    MLoopFXValueWidget->setInteractiveSliderColor(MIP_Color(0.0, 0.9, 0.0) );
+    MLoopFXValueWidget->setTextColor(             MIP_Color(0, 0, 0, 0.5));
+    //MLoopFXValueWidget->setDisabled(true);
+    //MLoopFXValueWidget->setDisabledColor(BACKGROUNDCOLOR);
+    //MLoopFXValueWidget->setActive(false);
 
-    connect( loop_fx_range_slider, 0, AParameters->getItem(PAR_PROB_FX_MIN_LOOP) );
-    connect( loop_fx_range_slider, 1, AParameters->getItem(PAR_PROB_FX_MAX_LOOP) );
+    connect( MLoopFXValueWidget, 0, AParameters->getItem(PAR_PROB_FX_MIN_LOOP) );
+    connect( MLoopFXValueWidget, 1, AParameters->getItem(PAR_PROB_FX_MAX_LOOP) );
 

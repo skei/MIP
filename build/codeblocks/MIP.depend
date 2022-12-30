@@ -1,6 +1,6 @@
 # depslib dependency file v1.0
-1672434477 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../source/skei.audio/sa_botage.cpp"
+1672438009 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../source/skei.audio/sa_lad.cpp"
 
 1670414796 /DISKS/sda2/code/git/MIP/build/test/test1.cpp
 	"gui/mip_window.h"
@@ -1368,4 +1368,31 @@
 1672434725 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_seq.h
 
 1672434717 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_perf.h
+
+1672051212 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_lad.cpp
+	"plugin/mip_registry.h"
+	"plugin/clap/mip_clap_entry.h"
+	"plugin/vst3/mip_vst3_entry.h"
+	"base/mip.h"
+	"base/utils/mip_strutils.h"
+	"plugin/mip_plugin.h"
+	"plugin/ladspa//mip_ladspa.h"
+	"plugin/ladspa//mip_ladspa_hosted_plugin.h"
+
+1672246267 /DISKS/sda2/code/git/MIP/include/plugin/ladspa//mip_ladspa.h
+	"base/mip.h"
+	<ladspa.h>
+
+1672439401 /DISKS/sda2/code/git/MIP/include/plugin/ladspa//mip_ladspa_hosted_plugin.h
+	"base/mip.h"
+	"plugin/ladspa/mip_ladspa.h"
+	"plugin/clap/mip_clap_host.h"
+
+1672246267 /DISKS/sda2/code/git/MIP/include/plugin/ladspa/mip_ladspa.h
+	"base/mip.h"
+	<ladspa.h>
+
+1669323612 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_host.h
+	"base/mip.h"
+	"plugin/clap/mip_clap.h"
 
