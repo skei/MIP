@@ -6,9 +6,6 @@
 
 //----------
 
-#define MIP_LOGGING
-#define MIP_LOG_APPEND
-
 #define SA_BOTAGE_EDITOR_WIDTH  490
 #define SA_BOTAGE_EDITOR_HEIGHT 392
 
@@ -20,6 +17,8 @@
 
 #include "plugin/mip_plugin.h"
 #include "audio/mip_audio_utils.h"
+
+#include "gui/mip_bitmap.h"
 
 //----------
 

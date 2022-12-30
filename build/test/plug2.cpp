@@ -85,15 +85,17 @@ public:
     waveform->setGridColor( MIP_Color(0.8), MIP_Color(0.5) );
 
 
-    waveform->setNumAreas(2);
-    waveform->setArea( 0, 0, 0.375);
-    waveform->setArea( 1, 0, 0.125);
+    waveform->setAreaPos( 0, 0, 0.375);
+    waveform->setAreaPos( 1, 0, 0.125);
+    waveform->setAreaActive(0);
+    waveform->setAreaActive(1);
 
     waveform->setAreaColor( 0, MIP_Color(0, 0.4, 0));
     waveform->setAreaColor( 1, MIP_Color(0, 0.5, 0));
 
-    waveform->setNumMarkers(1);
-    waveform->setMarker(0, 0.26, 0.0025);
+    waveform->setMarkerActive(0);
+    waveform->setMarkerActive(1);
+    waveform->setMarkerPos(0, 0.26, 0.0025);
     waveform->setMarkerColor(0,MIP_Color(0.8, 0, 0));
 
   }

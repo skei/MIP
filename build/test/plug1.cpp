@@ -84,10 +84,10 @@ public:
   bool gui_create(const char* api, bool is_floating) final {
     bool result = MIP_Plugin::gui_create(api,is_floating);
     if (result) {
-      MIP_Window* window = MEditor.getWindow();
+      MIP_Window* window = MEditor->getWindow();
       MIP_Assert(window);
       MRootWidget = new MIP_PanelWidget(MIP_DRect(0,0,640,480));
-      MEditor.setRootWidget(MRootWidget);//,window);
+      MEditor->setRootWidget(MRootWidget);//,window);
       MIP_MenuWidget* menu = new MIP_MenuWidget(MIP_DRect(0,0,100,60), nullptr);
       menu->appendChildWidget( new MIP_MenuItemWidget(MIP_DRect(0, 0,100,15), "Item1" ) );
       menu->appendChildWidget( new MIP_MenuItemWidget(MIP_DRect(0,15,100,15), "Item2" ) );
@@ -102,7 +102,7 @@ public:
       MRootWidget->appendChildWidget(button);
       MIP_DragValueWidget* dragvalue = new MIP_DragValueWidget( MIP_DRect(100,170,200,20), "DragValue", 0.5 );
       MRootWidget->appendChildWidget(dragvalue);
-      dragvalue->clearFlag(MIP_WIDGET_FLAG_AUTO_HIDE_CURSOR);
+//      dragvalue->clearFlag(MIP_WIDGET_FLAG_AUTO_HIDE_CURSOR);
       MIP_SliderWidget* slider = new MIP_SliderWidget( MIP_DRect(100,200,200,20), "Slider", 0.5 );
       MRootWidget->appendChildWidget(slider);
       MIP_KnobWidget* knob = new MIP_KnobWidget( MIP_DRect(100,230,50,50), "Knob", 0.5 );
@@ -118,9 +118,9 @@ public:
       MIP_ButtonRowWidget* buttonrow2 = new MIP_ButtonRowWidget( MIP_DRect(400,350,200,20), 6, brtxt, MIP_BUTTON_ROW_MULTI );
       MRootWidget->appendChildWidget(buttonrow2);
       MRootWidget->appendChildWidget(menu);
-      MEditor.connect( knob,      getParameter(0) );
-      MEditor.connect( slider,    getParameter(1) );
-      MEditor.connect( dragvalue, getParameter(2) );
+      MEditor->connect( knob,      getParameter(0) );
+      MEditor->connect( slider,    getParameter(1) );
+      MEditor->connect( dragvalue, getParameter(2) );
     }
     return result;
   }

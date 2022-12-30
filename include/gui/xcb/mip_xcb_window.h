@@ -173,6 +173,7 @@ public:
 
   virtual ~MIP_XcbWindow() {
     if (MGuiTimer) {
+        LOG.print("XCB Stopping gui timer (destructor)\n");
       MGuiTimer->stop();
       delete MGuiTimer;
     }
@@ -208,11 +209,18 @@ private:
 
     //MConnection = xcb_connect(ADisplayName,&MDefaultScreen);
     XInitThreads(); // is this needed ???
+
     MDisplay = XOpenDisplay(ADisplayName);
+    LOG.print("X Display: %p\n",MDisplay);
+
     MConnection = XGetXCBConnection(MDisplay);
+    LOG.print("XCB connection: %p\n",MConnection);
+
     XSetEventQueueOwner(MDisplay,XCBOwnsEventQueue);
 
     MDefaultScreen = DefaultScreen(MDisplay); // ???
+    LOG.print("X DefaultScreen: %i\n",MDefaultScreen);
+
     return true;
   }
 
@@ -234,7 +242,10 @@ private:
     iter = xcb_setup_roots_iterator(xcb_get_setup(MConnection));
     for (; iter.rem; --screen_num, xcb_screen_next(&iter)) {
       if (screen_num == 0) {
+
         MScreen = iter.data;
+        LOG.print("XCB Screen: %p\n",MScreen);
+
         break;
       }
     }
@@ -245,6 +256,15 @@ private:
     MScreenColormap = MScreen->default_colormap;
     MScreenVisual   = MScreen->root_visual;
     MScreenDrawable = MScreen->root;
+
+    LOG.print("  ScreenWidth:    %i\n",MScreenWidth);
+    LOG.print("  ScreenHeight:   %i\n",MScreenHeight);
+    LOG.print("  ScreenDepth:    %i\n",MScreenDepth);
+    LOG.print("  ScreenWindow:   %i\n",MScreenWidth);
+    LOG.print("  ScreenColormap: %i\n",MScreenColormap);
+    LOG.print("  ScreenVisual:   %i\n",MScreenVisual);
+    LOG.print("  ScreenDrawable: %i\n",MScreenDrawable);
+
     return true;
   }
 
@@ -257,7 +277,10 @@ private:
 // gc
 
   bool initScreenGC() {
+
     MScreenGC = xcb_generate_id(MConnection);
+    LOG.print("XCB ScreenGC: %i\n",MScreenGC);
+
     xcb_drawable_t draw = MScreen->root;
     uint32_t mask = XCB_GC_FOREGROUND | XCB_GC_BACKGROUND;
     uint32_t values[2];
@@ -301,7 +324,10 @@ private:
       event_mask,
       MScreen->default_colormap
     };
+
     MWindow = xcb_generate_id(MConnection);
+    LOG.print("XCB Window: %i\n",MWindow);
+
     xcb_create_window(
       MConnection,                    // connection
       XCB_COPY_FROM_PARENT,           // depth (same as root)
@@ -564,6 +590,7 @@ public:
   void startTimer(uint32_t ms, uintptr_t id) override {
     //MIP_PRINT;
     if (MGuiTimer) {
+      LOG.print("XCB Starting gui timer\n");
       MGuiTimer->start(ms);
     }
   }
@@ -573,6 +600,7 @@ public:
   void stopTimer(uintptr_t id) override {
     //MIP_PRINT;
     if (MGuiTimer) {
+      LOG.print("XCB Stopping gui timer\n");
       MGuiTimer->stop();
     }
   }
@@ -1214,6 +1242,7 @@ private: // events
 
   static
   void* xcb_event_thread_proc(void* AWindow) {
+    LOG.print("XCB Started event thread\n");
     //mip_xcb_event_thread_pid = getpid();
     MIP_XcbWindow* window = (MIP_XcbWindow*)AWindow;
     if (window) {
@@ -1231,14 +1260,17 @@ private: // events
             //MIP_PRINT;
             if (!window->processEvent(event)) {
 //              window->xcb_event_thread_stop_callback(window);
+              LOG.print("XCB Returning from event thread\n");
               return nullptr;
             }
           } // active
         } // event
       } // while
 //      window->xcb_event_thread_stop_callback(window);
+      LOG.print("XCB Returning from event thread\n");
       return nullptr;
     } // window
+    LOG.print("XCB Returning from event thread\n");
     return nullptr;
   }
 

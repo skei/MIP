@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1672344726 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+1672434477 source:/DISKS/sda2/code/git/MIP/build/build.cpp
 	"../source/skei.audio/sa_botage.cpp"
 
 1670414796 /DISKS/sda2/code/git/MIP/build/test/test1.cpp
@@ -34,7 +34,7 @@
 	"base/mip_test.h"
 	"plugin/mip_registry.h"
 
-1672245994 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
+1672434323 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
 
 1641519085 /DISKS/sda2/code/git/MIP/include/base/mip_attributes.h
 
@@ -168,7 +168,7 @@
 	<stdint.h>
 	<stdint.h>
 
-1671708717 /DISKS/sda2/code/git/MIP/include/base/utils/mip_logfile.h
+1672431969 /DISKS/sda2/code/git/MIP/include/base/utils/mip_logfile.h
 	"base/mip.h"
 	"base/system/mip_file.h"
 	"base/system/mip_paths.h"
@@ -456,7 +456,7 @@
 1668731398 /DISKS/sda2/code/git/MIP/include/gui/mip_paint_context.h
 	"gui/mip_painter.h"
 
-1670327081 /DISKS/sda2/code/git/MIP/include/gui/mip_painter.h
+1672429175 /DISKS/sda2/code/git/MIP/include/gui/mip_painter.h
 	"gui/gdi/mip_gdi_painter.h"
 	"gui/glx/mip_glx_painter.h"
 	"gui/nvg/mip_nvg_painter.h"
@@ -640,12 +640,18 @@
 	"base/mip.h"
 	"gui/xcb/mip_xcb.h"
 
-1669507483 /DISKS/sda2/code/git/MIP/include/gui/mip_bitmap.h
+1672429066 /DISKS/sda2/code/git/MIP/include/gui/mip_bitmap.h
 	"base/mip.h"
+	"base/utils/mip_rgba.h"
+	"base/utils/mip_integer_math.h"
+	"base/utils/mip_random.h"
+	"base/types/mip_color.h"
 	"gui/mip_paint_source.h"
 	"gui/mip_paint_target.h"
+	"gui/cairo/mip_cairo.h"
+	"extern/stb/stb_image.h"
 
-1672360898 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
+1672429414 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
 	"base/mip.h"
 	"gui/base/mip_base_window.h"
 	"gui/mip_paint_context.h"
@@ -661,7 +667,7 @@
 	"gui/mip_paint_source.h"
 	"gui/mip_paint_target.h"
 
-1672043918 /DISKS/sda2/code/git/MIP/include/gui/xcb/mip_xcb_window.h
+1672434275 /DISKS/sda2/code/git/MIP/include/gui/xcb/mip_xcb_window.h
 	"base/mip.h"
 	"base/system/mip_timer.h"
 	"gui/base/mip_base_window.h"
@@ -716,13 +722,13 @@
 	"base/mip.h"
 	"plugin/clap/mip_clap.h"
 
-1670455642 /DISKS/sda2/code/git/MIP/build/test/plug1.cpp
+1672428620 /DISKS/sda2/code/git/MIP/build/test/plug1.cpp
 	"plugin/mip_plugin.h"
 	"audio/mip_audio_utils.h"
 	"gui/mip_widgets.h"
 	"plugin/mip_entry.h"
 
-1672179240 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
+1672434107 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
 	"base/mip.h"
 	"base/system/mip_timer.h"
 	"plugin/mip_parameter.h"
@@ -808,7 +814,7 @@
 	"gui/mip_paint_context.h"
 	"gui/widgets/mip_panel_widget.h"
 
-1672417083 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_button_row_widget.h
+1672435704 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_button_row_widget.h
 	"gui/widgets/mip_grid_widget.h"
 
 1672322455 /DISKS/sda2/code/git/MIP/include/gui/mip_widgets.h
@@ -861,18 +867,23 @@
 
 1672175500 /DISKS/sda2/code/git/MIP/include/plugin/exe/mip_exe.h
 
-1672369254 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
+1672432406 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
 	"plugin/mip_plugin.h"
 	"audio/mip_audio_utils.h"
+	"gui/mip_bitmap.h"
 	"sa_botage/sa_botage_parameters.h"
 	"sa_botage/sa_botage_processor.h"
 	"sa_botage/sa_botage_editor.h"
 	"plugin/mip_entry.h"
 
-1672418853 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
+1672435332 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
 	"base/mip.h"
 	"gui/mip_widgets.h"
 	"plugin/mip_editor.h"
+	"sa_botage_editor_page_prob.h"
+	"sa_botage_editor_page_fx.h"
+	"sa_botage_editor_page_seq.h"
+	"sa_botage_editor_page_perf.h"
 
 1670527678 /DISKS/sda2/code/git/MIP/source/skei.audio/img/sa_img.h
 
@@ -920,7 +931,7 @@
 1671618127 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_processor.h
 	"base/mip.h"
 
-1672344164 /DISKS/sda2/code/git/MIP/build/test/plug2.cpp
+1672428707 /DISKS/sda2/code/git/MIP/build/test/plug2.cpp
 	"base/mip.h"
 	"plugin/mip_plugin.h"
 	"plugin/mip_editor.h"
@@ -1340,4 +1351,21 @@
 	"base/utils/mip_interpolation.h"
 	"gui/mip_paint_context.h"
 	"gui/widgets/mip_panel_widget.h"
+
+1652222360 /DISKS/sda2/code/git/MIP/include/base/utils/mip_rgba.h
+	"base/utils/mip_math.h"
+	"base/types/mip_color.h"
+
+1668682926 /DISKS/sda2/code/git/MIP/include/gui/cairo/mip_cairo.h
+	"mip.h"
+	<cairo/cairo.h>
+	<cairo/cairo-xcb.h>
+
+1672436098 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_prob.h
+
+1672434710 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_fx.h
+
+1672434725 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_seq.h
+
+1672434717 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_perf.h
 

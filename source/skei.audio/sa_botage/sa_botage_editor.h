@@ -97,6 +97,8 @@ public:
     double __MIP_UNUSED x,y,w,h = 0;
     double width  = AWidth;
 
+    // root
+
     MRootWidget = new MIP_PanelWidget(MIP_DRect(0,0,SA_BOTAGE_EDITOR_WIDTH,SA_BOTAGE_EDITOR_HEIGHT));
     setRootWidget(MRootWidget);
     MRootWidget->setFillBackground(true);
@@ -104,14 +106,12 @@ public:
     MRootWidget->setDrawBorder(true);
     MRootWidget->setBorderColor(0.5);
 
-//------------------------------
-// header
-//------------------------------
+    // header
 
     MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,width,80),descriptor);
     MRootWidget->appendChildWidget(header);
 
-    // icons
+    // c
 
     MIP_TextWidget* c_icon = new MIP_TextWidget(MIP_DRect(475,65,10,10),"c");
     MRootWidget->appendChildWidget(c_icon);
@@ -123,6 +123,8 @@ public:
     c_icon->setFillBackground(true);
     c_icon->setBackgroundColor(0.2);
     c_icon->setHint("Config");
+
+    // i
 
     MIP_TextWidget* i_icon = new MIP_TextWidget(MIP_DRect(460,65,10,10),"i");
     MRootWidget->appendChildWidget(i_icon);
@@ -148,9 +150,9 @@ public:
     MHintWidget->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     MHintWidget->setTextOffset(MIP_DRect(5,0,0,0));
 
-//------------------------------
-// waveform / buffer
-//------------------------------
+    //------------------------------
+    // waveform / buffer
+    //------------------------------
 
     MWaveformWidget = new MIP_CircularWaveformWidget( MIP_DRect(10,90,230,230), 256 );
     MRootWidget->appendChildWidget(MWaveformWidget);
@@ -173,7 +175,7 @@ public:
     MNumBeatsWidget->setHint("Number of beats in buffer");
     MNumBeatsWidget->setInteractiveValueColor(MIP_COLOR_WHITE);
 
-  connect( MNumBeatsWidget,  AParameters->getItem(PAR_NUM_BEATS) );
+    connect( MNumBeatsWidget,  AParameters->getItem(PAR_NUM_BEATS) );
 
     // slices
 
@@ -188,56 +190,43 @@ public:
     MNumSlicesWidget->setHint("Number of slices per beat");
     MNumSlicesWidget->setInteractiveValueColor(MIP_COLOR_WHITE);
 
-  connect( MNumSlicesWidget, AParameters->getItem(PAR_NUM_SLICES) );
+    connect( MNumSlicesWidget, AParameters->getItem(PAR_NUM_SLICES) );
 
-    // envelopes
+    // loop env
 
-    MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(10,356,110,16), "Loop Env", 0.1, 0.9 );
+    MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(10,356,110,16), "L ms", 0.1, 0.9 );
     MRootWidget->appendChildWidget(env1_slider);
     env1_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    env1_slider->setHint("Loop Envenvelope");
+    env1_slider->setHint("Loop Envelope");
     env1_slider->setBackgroundColor(0.4);
     env1_slider->setSliderColor(0.6);
-    env1_slider->setTextColor(0.2);
+    env1_slider->setTextColor(MIP_Color(0,0,0,0.5));
     env1_slider->setTextSize(9);
     env1_slider->setValueColor(0.2);
-    //env1_slider->setTextSize(11);
-
     env1_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
     env1_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
     env1_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
 
+    connect( env1_slider, 0, AParameters->getItem(PAR_LOOP_ENV_ATTACK) );
+    connect( env1_slider, 1, AParameters->getItem(PAR_LOOP_ENV_DECAY) );
 
-  connect( env1_slider, 0, AParameters->getItem(PAR_LOOP_ENV_ATTACK) );
-  connect( env1_slider, 1, AParameters->getItem(PAR_LOOP_ENV_DECAY) );
+    // slice env
 
-    MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(130,356,110,16), "Slice Env", 0.1, 0.9 );
+    MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(130,356,110,16), "S %", 0.1, 0.9 );
     MRootWidget->appendChildWidget(env2_slider);
     env2_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     env2_slider->setHint("Slice envelope");
     env2_slider->setBackgroundColor(0.4);
     env2_slider->setSliderColor(0.6);
-    env2_slider->setTextColor(0.2);
+    env2_slider->setTextColor(MIP_Color(0,0,0,0.5));
     env2_slider->setTextSize(9);
     env2_slider->setValueColor(0.2);
-
     env2_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
     env2_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
     env2_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
 
-  connect( env2_slider, 0, AParameters->getItem(PAR_SLICE_ENV_ATTACK) );
-  connect( env2_slider, 1, AParameters->getItem(PAR_SLICE_ENV_DECAY) );
-
-
-
-
-
-
-
-
-
-
-
+    connect( env2_slider, 0, AParameters->getItem(PAR_SLICE_ENV_ATTACK) );
+    connect( env2_slider, 1, AParameters->getItem(PAR_SLICE_ENV_DECAY) );
 
     // pages
 
@@ -277,485 +266,28 @@ public:
     perf_page_button->setTextSize(10);
     perf_page_button->setTextColor(0.6);
 
-    //prob_page_button->setBackgroundColor(0.8);
-    //fx_page_button->setBackgroundColor(0.6);
-    //seq_page_button->setBackgroundColor(0.6);
-    //perf_page_button->setBackgroundColor(0.6);
-
-    //
-
     MPages = new MIP_PagesWidget( MIP_DRect(255,90,225,292));
     MRootWidget->appendChildWidget(MPages);
 
-      MIP_Widget* page1 = new MIP_PagesWidget( MIP_DRect(255,90,225,292));
-      MIP_Widget* page2 = new MIP_PagesWidget( MIP_DRect(255,90,225,292));
-      MIP_Widget* page3 = new MIP_PagesWidget( MIP_DRect(255,90,225,292));
-      MIP_Widget* page4 = new MIP_PagesWidget( MIP_DRect(255,90,225,292));
+    #include "sa_botage_editor_page_prob.h"
+    #include "sa_botage_editor_page_fx.h"
+    #include "sa_botage_editor_page_seq.h"
+    #include "sa_botage_editor_page_perf.h"
 
-      MPages->appendPage(page1);
-      MPages->appendPage(page2);
-      MPages->appendPage(page3);
-      MPages->appendPage(page4);
+    MPages->appendPage(page_prob);
+    MPages->appendPage(page_fx);
+    MPages->appendPage(page_seq);
+    MPages->appendPage(page_perf);
 
     MPages->setPage(0);
 
-
-
-
-
-//--------------------------------------------------
-//
-// page 1 - prob
-//
-//--------------------------------------------------
-
-
-
-
-
-//------------------------------
-// 1 prob
-//------------------------------
-
-    // prob
-
-    MMainProbWidget = new MIP_KnobWidget(MIP_DRect(255,90,80,80), "%", 0.0);
-    page1->appendChildWidget(MMainProbWidget);
-    MMainProbWidget->setArcThickness(15);
-    MMainProbWidget->setDrawText(true);
-    MMainProbWidget->setTextSize(20);
-    MMainProbWidget->setTextColor(0.6);
-    MMainProbWidget->setDrawValue(true);
-    MMainProbWidget->setValueSize(25);
-    MMainProbWidget->setValueColor(0.7);
-    MMainProbWidget->setHint("Main probability");
-    MMainProbWidget->setArcBackColor( MIP_Color(0.0, 0.3, 0.6) );
-    MMainProbWidget->setArcValueColor( MIP_Color(0.0, 0.5, 1.0) );
-    MMainProbWidget->setInteractiveArcValueColor( MIP_Color(0.5, 0.75, 1.0) );
-
-  connect( MMainProbWidget, AParameters->getItem(PAR_RANGE_PROB) );
-
-    // slices
-
-    MIP_TextWidget* prob_slices_label = new MIP_TextWidget( MIP_DRect(345,95,135,12), "Slices" );
-    page1->appendChildWidget(prob_slices_label);
-    prob_slices_label->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    prob_slices_label->setTextColor(0.8);
-    prob_slices_label->setTextSize(12);
-    prob_slices_label->setDrawBorder(false);
-    prob_slices_label->setFillBackground(false);
-
-    MMainSlicesWidget = new MIP_ButtonRowWidget( MIP_DRect(345,109,135,16), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
-    page1->appendChildWidget(MMainSlicesWidget);
-    MMainSlicesWidget->selectButton(0);
-    MMainSlicesWidget->setAllowZeroBits(false);
-    MMainSlicesWidget->setValueIsBits(true,8);
-    MMainSlicesWidget->setHint("Number of slices in range");
-    MMainSlicesWidget->setDrawBorder(false);
-    MMainSlicesWidget->setBackgroundCellColor( MIP_Color(0.0, 0.3, 0.6) );
-    MMainSlicesWidget->setActiveCellColor( MIP_Color(0.0, 0.5, 1.0) );
-
-//  virtual void setTextSize(double ASize)                { MTextSize = ASize; }
-//  virtual void setTextColor(MIP_Color AColor)           { MTextColor = AColor; }
-//  virtual void setActiveTextColor(MIP_Color AColor)     { MActiveTextColor = AColor; }
-//  virtual void setBackgroundCellColor(MIP_Color AColor) { MBackgroundCellColor = AColor; }
-//  virtual void setActiveCellColor(MIP_Color AColor)     { MActiveCellColor = AColor; }
-
-  connect( MMainSlicesWidget,  AParameters->getItem(PAR_RANGE_SLICE_COUNT) );
-
-    // loops
-
-    MIP_TextWidget* prob_loops_label = new MIP_TextWidget( MIP_DRect(345,134,135,12), "Loops" );
-    page1->appendChildWidget(prob_loops_label);
-    prob_loops_label->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    prob_loops_label->setTextColor(0.8);
-    prob_loops_label->setTextSize(12);
-    prob_loops_label->setDrawBorder(false);
-    prob_loops_label->setFillBackground(false);
-
-    MMainLoopsWidget = new MIP_ButtonRowWidget( MIP_DRect(345,148,135,16), 8, prob_slices_txt, MIP_BUTTON_ROW_MULTI );
-    page1->appendChildWidget(MMainLoopsWidget);
-    MMainLoopsWidget->selectButton(0);
-    MMainLoopsWidget->setAllowZeroBits(false);
-    MMainLoopsWidget->setValueIsBits(true,8);
-    MMainLoopsWidget->setHint("Range subdivision");
-    MMainLoopsWidget->setDrawBorder(false);
-    MMainLoopsWidget->setBackgroundCellColor( MIP_Color(0.0, 0.3, 0.6) );
-    MMainLoopsWidget->setActiveCellColor( MIP_Color(0.0, 0.5, 1.0) );
-
-  connect( MMainLoopsWidget,  AParameters->getItem(PAR_RANGE_LOOP_COUNT) );
-
-//------------------------------
-// 2 range
-//------------------------------
-
-    MIP_TextWidget* c1_header = new MIP_TextWidget(MIP_DRect(255,180,103,14),"Range");
-    page1->appendChildWidget(c1_header);
-    c1_header->setDrawBorder(true);
-    c1_header->setBorderColor(0.6);
-    c1_header->setBorderEdges(MIP_EDGE_BOTTOM);
-    c1_header->setFillBackground(false);
-    c1_header->setBackgroundColor(0.35);
-    c1_header->setTextColor(0.8);
-    c1_header->setTextSize(11);
-
-//----------
-
-    // range length
-
-    MRangeSizeWidget = new MIP_KnobWidget(MIP_DRect(255,205,33,33),"%", 0.0);
-    page1->appendChildWidget(MRangeSizeWidget);
-    MRangeSizeWidget->setArcThickness(7);
-    MRangeSizeWidget->setHint("Loop length");
-    MRangeSizeWidget->setTextColor(0.6);
-    MRangeSizeWidget->setValueColor(0.8);
-    MRangeSizeWidget->setArcBackColor( MIP_Color(0.5, 0.0, 0.0) );
-    MRangeSizeWidget->setArcValueColor( MIP_Color(0.7, 0.0, 0.0) );
-    MRangeSizeWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.0, 0.0) );
-
-  connect( MRangeSizeWidget, AParameters->getItem(PAR_PROB_SIZE_PROB_RANGE) );
-
-    MIP_TextWidget* range_length_text = new MIP_TextWidget(MIP_DRect(292,205,66,9),"Length");
-    page1->appendChildWidget(range_length_text);
-    range_length_text->setDrawBorder(false);
-    range_length_text->setFillBackground(false);
-    range_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    range_length_text->setTextColor(0.6);
-    range_length_text->setTextSize(10);
-
-    MRangeSizeValueWidget = new MIP_DualSliderWidget( MIP_DRect(292,216,66,16), "%");
-    page1->appendChildWidget(MRangeSizeValueWidget);
-    MRangeSizeValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    MRangeSizeValueWidget->setHint("Loop min/max");
-    MRangeSizeValueWidget->setBackgroundColor( MIP_Color(0.5, 0.0, 0.0) );
-    MRangeSizeValueWidget->setSliderColor( MIP_Color(0.7, 0.0, 0.0) );
-    MRangeSizeValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.0, 0.0) );
-
-  connect( MRangeSizeValueWidget, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_RANGE) );
-  connect( MRangeSizeValueWidget, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_RANGE) );
-
-    // range speed
-
-    MRangeSpeedWidget = new MIP_KnobWidget(MIP_DRect(255,240,33,33),"%", 0.0);
-    page1->appendChildWidget(MRangeSpeedWidget);
-    MRangeSpeedWidget->setArcThickness(7);
-    MRangeSpeedWidget->setValueColor(0.8);
-    MRangeSpeedWidget->setTextColor(0.6);
-    MRangeSpeedWidget->setArcBackColor( MIP_Color(0.5, 0.25, 0.0) );
-    MRangeSpeedWidget->setArcValueColor( MIP_Color(0.7, 0.35, 0.0) );
-    MRangeSpeedWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.45, 0.0) );
-
-  connect( MRangeSpeedWidget, AParameters->getItem(PAR_PROB_SPEED_PROB_RANGE) );
-
-    MIP_TextWidget* range_speed_text = new MIP_TextWidget(MIP_DRect(292,240,66,9),"Speed");
-    page1->appendChildWidget(range_speed_text);
-    range_speed_text->setDrawBorder(false);
-    range_speed_text->setFillBackground(false);
-    range_speed_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    range_speed_text->setTextColor(0.6);
-    range_speed_text->setTextSize(10);
-
-    MRangeSpeedValueWidget= new MIP_DualSliderWidget( MIP_DRect(292,251,66,16), "%", 0.5, 0.5 );
-    page1->appendChildWidget(MRangeSpeedValueWidget);
-    MRangeSpeedValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    MRangeSpeedValueWidget->setBackgroundColor( MIP_Color(0.5, 0.25, 0.0) );
-    MRangeSpeedValueWidget->setSliderColor( MIP_Color(0.7, 0.35, 0.0) );
-    MRangeSpeedValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.45, 0.0) );
-
-  connect( MRangeSpeedValueWidget, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_RANGE) );
-  connect( MRangeSpeedValueWidget, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_RANGE) );
-
-    // range offset
-
-    MRangeOffsetWidget = new MIP_KnobWidget(MIP_DRect(255,275,33,33),"%", 0.0);
-    page1->appendChildWidget(MRangeOffsetWidget);
-    MRangeOffsetWidget->setArcThickness(7);
-    MRangeOffsetWidget->setValueColor(0.8);
-    MRangeOffsetWidget->setTextColor(0.6);
-    MRangeOffsetWidget->setArcBackColor( MIP_Color(0.5, 0.5, 0.0) );
-    MRangeOffsetWidget->setArcValueColor( MIP_Color(0.7, 0.7, 0.0) );
-    MRangeOffsetWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.0) );
-
-  connect( MRangeOffsetWidget, AParameters->getItem(PAR_PROB_OFFSET_PROB_RANGE) );
-
-    MIP_TextWidget* range_offset_text = new MIP_TextWidget(MIP_DRect(292,275,66,9),"Offset");
-    page1->appendChildWidget(range_offset_text);
-    range_offset_text->setFillBackground(false);
-    range_offset_text->setDrawBorder(false);
-    range_offset_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    range_offset_text->setTextColor(0.6);
-    range_offset_text->setTextSize(10);
-
-    MRangeOffsetValueWidget = new MIP_DualSliderWidget( MIP_DRect(292,286,66,16), "sl", 0.5, 0.5 );
-    page1->appendChildWidget(MRangeOffsetValueWidget);
-    MRangeOffsetValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    MRangeOffsetValueWidget->setBackgroundColor( MIP_Color(0.5, 0.5, 0.0) );
-    MRangeOffsetValueWidget->setSliderColor( MIP_Color(0.7, 0.7, 0.0) );
-    MRangeOffsetValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.9, 0.0) );
-
-  connect( MRangeOffsetValueWidget, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_RANGE) );
-  connect( MRangeOffsetValueWidget, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_RANGE) );
-
-    // loop reverse
-
-    MRangeReverseWidget = new MIP_KnobWidget(MIP_DRect(255,310,33,33),"%", 0.0);
-    page1->appendChildWidget(MRangeReverseWidget);
-    MRangeReverseWidget->setArcThickness(7);
-    MRangeReverseWidget->setValueColor(0.8);
-    MRangeReverseWidget->setTextColor(0.6);
-    MRangeReverseWidget->setArcBackColor( MIP_Color(0.25, 0.5, 0.0) );
-    MRangeReverseWidget->setArcValueColor( MIP_Color(0.35, 0.7, 0.0) );
-    MRangeReverseWidget->setInteractiveArcValueColor( MIP_Color(0.45, 0.9, 0.0) );
-
-  connect( MRangeReverseWidget, AParameters->getItem(PAR_PROB_REVERSE_PROB_RANGE) );
-
-    MIP_TextWidget* range_reverse_text = new MIP_TextWidget(MIP_DRect(292,310,66,9),"Reverse");
-    page1->appendChildWidget(range_reverse_text);
-    range_reverse_text->setFillBackground(false);
-    range_reverse_text->setDrawBorder(false);
-    range_reverse_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    range_reverse_text->setTextColor(0.6);
-    range_reverse_text->setTextSize(10);
-
-    // loop fx
-
-    MIP_KnobWidget* range_fx_knob = new MIP_KnobWidget(MIP_DRect(255,345,33,33),"%", 0.0);
-    page1->appendChildWidget(range_fx_knob);
-    range_fx_knob->setArcThickness(7);
-    range_fx_knob->setDisabled(true);
-    range_fx_knob->setDisabledColor(BACKGROUNDCOLOR);
-    range_fx_knob->setActive(false);
-    range_fx_knob->setValueColor(0.8);
-    range_fx_knob->setTextColor(0.6);
-    range_fx_knob->setArcBackColor( MIP_Color(0.25, 0.5, 0.0) );
-    range_fx_knob->setArcValueColor( MIP_Color(0.35, 0.7, 0.0) );
-    range_fx_knob->setInteractiveArcValueColor( MIP_Color(0.45, 0.9, 0.0) );
-
-  connect( range_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_RANGE) );
-
-    MIP_TextWidget* range_fx_text = new MIP_TextWidget(MIP_DRect(292,345,66,9),"FX");
-    page1->appendChildWidget(range_fx_text);
-    range_fx_text->setFillBackground(false);
-    range_fx_text->setDrawBorder(false);
-    range_fx_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    range_fx_text->setTextColor(0.6);
-    range_fx_text->setTextSize(10);
-    range_fx_text->setDisabled(true);
-    range_fx_text->setDisabledColor(BACKGROUNDCOLOR);
-    range_fx_text->setActive(false);
-
-    MIP_DualSliderWidget* range_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(292,356,66,16), "%", 0.5, 0.5 );
-    page1->appendChildWidget(range_fx_range_slider);
-    range_fx_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    range_fx_range_slider->setDisabled(true);
-    range_fx_range_slider->setDisabledColor(BACKGROUNDCOLOR);
-    range_fx_range_slider->setActive(false);
-    range_fx_range_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.0) );
-    range_fx_range_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.0) );
-    range_fx_range_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.0) );
-
-  connect( range_fx_range_slider, 0, AParameters->getItem(PAR_PROB_FX_MIN_RANGE) );
-  connect( range_fx_range_slider, 1, AParameters->getItem(PAR_PROB_FX_MAX_RANGE) );
-
-//------------------------------
-// 3 loop
-//------------------------------
-
-    MIP_TextWidget* c2_header = new MIP_TextWidget(MIP_DRect(377,180,103,14),"Loop");
-    page1->appendChildWidget(c2_header);
-    c2_header->setDrawBorder(true);
-    c2_header->setBorderColor(0.6);
-    c2_header->setBorderEdges(MIP_EDGE_BOTTOM);
-    c2_header->setFillBackground(false);
-    c2_header->setBackgroundColor(0.35);
-    c2_header->setTextColor(0.8);
-    c2_header->setTextSize(11);
-
-//----------
-
-    // loop length
-
-    MLoopSizeWidget = new MIP_KnobWidget(MIP_DRect(377,205,33,33),"%", 0.0);
-    page1->appendChildWidget(MLoopSizeWidget);
-    MLoopSizeWidget->setArcThickness(7);
-    MLoopSizeWidget->setValueColor(0.8);
-    MLoopSizeWidget->setTextColor(0.6);
-    MLoopSizeWidget->setArcBackColor( MIP_Color(0.5, 0.0, 0.0) );
-    MLoopSizeWidget->setArcValueColor( MIP_Color(0.7, 0.0, 0.0) );
-    MLoopSizeWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.0, 0.0) );
-
-  connect( MLoopSizeWidget, AParameters->getItem(PAR_PROB_SIZE_PROB_LOOP) );
-
-    MIP_TextWidget* loop_length_text = new MIP_TextWidget(MIP_DRect(414,205,66,9),"Length");
-    page1->appendChildWidget(loop_length_text);
-    loop_length_text->setDrawBorder(false);
-    loop_length_text->setFillBackground(false);
-    loop_length_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    loop_length_text->setTextColor(0.6);
-    loop_length_text->setTextSize(10);
-
-    MLoopSizeValueWidget = new MIP_DualSliderWidget( MIP_DRect(414,216,66,16), "%", 0.5, 0.5 );
-    page1->appendChildWidget(MLoopSizeValueWidget);
-    MLoopSizeValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    MLoopSizeValueWidget->setBackgroundColor( MIP_Color(0.5, 0.0, 0.0) );
-    MLoopSizeValueWidget->setSliderColor( MIP_Color(0.7, 0.0, 0.0) );
-    MLoopSizeValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.0, 0.0) );
-
-  connect( MLoopSizeValueWidget, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_LOOP) );
-  connect( MLoopSizeValueWidget, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_LOOP) );
-
-    // loop speed
-
-    MLoopSpeedWidget = new MIP_KnobWidget(MIP_DRect(377,240,33,33),"%", 0.0);
-    page1->appendChildWidget(MLoopSpeedWidget);
-    MLoopSpeedWidget->setArcThickness(7);
-    MLoopSpeedWidget->setValueColor(0.8);
-    MLoopSpeedWidget->setTextColor(0.6);
-    MLoopSpeedWidget->setArcBackColor( MIP_Color(0.5, 0.25, 0.0) );
-    MLoopSpeedWidget->setArcValueColor( MIP_Color(0.7, 0.35, 0.0) );
-    MLoopSpeedWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.45, 0.0) );
-
-  connect( MLoopSpeedWidget, AParameters->getItem(PAR_PROB_SPEED_PROB_LOOP) );
-
-    MIP_TextWidget* loop_speed_text = new MIP_TextWidget(MIP_DRect(414,240,66,9),"Speed");
-    page1->appendChildWidget(loop_speed_text);
-    loop_speed_text->setDrawBorder(false);
-    loop_speed_text->setFillBackground(false);
-    loop_speed_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    loop_speed_text->setTextColor(0.6);
-    loop_speed_text->setTextSize(10);
-
-    MLoopSpeedValueWidget = new MIP_DualSliderWidget( MIP_DRect(414,251,66,16), "%", 0.5, 0.5 );
-    page1->appendChildWidget(MLoopSpeedValueWidget);
-    MLoopSpeedValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    MLoopSpeedValueWidget->setBackgroundColor( MIP_Color(0.5, 0.25, 0.0) );
-    MLoopSpeedValueWidget->setSliderColor( MIP_Color(0.7, 0.35, 0.0) );
-    MLoopSpeedValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.45, 0.0) );
-
-  connect( MLoopSpeedValueWidget, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_LOOP) );
-  connect( MLoopSpeedValueWidget, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_LOOP) );
-
-    // loop offset
-
-    MLoopOffsetWidget = new MIP_KnobWidget(MIP_DRect(377,275,33,33),"%", 0.0);
-    page1->appendChildWidget(MLoopOffsetWidget);
-    MLoopOffsetWidget->setArcThickness(7);
-    MLoopOffsetWidget->setValueColor(0.8);
-    MLoopOffsetWidget->setTextColor(0.6);
-    MLoopOffsetWidget->setArcBackColor( MIP_Color(0.5, 0.5, 0.0) );
-    MLoopOffsetWidget->setArcValueColor( MIP_Color(0.7, 0.7, 0.0) );
-    MLoopOffsetWidget->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.0) );
-
-  connect( MLoopOffsetWidget, AParameters->getItem(PAR_PROB_OFFSET_PROB_LOOP) );
-
-    MIP_TextWidget* loop_offset_text = new MIP_TextWidget(MIP_DRect(414,275,66,9),"Offset");
-    page1->appendChildWidget(loop_offset_text);
-    loop_offset_text->setDrawBorder(false);
-    loop_offset_text->setFillBackground(false);
-    loop_offset_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    loop_offset_text->setTextColor(0.6);
-    loop_offset_text->setTextSize(10);
-
-    MLoopOffsetValueWidget = new MIP_DualSliderWidget( MIP_DRect(414,286,66,16), "sl", 0.5, 0.5 );
-    page1->appendChildWidget(MLoopOffsetValueWidget);
-    MLoopOffsetValueWidget->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    MLoopOffsetValueWidget->setBackgroundColor( MIP_Color(0.5, 0.5, 0.0) );
-    MLoopOffsetValueWidget->setSliderColor( MIP_Color(0.7, 0.7, 0.0) );
-    MLoopOffsetValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.9, 0.0) );
-
-  connect( MLoopOffsetValueWidget, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_LOOP) );
-  connect( MLoopOffsetValueWidget, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_LOOP) );
-
-    // loop reverse
-
-    MLoopReverseWidget = new MIP_KnobWidget(MIP_DRect(377,310,33,33),"%", 0.0);
-    page1->appendChildWidget(MLoopReverseWidget);
-    MLoopReverseWidget->setArcThickness(7);
-    MLoopReverseWidget->setValueColor(0.8);
-    MLoopReverseWidget->setTextColor(0.6);
-    MLoopReverseWidget->setArcBackColor( MIP_Color(0.25, 0.5, 0.0) );
-    MLoopReverseWidget->setArcValueColor( MIP_Color(0.35, 0.7, 0.0) );
-    MLoopReverseWidget->setInteractiveArcValueColor( MIP_Color(0.45, 0.9, 0.0) );
-
-  connect( MLoopReverseWidget, AParameters->getItem(PAR_PROB_REVERSE_PROB_LOOP) );
-
-    MIP_TextWidget* loop_reverse_text = new MIP_TextWidget(MIP_DRect(414,310,66,9),"Reverse");
-    page1->appendChildWidget(loop_reverse_text);
-    loop_reverse_text->setDrawBorder(false);
-    loop_reverse_text->setFillBackground(false);
-    loop_reverse_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    loop_reverse_text->setTextColor(0.6);
-    loop_reverse_text->setTextSize(10);
-
-    // loop fx
-
-    MIP_KnobWidget* loop_fx_knob = new MIP_KnobWidget(MIP_DRect(377,345,33,33),"%", 0.0);
-    page1->appendChildWidget(loop_fx_knob);
-    loop_fx_knob->setArcThickness(7);
-    loop_fx_knob->setDisabled(true);
-    loop_fx_knob->setDisabledColor(BACKGROUNDCOLOR);
-    loop_fx_knob->setActive(false);
-    loop_fx_knob->setValueColor(0.8);
-    loop_fx_knob->setTextColor(0.6);
-    loop_fx_knob->setArcBackColor( MIP_Color(0.0, 0.5, 0.0) );
-    loop_fx_knob->setArcValueColor( MIP_Color(0.0, 0.7, 0.0) );
-    loop_fx_knob->setInteractiveArcValueColor( MIP_Color(0.0, 0.9, 0.0) );
-
-  connect( loop_fx_knob, AParameters->getItem(PAR_PROB_FX_PROB_LOOP) );
-
-    MIP_TextWidget* loop_fx_text = new MIP_TextWidget(MIP_DRect(414,345,66,9),"FX");
-    page1->appendChildWidget(loop_fx_text);
-    loop_fx_text->setDrawBorder(false);
-    loop_fx_text->setFillBackground(false);
-    loop_fx_text->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    loop_fx_text->setTextColor(0.6);
-    loop_fx_text->setTextSize(10);
-    loop_fx_text->setDisabled(true);
-    loop_fx_text->setDisabledColor(BACKGROUNDCOLOR);
-    loop_fx_text->setActive(false);
-
-    MIP_DualSliderWidget* loop_fx_range_slider = new MIP_DualSliderWidget( MIP_DRect(414,356,66,16), "%", 0.5, 0.5 );
-    page1->appendChildWidget(loop_fx_range_slider);
-    loop_fx_range_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    loop_fx_range_slider->setDisabled(true);
-    loop_fx_range_slider->setDisabledColor(BACKGROUNDCOLOR);
-    loop_fx_range_slider->setActive(false);
-    loop_fx_range_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.0) );
-    loop_fx_range_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.0) );
-    loop_fx_range_slider->setSliderColor( MIP_Color(0.0, 0.9, 0.0) );
-
-  connect( loop_fx_range_slider, 0, AParameters->getItem(PAR_PROB_FX_MIN_LOOP) );
-  connect( loop_fx_range_slider, 1, AParameters->getItem(PAR_PROB_FX_MAX_LOOP) );
-
-//----------------------------------------------------------------------
-//
-// page 2 - fx
-//
-//----------------------------------------------------------------------
-
-
-//----------------------------------------------------------------------
-//
-// page 3 - seq
-//
-//----------------------------------------------------------------------
-
-//----------------------------------------------------------------------
-//
-// page 4 - perf
-//
-//----------------------------------------------------------------------
-
-//------------------------------
-// footer
-//------------------------------
+    // footer
 
     //double height = ARootWidget->getHeight();
     //sa_botage_footer* footer  = new sa_botage_footer(MIP_DRect(0,(height - SA_BOTAGE_FOOTER_HEIGHT),width,SA_BOTAGE_FOOTER_HEIGHT));
     //ARootWidget->appendChildWidget(footer);
 
   }
-
 
   //----------
 
@@ -775,11 +307,12 @@ public:
     //MWaveformWidget->setNumSubGrid(slices);
     MWaveformWidget->setGrid(beats,slices);
 
-//    double scale = 1.0;
-//    double aspect = (double)MEditorWidth / (double)MEditorHeight;
-//    if (aspect >= MAspectRatio) scale = (double)MEditorHeight / (double)MInitialHeight;
-//    else scale = (double)MEditorWidth / (double)MInitialWidth;
-//    MWindow->setWindowScale(scale);
+    //  double scale = 1.0;
+    //  double aspect = (double)MEditorWidth / (double)MEditorHeight;
+    //  if (aspect >= MAspectRatio) scale = (double)MEditorHeight / (double)MInitialHeight;
+    //  else scale = (double)MEditorWidth / (double)MInitialWidth;
+    //  MWindow->setWindowScale(scale);
+
     //MIP_Print("%i,%i\n",MEditorWidth,MEditorHeight);
     return MIP_Editor::show();
   }
@@ -865,13 +398,13 @@ public:
 public:
 //------------------------------
 
-//  void timer_update(sa_botage_processor* processor) {
-//    //MIP_Assert(MWaveformWidget);
-//    if (MIsEditorOpen) {
-//      updateWaveformWidget(processor);
-//      MWaveformWidget->redraw(); // do_widget_redraw(MWaveformWidget);
-//    }
-//  }
+  //  void timer_update(sa_botage_processor* processor) {
+  //    //MIP_Assert(MWaveformWidget);
+  //    if (MIsEditorOpen) {
+  //      updateWaveformWidget(processor);
+  //      MWaveformWidget->redraw(); // do_widget_redraw(MWaveformWidget);
+  //    }
+  //  }
 
   //----------
 

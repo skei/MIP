@@ -33,8 +33,8 @@
 //
 //----------------------------------------------------------------------
 
-#define MIP_RECT_STACK_SIZE 1024
-typedef MIP_Stack<MIP_DRect,MIP_RECT_STACK_SIZE> MIP_RectStack;
+//#define MIP_RECT_STACK_SIZE 1024
+typedef MIP_Stack<MIP_DRect,MIP_CLIP_RECT_STACK_SIZE> MIP_RectStack;
 
 //----------------------------------------------------------------------
 

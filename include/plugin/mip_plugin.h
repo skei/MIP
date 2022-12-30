@@ -18,10 +18,6 @@
 //
 //----------------------------------------------------------------------
 
-#define MIP_PLUGIN_MAX_GUI_EVENTS       32
-#define MIP_PLUGIN_MAX_PARAM_EVENTS     4096
-#define MIP_PLUGIN_GENERIC_EDITOR_WIDTH 500
-
 #include "plugin/mip_editor.h"
 #include "gui/mip_widgets.h"
 
@@ -87,6 +83,16 @@ public:
   MIP_Plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_ClapPlugin(ADescriptor) {
     //MIP_PRINT;
+
+    // TODO: implenent MExeHost
+    #ifndef MIP_EXE
+      LOG.print("  CLAP: host.name:    %s\n",AHost->name);
+      LOG.print("  CLAP: host.vendor:  %s\n",AHost->vendor);
+      LOG.print("  CLAP: host.url:     %s\n",AHost->url);
+      LOG.print("  CLAP: host.version: %s\n",AHost->version);
+      LOG.print("  CLAP: host.data:    %p\n",AHost->host_data);
+    #endif
+
   }
 
   //----------
@@ -119,6 +125,7 @@ public: // plugin
 //------------------------------
 
   bool init() override {
+    LOG.print("PLUGIN: init\n");
     //MIP_Assert(!MIsInitialized);
     if (!MIsInitialized) {
       MIsInitialized = true;
@@ -129,6 +136,7 @@ public: // plugin
   //----------
 
   void destroy() override {
+    LOG.print("PLUGIN: destroy\n");
     //MIP_Assert(MIsInitialized);
     //if (MIsInitialized)
     MIsInitialized = false;
@@ -137,6 +145,7 @@ public: // plugin
   //----------
 
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) override {
+    LOG.print("PLUGIN: activate(%.2f,%i,%i)\n",sample_rate,min_frames_count,max_frames_count);
     //MIP_PRINT;
     //MIP_Assert(!MIsActivated);
     if (!MIsActivated) {
@@ -150,6 +159,7 @@ public: // plugin
   //----------
 
   void deactivate() override {
+    LOG.print("PLUGIN: deactivate\n");
     //MIP_Assert(MIsActivated);
     //if (MIsActivated)
     MIsActivated = false;
@@ -177,6 +187,7 @@ public: // plugin
   //----------
 
   void reset() override {
+    LOG.print("PLUGIN: reset\n");
   }
 
   //----------
@@ -198,6 +209,7 @@ public: // plugin
   //----------
 
   const void* get_extension(const char *id) override {
+    LOG.print("CLAP: get_extension \"%s\"\n",id);
     if (strcmp(id,CLAP_EXT_AMBISONIC)           == 0) return &MAmbisonic;       // draft
     if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG)  == 0) return &MAudioPortsConfig;
     if (strcmp(id,CLAP_EXT_AUDIO_PORTS)         == 0) return &MAudioPorts;
@@ -503,11 +515,13 @@ public: // ext gui
     bool result = MEditor->show();
     if (result) {
       #ifdef MIP_LINUX
+        LOG.print("PLUGIN: Starting gui timer\n");
         MGuiTimer.start(MIP_EDITOR_TIMER_MS);
       #endif
       #ifdef MIP_WIN32
         MIP_Win32Window* window = MEditor->getWindow();
         HWND hwnd = window->getHandle();
+        LOG.print("PLUGIN: Starting gui timer\n");
         MGuiTimer.start(MIP_EDITOR_TIMER_MS,hwnd);
       #endif
       MIsEditorOpen = true;
@@ -520,6 +534,7 @@ public: // ext gui
   bool gui_hide() override {
     //MIP_Print("\n");
     MIP_Assert(MEditor);
+    LOG.print("PLUGIN: Stopping gui timer\n");
     MGuiTimer.stop();
     MIsEditorOpen = false;
     bool result = MEditor->hide();

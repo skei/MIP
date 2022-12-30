@@ -162,67 +162,68 @@ public:
   //virtual uint32_t        getFlags()                      { return MFlags; }
   //virtual bool            hasFlag(uint32_t AFlag)         { return MFlags & AFlag; }
 
-  virtual bool isActive()       { return MIsActive; }
-  virtual bool isVisible()      { return MIsVisible; }
-  virtual bool isInteracting()  { return MIsInteracting; }
+  virtual bool            isActive()                        { return MIsActive; }
+  virtual bool            isVisible()                       { return MIsVisible; }
+  virtual bool            isInteracting()                   { return MIsInteracting; }
 
-  virtual bool isDisabled()     { return MIsDisabled; }
-  virtual bool isFocused()      { return MIsFocused; }
-  virtual bool isHovering()     { return MIsHovering; }
+  virtual bool            isDisabled()                      { return MIsDisabled; }
+  virtual bool            isFocused()                       { return MIsFocused; }
+  virtual bool            isHovering()                      { return MIsHovering; }
 
-  virtual bool autoSetCursor()  { return MAutoSetCursor; }
-  virtual bool autoHideCursor() { return MAutoHideCursor; }
-  virtual bool autoLockCursor() { return MAutoLockCursor; }
+  virtual bool            autoSetCursor()                   { return MAutoSetCursor; }
+  virtual bool            autoHideCursor()                  { return MAutoHideCursor; }
+  virtual bool            autoLockCursor()                  { return MAutoLockCursor; }
 
-  virtual void setActive(bool AActive=true)               { MIsActive = AActive; }
-  virtual void setInteracting(bool AInteracting=true)     { MIsInteracting = AInteracting; }
-  virtual void setVisible(bool AVisible=true)             { MIsVisible = AVisible; }
+  //
 
-  virtual void setDisabled(bool ADisabled=true)           { MIsDisabled = ADisabled; }
-  virtual void setFocused(bool AFocused=true)             { MIsFocused = AFocused; }
-  virtual void setHovering(bool AHovering=true)           { MIsHovering = AHovering; }
+  virtual void setActive(bool AActive=true)                             { MIsActive = AActive; }
+  virtual void setInteracting(bool AInteracting=true)                   { MIsInteracting = AInteracting; }
+  virtual void setVisible(bool AVisible=true)                           { MIsVisible = AVisible; }
 
-  virtual void setAutoSetCursor(bool AAuto=true)          { MAutoSetCursor = AAuto; }
-  virtual void setAutoHideCursor(bool AAuto=true)         { MAutoHideCursor = AAuto; }
-  virtual void setAutoLockCursor(bool AAuto=true)         { MAutoLockCursor = AAuto; }
+  virtual void setDisabled(bool ADisabled=true)                         { MIsDisabled = ADisabled; }
+  virtual void setFocused(bool AFocused=true)                           { MIsFocused = AFocused; }
+  virtual void setHovering(bool AHovering=true)                         { MIsHovering = AHovering; }
+
+  virtual void setAutoSetCursor(bool AAuto=true)                        { MAutoSetCursor = AAuto; }
+  virtual void setAutoHideCursor(bool AAuto=true)                       { MAutoHideCursor = AAuto; }
+  virtual void setAutoLockCursor(bool AAuto=true)                       { MAutoLockCursor = AAuto; }
 
   virtual void setListener(MIP_WidgetListener* AListener)               { MListener = AListener; }
   virtual void setParameter(MIP_Parameter* AParameter)                  { MParameters[0] = AParameter; }
   virtual void setParameter(uint32_t AIndex, MIP_Parameter* AParameter) { MParameters[AIndex] = AParameter; }
 
-  virtual void setNumParameters(uint32_t ANum)            { MNumParameters = ANum; }
+  virtual void setNumParameters(uint32_t ANum)                          { MNumParameters = ANum; }
 
-//virtual void setValue(double AValue)                    { MValue = AValue; }
-//virtual void setModulation(double AValue)               { MModulation = AValue; }
+//virtual void setValue(double AValue)                                  { MValue = AValue; }
+//virtual void setModulation(double AValue)                             { MModulation = AValue; }
 
-  virtual void setValue(double AValue)                    { MValues[0] = AValue; }
-  virtual void setModulation(double AValue)               { MModulations[0] = AValue; }
+  virtual void setValue(double AValue)                                  { MValues[0] = AValue; }
+  virtual void setModulation(double AValue)                             { MModulations[0] = AValue; }
 
-  virtual void setValue(uint32_t AIndex,double AValue)      { MValues[AIndex] = AValue; }
-  virtual void setModulation(uint32_t AIndex,double AValue) { MModulations[AIndex] = AValue; }
+  virtual void setValue(uint32_t AIndex,double AValue)                  { MValues[AIndex] = AValue; }
+  virtual void setModulation(uint32_t AIndex,double AValue)             { MModulations[AIndex] = AValue; }
 
-  virtual void setCursor(int32_t ACursor)                   { MCursor = ACursor; }
+  virtual void setCursor(int32_t ACursor)                               { MCursor = ACursor; }
 
-  virtual void setHint(const char* AHint)                   { MHint = AHint; }
+  virtual void setHint(const char* AHint)                               { MHint = AHint; }
 
   //virtual void setFlags(uint32_t AFlags)                  { MFlags = AFlags; }
   //virtual void setFlag(uint32_t AFlag)                    { MFlags |= AFlag; }
   //virtual void clearFlag(uint32_t AFlag)                  { MFlags &= ~AFlag; }
 
-  virtual void setDisabledColor(MIP_Color AColor) { MDisabledColor = AColor; }
-  virtual void setDisabledAlpha(double AAlpha)      { MDisabledAlpha = AAlpha; }
+  virtual void setDisabledColor(MIP_Color AColor)             { MDisabledColor = AColor; }
+  virtual void setDisabledAlpha(double AAlpha)                { MDisabledAlpha = AAlpha; }
 
-  virtual void setDrawIndicator(bool ADraw=true)   { MDrawIndicator = ADraw; }
-  virtual void setIndicatorColor(MIP_Color AColor) { MIndicatorColor = AColor; }
+  virtual void setDrawModulation(bool ADraw=true)             { MDrawModulation = ADraw; }
+  virtual void setModulationColor(MIP_Color AColor)           { MModulationColor = AColor; }
+
+  virtual void setDrawIndicator(bool ADraw=true)              { MDrawIndicator = ADraw; }
+  virtual void setIndicatorColor(MIP_Color AColor)            { MIndicatorColor = AColor; }
 
   virtual void setIndicatorValue(double AValue, bool ARedraw=true) {
     MIndicatorValue = AValue;
     if (ARedraw) do_widget_redraw(this);
   }
-
-  virtual void setDrawModulation(bool ADraw=true)   { MDrawModulation = ADraw; }
-  virtual void setModulationColor(MIP_Color AColor) { MModulationColor = AColor; }
-
 
   virtual MIP_Widget* getConnection(uint32_t AIndex) {
     return this;

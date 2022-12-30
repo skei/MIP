@@ -22,18 +22,22 @@
 //
 //----------------------------------------------------------------------
 
-  #define MIP_ALIGNMENT_SIMD            16
-  #define MIP_ALIGNMENT_CACHE           64
-  #define MIP_EDITOR_TIMER_MS           20
-  #define MIP_EDITOR_TIMER_ID           333
-  #define MIP_LOGFILE_NAME              "mip.log"
-  #define MIP_MAX_PATH_LENGTH           512
-  #define MIP_MAX_STRING_LENGTH         256
-  #define MIP_OPENGL_VERSION_MAJOR      3
-  #define MIP_OPENGL_VERSION_MINOR      2
-  #define MIP_WINDOW_MAX_DIRTY_RECTS    1024
-  #define MIP_WINDOW_TIMER_MS           20
-  #define MIP_WINDOW_TIMER_ID           333
+  #define MIP_ALIGNMENT_SIMD              16
+  #define MIP_ALIGNMENT_CACHE             64
+  #define MIP_CLIP_RECT_STACK_SIZE        1024
+  #define MIP_EDITOR_TIMER_MS             20
+  #define MIP_EDITOR_TIMER_ID             333
+  #define MIP_LOGFILE_NAME                "mip.log"
+  #define MIP_MAX_PATH_LENGTH             512
+  #define MIP_MAX_STRING_LENGTH           256
+  #define MIP_OPENGL_VERSION_MAJOR        3
+  #define MIP_OPENGL_VERSION_MINOR        2
+  #define MIP_PLUGIN_MAX_GUI_EVENTS       32
+  #define MIP_PLUGIN_MAX_PARAM_EVENTS     4096
+  #define MIP_PLUGIN_GENERIC_EDITOR_WIDTH 500
+  #define MIP_WINDOW_MAX_DIRTY_RECTS      1024
+  #define MIP_WINDOW_TIMER_MS             20
+  #define MIP_WINDOW_TIMER_ID             333
 
 
 //----------------------------------------------------------------------
@@ -44,8 +48,8 @@
 
 //#define MIP_EXECUTABLE_SHARED_LIBRARY
 //#define MIP_FAST_MATH_EXTRA_PRECISION
-//#define MIP_LOGGING
-//#define MIP_LOG_APPEND
+  #define MIP_LOGGING
+  #define MIP_LOG_APPEND
 //#define MIP_NO_AUTODELETE
   #define MIP_NO_DEFAULT_WARNINGS
 //#define MIP_NO_DMC_COMPRESS
@@ -89,9 +93,17 @@
 //
 //----------------------------------------------------------------------
 
+
+
 //#define MIP_GUI_WIN32
 //#define MIP_GUI_XCB
 //#define MIP_MOUSE_DOUBLECLICK
+//#define MIP_NO_BITMAP_PNG
+//#define MIP_NO_BITMAP_PNG_FILE
+//#define MIP_NO_BITMAP_DRAW
+//#define MIP_NO_BITMAP_FONT
+//#define MIP_NO_BITMAP_PROC
+//#define MIP_NO_BITMAP_GEN
 //#define MIP_NO_GUI
 //#define MIP_NO_PAINTER
 //#define MIP_PAINTER_CAIRO

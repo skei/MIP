@@ -25,17 +25,18 @@ private:
 
   MIP_File    MFile                             = {};
   const char* MLogfileName                      = nullptr;//"mip2_log.txt";
-
-  //char      MHomePath[MIP_MAX_PATH_LENGTH]    = {0};
+  bool        MEnabled                          = false;
   char        MDesktopPath[MIP_MAX_PATH_LENGTH] = {0};
   char        MFilename[MIP_MAX_PATH_LENGTH*2]  = {0};
   char        MTempBuffer[MIP_MAX_PATH_LENGTH]  = {0};
+  //char      MHomePath[MIP_MAX_PATH_LENGTH]    = {0};
 
 //------------------------------
 public:
 //------------------------------
 
   MIP_LogFile(const char* AName) {
+    MEnabled = false;
     MLogfileName = AName;
     MIP_File file = {};
     MIP_GetDesktopPath(MDesktopPath);
@@ -59,6 +60,7 @@ public:
         printf("Log: couldn't open logfile '%s'\n",MFilename);
       }
       else {
+        MEnabled = true;
         print("\n----------------------------------------------------------------------\n\n");
         print_header();
         print("\n----------\n\n");
@@ -74,8 +76,10 @@ public:
   //----------
 
   ~MIP_LogFile() {
-    print("\n\n");
-    MFile.close();
+    if (MEnabled) {
+      print("\n\n");
+      MFile.close();
+    }
   }
 
 //------------------------------
@@ -83,98 +87,103 @@ public:
 //------------------------------
 
   void print_header() {
-    MIP_CurrentTime time = {0};
-    MIP_GetLocalTime(&time);
 
-    //------------------------------
-    //
-    //------------------------------
+    if (MEnabled) {
 
-    const char* gui = "";
-    const char* painter = "";
+      MIP_CurrentTime time = {0};
+      MIP_GetLocalTime(&time);
 
-    #ifdef MIP_NO_GUI
-      gui = "MIP_NO_GUI";
-    #endif
+      //------------------------------
+      //
+      //------------------------------
 
-    #ifdef MIP_GUI_WIN32
-      gui = "MIP_GUI_WIN32";
-    #endif
+      const char* gui = "";
+      const char* painter = "";
 
-    #ifdef MIP_GUI_XCB
-      gui = "MIP_GUI_XCB";
-    #endif
+      #ifdef MIP_NO_GUI
+        gui = "MIP_NO_GUI";
+      #endif
 
-    #ifdef MIP_NO_PAINTER
-      gui = "MIP_NO_PAINTER";
-    #endif
+      #ifdef MIP_GUI_WIN32
+        gui = "MIP_GUI_WIN32";
+      #endif
 
-    #ifdef MIP_PAINTER_GDI
-      painter = "MIP_PAINER_GDI";
-    #endif
+      #ifdef MIP_GUI_XCB
+        gui = "MIP_GUI_XCB";
+      #endif
 
-    #ifdef MIP_PAINTER_GLX
-      painter = "MIP_PAINER_GLX";
-    #endif
+      #ifdef MIP_NO_PAINTER
+        gui = "MIP_NO_PAINTER";
+      #endif
 
-    #ifdef MIP_PAINTER_NVG
-      painter = "MIP_PAINER_NVG";
-    #endif
+      #ifdef MIP_PAINTER_GDI
+        painter = "MIP_PAINER_GDI";
+      #endif
 
-    #ifdef MIP_PAINTER_WGL
-      painter = "MIP_PAINER_WGL";
-    #endif
+      #ifdef MIP_PAINTER_GLX
+        painter = "MIP_PAINER_GLX";
+      #endif
 
-    #ifdef MIP_PAINTER_XCB
-      painter = "MIP_PAINER_XCB";
-    #endif
+      #ifdef MIP_PAINTER_NVG
+        painter = "MIP_PAINER_NVG";
+      #endif
 
-    //------------------------------
-    //
-    //------------------------------
+      #ifdef MIP_PAINTER_WGL
+        painter = "MIP_PAINER_WGL";
+      #endif
 
-    print("Time: %02i.%02i.%04i (%02i.%02i.%02i)\n",time.day,time.month,time.year,time.hour,time.minutes,time.seconds);
+      #ifdef MIP_PAINTER_XCB
+        painter = "MIP_PAINER_XCB";
+      #endif
 
-    #ifdef MIP_DEBUG
-      print("Build: Debug\n");
-    #else
-      print("Build: Release\n");
-    #endif
+      //------------------------------
+      //
+      //------------------------------
 
-    #ifdef MIP_LINUX
-      print("OS: Linux\n");
-    #endif
+      print("Time: %02i.%02i.%04i (%02i.%02i.%02i)\n",time.day,time.month,time.year,time.hour,time.minutes,time.seconds);
 
-    #ifdef MIP_WIN32
-      print("OS: Windows\n");
-    #endif
+      #ifdef MIP_DEBUG
+        print("Build: Debug\n");
+      #else
+        print("Build: Release\n");
+      #endif
 
-    print("GUI: %s\n",gui);
-    print("Painter: %s\n",painter);
+      #ifdef MIP_LINUX
+        print("OS: Linux\n");
+      #endif
 
-    char buffer[MIP_MAX_PATH_LENGTH];
-    print("Home path: %s\n",MIP_GetHomePath(buffer));
-    print("Desktop path: %s\n",MIP_GetDesktopPath(buffer));
-    print("Base filename: %s\n",MIP_GetBaseFilename(buffer));
-    print("Base path: %s\n",MIP_GetBasePath(buffer));
+      #ifdef MIP_WIN32
+        print("OS: Windows\n");
+      #endif
 
-    print("CLAP Version: %i.%i.%i\n",CLAP_VERSION_MAJOR,CLAP_VERSION_MINOR,CLAP_VERSION_REVISION);
+      print("GUI: %s\n",gui);
+      print("Painter: %s\n",painter);
 
-    #ifdef MIP_PLUGIN_EXE
-      print("Wrapper: EXE\n");
-    #endif
+      char buffer[MIP_MAX_PATH_LENGTH];
+      print("Home path: %s\n",MIP_GetHomePath(buffer));
+      print("Desktop path: %s\n",MIP_GetDesktopPath(buffer));
+      print("Base filename: %s\n",MIP_GetBaseFilename(buffer));
+      print("Base path: %s\n",MIP_GetBasePath(buffer));
 
-    #ifdef MIP_PLUGIN_VST2
-      print("Wrapper: VST2\n");
-    #endif
+      print("CLAP Version: %i.%i.%i\n",CLAP_VERSION_MAJOR,CLAP_VERSION_MINOR,CLAP_VERSION_REVISION);
 
-    #ifdef MIP_PLUGIN_VST3
-      print("Wrapper: VST3\n");
-    #endif
+      #ifdef MIP_PLUGIN_EXE
+        print("Wrapper: EXE\n");
+      #endif
 
-    //------------------------------
-    //
-    //------------------------------
+      #ifdef MIP_PLUGIN_VST2
+        print("Wrapper: VST2\n");
+      #endif
+
+      #ifdef MIP_PLUGIN_VST3
+        print("Wrapper: VST3\n");
+      #endif
+
+      //------------------------------
+      //
+      //------------------------------
+
+    } // enabled
 
   }
 
@@ -187,30 +196,36 @@ public:
   //----------
 
   void print_string(char* str) {
-    uint32_t len = strlen(str);
-    MFile.write(str,len);
-    MFile.flush();
+    if (MEnabled) {
+      uint32_t len = strlen(str);
+      MFile.write(str,len);
+      MFile.flush();
+    }
 }
 
   //----------
 
   void print(const char* format, ...) {
-    if (MFile.isOpen()) {
-      va_list args;
-      va_start(args,format);
-      vsprintf(MTempBuffer,format,args);
-      va_end(args);
-      print_string(MTempBuffer);
+    if (MEnabled) {
+      if (MFile.isOpen()) {
+        va_list args;
+        va_start(args,format);
+        vsprintf(MTempBuffer,format,args);
+        va_end(args);
+        print_string(MTempBuffer);
+      }
     }
   }
 
   void print_if(bool cond, const char* format, ...) {
-    if (cond && MFile.isOpen()) {
-      va_list args;
-      va_start(args,format);
-      vsprintf(MTempBuffer,format,args);
-      va_end(args);
-      print_string(MTempBuffer);
+    if (MEnabled) {
+      if (cond && MFile.isOpen()) {
+        va_list args;
+        va_start(args,format);
+        vsprintf(MTempBuffer,format,args);
+        va_end(args);
+        print_string(MTempBuffer);
+      }
     }
   }
 
