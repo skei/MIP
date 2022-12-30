@@ -37,6 +37,10 @@ const clap_plugin_descriptor_t myDescriptor = {
 //
 //----------------------------------------------------------------------
 
+#define NUM_TEST_SAMPLES 100000
+
+//
+
 class myEditor
 : public MIP_Editor {
 
@@ -44,7 +48,8 @@ class myEditor
 private:
 //------------------------------
 
-  MIP_PanelWidget* MRoot = nullptr;
+  MIP_PanelWidget*  MRoot   = nullptr;
+  float*            MBuffer = nullptr;
 
 //------------------------------
 public:
@@ -54,17 +59,42 @@ public:
   : MIP_Editor(AListener,AWidth,AHeight,AParameters) {
 
     MRoot = new MIP_PanelWidget(MIP_DRect(0,0,640,480));
-    //setRootWidget(panel,this);
     setRootWidget(MRoot);
 
-    //MIP_Knob2Widget* knob2 = new MIP_Knob2Widget(MIP_DRect(10,10,200,250),"Knob",0.5);
-    //MRoot->appendChildWidget(knob2);
-    //knob2->setDrawBorder(true);
+    MRoot->setFillBackground(true);
+    MRoot->setBackgroundColor(0.2);
 
     MIP_SliderWidget* slider = new MIP_SliderWidget(MIP_DRect(10,10,200,20),"Slider",0.5);
     MRoot->appendChildWidget(slider);
-
     connect(slider,AParameters->getItem(0));
+
+    MIP_CircularWaveformWidget* waveform = new MIP_CircularWaveformWidget(MIP_DRect(100,100,300,300));
+    MRoot->appendChildWidget(waveform);
+
+    //-----
+
+    MBuffer = (float *)malloc(NUM_TEST_SAMPLES * sizeof(float) * 2);
+    for (uint32_t i=0; i<NUM_TEST_SAMPLES; i++) {
+      MBuffer[(i * 2)    ] = MIP_RandomSigned();
+      MBuffer[(i * 2) + 1] = MIP_RandomSigned();
+    }
+
+    waveform->setAudioBuffer(NUM_TEST_SAMPLES,MBuffer,true);
+
+    waveform->setGrid(4,4);
+    waveform->setGridColor( MIP_Color(0.8), MIP_Color(0.5) );
+
+
+    waveform->setNumAreas(2);
+    waveform->setArea( 0, 0, 0.375);
+    waveform->setArea( 1, 0, 0.125);
+
+    waveform->setAreaColor( 0, MIP_Color(0, 0.4, 0));
+    waveform->setAreaColor( 1, MIP_Color(0, 0.5, 0));
+
+    waveform->setNumMarkers(1);
+    waveform->setMarker(0, 0.26, 0.0025);
+    waveform->setMarkerColor(0,MIP_Color(0.8, 0, 0));
 
   }
 
@@ -72,6 +102,7 @@ public:
 
   virtual ~myEditor() {
     if (MRoot) delete MRoot;
+    free(MBuffer);
   }
 
 };

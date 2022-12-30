@@ -23,7 +23,7 @@ protected:
 //------------------------------
 
   bool      MDrawWaveform   = true;
-  double    MWaveformWidth  = 1;
+  double    MWaveformWidth  = 1.0;
   MIP_Color MWaveformColor  = MIP_Color(0.25);//MIP_COLOR_DARK_GRAY;
 
   bool      MDrawZeroLine   = true;

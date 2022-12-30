@@ -76,6 +76,10 @@ public:
     setFillBackground(true);
     setBackgroundColor(0.25);
 
+    setDrawBorder(true);
+    setBorderColor(0.8);
+    setBorderEdges(MIP_EDGE_BOTTOM);
+
     // sa
 
     MSaImage = new MIP_ImageWidget(MIP_DRect(0,0,80,80),(void*)sa_img,sa_img_size);
@@ -115,14 +119,14 @@ public:
 
     // mip
 
-    MMipImage = new MIP_ImageWidget(MIP_DRect((ARect.w - 120),0,120,80),(void*)mip_img,mip_img_size);
+    MMipImage = new MIP_ImageWidget(MIP_DRect((ARect.w - 120),-5,120,80),(void*)mip_img,mip_img_size);
     appendChildWidget(MMipImage);
     MMipImage->setAlpha(0.6);
     MMipImage->setHint("Multum In Parvo");
 
     // mip version
 
-    MVersionText = new MIP_TextWidget(MIP_DRect((ARect.w - 110),55,60,10),MIP_VERSION);
+    MVersionText = new MIP_TextWidget(MIP_DRect((ARect.w - 110),50,60,10),MIP_VERSION);
     appendChildWidget(MVersionText);
     MVersionText->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     MVersionText->setTextSize(8);

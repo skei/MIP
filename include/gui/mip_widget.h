@@ -108,12 +108,12 @@ protected:
   MIP_Color           MDisabledColor    = MIP_Color(0.5);
   double              MDisabledAlpha    = 0.5;
 
-  bool                MDrawIndicator    = false;
+  bool                MDrawIndicator    = true;//false;
   double              MIndicatorValue   = 0.0;
-  MIP_Color           MIndicatorColor   = MIP_Color(1,0,0,0.8);
+  MIP_Color           MIndicatorColor   = MIP_Color(1.0, 0.0, 0.0, 0.5);
 
-  bool                MDrawModulation   = true;
-  MIP_Color           MModulationColor  = MIP_Color(1,0,0,0.8);
+  bool                MDrawModulation   = false;//true;
+  MIP_Color           MModulationColor  = MIP_Color(1,0,1,0.5);
 
 //------------------------------
 public:

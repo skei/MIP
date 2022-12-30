@@ -45,9 +45,13 @@ public:
     setValue(1,AValue2);
     setDragDirection(MIP_RIGHT);
     setDragSensitivity( 1.0 / 400.0 );
-    setValueSize(12);
+    setValueSize(10);
     setValueOffset(MIP_DRect(5,0,5,0));
+    setTextSize(10);
     setTextAlignment(MIP_TEXT_ALIGN_CENTER);
+
+    setIValueColor(MIP_COLOR_BLACK);
+
   }
 
   //----------

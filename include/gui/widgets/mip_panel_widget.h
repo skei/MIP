@@ -20,13 +20,13 @@ protected:
 //------------------------------
 
   bool      MFillBackground   = true;
-  bool      MDrawBorder       = true;
+  bool      MDrawBorder       = false;//true;
 
   double    MBorderWidth      = 1.0;
   uint32_t  MBorderEdges      = MIP_EDGE_ALL;
 
-  MIP_Color MBackgroundColor  = MIP_COLOR_GRAY;
-  MIP_Color MBorderColor      = MIP_COLOR_DARK_GRAY;
+  MIP_Color MBackgroundColor  = MIP_Color(0.4);//MIP_COLOR_GRAY;
+  MIP_Color MBorderColor      = MIP_Color(0.6);//MIP_COLOR_DARK_GRAY;
 
 //------------------------------
 public:
@@ -57,37 +57,37 @@ public:
 //------------------------------
 
   virtual void fillBackground(MIP_PaintContext* AContext) {
-    MIP_Painter* painter = AContext->painter;
-    MIP_DRect mrect = getRect();
-
-    MIP_Color color = MBackgroundColor;
-    if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
-    painter->setFillColor(color);
-
-    painter->fillRect(mrect.x,mrect.y,mrect.w,mrect.h);
+    if (MFillBackground) {
+      MIP_Painter* painter = AContext->painter;
+      MIP_DRect mrect = getRect();
+      MIP_Color color = MBackgroundColor;
+      if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+      painter->setFillColor(color);
+      painter->fillRect(mrect.x,mrect.y,mrect.w,mrect.h);
+    }
   }
 
   //----------
 
   virtual void drawBorder(MIP_PaintContext* AContext) {
-    MIP_Window* window = (MIP_Window*)getOwnerWindow();
-    double S = window->getWindowScale();
-    MIP_Painter* painter = AContext->painter;
-    MIP_DRect mrect = getRect();
-
-    MIP_Color color = MBorderColor;
-    if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
-    painter->setDrawColor(color);
-
-    painter->setLineWidth(MBorderWidth * S);
-    if (MBorderEdges == MIP_EDGE_ALL) {
-      painter->drawRect(mrect.x,mrect.y,mrect.w,mrect.h);
-    }
-    else {
-      if (MBorderEdges == MIP_EDGE_TOP)     painter->drawLine( mrect.x,    mrect.y,   mrect.x2(), mrect.y    );
-      if (MBorderEdges == MIP_EDGE_BOTTOM)  painter->drawLine( mrect.x,    mrect.y2(),mrect.x2(), mrect.y2() );
-      if (MBorderEdges == MIP_EDGE_LEFT)    painter->drawLine( mrect.x,    mrect.y,   mrect.x,    mrect.y2() );
-      if (MBorderEdges == MIP_EDGE_RIGHT)   painter->drawLine( mrect.x2(), mrect.y,   mrect.x2(), mrect.y2() );
+    if (MDrawBorder) {
+      MIP_Window* window = (MIP_Window*)getOwnerWindow();
+      double S = window->getWindowScale();
+      MIP_Painter* painter = AContext->painter;
+      MIP_DRect mrect = getRect();
+      MIP_Color color = MBorderColor;
+      if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
+      painter->setDrawColor(color);
+      painter->setLineWidth(MBorderWidth * S);
+      if (MBorderEdges == MIP_EDGE_ALL) {
+        painter->drawRect(mrect.x,mrect.y,mrect.w,mrect.h);
+      }
+      else {
+        if (MBorderEdges == MIP_EDGE_TOP)     painter->drawLine( mrect.x,    mrect.y,   mrect.x2(), mrect.y    );
+        if (MBorderEdges == MIP_EDGE_BOTTOM)  painter->drawLine( mrect.x,    mrect.y2(),mrect.x2(), mrect.y2() );
+        if (MBorderEdges == MIP_EDGE_LEFT)    painter->drawLine( mrect.x,    mrect.y,   mrect.x,    mrect.y2() );
+        if (MBorderEdges == MIP_EDGE_RIGHT)   painter->drawLine( mrect.x2(), mrect.y,   mrect.x2(), mrect.y2() );
+      }
     }
   }
 

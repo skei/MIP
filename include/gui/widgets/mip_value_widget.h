@@ -23,8 +23,8 @@ protected:
   double      MValueSize      = 14.0;
   double      MIValueSize     = 16.0;
 
-  MIP_Color   MValueColor     = MIP_COLOR_DARK_GRAY;
-  MIP_Color   MIValueColor    = MIP_COLOR_BLACK;
+  MIP_Color   MValueColor     = MIP_Color(0);//MIP_COLOR_DARK_GRAY;
+  MIP_Color   MIValueColor    = MIP_COLOR_WHITE;
 
   //double      MValue          = 0.0;
   uint32_t    MValueAlignment = MIP_TEXT_ALIGN_RIGHT;

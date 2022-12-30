@@ -54,6 +54,8 @@ public:
     setTextOffset(0);
     setTextSize(8);
 
+    //setDrawIndicator(true);
+
   }
 
   //----------

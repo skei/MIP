@@ -9,8 +9,8 @@
 #define MIP_LOGGING
 #define MIP_LOG_APPEND
 
-#define SA_BOTAGE_EDITOR_WIDTH  640
-#define SA_BOTAGE_EDITOR_HEIGHT 480
+#define SA_BOTAGE_EDITOR_WIDTH  490
+#define SA_BOTAGE_EDITOR_HEIGHT 392
 
 #define SA_BOTAGE_NAME          "sa_botage"
 #define SA_BOTAGE_VENDOR        "skei.audio"

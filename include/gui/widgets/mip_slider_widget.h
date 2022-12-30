@@ -25,8 +25,8 @@ protected:
 
 
   bool      MDrawSlider   = true;
-  MIP_Color MSliderColor  = MIP_COLOR_LIGHT_GRAY;
-  MIP_Color MISliderColor = MIP_COLOR_WHITE;
+  MIP_Color MSliderColor  = MIP_Color(0.6);//MIP_COLOR_LIGHT_GRAY;
+  MIP_Color MISliderColor = MIP_Color(1.0);//MIP_COLOR_WHITE;
 
 
 //------------------------------
