@@ -349,6 +349,13 @@ public: // MIP_BaseWindow
 
   //----------
 
+  void getSize(uint32_t* AWidth, uint32_t* AHeight) override {
+    *AWidth = MWindowWidth;
+    *AHeight = MWindowHeight;
+  }
+
+  //----------
+
   void setTitle(const char* ATitle) override {
     MWindowTitle = ATitle;
     SetWindowText(MHandle, ATitle);
@@ -401,7 +408,7 @@ public: // events
   //      DispatchMessage(&msg);
   //    }
   //    if (msg.message == WM_QUIT) break;
-  //    if (MListener) MListener->on_windowRenderFrame(this);
+  //    if (MWindowListener) MWindowListener->on_windowRenderFrame(this);
   //  }
   //}
 
@@ -1065,7 +1072,7 @@ private: // remap
           //invalidateRegion(0,0,w,h);
           //if (MFlags & s3_wf_autoalign) on_widgetAlign(this);
           //#ifndef S3_NO_WINDOW_BACKBUFFER
-          //if (MListener) MListener->on_bufferPaint(this,S3_NULL,s3_pm_normal); //redraw;
+          //if (MWindowListener) MWindowListener->on_bufferPaint(this,S3_NULL,s3_pm_normal); //redraw;
           //#endif
         //}
         break;
@@ -1130,7 +1137,7 @@ private: // remap
         }
         int32_t x = short(LOWORD(lParam));
         int32_t y = short(HIWORD(lParam));
-      //if (MListener) MListener->on_mouseDown(this,x,y,b,remapKey(wParam));
+      //if (MWindowListener) MWindowListener->on_mouseDown(this,x,y,b,remapKey(wParam));
         on_window_mouse_click(b,remapMouseKey(wParam),x,y,time);
         //        if (MFlags & s3_wf_capture) grabCursor();
         break;
@@ -1152,7 +1159,7 @@ private: // remap
         }
         int32_t x = short(LOWORD(lParam));
         int32_t y = short(HIWORD(lParam));
-        //if (MListener) MListener->on_mouseUp(this,x,y,b,remapKey(wParam));
+        //if (MWindowListener) MWindowListener->on_mouseUp(this,x,y,b,remapKey(wParam));
         on_window_mouse_release(b,remapMouseKey(wParam),x,y,time);
         //        if (MFlags&s3_wf_capture) releaseCursor();
         break;
@@ -1191,7 +1198,7 @@ private: // remap
         y = short(HIWORD(lParam));
         //x = GET_X_LPARAM(lParam);
         //y = GET_Y_LPARAM(lParam);
-        //if (MListener) MListener->on_mouseUp(this,x,y,b,remapKey(wParam));
+        //if (MWindowListener) MWindowListener->on_mouseUp(this,x,y,b,remapKey(wParam));
         on_widgetMouseDoubleClick(this,x,y,b,remapMouseKey(wParam));
         break;
       }
@@ -1202,8 +1209,8 @@ private: // remap
 
       case WM_MOUSEWHEEL: {
         int32_t d = GET_WHEEL_DELTA_WPARAM(wParam);
-        //if (d>0) { if (MListener) MListener->on_mouseDown(this,MMouseXpos,MMouseYpos,smb_wheelUp,  smb_none); }
-        //if (d<0) { if (MListener) MListener->on_mouseDown(this,MMouseXpos,MMouseYpos,smb_wheelDown,smb_none); }
+        //if (d>0) { if (MWindowListener) MWindowListener->on_mouseDown(this,MMouseXpos,MMouseYpos,smb_wheelUp,  smb_none); }
+        //if (d<0) { if (MWindowListener) MWindowListener->on_mouseDown(this,MMouseXpos,MMouseYpos,smb_wheelDown,smb_none); }
         if (d > 0) { on_window_mouse_click(MIP_BUTTON_SCROLL_UP,   MIP_KEY_NONE, MMouseXpos,MMouseYpos,time); }
         if (d < 0) { on_window_mouse_click(MIP_BUTTON_SCROLL_DOWN, MIP_KEY_NONE, MMouseXpos,MMouseYpos,time); }
         break;
@@ -1212,7 +1219,7 @@ private: // remap
       //-----
 
       case WM_KEYDOWN: {
-        //if (MListener) MListener->on_keyDown(this,wParam,lParam);
+        //if (MWindowListener) MWindowListener->on_keyDown(this,wParam,lParam);
         //k = remapKeyCode(wParam,lParam);
         on_window_key_press(wParam,lParam,time);
         break;
@@ -1221,7 +1228,7 @@ private: // remap
       //-----
 
       case WM_KEYUP: {
-        //if (MListener) MListener->on_keyUp(this,wParam,lParam);
+        //if (MWindowListener) MWindowListener->on_keyUp(this,wParam,lParam);
         //k = remapKeyCode(wParam,lParam);
         on_window_key_release(wParam,lParam,time);
         break;

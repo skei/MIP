@@ -33,7 +33,7 @@ class MIP_MenuWidget
 protected:
 //------------------------------
 
-  MIP_MenuListener* MListener = nullptr;
+  MIP_MenuListener* MMenuListener = nullptr;
 
 //------------------------------
 public:
@@ -42,7 +42,7 @@ public:
   MIP_MenuWidget(MIP_DRect ARect, MIP_MenuListener* AListener=nullptr)
   : MIP_PanelWidget(ARect) {
     //MName = "MIP_MenuWidget";
-    MListener = AListener;
+    MMenuListener = AListener;
     setActive(false);
     setVisible(false);
 //    Options.alignIfHidden = true;
@@ -59,8 +59,8 @@ public:
 public: // parent to child
 //------------------------------
 
-  virtual void setListener(MIP_MenuListener* AListener) {
-    MListener = AListener;
+  virtual void setMenuListener(MIP_MenuListener* AListener) {
+    MMenuListener = AListener;
   }
 
 //------------------------------
@@ -70,7 +70,7 @@ public: // parent to child
   void on_widget_mouse_click(uint32_t AButton, uint32_t AState, double AXpos, double AYpos, uint32_t ATime) override {
     MIP_DRect mrect = getRect();
     if (!mrect.contains(AXpos,AYpos)) {
-      if (MListener) MListener->on_menu_selected(this,-1);
+      if (MMenuListener) MMenuListener->on_menu_selected(this,-1);
       close(true);
     }
     else {
@@ -99,10 +99,10 @@ public: // child to parent
     //if (MParent) MParent->do_widget_update(ASender,AMode);
     int32_t index = AValue;//ASender->getWidgetIndex();
     if (index < 0) {
-      if (MListener) MListener->on_menu_selected(this,-1);
+      if (MMenuListener) MMenuListener->on_menu_selected(this,-1);
     }
     else {
-      if (MListener) MListener->on_menu_selected(this,index);
+      if (MMenuListener) MMenuListener->on_menu_selected(this,index);
     }
     close(true);
     //do_widget_modal(nullptr);
@@ -114,22 +114,27 @@ public:
 
   virtual void open(double AXpos, double AYpos, bool AModal/*=true*/) {
 
-//    double x = AXpos;
-//    double y = AYpos;
-//    MIP_Window* window = (MIP_Window*)getOwnerWindow();
-//    if (window) {
-//      uint32_t winw = window->getWindowWidth();
-//      uint32_t winh = window->getWindowHeight();
-//      if ((x + MRect.w) > winw) { x = winw - MRect.w; }
-//      if ((y + MRect.h) > winh) { y = winh - MRect.h; }
-//    }
+    double x = AXpos;
+    double y = AYpos;
+
+    MIP_Window* window = (MIP_Window*)getOwnerWindow();
+    if (window) {
+      //uint32_t winw = window->getWidth();
+      //uint32_t winh = window->getWindowHeight();
+      MIP_DRect mrect = getRect();
+      uint32_t winw = 0;
+      uint32_t winh = 0;
+      window->getSize(&winw,&winh);
+      if ((x + mrect.w) > winw) { x = winw - mrect.w; }
+      if ((y + mrect.h) > winh) { y = winh - mrect.h; }
+    }
 //    setWidgetPos(x,y);
 //    alignChildWidgets();
 
-    double dx = AXpos - getRect().x;
-    double dy = AYpos - getRect().y;
+    double dx = x/*AXpos*/ - getRect().x;
+    double dy = y/*AYpos*/ - getRect().y;
 
-    setPos(AXpos,AYpos);
+    setPos(x,y/*AXpos,AYpos*/);
     //setBasePos(AXpos,AYpos);
     moveChildWidgets(dx,dy);
 

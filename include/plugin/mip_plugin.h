@@ -25,7 +25,7 @@
 
 class MIP_Plugin
 : public MIP_ClapPlugin
-, public MIP_TimerListener
+//, public MIP_TimerListener
 , public MIP_EditorListener {
 
   //friend class MIP_ExeWindow;
@@ -48,7 +48,17 @@ protected:
   MIP_NotePortArray     MNoteOutputPorts          = {};
 
   MIP_Editor*           MEditor                   = nullptr;
-  MIP_Timer             MGuiTimer                 = MIP_Timer(this);
+
+  bool                  MIsInitialized            = false;
+  bool                  MIsActivated              = false;
+  bool                  MIsProcessing             = false;
+  bool                  MIsEditorOpen             = false;
+//bool                  MIsEditorBusy             = false;
+
+  uint32_t              MSelectedAudioPortsConfig = 0;
+  int32_t               MRenderMode               = CLAP_RENDER_REALTIME;
+  uint32_t              MInitialEditorWidth       = 256;
+  uint32_t              MInitialEditorHeight      = 256;
 
   // write values before indexes
   // read indexes before values
@@ -65,17 +75,6 @@ protected:
   MIP_Queue<double,MIP_PLUGIN_MAX_PARAM_EVENTS>   MQueuedGuiModValues       = {};
   MIP_Queue<double,MIP_PLUGIN_MAX_GUI_EVENTS>     MQueuedHostParamValues    = {};
 
-  bool                  MIsInitialized            = false;
-  bool                  MIsActivated              = false;
-  bool                  MIsProcessing             = false;
-  bool                  MIsEditorOpen             = false;
-//bool                  MIsEditorBusy             = false;
-
-  uint32_t              MSelectedAudioPortsConfig = 0;
-  int32_t               MRenderMode               = CLAP_RENDER_REALTIME;
-  uint32_t              MInitialEditorWidth       = 256;
-  uint32_t              MInitialEditorHeight      = 256;
-
 //------------------------------
 public:
 //------------------------------
@@ -83,7 +82,6 @@ public:
   MIP_Plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_ClapPlugin(ADescriptor) {
     //MIP_PRINT;
-
     // TODO: implenent MExeHost
     #ifndef MIP_EXE
       LOG.print("  CLAP: host.name:    %s\n",AHost->name);
@@ -92,7 +90,6 @@ public:
       LOG.print("  CLAP: host.version: %s\n",AHost->version);
       LOG.print("  CLAP: host.data:    %p\n",AHost->host_data);
     #endif
-
   }
 
   //----------
@@ -118,7 +115,11 @@ public:
     //MEditor.setInitialSize(AWidth,AHeight); // ->gui_create
   }
 
-  virtual MIP_Editor* getEditor() { return MEditor; }
+  //----------
+
+  virtual MIP_Editor* getEditor() {
+    return MEditor;
+  }
 
 //------------------------------
 public: // plugin
@@ -514,16 +515,16 @@ public: // ext gui
     updateEditorParameterValues();
     bool result = MEditor->show();
     if (result) {
-      #ifdef MIP_LINUX
-        LOG.print("PLUGIN: Starting gui timer\n");
-        MGuiTimer.start(MIP_EDITOR_TIMER_MS);
-      #endif
-      #ifdef MIP_WIN32
-        MIP_Win32Window* window = MEditor->getWindow();
-        HWND hwnd = window->getHandle();
-        LOG.print("PLUGIN: Starting gui timer\n");
-        MGuiTimer.start(MIP_EDITOR_TIMER_MS,hwnd);
-      #endif
+//      #ifdef MIP_LINUX
+//        LOG.print("PLUGIN: Starting gui timer\n");
+//        MGuiTimer.start(MIP_EDITOR_TIMER_MS);
+//      #endif
+//      #ifdef MIP_WIN32
+//        MIP_Win32Window* window = MEditor->getWindow();
+//        HWND hwnd = window->getHandle();
+//        LOG.print("PLUGIN: Starting gui timer\n");
+//        MGuiTimer.start(MIP_EDITOR_TIMER_MS,hwnd);
+//      #endif
       MIsEditorOpen = true;
     }
     return result;
@@ -534,8 +535,8 @@ public: // ext gui
   bool gui_hide() override {
     //MIP_Print("\n");
     MIP_Assert(MEditor);
-    LOG.print("PLUGIN: Stopping gui timer\n");
-    MGuiTimer.stop();
+//    LOG.print("PLUGIN: Stopping gui timer\n");
+//    MGuiTimer.stop();
     MIsEditorOpen = false;
     bool result = MEditor->hide();
     return result;
@@ -850,7 +851,7 @@ public: // ext voice-info
   }
 
 //------------------------------
-private: // editor listener
+public: // editor listener
 //------------------------------
 
   void on_editor_parameter_change(uint32_t AIndex, double AValue) override {
@@ -861,14 +862,15 @@ private: // editor listener
 
   //----------
 
-  void on_editor_editor_resize() override  {
-    //MIP_Print("%i,%i\n",AWidth,AHeight);
-    //clap_host_gui_t* host_gui = (clap_host_gui_t*)MClapHost->get_extension(MClapHost,CLAP_EXT_GUI);
-    //if (host_gui) {
-    //  host_gui->request_resize(MClapHost,AWidth,AHeight);
-    //  gui_set_size(AWidth,AHeight);
-    //}
-  }
+//  void on_editor_resize(uint32-t AWidth, uint32_t AHeight) override  {
+//    MIP_PRINT;
+//    //MIP_Print("%i,%i\n",AWidth,AHeight);
+//    //clap_host_gui_t* host_gui = (clap_host_gui_t*)MClapHost->get_extension(MClapHost,CLAP_EXT_GUI);
+//    //if (host_gui) {
+//    //  host_gui->request_resize(MClapHost,AWidth,AHeight);
+//    //  gui_set_size(AWidth,AHeight);
+//    //}
+//  }
 
   //----------
 
@@ -877,8 +879,17 @@ private: // editor listener
 
   //----------
 
-  //void on_editor_gesture_end() override {
-  //}
+  // called by editor,
+  // after editor has been called from window
+  // (timer callback)
+
+  void on_editor_timer() override {
+    //MIP_PRINT;
+    if (MIsEditorOpen) { //  && !MIsEditorBusy) {
+      flushGuiParams();
+      flushGuiMods();
+    }
+  }
 
 //------------------------------
 public: // timer listener
@@ -888,27 +899,24 @@ public: // timer listener
     called from our (separate) timer thread..
   */
 
-  #ifndef MIP_NO_GUI
-
-  // added override.. :-/
-
-  void on_timer_callback(MIP_Timer* ATimer) override {
-    //MIP_Print("1\n");
-    if (ATimer == &MGuiTimer) {
-      if (MIsEditorOpen) { //  && !MIsEditorBusy) {
-
-//        MEditor->updateTimer();
-//        MEditor.updateWaveformWidget(sa_botage_processor* process) {
-
-        flushGuiParams();
-        flushGuiMods();
-
-      }
-    }
-    //MIP_PRINT;
-  }
-
-  #endif
+//  #ifndef MIP_NO_GUI
+//
+//  void on_timer_callback(MIP_Timer* ATimer) override {
+//    MIP_Print("we don't need this?\n");
+//    if (ATimer == &MGuiTimer) {
+//      if (MIsEditorOpen) { //  && !MIsEditorBusy) {
+//        //MEditor->updateTimer();
+//        //MEditor.updateWaveformWidget(sa_botage_processor* process) {
+//        flushGuiParams();
+//        flushGuiMods();
+//        //MIP_Window* window = MEditor->getWindow();
+//        //window->flushDirtyRects();
+//      }
+//    }
+//    //MIP_PRINT;
+//  }
+//
+//  #endif
 
 //------------------------------
 public: // parameters

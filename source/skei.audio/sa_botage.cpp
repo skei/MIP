@@ -1,31 +1,25 @@
 
+//// nc -U -l -k /tmp/mip.socket
 //#ifdef MIP_PLUGIN
 //  #define MIP_DEBUG_PRINT_SOCKET
-//  // nc -U -l -k /tmp/mip.socket
 //#endif
 
 //----------
 
-#define SA_BOTAGE_EDITOR_WIDTH  490
-#define SA_BOTAGE_EDITOR_HEIGHT 392
-
 #define SA_BOTAGE_NAME          "sa_botage"
 #define SA_BOTAGE_VENDOR        "skei.audio"
-#define SA_BOTAGE_VERSION       "0.1.7"
+#define SA_BOTAGE_VERSION       "0.1.9"
+#define SA_BOTAGE_EDITOR_WIDTH  490 + 132
+#define SA_BOTAGE_EDITOR_HEIGHT 392
 
 //----------------------------------------------------------------------
 
 #include "plugin/mip_plugin.h"
 #include "audio/mip_audio_utils.h"
 
-#include "gui/mip_bitmap.h"
-
-//----------
-
 #include "sa_botage/sa_botage_parameters.h"
 #include "sa_botage/sa_botage_processor.h"
 #include "sa_botage/sa_botage_editor.h"
-//#include "sa_botage/sa_botage_widgets.h"
 
 //----------------------------------------------------------------------
 //
@@ -68,6 +62,7 @@ public:
   sa_botage_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
     setInitialEditorSize(SA_BOTAGE_EDITOR_WIDTH,SA_BOTAGE_EDITOR_HEIGHT);
+    MIP_PRINT;
   }
 
 //------------------------------
@@ -128,14 +123,24 @@ public:
 public:
 //------------------------------
 
-  void on_timer_callback(MIP_Timer* ATimer) override {
+  void on_editor_timer() override {
+    MIP_PRINT;
     if (MEditor && MEditor->isEditorOpen()) {
       sa_botage_editor* editor = (sa_botage_editor*)MEditor;
       editor->updateWaveformWidget(&MProcessor);
       editor->updateProbIndicators(&MProcessor);
     }
-    MIP_Plugin::on_timer_callback(ATimer);
+    MIP_Plugin::on_editor_timer();
   }
+
+//  void on_timer_callback(MIP_Timer* ATimer) override {
+//    if (MEditor && MEditor->isEditorOpen()) {
+//      sa_botage_editor* editor = (sa_botage_editor*)MEditor;
+//      editor->updateWaveformWidget(&MProcessor);
+//      editor->updateProbIndicators(&MProcessor);
+//    }
+//    MIP_Plugin::on_timer_callback(ATimer);
+//  }
 
 };
 

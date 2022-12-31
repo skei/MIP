@@ -59,14 +59,14 @@ private:
 
 private:
 
-  bool                MRunning    = false;
-  MIP_TimerListener*  MListener   = nullptr;
-  HWND                MWinHandle  = NULL;
+  bool                MRunning        = false;
+  MIP_TimerListener*  MTimerListener  = nullptr;
+  HWND                MWinHandle      = NULL;
 
 public:
 
   MIP_Timer(MIP_TimerListener* AListener) {
-    MListener = AListener;
+    MTimerListener = AListener;
   }
 
   //----------
@@ -109,7 +109,7 @@ public:
   //----------
 
   void on_timer() {
-    if (MListener) MListener->on_timer_callback(this);
+    if (MTimerListener) MTimerListener->on_timer_callback(this);
   }
 
 };

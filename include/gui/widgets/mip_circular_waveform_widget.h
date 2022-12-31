@@ -347,12 +347,19 @@ public:
         double y1 = MWaveformLineCoords[(i * 4) + 1] * S;
         double x2 = MWaveformLineCoords[(i * 4) + 2] * S;
         double y2 = MWaveformLineCoords[(i * 4) + 3] * S;
-        double cx = MIP_Interpolate_Linear(0.5,x1,x2);
-        double cy = MIP_Interpolate_Linear(0.5,y1,y2);
-        double xx = MIP_Interpolate_Linear(v,x1,x2);
-        double yy = MIP_Interpolate_Linear(v,y1,y2);
-        painter->drawLine(cx,cy,xx,yy);
+        double sx = MIP_Interpolate_Linear(0.5,x1,x2);
+        double sy = MIP_Interpolate_Linear(0.5,y1,y2);
+        double ex = MIP_Interpolate_Linear(v,x1,x2);
+        double ey = MIP_Interpolate_Linear(v,y1,y2);
+        MWaveformDrawCoords[(i * 4)    ] = sx;
+        MWaveformDrawCoords[(i * 4) + 1] = sy;
+        MWaveformDrawCoords[(i * 4) + 2] = ex;
+        MWaveformDrawCoords[(i * 4) + 3] = ey;
+        //painter->drawLine(sx,sy,ex,ey);
+
       }
+      painter->drawLines(MNumWaveformLineCoords,MWaveformDrawCoords);
+
     }
     // zero-line
     double cx = mrect.x + (mrect.w * 0.5);

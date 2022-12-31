@@ -65,13 +65,13 @@ private:
   timer_t             MTimer;
   itimerspec          MTimerSpec;
   bool                MRunning  = false;
-  MIP_TimerListener*  MListener = nullptr;
+  MIP_TimerListener*  MTimerListener = nullptr;
 
 public:
 
   MIP_Timer(MIP_TimerListener* AListener/*, void* AUserPtr*/) {
 
-    MListener = AListener;
+    MTimerListener = AListener;
 
     MSigEvent.sigev_notify            = SIGEV_THREAD;
     MSigEvent.sigev_notify_function   = mip_timer_callback;
@@ -169,7 +169,7 @@ public:
   //----------
 
   void on_timer() {
-    if (MListener) MListener->on_timer_callback(this);
+    if (MTimerListener) MTimerListener->on_timer_callback(this);
   }
 
 };

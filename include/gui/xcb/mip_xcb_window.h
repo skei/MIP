@@ -473,6 +473,13 @@ public:
 
   //----------
 
+  void getSize(uint32_t* AWidth, uint32_t* AHeight) override {
+    *AWidth = MWindowWidth;
+    *AHeight = MWindowHeight;
+  }
+
+  //----------
+
   void setSize(uint32_t AWidth, uint32_t AHeight) override {
     MWindowWidth = AWidth;
     MWindowHeight = AHeight;

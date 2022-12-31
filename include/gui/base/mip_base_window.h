@@ -21,6 +21,7 @@ public:
 
   virtual void      setPos(uint32_t AXpos, uint32_t AYpos) {}
   virtual void      setSize(uint32_t AWidth, uint32_t AHeight) {}
+  virtual void      getSize(uint32_t* AWidth, uint32_t* AHeight) { *AWidth = 0; *AHeight = 0; }
   virtual void      setTitle(const char* ATitle) {}
 
 //  virtual double    getScale() { return 1.0; }

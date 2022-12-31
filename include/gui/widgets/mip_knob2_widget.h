@@ -116,7 +116,7 @@ public:
   //----------
 
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
-    //if (MListener) MListener->do_widget_update(AWidget,AMode);
+    //if (MWidgetListener) MWidgetListener->do_widget_update(AWidget,AMode);
     MIP_PanelWidget::do_widget_update(AWidget,AMode);
     if (MDrawValue) {
       if (AWidget == MKnobWidget) {

@@ -705,6 +705,10 @@
 		<Unit filename="../../source/skei.audio/sa_botage/history.txt" />
 		<Unit filename="../../source/skei.audio/sa_botage/issues.txt" />
 		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_editor.h" />
+		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_editor_page_fx.h" />
+		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_editor_page_perf.h" />
+		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_editor_page_prob.h" />
+		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_editor_page_seq.h" />
 		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_parameters.h" />
 		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_processor.h" />
 		<Unit filename="../../source/skei.audio/sa_botage/sa_botage_widgets.h" />

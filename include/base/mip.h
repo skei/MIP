@@ -42,24 +42,22 @@
 //
 //------------------------------
 
+// nc -U -l -k /tmp/mip.socket
+
+#ifdef MIP_PLUGIN
+  #define MIP_DEBUG_PRINT_SOCKET
+#endif
+
 #include "base/mip_debug.h"
-
-//-----
-
 #include "base/utils/mip_logfile.h"
-
-//-----
-
 #include "base/mip_test.h"
+
 #ifdef MIP_UNIT_TESTING
   MIP_TEST_STATE();
 #endif
 
-//------------------------------
-//
-//------------------------------
-
 #include "plugin/mip_registry.h"
+
 //#include "plugin/mip_entry.h"
 
 //----------------------------------------------------------------------

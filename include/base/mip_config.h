@@ -25,8 +25,8 @@
   #define MIP_ALIGNMENT_SIMD              16
   #define MIP_ALIGNMENT_CACHE             64
   #define MIP_CLIP_RECT_STACK_SIZE        1024
-  #define MIP_EDITOR_TIMER_MS             20
-  #define MIP_EDITOR_TIMER_ID             333
+//  #define MIP_EDITOR_TIMER_MS             30
+//  #define MIP_EDITOR_TIMER_ID             333
   #define MIP_LOGFILE_NAME                "mip.log"
   #define MIP_MAX_PATH_LENGTH             512
   #define MIP_MAX_STRING_LENGTH           256
@@ -122,6 +122,12 @@
 //#define MIP_WIN32_INVALIDATE_WHEN_RESIZING
 //#define MIP_WINDOW_BUFFERED
 //#define MIP_XCB_USE_STB_TRUETYPE
+
+  // was:
+  // black screen when hiding/showing gui
+  // (bitwig add modulator)
+  // is this fixed?
+
   #define MIP_XCB_WAIT_FOR_MAPNOTIFY
 
 //----------------------------------------------------------------------
@@ -133,6 +139,9 @@
 //#define MIP_NO_ENTRY
 //#define MIP_NO_PLUGIN
 //#define MIP_NO_REGISTRY
+
+  // we always want to export the clap entry
+
   #define MIP_PLUGIN_CLAP
 //#define MIP_PLUGIN_EXE
 //#define MIP_PLUGIN_VST2

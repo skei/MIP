@@ -26,6 +26,20 @@
 //#define MIP_WINDOW_TIMER_MS 20
 //#define MIP_WINDOW_TIMER_ID 123
 
+#define MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
+
+//----------------------------------------------------------------------
+//
+//
+//
+//----------------------------------------------------------------------
+
+class MIP_WindowListener {
+public:
+  virtual void do_window_listener_timer() {}
+};
+
+
 //----------------------------------------------------------------------
 //
 //
@@ -38,10 +52,13 @@ class MIP_Window
 
   // hack
   friend class MIP_Editor;
+  friend class MIP_Plugin;
 
 //------------------------------
 private:
 //------------------------------
+
+  MIP_WindowListener* MWindowListener = nullptr;
 
   //test
   void* MRenderBuffer = nullptr;
@@ -111,6 +128,10 @@ public:
 public:
 //------------------------------
 
+  virtual void setWindowListener(MIP_WindowListener* AListener) {
+    MWindowListener = AListener;
+  }
+
   virtual MIP_Widget* getRootWidget() {
     return MRootWidget;
   }
@@ -132,7 +153,7 @@ public:
   virtual void setRootWidget(MIP_Widget* AWidget, MIP_WidgetListener* AListener=nullptr) {
     //MIP_Print("%i,%i\n",AWidget->getWidth(),AWidget->getHeight());
     MRootWidget = AWidget;
-    if (AListener) AWidget->setListener(AListener);
+    if (AListener) AWidget->setWidgetListener(AListener);
   }
 
   //----------
@@ -177,6 +198,7 @@ private:
   */
 
   void queueDirtyRect(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) {
+    MIP_PRINT;
     MIP_IRect rect = {AXpos,AYpos,AWidth,AHeight };
     MDirtyRectsQueue.write(rect);
   }
@@ -184,6 +206,7 @@ private:
   //----------
 
   void flushDirtyRects() {
+    MIP_PRINT;
     MIP_IRect final_rect = {0};
     MIP_IRect dirty_rect = {0};
     while ( MDirtyRectsQueue.read(&dirty_rect) ) {
@@ -218,7 +241,10 @@ public:
 
   void open() override {
     MIP_ImplementedWindow::open();
-    startTimer(MIP_WINDOW_TIMER_MS,MIP_WINDOW_TIMER_ID);
+    #ifdef MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
+      MIP_PRINT;
+      startTimer(MIP_WINDOW_TIMER_MS,MIP_WINDOW_TIMER_ID);
+    #endif
     if (MRootWidget) MRootWidget->open(this);
   }
 
@@ -228,7 +254,10 @@ public:
 
   void close() override {
     if (MRootWidget) MRootWidget->close(this);  // crash...
-    stopTimer(MIP_WINDOW_TIMER_ID);
+    #ifdef MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
+      MIP_PRINT;
+      stopTimer(MIP_WINDOW_TIMER_ID);
+    #endif
     MIP_ImplementedWindow::close();
   }
 
@@ -431,7 +460,11 @@ public: // window
   //----------
 
   void on_window_timer() override {
-    flushDirtyRects();
+    //MIP_PRINT;
+    if (MWindowListener) MWindowListener->do_window_listener_timer();
+    #ifdef MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
+      flushDirtyRects();
+    #endif
   }
 
 //------------------------------

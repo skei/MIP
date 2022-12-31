@@ -17,9 +17,10 @@
 class MIP_EditorListener {
 public:
   virtual void on_editor_parameter_change(uint32_t AIndex, double AValue) {}
-  virtual void on_editor_editor_resize() {}
+  //virtual void on_editor_resize(uint32_t AWidth, uint32_t AHeight) {}
   //virtual void on_editor_gesture_begin() {}
   //virtual void on_editor_gesture_end() {}
+  virtual void on_editor_timer() {}
 };
 
 //----------------------------------------------------------------------
@@ -29,7 +30,8 @@ public:
 //----------------------------------------------------------------------
 
 class MIP_Editor
-: public MIP_WidgetListener {
+: public MIP_WidgetListener
+, public MIP_WindowListener {
 
   friend class MIP_Plugin;
 
@@ -42,7 +44,7 @@ protected:
 //------------------------------
 
   MIP_Window*         MWindow         = nullptr;
-  MIP_EditorListener* MListener       = nullptr;
+  MIP_EditorListener* MEditorListener = nullptr;
 
   intptr_t            MParentWindow   = 0;
   bool                MIsEditorOpen   = false;
@@ -63,7 +65,7 @@ public:
 
   MIP_Editor(MIP_EditorListener* AListener, uint32_t AWidth, uint32_t AHeight, MIP_ParameterArray* AParameters) {
     //MIP_Print("%i,%i\n",AWidth,AHeight);
-    MListener       = AListener;
+    MEditorListener = AListener;
     MInitialWidth   = AWidth;
     MInitialHeight  = AHeight;
     MEditorWidth    = AWidth;
@@ -71,6 +73,8 @@ public:
     MParameters     = AParameters;
     MAspectRatio    = (double)AWidth / (double)AHeight;
     MWindow         = new MIP_Window(AWidth,AHeight);
+
+    MWindow->setWindowListener(this);
 
     // setup parameters & widgets
 
@@ -106,8 +110,8 @@ public:
 
   //----------
 
-  virtual void setListener(MIP_EditorListener* AListener) {
-    MListener = AListener;
+  virtual void setEditorListener(MIP_EditorListener* AListener) {
+    MEditorListener = AListener;
   }
 
   //----------
@@ -176,12 +180,6 @@ public:
     if (MWindow && MIsEditorOpen) {
       MIP_PRINT;
     }
-  }
-
-  //----------
-
-  virtual void timerCallback() {
-    MIP_PRINT;
   }
 
 //------------------------------
@@ -432,8 +430,21 @@ public: // clap.gui
   }
 
 //------------------------------
+public: // window listener
+//------------------------------
+
+  void do_window_listener_timer() override {
+    MIP_PRINT;
+    if (MEditorListener) MEditorListener->on_editor_timer();
+  }
+
+//------------------------------
 public: // widget listener
 //------------------------------
+
+  // pass messages on to the window
+
+  //----------
 
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
     uint32_t num = AWidget->getNumParameters();
@@ -443,9 +454,9 @@ public: // widget listener
         uint32_t index = parameter->getIndex();
         //double value = parameter->getValue();
         double value = AWidget->getValue(i);
-        if (MListener) {
+        if (MEditorListener) {
           //MIP_Print("%i = %f\n",index,value);
-          MListener->on_editor_parameter_change(index,value);
+          MEditorListener->on_editor_parameter_change(index,value);
         }
       }
     }

@@ -258,7 +258,7 @@ public:
   void drawLines(uint32_t num, double* coords) override {
     if (num >= 2) {
       nvgBeginPath(MContext);
-      for (uint32_t i=1; i<num; i++) {
+      for (uint32_t i=0; i<num; i++) {
         double x = *coords++;
         double y = *coords++;
         nvgMoveTo(MContext,x,y);

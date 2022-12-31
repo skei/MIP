@@ -68,7 +68,7 @@ private:
 //------------------------------
 
 //  MIP_Widget*       MParent           = nullptr;
-  MIP_WidgetListener* MListener         = nullptr;
+  MIP_WidgetListener* MWidgetListener   = nullptr;
   MIP_Widgets         MChildren         = {};
   MIP_BaseWindow*     MOwnerWindow      = nullptr;
   int32_t             MIndex            = -1;
@@ -188,7 +188,7 @@ public:
   virtual void setAutoHideCursor(bool AAuto=true)                       { MAutoHideCursor = AAuto; }
   virtual void setAutoLockCursor(bool AAuto=true)                       { MAutoLockCursor = AAuto; }
 
-  virtual void setListener(MIP_WidgetListener* AListener)               { MListener = AListener; }
+  virtual void setWidgetListener(MIP_WidgetListener* AListener)         { MWidgetListener = AListener; }
   virtual void setParameter(MIP_Parameter* AParameter)                  { MParameters[0] = AParameter; }
   virtual void setParameter(uint32_t AIndex, MIP_Parameter* AParameter) { MParameters[AIndex] = AParameter; }
 
@@ -292,7 +292,7 @@ public:
   //----------
 
   virtual void redraw() {
-    if (MListener) MListener->do_widget_redraw(this);
+    if (MWidgetListener) MWidgetListener->do_widget_redraw(this);
   }
 
 //------------------------------
@@ -303,8 +303,8 @@ public:
   virtual MIP_Widget* appendChildWidget(MIP_Widget* AWidget, MIP_WidgetListener* AListener=nullptr) {
     int32_t index = MChildren.size();
     //AWidget->MParent = this;
-    if (AListener) AWidget->MListener = AListener;
-    else AWidget->MListener = this;
+    if (AListener) AWidget->MWidgetListener = AListener;
+    else AWidget->MWidgetListener = this;
     AWidget->MIndex = index;
 
 //    MWidget->MRect.x += MRect.x;
@@ -514,45 +514,44 @@ public:
   virtual void on_widget_cancel(uint32_t AReason=0) {
   }
 
-
 //------------------------------
 public:
 //------------------------------
 
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
-    if (MListener) MListener->do_widget_update(AWidget,AMode);
+    if (MWidgetListener) MWidgetListener->do_widget_update(AWidget,AMode);
   }
 
   void do_widget_redraw(MIP_Widget* AWidget, uint32_t AMode=0) override {
-    if (MListener) MListener->do_widget_redraw(AWidget,AMode);
+    if (MWidgetListener) MWidgetListener->do_widget_redraw(AWidget,AMode);
   }
 
   void do_widget_set_cursor(MIP_Widget* AWidget, int32_t ACursor) override {
-    if (MListener) MListener->do_widget_set_cursor(AWidget,ACursor);
+    if (MWidgetListener) MWidgetListener->do_widget_set_cursor(AWidget,ACursor);
   }
 
   void do_widget_set_cursor_pos(MIP_Widget* AWidget, int32_t AXpos, int32_t AYpos) override {
-    if (MListener) MListener->do_widget_set_cursor_pos(AWidget,AXpos,AYpos);
+    if (MWidgetListener) MWidgetListener->do_widget_set_cursor_pos(AWidget,AXpos,AYpos);
   }
 
   void do_widget_set_capture(MIP_Widget* AWidget, uint32_t AMode=0) override {
-    if (MListener) MListener->do_widget_set_capture(AWidget,AMode);
+    if (MWidgetListener) MWidgetListener->do_widget_set_capture(AWidget,AMode);
   }
 
   void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode=0) override {
-    if (MListener) MListener->do_widget_set_modal(AWidget,AMode);
+    if (MWidgetListener) MWidgetListener->do_widget_set_modal(AWidget,AMode);
   }
 
   void do_widget_set_hint(MIP_Widget* AWidget, const char* AHint) override {
-    if (MListener) MListener->do_widget_set_hint(AWidget,AHint);
+    if (MWidgetListener) MWidgetListener->do_widget_set_hint(AWidget,AHint);
   }
 
 //  void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) override {
-//    if (MListener) MListener->do_widget_set_timer(AWidget,ATime);
+//    if (MWidgetListener) MWidgetListener->do_widget_set_timer(AWidget,ATime);
 //  }
 
   void do_widget_notify(MIP_Widget* AWidget, int32_t AValue) override {
-    if (MListener) MListener->do_widget_notify(AWidget,AValue);
+    if (MWidgetListener) MWidgetListener->do_widget_notify(AWidget,AValue);
   }
 
 };

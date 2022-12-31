@@ -1,4 +1,12 @@
 
-0.1.7
-
+0.1.7 - 30.dec.2023
 * better gui
+
+0.1.8 - 31.dec.2022
+* various
+* colors
+
+0.1.9 -
+* improved waveform drawing
+* preliminary effect widgets (removed effect page/tab)
+* better handling of gui timers & repainting
