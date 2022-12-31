@@ -434,7 +434,7 @@ public: // window listener
 //------------------------------
 
   void do_window_listener_timer() override {
-    MIP_PRINT;
+    //MIP_PRINT;
     if (MEditorListener) MEditorListener->on_editor_timer();
   }
 

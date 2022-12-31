@@ -20,16 +20,6 @@ const char* prob_slices_text[] = {
   "1", "2", "3", "4", "5", "6", "7", "8"
 };
 
-#define SA_BOTAGE_FX_TYPE_COUNT 6
-const char* fx_type_text[SA_BOTAGE_FX_TYPE_COUNT] = {
-  "Off",
-  "Filter",
-  "Delay",
-  "Distortion",
-  "Bitcrusher",
-  "Comb Filter"
-};
-
 //----------------------------------------------------------------------
 
 class sa_botage_MenuWidget
@@ -47,8 +37,6 @@ public:
       menuitem->setTextSize(9);
       menuitem->setTextColor(0);
       menuitem->setBackgroundColor(0.5);
-      //menuitem->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
-      //menuitem->setTextSize(-0.7);
     }
   }
 };
@@ -74,7 +62,6 @@ private:
   MIP_PagesWidget*            MPages            = nullptr;
 
   MIP_ButtonWidget*           prob_page_button  = nullptr;
-  //MIP_ButtonWidget*           fx_page_button    = nullptr;
   MIP_ButtonWidget*           seq_page_button   = nullptr;
   MIP_ButtonWidget*           perf_page_button  = nullptr;
 
@@ -114,13 +101,11 @@ private:
   MIP_DualSliderWidget*       MRangeSizeValueWidget     = nullptr;
   MIP_DualSliderWidget*       MRangeSpeedValueWidget    = nullptr;
   MIP_DualSliderWidget*       MRangeOffsetValueWidget   = nullptr;
-//MIP_DualSliderWidget*       MRangeReverseValueWidget  = nullptr;
   MIP_DualSliderWidget*       MRangeFXValueWidget       = nullptr;
 
   MIP_DualSliderWidget*       MLoopSizeValueWidget      = nullptr;
   MIP_DualSliderWidget*       MLoopSpeedValueWidget     = nullptr;
   MIP_DualSliderWidget*       MLoopOffsetValueWidget    = nullptr;
-//MIP_DualSliderWidget*       MLoopReverseValueWidget   = nullptr;
   MIP_DualSliderWidget*       MLoopFXValueWidget        = nullptr;
 
 //------------------------------
@@ -200,7 +185,6 @@ public:
     // beats
 
     MNumBeatsWidget = new MIP_DragValueWidget( MIP_DRect(10,330,110,16),"Beats");
-    //MNumBeatsWidget = new MIP_DragValueWidget( MIP_DRect(255,90,103,16),"Beats");
     MRootWidget->appendChildWidget(MNumBeatsWidget);
     MNumBeatsWidget->setFillBackground(true);
     MNumBeatsWidget->setBackgroundColor( 0.5 );
@@ -216,7 +200,6 @@ public:
     // slices
 
     MNumSlicesWidget = new MIP_DragValueWidget( MIP_DRect(130,330,110,16),"Slices");
-    //MNumSlicesWidget = new MIP_DragValueWidget( MIP_DRect(255,111,103,16),"Slices");
     MRootWidget->appendChildWidget(MNumSlicesWidget);
     MNumSlicesWidget->setFillBackground(true);
     MNumSlicesWidget->setBackgroundColor( 0.5 );
@@ -232,7 +215,6 @@ public:
     // loop env
 
     MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(10,356,110,16), "L ms", 0.1, 0.9 );
-    //MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(255,132,103,16), "L ms", 0.1, 0.9 );
     MRootWidget->appendChildWidget(env1_slider);
     env1_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     env1_slider->setHint("Loop Envelope");
@@ -251,7 +233,6 @@ public:
     // slice env
 
     MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(130,356,110,16), "S %", 0.1, 0.9 );
-    //MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(255,153,103,16), "S %", 0.1, 0.9 );
     MRootWidget->appendChildWidget(env2_slider);
     env2_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     env2_slider->setHint("Slice envelope");
@@ -278,16 +259,7 @@ public:
     prob_page_button->setTextSize(10);
     prob_page_button->setTextColor(0.6);
 
-//    fx_page_button = new MIP_ButtonWidget(MIP_DRect(275,5,30,15), "FX",0);
-//    MRootWidget->appendChildWidget(fx_page_button);
-//    fx_page_button->setHint("Effects");
-//    fx_page_button->setFillBackground(true);
-//    fx_page_button->setBackgroundColor(0.25);
-//    fx_page_button->setDrawBorder(false);
-//    fx_page_button->setTextSize(10);
-//    fx_page_button->setTextColor(0.6);
-
-    seq_page_button = new MIP_ButtonWidget(MIP_DRect(275/*310*/,5,30,15), "Seq",0);
+    seq_page_button = new MIP_ButtonWidget(MIP_DRect(275,5,30,15), "Seq",0);
     MRootWidget->appendChildWidget(seq_page_button);
     seq_page_button->setHint("Sequence");
     seq_page_button->setFillBackground(true);
@@ -296,7 +268,7 @@ public:
     seq_page_button->setTextSize(10);
     seq_page_button->setTextColor(0.6);
 
-    perf_page_button = new MIP_ButtonWidget(MIP_DRect(310/*345*/,5,30,15), "Perf",0);
+    perf_page_button = new MIP_ButtonWidget(MIP_DRect(310,5,30,15), "Perf",0);
     MRootWidget->appendChildWidget(perf_page_button);
     perf_page_button->setHint("Perform");
     perf_page_button->setFillBackground(true);
@@ -305,23 +277,20 @@ public:
     perf_page_button->setTextSize(10);
     perf_page_button->setTextColor(0.6);
 
-    MPages = new MIP_PagesWidget( MIP_DRect(255,90,/*225*/357,292));
+    MPages = new MIP_PagesWidget( MIP_DRect(255,90,357,292));
     MRootWidget->appendChildWidget(MPages);
 
     #include "sa_botage_editor_page_prob.h"
-//    #include "sa_botage_editor_page_fx.h"
     #include "sa_botage_editor_page_seq.h"
     #include "sa_botage_editor_page_perf.h"
 
     MPages->appendPage(page_prob);
-//    MPages->appendPage(page_fx);
     MPages->appendPage(page_seq);
     MPages->appendPage(page_perf);
 
     MPages->setPage(0);
 
     // footer
-
     //double height = ARootWidget->getHeight();
     //sa_botage_footer* footer  = new sa_botage_footer(MIP_DRect(0,(height - SA_BOTAGE_FOOTER_HEIGHT),width,SA_BOTAGE_FOOTER_HEIGHT));
     //ARootWidget->appendChildWidget(footer);
@@ -372,48 +341,29 @@ public:
       MPages->setPage(0);
       MPages->redraw();
       prob_page_button->setBackgroundColor(0.3);
-//      fx_page_button->setBackgroundColor(0.25);
       seq_page_button->setBackgroundColor(0.25);
       perf_page_button->setBackgroundColor(0.25);
       prob_page_button->redraw();
-  //    fx_page_button->redraw();
       seq_page_button->redraw();
       perf_page_button->redraw();
     }
-//    else if (AWidget == fx_page_button)   {
-//      MCurrentPage = 1;
-//      MPages->setPage(1);
-//      MPages->redraw();
-//      prob_page_button->setBackgroundColor(0.25);
-//      fx_page_button->setBackgroundColor(0.3);
-//      seq_page_button->setBackgroundColor(0.25);
-//      perf_page_button->setBackgroundColor(0.25);
-//      prob_page_button->redraw();
-//      fx_page_button->redraw();
-//      seq_page_button->redraw();
-//      perf_page_button->redraw();
-//    }
     else if (AWidget == seq_page_button)  {
-      MCurrentPage = 1;//2;
+      MCurrentPage = 1;
       MPages->setPage(2); MPages->redraw();
       prob_page_button->setBackgroundColor(0.25);
-//      fx_page_button->setBackgroundColor(0.25);
       seq_page_button->setBackgroundColor(0.3);
       perf_page_button->setBackgroundColor(0.25);
       prob_page_button->redraw();
-//      fx_page_button->redraw();
       seq_page_button->redraw();
       perf_page_button->redraw();
     }
     else if (AWidget == perf_page_button) {
-      MCurrentPage = 2;//3;
+      MCurrentPage = 2;
       MPages->setPage(3); MPages->redraw();
       prob_page_button->setBackgroundColor(0.25);
-//      fx_page_button->setBackgroundColor(0.25);
       seq_page_button->setBackgroundColor(0.25);
       perf_page_button->setBackgroundColor(0.3);
       prob_page_button->redraw();
-//      fx_page_button->redraw();
       seq_page_button->redraw();
       perf_page_button->redraw();
     }
@@ -506,7 +456,6 @@ public:
 
   void updateProbIndicators(sa_botage_processor* processor) {
 
-    // only if page is visible
     if (MCurrentPage == 0) {
 
       MMainProbWidget->setIndicatorValue(processor->rnd_main_prob);

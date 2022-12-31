@@ -15,30 +15,43 @@ const clap_plugin_t*            clapplugin      = nullptr;
 MIP_Plugin*                     plugin          = nullptr;
 
 //----------------------------------------------------------------------
-//
-// list plugins
-//
+
+void mip_exe_print_help() {
+  printf("arguments:\n");
+  printf("  -?,-h   this help\n");
+  printf("  -i n    plugin index (default: 0)\n");
+  printf("  -ned    no editor (default: show editor)\n");
+  printf("  -lpl    list plugins\n");
+  printf("  -lpa    list parameters\n");
+  printf("  -lpo    list ports\n");
+}
+
 //----------------------------------------------------------------------
 
-
-  /*
-  MIP_DPrint("  clap_version    %i.%i.%i\n",clapdescriptor->clap_version.major,clapdescriptor->clap_version.minor,clapdescriptor->clap_version.revision);
-  MIP_DPrint("  id              %s\n",clapdescriptor->id);
-  MIP_DPrint("  name            %s\n",clapdescriptor->name);
-  MIP_DPrint("  vendor          %s\n",clapdescriptor->vendor);
-  MIP_DPrint("  url             %s\n",clapdescriptor->url);
-  MIP_DPrint("  manual_url      %s\n",clapdescriptor->manual_url);
-  MIP_DPrint("  support_url     %s\n",clapdescriptor->support_url);
-  MIP_DPrint("  version         %s\n",clapdescriptor->version);
-  MIP_DPrint("  description     %s\n",clapdescriptor->description);
-  MIP_DPrint("  features       ");
-  const char** ptr = clapdescriptor->features;
-  while (*ptr) {
-    MIP_DPrint("%s ",*ptr);
-    ptr += 1;
+bool mip_exe_load_plugin(uint32_t AIndex) {
+  uint32_t num = MIP_REGISTRY.getNumDescriptors();
+  if (AIndex >= num) {
+    printf("error: plugin index (%i) out of bounds (0..%i)\n",AIndex,num-1);
+    return false;
   }
-  MIP_DPrint("\n");
-  */
+  claphost = nullptr; //TODO
+  clapdescriptor = MIP_REGISTRY.getDescriptor(AIndex);
+  plugin = MIP_CreatePlugin(AIndex,clapdescriptor,claphost);
+  clapplugin = plugin->getClapPlugin();
+  plugin->init();
+  return true;
+}
+
+//----------
+
+void mip_exe_unload_plugin() {
+  plugin->stop_processing();
+  plugin->deactivate();
+  plugin->destroy();
+  delete plugin;
+}
+
+//----------------------------------------------------------------------
 
 void mip_exe_list_plugins() {
   uint32_t num = MIP_REGISTRY.getNumDescriptors();
@@ -48,17 +61,76 @@ void mip_exe_list_plugins() {
   }
 }
 
+//----------
+
 void mip_exe_list_parameters(uint32_t index) {
+  if (plugin) {
+    clap_plugin_params_t* params = (clap_plugin_params_t*)plugin->get_extension(CLAP_EXT_PARAMS);
+    if (params) {
+      uint32_t count = params->count(clapplugin);
+      printf("%i parameters:\n",count);
+      for (uint32_t index=0; index<count; index++) {
+        clap_param_info_t info;
+        if (params->get_info(clapplugin,index,&info)) {
+          printf("    %i. [%i] %s [%s] %.2f (%.2f - %.2f) 0x%04x\n", index, info.id, info.name, info.module, info.default_value, info.min_value, info.max_value, info.flags );
+        }
+      }
+    }
+  }
 }
+
+//----------
 
 void mip_exe_list_ports(uint32_t index) {
+  if (plugin) {
+    // audio ports
+    clap_plugin_audio_ports_t* audio_ports = (clap_plugin_audio_ports_t*)plugin->get_extension(CLAP_EXT_AUDIO_PORTS);
+    if (audio_ports) {
+      // audio inputs
+      uint32_t count = audio_ports->count(clapplugin,true);
+      printf("%i audio inputs:\n",count);
+      for (uint32_t index=0; index<count; index++) {
+        clap_audio_port_info_t info;
+        if (audio_ports->get(clapplugin,index,true,&info)) {
+          printf("    %i. [%i] %s %s %i %i 0x%02x\n", index, info.id, info.name, info.port_type, info.channel_count, info.in_place_pair, info.flags );
+        }
+      }
+      // audio outputs
+      count = audio_ports->count(clapplugin,false);
+      printf("%i audio outputs:\n",count);
+      for (uint32_t index=0; index<count; index++) {
+        clap_audio_port_info_t info;
+        if (audio_ports->get(clapplugin,index,false,&info)) {
+          printf("    %i. [%i] %s %s %i %i 0x%02x\n", index, info.id, info.name, info.port_type, info.channel_count, info.in_place_pair, info.flags );
+        }
+      }
+    }
+    // note ports
+    clap_plugin_note_ports_t* note_ports = (clap_plugin_note_ports_t*)plugin->get_extension(CLAP_EXT_NOTE_PORTS);
+    if (note_ports) {
+      // note inputs
+      uint32_t count = note_ports->count(clapplugin,true);
+      printf("%i note inputs:\n",count);
+      for (uint32_t index=0; index<count; index++) {
+        clap_note_port_info_t info;
+        if (note_ports->get(clapplugin,index,true,&info)) {
+          printf("    %i. [%i] %s 0x%02x 0x%02x\n", index, info.id, info.name, info.preferred_dialect, info.supported_dialects );
+        }
+      }
+      // note outputs
+      count = note_ports->count(clapplugin,false);
+      printf("%i note outputs:\n",count);
+      for (uint32_t index=0; index<count; index++) {
+        clap_note_port_info_t info;
+        if (note_ports->get(clapplugin,index,false,&info)) {
+          printf("    %i. [%i] %s 0x%02x 0x%02x\n", index, info.id, info.name, info.preferred_dialect, info.supported_dialects );
+        }
+      }
+    }
+  }
 }
 
 
-//----------------------------------------------------------------------
-//
-// open editor
-//
 //----------------------------------------------------------------------
 
 void mip_exe_open_editor() {
@@ -102,64 +174,29 @@ void mip_exe_open_editor() {
 
 //----------------------------------------------------------------------
 //
-// load plugin
-//
-//----------------------------------------------------------------------
-
-int mip_exe_load_plugin(uint32_t AIndex) {
-  uint32_t num = MIP_REGISTRY.getNumDescriptors();
-  if (AIndex >= num) {
-    printf("error: plugin index (%i) out of bounds (0..%i)\n",AIndex,num-1);
-    return -1;
-  }
-  claphost = nullptr; //TODO
-  clapdescriptor = MIP_REGISTRY.getDescriptor(AIndex);
-  plugin = MIP_CreatePlugin(AIndex,clapdescriptor,claphost);
-  clapplugin = plugin->getClapPlugin();
-  plugin->init();
-  plugin->activate(44100,256,1024);
-  plugin->start_processing();
-
-  if (arguments.hasOption("-ned") == false) {
-    mip_exe_open_editor();
-  }
-
-  plugin->stop_processing();
-  plugin->deactivate();
-  plugin->destroy();
-  delete plugin;
-  return 0;
-}
-
-//----------------------------------------------------------------------
-//
 // main
 //
 //----------------------------------------------------------------------
 
-
 int main(int argc, char** argv) {
-  int result = 0;
   arguments.init(argc,argv);
-
   int index = arguments.getArgInt("-i");
-
-  if ( arguments.hasOption("-?") || arguments.hasOption("-h") ) {
-    printf("arguments:\n");
-    printf("  -?,-h   this help\n");
-    printf("  -i n    plugin index (default: 0)\n");
-    printf("  -ned    no editor (default: show editor)\n");
-    printf("  -lpl    list plugins\n");
-    printf("  -lpa    list parameters\n");
-    printf("  -lpo    list ports\n");
-  }
-
+  if      (arguments.hasOption("-?"  )) mip_exe_print_help();
+  else if (arguments.hasOption("-h"  )) mip_exe_print_help();
   else if (arguments.hasOption("-lpl")) mip_exe_list_plugins();
-  else if (arguments.hasOption("-lpa")) mip_exe_list_parameters(index);
-  else if (arguments.hasOption("-lpa")) mip_exe_list_ports(index);
-  else result = mip_exe_load_plugin(index);
-
-  return result;
+  else {
+    bool result = mip_exe_load_plugin(index);
+    if (result) {
+      if (arguments.hasOption("-lpa")) mip_exe_list_parameters(index);
+      if (arguments.hasOption("-lpo")) mip_exe_list_ports(index);
+      plugin->activate(44100,256,1024);
+      plugin->start_processing();
+      bool with_gui = !arguments.hasOption("-ned");
+      if (with_gui) mip_exe_open_editor();
+      mip_exe_unload_plugin();
+    }
+  }
+  return 0;
 }
 
 //----------------------------------------------------------------------

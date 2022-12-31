@@ -5,6 +5,8 @@
 #include "base/mip.h"
 //#include "sa_botage_params.h"
 
+#include "audio/old/filters/mip_svf_filter.h"
+
 //----------------------------------------------------------------------
 
 #define BUFFER_SIZE       (1024 * 1024 * 16)
@@ -116,6 +118,36 @@ private:
   double    par_prob_fx_min_loop        = 0.0;
   double    par_prob_fx_max_loop        = 0.0;
 
+  double    par_fx1_prob                = 0.0;
+  uint32_t  par_fx1_type                = 0.0;
+  double    par_fx1_par1                = 0.0;
+  double    par_fx1_par2                = 0.0;
+  double    par_fx1_par3                = 0.0;
+
+  double    par_fx2_prob                = 0.0;
+  uint32_t  par_fx2_type                = 0.0;
+  double    par_fx2_par1                = 0.0;
+  double    par_fx2_par2                = 0.0;
+  double    par_fx2_par3                = 0.0;
+
+  double    par_fx3_prob                = 0.0;
+  uint32_t  par_fx3_type                = 0.0;
+  double    par_fx3_par1                = 0.0;
+  double    par_fx3_par2                = 0.0;
+  double    par_fx3_par3                = 0.0;
+
+  double    par_fx4_prob                = 0.0;
+  uint32_t  par_fx4_type                = 0.0;
+  double    par_fx4_par1                = 0.0;
+  double    par_fx4_par2                = 0.0;
+  double    par_fx4_par3                = 0.0;
+
+  double    par_fx5_prob                = 0.0;
+  uint32_t  par_fx5_type                = 0.0;
+  double    par_fx5_par1                = 0.0;
+  double    par_fx5_par2                = 0.0;
+  double    par_fx5_par3                = 0.0;
+
 //------------------------------
 private:
 //------------------------------
@@ -148,6 +180,10 @@ private:
   double rnd_loop_reverse_value   = 0.0;
   double rnd_loop_fx_value        = 0.0;
 
+  //double fx_loop_value           = 0.0;
+  //double fx_range_value          = 0.0;
+  double fx_rnd_value           = 0.0;
+
   //
 
   bool rnd_slice_on             = false;
@@ -163,6 +199,13 @@ private:
   bool rnd_loop_offset_on       = false;
   bool rnd_loop_reverse_on      = false;
   bool rnd_loop_fx_on           = false;
+
+//------------------------------
+private:
+//------------------------------
+
+  MIP_SvfFilter   MFilter0  = {};
+  MIP_SvfFilter   MFilter1  = {};
 
 //------------------------------
 public:
@@ -203,10 +246,10 @@ public:
       case PAR_LOOP_ENV_DECAY           : par_loop_env_decay          = 25.0 - value; break;
       case PAR_SLICE_ENV_ATTACK         : par_slice_env_attack        = value; break;
       case PAR_SLICE_ENV_DECAY          : par_slice_env_decay         = 1.0 - value; break;
-      case PAR_FX_FILTER_PROB           : par_fx_filter_prob          = value; break;
-      case PAR_FX_FILTER_TYPE           : par_fx_filter_type          = value; break;
-      case PAR_FX_FILTER_FREQ           : par_fx_filter_freq          = value; break;
-      case PAR_FX_FILTER_BW             : par_fx_filter_bw            = value; break;
+      //case PAR_FX_FILTER_PROB           : par_fx_filter_prob          = value; break;
+      //case PAR_FX_FILTER_TYPE           : par_fx_filter_type          = value; break;
+      //case PAR_FX_FILTER_FREQ           : par_fx_filter_freq          = value; break;
+      //case PAR_FX_FILTER_BW             : par_fx_filter_bw            = value; break;
       case PAR_PROB_SIZE_PROB_RANGE     : par_prob_size_prob_range    = value; break;
       case PAR_PROB_SIZE_MIN_RANGE      : par_prob_size_min_range     = value; break;
       case PAR_PROB_SIZE_MAX_RANGE      : par_prob_size_max_range     = value; break;
@@ -233,6 +276,37 @@ public:
       case PAR_PROB_FX_PROB_LOOP        : par_prob_fx_prob_loop       = value; break;
       case PAR_PROB_FX_MIN_LOOP         : par_prob_fx_min_loop        = value; break;
       case PAR_PROB_FX_MAX_LOOP         : par_prob_fx_max_loop        = value; break;
+
+      case PAR_FX1_PROB                 : par_fx1_prob                = value; break;
+      case PAR_FX1_TYPE                 : par_fx1_type                = value; break;
+      case PAR_FX1_PAR1                 : par_fx1_par1                = value; break;
+      case PAR_FX1_PAR2                 : par_fx1_par2                = value; break;
+      case PAR_FX1_PAR3                 : par_fx1_par3                = value; break;
+
+      case PAR_FX2_PROB                 : par_fx2_prob                = value; break;
+      case PAR_FX2_TYPE                 : par_fx2_type                = value; break;
+      case PAR_FX2_PAR1                 : par_fx2_par1                = value; break;
+      case PAR_FX2_PAR2                 : par_fx2_par2                = value; break;
+      case PAR_FX2_PAR3                 : par_fx2_par3                = value; break;
+
+      case PAR_FX3_PROB                 : par_fx3_prob                = value; break;
+      case PAR_FX3_TYPE                 : par_fx3_type                = value; break;
+      case PAR_FX3_PAR1                 : par_fx3_par1                = value; break;
+      case PAR_FX3_PAR2                 : par_fx3_par2                = value; break;
+      case PAR_FX3_PAR3                 : par_fx3_par3                = value; break;
+
+      case PAR_FX4_PROB                 : par_fx4_prob                = value; break;
+      case PAR_FX4_TYPE                 : par_fx4_type                = value; break;
+      case PAR_FX4_PAR1                 : par_fx4_par1                = value; break;
+      case PAR_FX4_PAR2                 : par_fx4_par2                = value; break;
+      case PAR_FX4_PAR3                 : par_fx4_par3                = value; break;
+
+      case PAR_FX5_PROB                 : par_fx5_prob                = value; break;
+      case PAR_FX5_TYPE                 : par_fx5_type                = value; break;
+      case PAR_FX5_PAR1                 : par_fx5_par1                = value; break;
+      case PAR_FX5_PAR2                 : par_fx5_par2                = value; break;
+      case PAR_FX5_PAR3                 : par_fx5_par3                = value; break;
+
     }
   }
 
@@ -373,6 +447,8 @@ public:
         out0 *= env;
         out1 *= env;
 
+        handleEffects(&out0,&out1);
+
         // finat output
 
         *audioout0++ = out0;
@@ -509,6 +585,9 @@ private:
     rnd_main_slices = num_slices;
     rnd_main_subdiv = num_loops;
 
+    MFilter0.reset();
+    MFilter1.reset();
+
   }
 
   //----------
@@ -518,11 +597,13 @@ private:
   */
 
   void endRange() {
-    MRange = false;
-    MLoop = false;
-    MPrevSlice = -1;
-    MReadPos = MWritePos;
-    MReadSpeed = 1.0;
+    MRange          = false;
+    MLoop           = false;
+    MPrevSlice      = -1;
+    MReadPos        = MWritePos;
+    MReadSpeed      = 1.0;
+    rnd_range_fx_on = false;
+    //fx_rnd_value    = 1.0;
   }
 
 //------------------------------
@@ -536,12 +617,12 @@ private:
 
   void handleLoopStarting() {
 
-    rnd_range_size_on = false;
-    rnd_range_speed_on = false;
-    rnd_range_offset_on = false;
-    rnd_range_reverse_on = false;
-
-    //float rnd = 0.0;
+    rnd_range_size_on     = false;
+    rnd_range_speed_on    = false;
+    rnd_range_offset_on   = false;
+    rnd_range_reverse_on  = false;
+    rnd_range_fx_on       = false;
+    //fx_rnd_value          = 1.0;
 
     // size
     rnd_range_size = MIP_Random();
@@ -601,10 +682,11 @@ private:
     if (rnd_range_fx < par_prob_fx_prob_range) {
       rnd_range_fx_on = true;
       rnd_range_fx_value = MIP_Random();
-      //double s = par_prob_fx_max_range - par_prob_fx_min_range;
-      //s *= rnd_range_fx_value;
-      //s += par_prob_fx_min_range;
-      //float n = powf(0.5,-s);
+      double s = par_prob_fx_max_range - par_prob_fx_min_range;
+      s *= rnd_range_fx_value;
+      s += par_prob_fx_min_range;
+      float n = powf(0.5,-s);
+      fx_rnd_value = n;
       //MLoopLength *= n;
       //MLoopLength = MIP_MaxI(MLoopLength,MIN_LOOP_LENGTH);
     }
@@ -629,10 +711,12 @@ private:
 
     //float rnd = 0.0;
 
-    rnd_loop_size_on = false;
-    rnd_loop_speed_on = false;
-    rnd_loop_offset_on = false;
+    rnd_loop_size_on    = false;
+    rnd_loop_speed_on   = false;
+    rnd_loop_offset_on  = false;
     rnd_loop_reverse_on = false;
+    rnd_loop_fx_on      = false;
+    //fx_rnd_value        = 1.0;
 
     // size
     rnd_loop_size = MIP_Random();
@@ -691,10 +775,12 @@ private:
     if (rnd_loop_fx < par_prob_fx_prob_loop) {
       rnd_loop_fx_on = true;
       rnd_loop_fx_value = MIP_Random();
-      //double s = par_prob_fx_max_loop - par_prob_fx_min_loop;
-      //s *= rnd_loop_fx_value;
-      //s += par_prob_fx_min_loop;
-      //float n = powf(0.5,-s);
+      double s = par_prob_fx_max_loop - par_prob_fx_min_loop;
+      s *= rnd_loop_fx_value;
+      s += par_prob_fx_min_loop;
+      float n = powf(0.5,-s);
+      fx_rnd_value *= n;
+      //MIP_Print("rnd_fx_value: %.3f\n",rnd_loop_value);
       //MLoopLength *= n;
       //MLoopLength = MIP_MaxI(MLoopLength,MIN_LOOP_LENGTH);
     }
@@ -742,6 +828,58 @@ private:
     }
 
     return env;
+  }
+
+//------------------------------
+private:
+//------------------------------
+
+  void process_effect(uint32_t type, double par1, double par2, double par3, float* in0, float* in1) {
+    switch (type) {
+      case FX_OFF: {
+        break;
+      }
+      case FX_FILTER: {
+        double freq = MIP_Clamp(par1 * fx_rnd_value, 0,1);
+        double bw   = par2;//MIP_Clamp(par2, 0,1);
+        freq  = MIP_Curve(freq,0.2);
+        //bw    = 1.0 - bw;
+        bw    = 1.0 - MIP_Curve(bw,0.9);
+        MFilter0.setMode(1); // lp
+        MFilter0.setFreq(freq);
+        MFilter0.setBW(bw);
+        MFilter1.setMode(1); // lp
+        MFilter1.setFreq(freq);
+        MFilter1.setBW(bw);
+        *in0 = MFilter0.process(*in0);
+        *in1 = MFilter1.process(*in1);
+        break;
+      }
+      case FX_DELAY: {
+        break;
+      }
+      case FX_DISTORTION: {
+        break;
+      }
+      case FX_BITCRUSHER: {
+        break;
+      }
+      case FX_COMBFILTER: {
+        break;
+      }
+    } // switch
+  }
+
+  //----------
+
+  void handleEffects(float* in0, float* in1) {
+    if (rnd_range_fx_on) {
+      process_effect(par_fx1_type,par_fx1_par1,par_fx1_par2,par_fx1_par3,in0,in1);
+      process_effect(par_fx2_type,par_fx2_par1,par_fx2_par2,par_fx2_par3,in0,in1);
+      process_effect(par_fx3_type,par_fx3_par1,par_fx3_par2,par_fx3_par3,in0,in1);
+      process_effect(par_fx4_type,par_fx4_par1,par_fx4_par2,par_fx4_par3,in0,in1);
+      process_effect(par_fx5_type,par_fx5_par1,par_fx5_par2,par_fx5_par3,in0,in1);
+    }
   }
 
 };

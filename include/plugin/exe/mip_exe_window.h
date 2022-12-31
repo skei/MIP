@@ -27,14 +27,6 @@ public:
   : MIP_ImplementedWindow(AWidth,AHeight) {
     plugin = APlugin;
     gui = AGui;
-    setTitle("MIP_ExeWindow");
-    //setWindowFillBackground(true);
-    //setWindowBackgroundColor(0.5);
-  }
-
-  //----------
-
-  virtual ~MIP_ExeWindow() {
   }
 
 //------------------------------
@@ -42,22 +34,7 @@ public:
 //------------------------------
 
   void on_window_resize(int32_t AWidth, int32_t AHeight) override {
-
-    // TODO:
-    // can_resize
-    // adjust_size
-    // etc..
-
-//    if (MModalWidget) {
-//      MModalWidget->on_widget_cancel(0);
-//    }
-
-    // can we safely do this?
-    //MWindow->on_window_resize(AWidth,AHeight);
-
-    // let our plugin know..
     gui->set_size(plugin,AWidth,AHeight);
-
   }
 
 };

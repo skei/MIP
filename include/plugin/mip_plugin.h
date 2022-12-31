@@ -216,7 +216,7 @@ public: // plugin
     if (strcmp(id,CLAP_EXT_AUDIO_PORTS)         == 0) return &MAudioPorts;
     if (strcmp(id,CLAP_EXT_CHECK_FOR_UPDATE)    == 0) return &MCheckForUpdate;  // draft
     if (strcmp(id,CLAP_EXT_CV)                  == 0) return &MCV;              // draft
-    if (strcmp(id,CLAP_EXT_FILE_REFERENCE)      == 0) return &MFileReference;   // draft
+    //if (strcmp(id,CLAP_EXT_FILE_REFERENCE)      == 0) return &MFileReference;   // draft
     #ifndef MIP_NO_GUI
     if (strcmp(id,CLAP_EXT_GUI)                 == 0) return &MGui;
     #endif
@@ -226,7 +226,7 @@ public: // plugin
     if (strcmp(id,CLAP_EXT_NOTE_PORTS)          == 0) return &MNotePorts;
     if (strcmp(id,CLAP_EXT_PARAMS)              == 0) return &MParams;
     if (strcmp(id,CLAP_EXT_PRESET_LOAD)         == 0) return &MPresetLoad;      // draft
-    if (strcmp(id,CLAP_EXT_QUICK_CONTROLS)      == 0) return &MQuickControls;   // draft
+    //if (strcmp(id,CLAP_EXT_QUICK_CONTROLS)      == 0) return &MQuickControls;   // draft
     if (strcmp(id,CLAP_EXT_RENDER)              == 0) return &MRender;
     if (strcmp(id,CLAP_EXT_STATE)               == 0) return &MState;
     if (strcmp(id,CLAP_EXT_SURROUND)            == 0) return &MSurround;        // draft
@@ -327,6 +327,8 @@ public: // draft cv
 public: // draft file-reference
 //------------------------------
 
+  /*
+
   uint32_t file_reference_count() override {
     return 0;
   }
@@ -360,6 +362,8 @@ public: // draft file-reference
   bool file_reference_save_resources() override {
     return false;
   }
+
+  */
 
 //------------------------------
 public: // ext gui
@@ -682,6 +686,8 @@ public: // draft preset-load
 public: // draft quick-controls
 //------------------------------
 
+  /*
+
   uint32_t quick_controls_count() override {
     return 1;
   }
@@ -700,6 +706,8 @@ public: // draft quick-controls
     }
     return false;
   }
+
+  */
 
 //------------------------------
 public: // ext render

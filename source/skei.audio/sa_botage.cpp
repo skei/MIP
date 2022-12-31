@@ -62,7 +62,7 @@ public:
   sa_botage_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
     setInitialEditorSize(SA_BOTAGE_EDITOR_WIDTH,SA_BOTAGE_EDITOR_HEIGHT);
-    MIP_PRINT;
+    //MIP_PRINT;
   }
 
 //------------------------------
@@ -124,7 +124,7 @@ public:
 //------------------------------
 
   void on_editor_timer() override {
-    MIP_PRINT;
+    //MIP_PRINT;
     if (MEditor && MEditor->isEditorOpen()) {
       sa_botage_editor* editor = (sa_botage_editor*)MEditor;
       editor->updateWaveformWidget(&MProcessor);

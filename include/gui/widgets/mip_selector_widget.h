@@ -50,6 +50,13 @@ public:
 public:
 //------------------------------
 
+  virtual void setDrawArrow(bool ADraw=true)    { MDrawArrow = ADraw; }
+  virtual void setArrowColor(MIP_Color AColor)  { MArrowColor = AColor; }
+
+//------------------------------
+public:
+//------------------------------
+
   void setValue(double AValue) override {
     MIP_Widget::setValue(AValue);
     MSelected = AValue;
@@ -94,6 +101,30 @@ public:
     }
   }
 
+//------------------------------
+public:
+//------------------------------
+
+  //TODO: proportional positions, not pixels..
+  // or better, MIP_SymbolWidget
+
+  virtual void drawArrow(MIP_PaintContext* AContext) {
+    MIP_DRect mrect = getRect();
+    if (MDrawArrow) {
+      MIP_Painter* painter = AContext->painter;
+      //MIP_DRect rect = MRect;
+      //rect.shrink(2);
+      //painter->fontSize(MTextSize);
+      double x1 = mrect.x2() - 2 - 8;
+      double x2 = x1 + 4;
+      double x3 = x1 + 8;
+      double y1 = mrect.y2() - 5 - 6;
+      double y2 = y1 + 6;
+      painter->setFillColor(MArrowColor);
+      double coords[6] = { x1,y1, x3,y1, x2,y2 };
+      painter->fillLineStrip(3,coords);
+    }
+  }
 
 //------------------------------
 public: // parent to child
@@ -126,38 +157,6 @@ public: // parent to child
     drawText(AContext);
     drawArrow(AContext);
     drawBorder(AContext);
-  }
-
-
-
-//------------------------------
-public:
-//------------------------------
-
-  //TODO: proportional positions, not pixels..
-  // or better, MIP_SymbolWidget
-
-  virtual void drawArrow(MIP_PaintContext* AContext) {
-//    MIP_DRect mrect = getRect();
-    if (MDrawArrow) {
-//      MIP_Painter* painter = AContext->painter;
-      //MIP_DRect rect = MRect;
-      //rect.shrink(2);
-      //painter->fontSize(MTextSize);
-//      double x1 = mrect.x2() - 5 - 6;
-//      double x2 = x1 + 3;
-//      double x3 = x1 + 6;
-//      double y1 = mrect.y2() - 5 - 5;
-//      double y2 = y1 + 5;
-//      painter->beginPath();
-//      //painter->drawTextBox(rect,MText,MTextAlignment,MTextColor);
-//      painter->moveTo(x1,y1);
-//      painter->lineTo(x3,y1);
-//      painter->lineTo(x2,y2);
-//      painter->closePath();
-//      painter->fillColor(MArrowColor);
-//      painter->fill();
-    }
   }
 
 };

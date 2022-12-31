@@ -26,7 +26,7 @@
 //#define MIP_WINDOW_TIMER_MS 20
 //#define MIP_WINDOW_TIMER_ID 123
 
-#define MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
+//#define MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
 
 //----------------------------------------------------------------------
 //
@@ -198,7 +198,7 @@ private:
   */
 
   void queueDirtyRect(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) {
-    MIP_PRINT;
+    //MIP_PRINT;
     MIP_IRect rect = {AXpos,AYpos,AWidth,AHeight };
     MDirtyRectsQueue.write(rect);
   }
@@ -206,7 +206,7 @@ private:
   //----------
 
   void flushDirtyRects() {
-    MIP_PRINT;
+    //MIP_PRINT;
     MIP_IRect final_rect = {0};
     MIP_IRect dirty_rect = {0};
     while ( MDirtyRectsQueue.read(&dirty_rect) ) {
@@ -241,10 +241,10 @@ public:
 
   void open() override {
     MIP_ImplementedWindow::open();
-    #ifdef MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
-      MIP_PRINT;
+    //#ifdef MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
+      //MIP_PRINT;
       startTimer(MIP_WINDOW_TIMER_MS,MIP_WINDOW_TIMER_ID);
-    #endif
+    //#endif
     if (MRootWidget) MRootWidget->open(this);
   }
 
@@ -254,10 +254,10 @@ public:
 
   void close() override {
     if (MRootWidget) MRootWidget->close(this);  // crash...
-    #ifdef MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
-      MIP_PRINT;
+    //#ifdef MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
+     // MIP_PRINT;
       stopTimer(MIP_WINDOW_TIMER_ID);
-    #endif
+    //#endif
     MIP_ImplementedWindow::close();
   }
 
@@ -462,9 +462,9 @@ public: // window
   void on_window_timer() override {
     //MIP_PRINT;
     if (MWindowListener) MWindowListener->do_window_listener_timer();
-    #ifdef MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
+    //#ifdef MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
       flushDirtyRects();
-    #endif
+    //#endif
   }
 
 //------------------------------

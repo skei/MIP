@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "../plugin.h"
 #include "../string-sizes.h"
@@ -73,6 +73,41 @@
 ///   - if a parameter is gone or is created with an id that may have been used before,
 ///     call clap_host_params.clear(host, param_id, CLAP_PARAM_CLEAR_ALL)
 ///   - call clap_host_params->rescan(CLAP_PARAM_RESCAN_ALL)
+///
+/// CLAP allows the plugin to change the parameter range, yet the plugin developper
+/// should be aware that doing so isn't without risk, especially if you made the
+/// promise to never change the sound. If you want to be 100% certain that the
+/// sound will not change with all host, then simply never change the range.
+///
+/// There are two approaches to automations, either you automate the plain value,
+/// or you automate the knob position. The first option will be robust to a range
+/// increase, while the second won't be.
+///
+/// If the host goes with the second approach (automating the knob position), it means
+/// that the plugin is hosted in a relaxed environment regarding sound changes (they are
+/// accepted, and not a concern as long as they are reasonable). Though, stepped parameters
+/// should be stored as plain value in the document.
+///
+/// If the host goes with the first approach, there will still be situation where the
+/// sound may innevitably change. For example, if the plugin increase the range, there
+/// is an automation playing at the max value and on top of that an LFO is applied.
+/// See the following curve:
+///                                   .
+///                                  . .
+///          .....                  .   .
+/// before: .     .     and after: .     .
+///
+/// Advice for the host:
+/// - store plain values in the document (automation)
+/// - store modulation amount in plain value delta, not in percentage
+/// - when you apply a CC mapping, remember the min/max plain values so you can adjust
+///
+/// Advice for the plugin:
+/// - think carefully about your parameter range when designing your DSP
+/// - avoid shrinking parameter ranges, they are very likely to change the sound
+/// - consider changing the parameter range as a tradeoff: what you improve vs what you break
+/// - if you plan to use adapters for other plugin formats, then you need to pay extra
+///   attention to the adapter requirements
 
 static CLAP_CONSTEXPR const char CLAP_EXT_PARAMS[] = "clap.params";
 
@@ -107,7 +142,7 @@ enum {
    //
    // The host can send live user changes for this parameter regardless of this flag.
    //
-   // If this parameters affect the internal processing structure of the plugin, ie: max delay, fft
+   // If this parameter affects the internal processing structure of the plugin, ie: max delay, fft
    // size, ... and the plugins needs to re-allocate its working buffers, then it should call
    // host->request_restart(), and perform the change once the plugin is re-activated.
    CLAP_PARAM_IS_AUTOMATABLE = 1 << 5,
@@ -150,14 +185,13 @@ typedef uint32_t clap_param_info_flags;
 
 /* This describes a parameter */
 typedef struct clap_param_info {
-   // stable parameter identifier, it must never change.
+   // Stable parameter identifier, it must never change.
    clap_id id;
 
    clap_param_info_flags flags;
 
    // This value is optional and set by the plugin.
-   // Its purpose is to provide a fast access to the
-   // plugin parameter object by caching its pointer.
+   // Its purpose is to provide a fast access to the plugin parameter object by caching its pointer.
    // For instance:
    //
    // in clap_plugin_params.get_info():
@@ -170,32 +204,31 @@ typedef struct clap_param_info {
    //    if (!p) [[unlikely]]
    //       p = findParameter(event->param_id);
    //
-   // where findParameter() is a function the plugin implements
-   // to map parameter ids to internal objects.
+   // where findParameter() is a function the plugin implements to map parameter ids to internal
+   // objects.
    //
    // Important:
-   //  - The cookie is invalidated by a call to
-   //    clap_host_params->rescan(CLAP_PARAM_RESCAN_ALL) or when the plugin is
-   //    destroyed.
-   //  - The host will either provide the cookie as issued or nullptr
-   //    in events addressing parameters.
-   //  - The plugin must gracefully handle the case of a cookie
-   //    which is nullptr.
-   //  - Many plugins will process the parameter events more quickly if the host
-   //    can provide the cookie in a faster time than a hashmap lookup per param
-   //    per event.
+   //  - The cookie is invalidated by a call to clap_host_params->rescan(CLAP_PARAM_RESCAN_ALL) or
+   //    when the plugin is destroyed.
+   //  - The host will either provide the cookie as issued or nullptr in events addressing
+   //    parameters.
+   //  - The plugin must gracefully handle the case of a cookie which is nullptr.
+   //  - Many plugins will process the parameter events more quickly if the host can provide the
+   //    cookie in a faster time than a hashmap lookup per param per event.
    void *cookie;
 
-   // the display name
+   // The display name. eg: "Volume". This does not need to be unique. Do not include the module
+   // text in this. The host should concatenate/format the module + name in the case where showing
+   // the name alone would be too vague.
    char name[CLAP_NAME_SIZE];
 
-   // the module path containing the param, eg:"oscillators/wt1"
-   // '/' will be used as a separator to show a tree like structure.
+   // The module path containing the param, eg: "Oscillators/Wavetable 1".
+   // '/' will be used as a separator to show a tree-like structure.
    char module[CLAP_PATH_SIZE];
 
-   double min_value;     // minimum plain value
-   double max_value;     // maximum plain value
-   double default_value; // default plain value
+   double min_value;     // Minimum plain value
+   double max_value;     // Maximum plain value
+   double default_value; // Default plain value
 } clap_param_info_t;
 
 typedef struct clap_plugin_params {
@@ -203,35 +236,38 @@ typedef struct clap_plugin_params {
    // [main-thread]
    uint32_t(CLAP_ABI *count)(const clap_plugin_t *plugin);
 
-   // Copies the parameter's info to param_info and returns true on success.
+   // Copies the parameter's info to param_info. Returns true on success.
    // [main-thread]
    bool(CLAP_ABI *get_info)(const clap_plugin_t *plugin,
                             uint32_t             param_index,
                             clap_param_info_t   *param_info);
 
-   // Gets the parameter plain value.
+   // Writes the parameter's current value to out_value. Returns true on success.
    // [main-thread]
-   bool(CLAP_ABI *get_value)(const clap_plugin_t *plugin, clap_id param_id, double *value);
+   bool(CLAP_ABI *get_value)(const clap_plugin_t *plugin, clap_id param_id, double *out_value);
 
-   // Formats the display text for the given parameter value.
-   // The host should always format the parameter value to text using this function
-   // before displaying it to the user.
-   // [main-thread]
-   bool(CLAP_ABI *value_to_text)(
-      const clap_plugin_t *plugin, clap_id param_id, double value, char *display, uint32_t size);
+   // Fills out_buffer with a null-terminated UTF-8 string that represents the parameter at the
+   // given 'value' argument. eg: "2.3 kHz". Returns true on success. The host should always use
+   // this to format parameter values before displaying it to the user. [main-thread]
+   bool(CLAP_ABI *value_to_text)(const clap_plugin_t *plugin,
+                                 clap_id              param_id,
+                                 double               value,
+                                 char                *out_buffer,
+                                 uint32_t             out_buffer_capacity);
 
-   // Converts the display text to a parameter value.
+   // Converts the null-terminated UTF-8 param_value_text into a double and writes it to out_value.
+   // Returns true on success. The host can use this to convert user input into a parameter value.
    // [main-thread]
    bool(CLAP_ABI *text_to_value)(const clap_plugin_t *plugin,
                                  clap_id              param_id,
-                                 const char          *display,
-                                 double              *value);
+                                 const char          *param_value_text,
+                                 double              *out_value);
 
    // Flushes a set of parameter changes.
    // This method must not be called concurrently to clap_plugin->process().
    //
    // Note: if the plugin is processing, then the process() call will already achieve the
-   // parameter update (bi-directionnal), so a call to flush isn't required, also be aware
+   // parameter update (bi-directional), so a call to flush isn't required, also be aware
    // that the plugin may use the sample offset in process(), while this information would be
    // lost within flush().
    //
@@ -268,7 +304,9 @@ enum {
    // - some parameters were added or removed.
    // - some parameters had critical changes:
    //   - is_per_note (flag)
+   //   - is_per_key (flag)
    //   - is_per_channel (flag)
+   //   - is_per_port (flag)
    //   - is_readonly (flag)
    //   - is_bypass (flag)
    //   - is_stepped (flag)

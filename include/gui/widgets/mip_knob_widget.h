@@ -85,6 +85,11 @@ public:
     MIP_Painter* painter = AContext->painter;
 
     double value = getValue();
+    MIP_Parameter* param = getParameter();
+    if (param) {
+      value = param->normalizeValue(value);
+    }
+
     double thick  = MArcThickness * S;
     //double bthick = MArcThickness * S * 0.5;
 

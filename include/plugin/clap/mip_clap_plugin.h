@@ -117,16 +117,16 @@ public: // draft
   virtual void                check_for_updates_check(bool include_preview) { }
   virtual bool                cv_get_channel_type(bool is_input, uint32_t port_index, uint32_t channel_index, uint32_t *channel_type) { return false; }
   virtual uint32_t            file_reference_count() { return 0; }
-  virtual bool                file_reference_get(uint32_t index, clap_file_reference_t *file_reference) { return false; }
-  virtual bool                file_reference_get_blake3_digest(clap_id resource_id, uint8_t *digest) { return false; }
-  virtual bool                file_reference_get_file_size(clap_id resource_id, uint64_t *size) { return false; }
-  virtual bool                file_reference_update_path(clap_id resource_id, const char *path) { return false; }
-  virtual bool                file_reference_save_resources() { return false; }
+//  virtual bool                file_reference_get(uint32_t index, clap_file_reference_t *file_reference) { return false; }
+//  virtual bool                file_reference_get_blake3_digest(clap_id resource_id, uint8_t *digest) { return false; }
+//  virtual bool                file_reference_get_file_size(clap_id resource_id, uint64_t *size) { return false; }
+//  virtual bool                file_reference_update_path(clap_id resource_id, const char *path) { return false; }
+//  virtual bool                file_reference_save_resources() { return false; }
   virtual uint32_t            midi_mappings_count() { return 0; }
   virtual bool                midi_mappings_get(uint32_t index, clap_midi_mapping_t *mapping) { return false; }
   virtual bool                preset_load_from_file(const char *path) { return false; }
-  virtual uint32_t            quick_controls_count() { return 0; }
-  virtual bool                quick_controls_get(uint32_t page_index, clap_quick_controls_page_t *page) { return false; }
+//  virtual uint32_t            quick_controls_count() { return 0; }
+//  virtual bool                quick_controls_get(uint32_t page_index, clap_quick_controls_page_t *page) { return false; }
   virtual uint32_t            surround_get_channel_map(bool is_input, uint32_t port_index, uint8_t *channel_map, uint32_t channel_map_capacity) { return 0; }
   virtual void                surround_changed() { }
   virtual void                track_info_changed() { }
@@ -677,6 +677,8 @@ protected:
 private: // draft: file reference
 //------------------------------
 
+  /*
+
   static
   uint32_t clap_plugin_file_reference_count_callback(const clap_plugin_t *plugin) {
     MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
@@ -724,6 +726,8 @@ protected:
     .save_resources     = clap_plugin_file_reference_save_resources_callback
   };
 
+  */
+
 //------------------------------
 private: // draft: midi mappings
 //------------------------------
@@ -767,6 +771,8 @@ protected:
 private: // draft: quick controls
 //------------------------------
 
+  /*
+
   static
   uint32_t clap_plugin_quick_controls_count_callback(const clap_plugin_t *plugin) {
     MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
@@ -785,6 +791,8 @@ protected:
     .count  = clap_plugin_quick_controls_count_callback,
     .get    = clap_plugin_quick_controls_get_callback
   };
+
+  */
 
 //------------------------------
 private: // draft: surround
