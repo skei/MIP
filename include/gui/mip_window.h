@@ -213,10 +213,20 @@ private:
       //invalidate( (rect.x,rect.y,rect.w,rect.h);
       final_rect.combine(dirty_rect);
     }
+
     if (final_rect.isNotEmpty()) {
+
+      /*
+        we invalidate the entire editor window here, to get rid of a partially
+        flashing screen during resizing..
+        (investigate..)
+      */
+
       //MIP_ImplementedWindow::invalidate(final_rect.x,final_rect.y,final_rect.w,final_rect.h);
       MIP_ImplementedWindow::invalidate(0,0,MWindowWidth,MWindowHeight);
+
     }
+
   }
 
 
