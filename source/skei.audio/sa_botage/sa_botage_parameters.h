@@ -8,23 +8,33 @@
 
 //----------------------------------------------------------------------
 
-#define SA_BOTAGE_FX_TYPE_COUNT 6
+#define SA_BOTAGE_FX_TYPE_COUNT 4
 const char* fx_type_text[SA_BOTAGE_FX_TYPE_COUNT] = {
   "Off",
   "Filter",
-  "Delay",
-  "Distortion",
-  "Bitcrusher",
-  "Comb Filter"
+  "Volume",
+  "Pan"
+  //"Delay",
+  //"Distortion",
+  //"Bitcrusher",
+  //"Comb Filter"
 };
 
 enum fx_type_enums {
   FX_OFF = 0,
-  FX_FILTER,
-  FX_DELAY,
-  FX_DISTORTION,
-  FX_BITCRUSHER,
-  FX_COMBFILTER
+  FX_LP_FILTER,
+  FX_VOLUME,
+  FX_PAN,
+  //FX_DELAY,
+  //FX_DISTORTION,
+  //FX_BITCRUSHER,
+  //FX_COMBFILTER
+};
+
+const char* fx_mode_text[3] = {
+  "All",
+  "Multi",
+  "Single"
 };
 
 //----------------------------------------------------------------------

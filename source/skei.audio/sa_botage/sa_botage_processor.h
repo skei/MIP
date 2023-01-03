@@ -839,7 +839,19 @@ private:
       case FX_OFF: {
         break;
       }
-      case FX_FILTER: {
+      case FX_VOLUME: {
+        double v = MIP_Clamp(par1 * fx_rnd_value, 0,1);
+        *in0 *= v;
+        *in1 *= v;
+        break;
+      }
+      case FX_PAN: {
+        double v = MIP_Clamp(par1 * fx_rnd_value, 0,1);
+        *in0 *= (1.0 - v);
+        *in1 *= v;
+        break;
+      }
+      case FX_LP_FILTER: {
         double freq = MIP_Clamp(par1 * fx_rnd_value, 0,1);
         double bw   = par2;//MIP_Clamp(par2, 0,1);
         freq  = MIP_Curve(freq,0.2);
@@ -853,18 +865,6 @@ private:
         MFilter1.setBW(bw);
         *in0 = MFilter0.process(*in0);
         *in1 = MFilter1.process(*in1);
-        break;
-      }
-      case FX_DELAY: {
-        break;
-      }
-      case FX_DISTORTION: {
-        break;
-      }
-      case FX_BITCRUSHER: {
-        break;
-      }
-      case FX_COMBFILTER: {
         break;
       }
     } // switch

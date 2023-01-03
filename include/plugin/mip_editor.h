@@ -215,6 +215,8 @@ public:
 
         if (ARedraw) {
 
+          // tell widget to redraw itself
+          // (send do_widget_redraw to its parent)
           widget->redraw(/*MIP_WIDGET_REDRAW_VALUE*/);
 
 //          MIP_DRect r = widget->getRect();

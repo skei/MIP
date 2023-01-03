@@ -441,6 +441,13 @@
     //
     //------------------------------
 
+    MIP_ButtonRowWidget* fx_mode_buttons = new MIP_ButtonRowWidget( MIP_DRect(499,154,103,10), 3, fx_mode_text, MIP_BUTTON_ROW_SINGLE );
+    page_prob->appendChildWidget(fx_mode_buttons);
+    fx_mode_buttons->selectButton(0);
+    fx_mode_buttons->setTextSize(8);
+    //fx_mode_buttons->setAllowZeroBits(false);
+    //fx_mode_buttons->setValueIsBits(true,8);
+
     // FX 1
 
     MIP_KnobWidget* fx1_knob = new MIP_KnobWidget(MIP_DRect(499,205,33,33),"%", 0.0);
