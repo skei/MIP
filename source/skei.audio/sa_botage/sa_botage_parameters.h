@@ -268,9 +268,9 @@ void sa_botage_init_parameters(MIP_Plugin* APlugin) {
   // ----- effects
 
   APlugin->appendParameter(new MIP_SA_PercentParameter(       "FX1 Prob",             0,          0, 1 ));
-  APlugin->appendParameter(new MIP_TextParameter(             "FX1 Type",             0,          0, SA_BOTAGE_FX_TYPE_COUNT-1, fx_type_text ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX1 Param1",           0,          0, 1 ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX1 Param2",           0,          0, 1 ));
+  APlugin->appendParameter(new MIP_TextParameter(             "FX1 Type",             1,          0, SA_BOTAGE_FX_TYPE_COUNT-1, fx_type_text ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX1 Param1",           0.6,        0, 1 ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX1 Param2",           0.4,        0, 1 ));
   APlugin->appendParameter(new MIP_Parameter(                 "FX1 Param3",           0,          0, 1 ));
 
   APlugin->appendParameter(new MIP_SA_PercentParameter(       "FX2 Prob",             0,          0, 1 ));

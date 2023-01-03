@@ -1,8 +1,20 @@
 #ifndef mip_window_included
 #define mip_window_included
 //----------------------------------------------------------------------
+/*
+
+repainting:
+
+a) WM_PAINT/EXPOSE
+b) timer, 50hz
+c) do_widget update
+
+
+*/
+//----------------------------------------------------------------------
 
 #include "base/mip.h"
+#include "base/system/mip_lock.h"
 #include "gui/mip_paint_context.h"
 #include "gui/mip_widget.h"
 
@@ -61,7 +73,7 @@ private:
   MIP_WindowListener* MWindowListener = nullptr;
 
   //test
-  void* MRenderBuffer = nullptr;
+  //void* MRenderBuffer = nullptr;
 
   /*
   MBackgroundWidget
@@ -92,10 +104,18 @@ private:
 
   int32_t           MCurrentCursor        = MIP_CURSOR_DEFAULT;
 
-  //
-
   //MIP_IRect MDirtyRects[MIP_MAX_DIRTY_RECTS] = {0};
-  MIP_Queue<MIP_IRect,MIP_WINDOW_MAX_DIRTY_RECTS> MDirtyRectsQueue = {};
+  //MIP_Queue<MIP_IRect,MIP_WINDOW_MAX_DIRTY_RECTS> MDirtyRectsQueue = {};
+  MIP_Queue<MIP_Widget*,MIP_WINDOW_MAX_DIRTY_WIDGETS> MDirtyWidgetsQueue = {};
+
+  uint32_t          MDirtyIndex           = 0xffffffff;
+
+  uint32_t          MRenderBufferWidth    = 0;
+  uint32_t          MRenderBufferHeight   = 0;
+  void*             MRenderBuffer         = nullptr;
+
+  //MIP_Lock          MPaintLock            = {};
+
 
 //------------------------------
 protected:
@@ -114,14 +134,39 @@ public:
     MInitialWidth = AWidth;
     MInitialHeight = AHeight;
     MWindowPainter = new MIP_Painter(this);
-//    MRenderBuffer = MWindowPainter->createRenderBuffer(AWidth,AHeight);
+    //MIP_Assert(MWindowPainter);
+    #ifdef MIP_WINDOW_BUFFERED
+    if (MWindowPainter) {
+        MWindowPainter->makeCurrent(0);
+        // we create a buffer equal to the screen-size,
+        // so we never have to resize it.. :-/
+        createRenderBuffer(getScreenWidth(),getScreenHeight());
+        //createRenderBuffer(AWidth,AHeight);
+        MWindowPainter->resetCurrent(0);
+        //MIP_Print("MRenderBuffer %p\n",MRenderBuffer);
+    }
+    else {
+      MIP_Print("Error creating MWindowPainter\n");
+    }
+    #endif
   }
 
   //----------
 
   virtual ~MIP_Window() {
-//    MWindowPainter->deleteRenderBuffer(MRenderBuffer);
+
+//    PaintLock.lock();
+
+    if (MWindowPainter) {
+      #ifdef MIP_WINDOW_BUFFERED
+      deleteRenderBuffer();
+      #endif
+    }
     delete MWindowPainter;
+
+
+//    MPaintLock.unlock();
+
   }
 
 //------------------------------
@@ -131,6 +176,8 @@ public:
   virtual void setWindowListener(MIP_WindowListener* AListener) {
     MWindowListener = AListener;
   }
+
+  //----------
 
   virtual MIP_Widget* getRootWidget() {
     return MRootWidget;
@@ -144,6 +191,12 @@ public:
 
   //----------
 
+  virtual void* getRenderBuffer() {
+    return MRenderBuffer;
+  }
+
+  //----------
+
   virtual double getWindowScale() {
     return MWindowScale;
   }
@@ -151,7 +204,6 @@ public:
   //----------
 
   virtual void setRootWidget(MIP_Widget* AWidget, MIP_WidgetListener* AListener=nullptr) {
-    //MIP_Print("%i,%i\n",AWidget->getWidth(),AWidget->getHeight());
     MRootWidget = AWidget;
     if (AListener) AWidget->setWidgetListener(AListener);
   }
@@ -171,7 +223,6 @@ public:
   //----------
 
   virtual void setInitialSize(uint32_t AWidth, uint32_t AHeight) {
-    //MIP_Print("%i,%i\n",AWidth,AHeight);
     MInitialWidth = AWidth;
     MInitialHeight = AHeight;
   }
@@ -188,71 +239,157 @@ public:
     if (MRootWidget) MRootWidget->scaleChildWidgets(AScale);
   }
 
+  //----------
+
+//  void paint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) {
+//    MWindowPainter->setClip(MIP_DRect(AXpos,AYpos,AWidth,AHeight));
+//    MWindowPainter->setClipRect(MIP_DRect(AXpos,AYpos,AWidth,AHeight));
+//    if (MFillBackground) {
+//      MWindowPainter->setFillColor(MBackgroundColor);
+//      MWindowPainter->fillRect(AXpos,AYpos,AWidth,AHeight);
+//    }
+//    MRootWidget->on_widget_paint(&MPaintContext);
+//    MWindowPainter->resetClip();
+//  }
+
+  //----------
+
+//  void paintWidget(MIP_Widget* AWidget, uint32_t AMode=0) {
+//    MIP_DRect r = AWidget->getRect();
+//    //queueDirtyRect(r.x,r.y,r.w,r.h);
+//    //queueDirtyWidget(AWidget);
+//    invalidate(r.x,r.y,r.w,r.h);
+//  }
+
 //------------------------------
-private:
+public: // buffer
 //------------------------------
 
-  /*
-    is it safe to save an entire rect in the queue?
-    (i think so)
-  */
+  void createRenderBuffer(uint32_t AWidth, uint32_t AHeight) {
 
-  void queueDirtyRect(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) {
-    //MIP_PRINT;
-    MIP_IRect rect = {AXpos,AYpos,AWidth,AHeight };
-    MDirtyRectsQueue.write(rect);
+//    MPaintLock.lock();
+
+    //MIP_Print("AWidth %i AHeight %i\n",AWidth,AHeight);
+    MIP_Assert(MWindowPainter);
+    if (MWindowPainter) {
+      MRenderBufferWidth = AWidth;
+      MRenderBufferHeight = AHeight;
+      MRenderBuffer = MWindowPainter->createRenderBuffer(AWidth,AHeight);
+      //MIP_Print("MRenderBuffer: %p\n",MRenderBuffer);
+      MIP_Assert(MRenderBuffer);
+    }
+
+//    MPaintLock.unlock();
+
   }
 
   //----------
 
-  void flushDirtyRects() {
+  void deleteRenderBuffer() {
     //MIP_PRINT;
-    MIP_IRect final_rect = {0};
-    MIP_IRect dirty_rect = {0};
-    while ( MDirtyRectsQueue.read(&dirty_rect) ) {
-      //invalidate( (rect.x,rect.y,rect.w,rect.h);
-      final_rect.combine(dirty_rect);
+
+//    MPaintLock.lock();
+
+    //MIP_Assert(MWindowPainter);
+    if (MWindowPainter) {
+      MIP_Assert(MRenderBuffer);
+      MWindowPainter->deleteRenderBuffer(MRenderBuffer);
+      MRenderBufferWidth = 0;
+      MRenderBufferHeight = 0;
+      MRenderBuffer = nullptr;
+      //MIP_Print("MRenderBuffer: %p\n",MRenderBuffer);
     }
 
-    if (final_rect.isNotEmpty()) {
-
-      /*
-        we invalidate the entire editor window here, to get rid of a partially
-        flashing screen during resizing..
-        (investigate..)
-      */
-
-      //MIP_ImplementedWindow::invalidate(final_rect.x,final_rect.y,final_rect.w,final_rect.h);
-      MIP_ImplementedWindow::invalidate(0,0,MWindowWidth,MWindowHeight);
-
-    }
+//    MPaintLock.unlock();
 
   }
 
+  //----------
+
+  void resizeRenderBuffer(uint32_t AWidth, uint32_t AHeight) {
+
+//    MPaintLock.lock();
+
+    //MIP_Print("AWidth %i AHeight %i\n",AWidth,AHeight);
+    //MIP_Print("MRenderBufferWidth %i MRenderBufferHeight %i\n",MRenderBufferWidth,MRenderBufferHeight);
+    if ((MRenderBufferWidth == AWidth) && (MRenderBufferHeight == AHeight)) {
+      //MIP_Print("no change in size, returning..\n");
+      return;
+    }
+    //deleteRenderBuffer();
+    void* new_render_buffer = MWindowPainter->createRenderBuffer(AWidth,AHeight);
+    //MIP_Print("new_render_buffer %p\n",new_render_buffer);
+    MWindowPainter->deleteRenderBuffer(MRenderBuffer);
+    //createRenderBuffer(AWidth,AHeight);
+    MRenderBufferWidth = AWidth;
+    MRenderBufferHeight = AHeight;
+    MRenderBuffer = new_render_buffer;
+
+//    MPaintLock.unlock();
+
+  }
+
+//------------------------------
+private: // dirty rects
+//------------------------------
+
+  // called by do_widget_redraw
+  // gui (tweak knob)
+
+  //void queueDirtyRect(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) {
+  void queueDirtyWidget(MIP_Widget* AWidget) {
+    //MIP_IRect rect = {AXpos,AYpos,AWidth,AHeight };
+    //MDirtyRectsQueue.write(rect);
+    MDirtyWidgetsQueue.write(AWidget);
+  }
+
+  //----------
+
+  // called by on_window_timer
+
+  //void flushDirtyRects() {
+  void flushDirtyWidgets() {
+    //MIP_IRect r = {0};
+    //MIP_IRect dr = {0};
+    //while (MDirtyRectsQueue.read(&dr)) r.combine(dr);
+    //if (r.isNotEmpty()) invalidate(0,0,MWindowWidth,MWindowHeight);
+    __MIP_UNUSED MIP_DRect frect = {0};
+    __MIP_UNUSED MIP_DRect wrect = {0};
+    MIP_Widget* widget = nullptr;
+    uint32_t count = 0;
+    while (MDirtyWidgetsQueue.read(&widget)) {
+      wrect = widget->getRect();
+      count += 1;
+      #ifndef MIP_WINDOW_FULL_UPDATE_RECT
+        #ifdef MIP_WINDOW_COMBINE_UPDATE_RECTS
+          frect.combine( wrect );
+        #else
+          invalidate(wrect.x,wrect.y,wrect.w,wrect.h);
+        #endif
+      #endif
+    }
+    if (count > 0) {
+      #ifdef MIP_WINDOW_FULL_UPDATE_RECT
+        invalidate(0,0,MWindowWidth,MWindowHeight);
+      #else
+        #ifdef MIP_WINDOW_COMBINE_UPDATE_RECTS
+          if (frect.isNotEmpty()) {
+            invalidate(frect.x,frect.y,frect.w,frect.h);
+          }
+        #endif
+      #endif
+    }
+  }
 
 //------------------------------
 public:
 //------------------------------
-
-  /*
-    override the real invalidate
-    so we can collect, and update multiple rects regularly (timer)
-  */
-
-  void invalidate(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
-    //MIP_ImplementedWindow::invalidate(AXpos,AYpos,AWidth,AHeight);  // not now..
-    queueDirtyRect(AXpos,AYpos,AWidth,AHeight);                       // save it
-    //flushDirtyRects();                                              // called in on_window_timer()
-  }
-
-  //----------
 
   // we want to start the timer, and tell the rootwidget we're open
 
   void open() override {
     MIP_ImplementedWindow::open();
     //#ifdef MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
-      //MIP_PRINT;
       startTimer(MIP_WINDOW_TIMER_MS,MIP_WINDOW_TIMER_ID);
     //#endif
     if (MRootWidget) MRootWidget->open(this);
@@ -296,16 +433,17 @@ public: // window
   */
 
   void on_window_resize(int32_t AWidth, int32_t AHeight) override {
-    //    exe_window overrides this..
-    //    if (MModalWidget) {
-    //      MModalWidget->on_widget_cancel(0);
+    MIP_PRINT;
+    //    uint32_t w2 = MIP_NextPowerOfTwo(AWidth);
+    //    uint32_t h2 = MIP_NextPowerOfTwo(AHeight);
+    //    if ((w2 =! MWindowWidth) || (h2 =! MWindowHeight)) {
+    //      MIP_Print("TODO: resize buffer: %i, %i\n",w2,h2);
     //    }
+    //
+    //    #ifdef MIP_WINDOW_BUFFERED
+    //      resizeWindowBuffer(AWidth,AHeight);
+    //    #endif
     MWindowPainter->setClipRect(MIP_DRect(0,0,AWidth,AHeight));
-    //double scale = 1.0;
-    //double aspect = (double)AWidth / (double)AHeight;
-    //if (aspect >= MAspectRatio) scale = (double)AHeight / (double)MInitialHeight;
-    //else scale = (double)AWidth / (double)MInitialWidth;
-    //MWindow->setWindowScale(scale);
     if (MInitialWidth > 0) {
       double s = (double)AWidth / (double)MInitialWidth;
       setWindowScale(s);
@@ -318,32 +456,78 @@ public: // window
   //----------
 
   void on_window_paint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
-    MIP_DRect updaterect = MIP_DRect(AXpos,AYpos,AWidth,AHeight);
+    MIP_Assert(MWindowPainter);
+    MIP_DRect r = MIP_DRect(AXpos,AYpos,AWidth,AHeight);
+    //queueDirtyRect(r.x,r.y,r.w,r.h);
 
-    if (MRootWidget) {
-      MPaintContext.painter = MWindowPainter;
-      MPaintContext.updateRect = updaterect;
+//MPaintLock.lock();
 
-//MRenderBuffer = MWindowPainter->createRenderBuffer(AWidth,AHeight);
-//MWindowPainter->selectRenderBuffer(MRenderBuffer);
+//#if 0
 
-      MWindowPainter->beginPaint(0,0,MWindowWidth,MWindowHeight);
-      //MWindowPainter->resetClip();
-      //MWindowPainter->setClipRect(updaterect);
-      MWindowPainter->setClip(updaterect);
-      if (MFillBackground) {
-        MWindowPainter->setFillColor(MBackgroundColor);
-        MWindowPainter->fillRect(AXpos,AYpos,AWidth,AHeight);
-      }
-      //MRootWidget->paintChildWidgets(&MPaintContext);
-      MRootWidget->on_widget_paint(&MPaintContext);
-      //MWindowPainter->resetClip();
-      MWindowPainter->endPaint();
+    #ifdef MIP_WINDOW_BUFFERED
+      MIP_Assert(MRenderBuffer);
+      MWindowPainter->beginPaint(0,0,MWindowWidth,MWindowHeight,0);
 
-//MWindowPainter->selectRenderBuffer(nullptr);
-//MWindowPainter->deleteRenderBuffer(MRenderBuffer);
+      // draw to fbo
 
-    }
+      MWindowPainter->selectRenderBuffer(MRenderBuffer);
+      MWindowPainter->setViewport(0,0,MRenderBufferWidth,MRenderBufferHeight);
+      MWindowPainter->beginFrame(MRenderBufferWidth,MRenderBufferHeight,1.0);
+        MWindowPainter->setClip(MIP_DRect(r.x,r.y,r.w,r.h));
+        MWindowPainter->setClipRect(MIP_DRect(r.x,r.y,r.w,r.h));
+        //if (MFillBackground) {
+        //  MWindowPainter->setFillColor(MBackgroundColor);
+        //  MWindowPainter->fillRect(AXpos,AYpos,AWidth,AHeight);
+        //}
+        MIP_PaintContext pc;
+        pc.painter = MWindowPainter;
+        pc.updateRect = MIP_DRect(r.x,r.y,r.w,r.h);
+        MRootWidget->on_widget_paint(&pc);
+        MWindowPainter->resetClip();
+      MWindowPainter->endFrame();
+
+      // draw fbo to window
+
+      MWindowPainter->selectRenderBuffer(nullptr);
+      MWindowPainter->setViewport(0,0,MWindowWidth,MWindowHeight);
+      MWindowPainter->beginFrame(MWindowWidth,MWindowHeight,1.0);
+        int image = MWindowPainter->getImageFromRenderBuffer(MRenderBuffer);
+        MWindowPainter->setFillImage(image,r.x,r.y,1.0,1.0);
+        MWindowPainter->fillRect(r.x,r.y,r.w,r.h);
+      MWindowPainter->endFrame();
+      MWindowPainter->endPaint(0);
+
+    #else
+
+      // draw to screen
+
+      MWindowPainter->beginPaint(0,0,MWindowWidth,MWindowHeight,0);
+      MWindowPainter->selectRenderBuffer(nullptr);
+      MWindowPainter->setViewport(0,0,MWindowWidth,MWindowHeight);
+      MWindowPainter->beginFrame(MWindowWidth,MWindowHeight,1.0);
+
+        MWindowPainter->setClip(MIP_DRect(r.x,r.y,r.w,r.h));
+        MWindowPainter->setClipRect(MIP_DRect(r.x,r.y,r.w,r.h));
+        //if (MFillBackground) {
+        //  MWindowPainter->setFillColor(MBackgroundColor);
+        //  MWindowPainter->fillRect(AXpos,AYpos,AWidth,AHeight);
+        //}
+        MIP_PaintContext pc;
+        pc.painter = MWindowPainter;
+        pc.updateRect = MIP_DRect(r.x,r.y,r.w,r.h);
+        MRootWidget->on_widget_paint(&pc);
+        MWindowPainter->resetClip();
+
+      MWindowPainter->endFrame();
+
+      //MWindowPainter->beginPaint(0,0,MWindowWidth,MWindowHeight,0);
+      //MWindowPainter->makeCurrent(0);
+
+      MWindowPainter->endPaint(0);
+
+    #endif
+//#endif // 0
+//MPaintLock.unlock();
 
   }
 
@@ -470,11 +654,27 @@ public: // window
   //----------
 
   void on_window_timer() override {
-    //MIP_PRINT;
+
     if (MWindowListener) MWindowListener->do_window_listener_timer();
-    //#ifdef MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
-      flushDirtyRects();
+    if (!MWindowPainter) return;
+
+    #ifdef MIP_WINDOW_BUFFERED
+    if (!MRenderBuffer) return;
+    #endif
+
+    //flushDirtyRects();
+    flushDirtyWidgets();
+
+    //#ifdef MIP_WINDOW_FULL_UPDATE_RECT
+    //  invalidate(0,0,MWindowWidth,MWindowHeight);
+    //#else
+    //  //flushDirtyRects();
+    //  flushDirtyWidgets();
     //#endif
+
+    //#ifdef MIP_WINDOW_BUFFERED
+    //#endif
+
   }
 
 //------------------------------
@@ -482,15 +682,16 @@ public: // widget listener
 //------------------------------
 
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
-    //MIP_PRINT;
   }
 
   //----------
 
   void do_widget_redraw(MIP_Widget* AWidget, uint32_t AMode=0) override {
-    MIP_DRect r = AWidget->getRect();
-    //MIP_Print("%.2f,%.2f - %.2f,%.2f\n",r.x,r.y,r.w,r.h);
-    invalidate(r.x,r.y,r.w,r.h);
+    //paintWidget(AWidget,AMode);
+    //MIP_DRect r = AWidget->getRect();
+    //invalidate(r.x,r.y,r.w,r.h);
+    //queueDirtyRect(r.x,r.y,r.w,r.h);
+    queueDirtyWidget(AWidget);
   }
 
   //----------

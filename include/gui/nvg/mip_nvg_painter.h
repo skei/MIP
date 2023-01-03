@@ -39,6 +39,8 @@ class MIP_NvgPainter
 : public MIP_WglPainter {
 #endif
 
+  //friend class MIP_GlxPainter;
+
 //------------------------------
 private:
 //------------------------------
@@ -54,6 +56,10 @@ private:
   //int   MIconImage    = 0;
 
   float MTextBounds[4] = {0};
+
+  int32_t MFrameWidth       = 0;
+  int32_t MFrameHeight      = 0;
+  double  MFramePixelRatio  = 0.0;
 
 protected:
 
@@ -72,13 +78,13 @@ public:
   //#ifdef MIP_LINUX
   #ifdef MIP_USE_GLX
   : MIP_GlxPainter(ATarget) {
-    MIP_GlxPainter::makeCurrent();
+    MIP_GlxPainter::makeCurrent(0);
   #endif
 
   //#ifdef MIP_WIN32
   #ifdef MIP_USE_WGL
   : MIP_WglPainter(ATarget) {
-    MIP_WglPainter::makeCurrent();
+    MIP_WglPainter::makeCurrent(0);
   #endif
 
     // create context
@@ -104,11 +110,11 @@ public:
     //#endif
 
     #ifdef MIP_USE_GLX
-      MIP_GlxPainter::resetCurrent();
+      MIP_GlxPainter::resetCurrent(0);
     #endif
 
     #ifdef MIP_USE_WGL
-      MIP_WglPainter::resetCurrent();
+      MIP_WglPainter::resetCurrent(0);
     #endif
 
   }
@@ -422,28 +428,63 @@ public:
 public:
 //------------------------------
 
-  void beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
+//  void beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight, uint32_t AMode) override {
+//    #ifdef MIP_USE_GLX
+//      MIP_GlxPainter::beginPaint(AXpos,AYpos,AWidth,AHeight,AMode);
+//    #endif
+//    #ifdef MIP_USE_WGL
+//      MIP_WglPainter::beginPaint(AXpos,AYpos,AWidth,AHeight,AMode);
+//    #endif
+//    // called in MIP_Window.on_window_paint
+//    //nvgBeginFrame(MContext,AWidth,AHeight,1.0);
+//    //beginFrame(AWidth,AHeight,1.0);
+//  }
+//
+//  //----------
+//
+//  void endPaint(uint32_t AMode) override {
+//    // called in MIP_Window.on_window_paint
+//    //nvgEndFrame(MContext);
+//    //endFrame();
+//    #ifdef MIP_USE_GLX
+//      MIP_GlxPainter::endPaint(AMode);
+//    #endif
+//    #ifdef MIP_USE_WGL
+//      MIP_WglPainter::endPaint(AMode);
+//    #endif
+//  }
 
-    #ifdef MIP_USE_GLX
-      MIP_GlxPainter::beginPaint(AXpos,AYpos,AWidth,AHeight);
-    #endif
-    #ifdef MIP_USE_WGL
-      MIP_WglPainter::beginPaint(AXpos,AYpos,AWidth,AHeight);
-    #endif
-    nvgBeginFrame(MContext,AWidth,AHeight,1.0);
+  //----------
+
+  void beginFrame(int32_t AWidth, int32_t AHeight, double APixelRatio) override {
+    MFrameWidth       = AWidth;
+    MFrameHeight      = AHeight;
+    MFramePixelRatio  = APixelRatio;
+    nvgBeginFrame(MContext,AWidth,AHeight,APixelRatio);
   }
 
   //----------
 
-  void endPaint() override {
+  void endFrame() override {
     nvgEndFrame(MContext);
-    #ifdef MIP_USE_GLX
-      MIP_GlxPainter::endPaint();
-    #endif
-    #ifdef MIP_USE_WGL
-      MIP_WglPainter::endPaint();
-    #endif
   }
+
+
+  //----------
+
+//  void beginTempFrame(int32_t AWidth, int32_t AHeight, double APixelRatio) override {
+//    //nvgEndFrame(MContext);
+//    glViewport(0,0,AWidth,AHeight);
+//    nvgBeginFrame(MContext,AWidth,AHeight,APixelRatio);
+//  }
+//
+//  //----------
+//
+//  void endTempFrame() override {
+//    nvgEndFrame(MContext);
+//    glViewport(0,0,MFrameWidth,MFrameHeight);
+//    nvgBeginFrame(MContext,MFrameWidth,MFrameHeight,MFramePixelRatio);
+//  }
 
 //----------
 //----------
@@ -632,14 +673,26 @@ public:
 
   void* createRenderBuffer(uint32_t AWidth, uint32_t AHeight) override {
     int flags = 0;
-    NVGLUframebuffer* fb = nvgluCreateFramebuffer(MContext,AWidth,AHeight,flags);
-    return fb;
+    //MIP_Print("is_current %i\n",MIsCurrent);
+    //if (MIsCurrent) {
+      NVGLUframebuffer* fb = nvgluCreateFramebuffer(MContext,AWidth,AHeight,flags);
+      //MIP_Print("fb %p\n",fb);
+      return fb;
+    //}
+    //else {
+    //  makeCurrent(0);
+    //  NVGLUframebuffer* fb = nvgluCreateFramebuffer(MContext,AWidth,AHeight,flags);
+    //  resetCurrent(0);
+    //  MIP_Print("fb %p\n",fb);
+    //  return fb;
+    //}
   }
 
   //----------
 
   void deleteRenderBuffer(void* buffer) override {
     NVGLUframebuffer* fb = (NVGLUframebuffer*)buffer;
+    nvgluBindFramebuffer(nullptr);
     nvgluDeleteFramebuffer(fb);
   }
 
@@ -653,6 +706,7 @@ public:
   //----------
 
   int32_t getImageFromRenderBuffer(void* buffer) override {
+    MIP_Assert(buffer);
     NVGLUframebuffer* fb = (NVGLUframebuffer*)buffer;
     return fb->image;
   }

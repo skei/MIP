@@ -287,10 +287,14 @@ private:
 public:
 //------------------------------
 
-  HWND  getHandle(void)     { return MHandle; }
-  HDC   getWinPaintDC(void) { return MWinPaintDC; }
-  HDC   getScreenDC(void)   { return MScreenDC; }
-  HDC   getWindowDC(void)   { return MWindowDC; }
+  HWND  getHandle(void)       { return MHandle; }
+  HDC   getWinPaintDC(void)   { return MWinPaintDC; }
+  HDC   getScreenDC(void)     { return MScreenDC; }
+  HDC   getWindowDC(void)     { return MWindowDC; }
+
+  uint32_t getScreenWidth()   { return MScreenWidth; }
+  uint32_t getScreenHeight()  { return MScreenHeight; }
+  int32_t  getScreenDepth()   { return MScreenDepth; }
 
 //------------------------------
 public:
@@ -1094,16 +1098,14 @@ private: // remap
       case WM_PAINT: {
         //MIP_Print("WM_PAINT\n");
         beginPaint();
-        //MWinPaintDC = BeginPaint(MHandle,&MWinPaintStruct);
-        int32_t x = MWinPaintStruct.rcPaint.left;
-        int32_t y = MWinPaintStruct.rcPaint.top;
-        int32_t w = MWinPaintStruct.rcPaint.right  - MWinPaintStruct.rcPaint.left;// + 1;
-        int32_t h = MWinPaintStruct.rcPaint.bottom - MWinPaintStruct.rcPaint.top;// + 1;
-        //MIP_Print("WM_PAINT x %i y %i w %i h %i\n",x,y,w,h);
-
-        //if (MFillBackground) fill(x,y,w,h,MBackgroundColor);
-
-        on_window_paint(x,y,w,h);
+          //MWinPaintDC = BeginPaint(MHandle,&MWinPaintStruct);
+          int32_t x = MWinPaintStruct.rcPaint.left;
+          int32_t y = MWinPaintStruct.rcPaint.top;
+          int32_t w = MWinPaintStruct.rcPaint.right  - MWinPaintStruct.rcPaint.left;// + 1;
+          int32_t h = MWinPaintStruct.rcPaint.bottom - MWinPaintStruct.rcPaint.top;// + 1;
+          //MIP_Print("WM_PAINT x %i y %i w %i h %i\n",x,y,w,h);
+          //if (MFillBackground) fill(x,y,w,h,MBackgroundColor);
+          on_window_paint(x,y,w,h);
         endPaint();
         //flush();
         //EndPaint(MHandle,&MWinPaintStruct);

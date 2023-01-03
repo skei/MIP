@@ -25,8 +25,8 @@
   #define MIP_ALIGNMENT_SIMD              16
   #define MIP_ALIGNMENT_CACHE             64
   #define MIP_CLIP_RECT_STACK_SIZE        1024
-//  #define MIP_EDITOR_TIMER_MS             30
-//  #define MIP_EDITOR_TIMER_ID             333
+//#define MIP_EDITOR_TIMER_MS             30
+//#define MIP_EDITOR_TIMER_ID             333
   #define MIP_LOGFILE_NAME                "mip.log"
   #define MIP_MAX_PATH_LENGTH             512
   #define MIP_MAX_STRING_LENGTH           256
@@ -36,9 +36,9 @@
   #define MIP_PLUGIN_MAX_PARAM_EVENTS     4096
   #define MIP_PLUGIN_GENERIC_EDITOR_WIDTH 500
   #define MIP_WINDOW_MAX_DIRTY_RECTS      1024
-  #define MIP_WINDOW_TIMER_MS             20
+  #define MIP_WINDOW_MAX_DIRTY_WIDGETS    1024
+  #define MIP_WINDOW_TIMER_MS             30
   #define MIP_WINDOW_TIMER_ID             333
-
 
 //----------------------------------------------------------------------
 //
@@ -120,7 +120,12 @@
 //#define MIP_USE_XCB
 //#define MIP_WIN32_GDIPLUS
 //#define MIP_WIN32_INVALIDATE_WHEN_RESIZING
+
 //#define MIP_WINDOW_BUFFERED
+
+  //#define MIP_WINDOW_COMBINE_UPDATE_RECTS
+  #define MIP_WINDOW_FULL_UPDATE_RECT
+
 //#define MIP_XCB_USE_STB_TRUETYPE
 
   // was:
@@ -128,7 +133,7 @@
   // (bitwig add modulator)
   // is this fixed?
 
-  #define MIP_XCB_WAIT_FOR_MAPNOTIFY
+#define MIP_XCB_WAIT_FOR_MAPNOTIFY
 
 //----------------------------------------------------------------------
 //

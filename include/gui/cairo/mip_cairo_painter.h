@@ -85,10 +85,10 @@ public:
 public:
 //------------------------------
 
-  void beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
+  void beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight, uint32_t AMode) override {
   }
 
-  void endPaint() override {
+  void endPaint(uint32-t AMode) override {
   }
 
   void setClip(MIP_DRect ARect) override {

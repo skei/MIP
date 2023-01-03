@@ -34,6 +34,7 @@ public:
 //------------------------------
 
   void on_window_resize(int32_t AWidth, int32_t AHeight) override {
+    //MIP_ImplementedWindow::on_window_resize(AWidth,AHeight);
     gui->set_size(plugin,AWidth,AHeight);
   }
 

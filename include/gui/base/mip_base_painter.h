@@ -13,9 +13,9 @@ public:
 public:
   virtual void    flush(void) {}
 
-  virtual bool    makeCurrent() { return false; }
-  virtual bool    resetCurrent() { return false; }
-  virtual void    swapBuffers() {}
+  virtual bool    makeCurrent(uint32_t AMode) { return false; }
+  virtual bool    resetCurrent(uint32_t AMode) { return false; }
+  virtual void    swapBuffers(uint32_t AMode) {}
 
   virtual void    setClip(MIP_DRect ARect) {}
   virtual void    resetClip() {}
@@ -53,8 +53,15 @@ public:
   virtual void    stretch(double ADstX, double ADstY, double ADstW, double ADstH, MIP_PaintSource* ASource, double ASrcX, double ASrcY, double ASrcW, double ASrcH) {}
   virtual void    blend(double ADstX, double ADstY, double ADstW, double ADstH, MIP_PaintSource* ASource, double ASrcX, double ASrcY, double ASrcW, double ASrcH) {}
 
-  virtual void    beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) {} // viewport
-  virtual void    endPaint() {}
+  virtual void    setViewport(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) {}
+  virtual void    beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight, uint32_t AMode) {} // viewport
+  virtual void    endPaint(uint32_t AMode) {}
+
+  virtual void    beginFrame(int32_t AWidth, int32_t AHeight, double APixelRatio) {}
+  virtual void    endFrame() {}
+
+//  virtual void    beginTempFrame(int32_t AWidth, int32_t AHeight, double APixelRatio) {}
+//  virtual void    endTempFrame() {}
 
   virtual void    setFillGradient(double AX1, double AY1, double AX2, double AY2, MIP_Color AColor1, MIP_Color AColor2) {}
 

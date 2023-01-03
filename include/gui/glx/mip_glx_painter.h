@@ -92,6 +92,8 @@ GLint MIP_GlxWindowAttribs[] = {
 class MIP_GlxPainter
 : public MIP_BasePainter {
 
+  friend class MIP_NvgPainter;
+
 //------------------------------
 private:
 //------------------------------
@@ -107,6 +109,7 @@ private:
   bool              MDrawableIsWindow = false;
 
 //bool              MIsPainting       = false;
+  bool MIsCurrent = false;
 
 //------------------------------
 public:
@@ -151,7 +154,11 @@ public:
     }
 
 //    MIP_GLXDisableVSync(MDisplay,MDrawable);
-//    //resetCurrent();
+
+    //resetCurrent();
+    //makeCurrent(0);
+
+    MIsCurrent = true;
 
   }
 
@@ -174,18 +181,25 @@ public:
 public:
 //------------------------------
 
-  void beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
-    makeCurrent();
-    glViewport(0,0,AWidth,AHeight);
+  void setViewport(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
+    glViewport(AXpos,AYpos,AWidth,AHeight);
+  }
+
+  //----------
+
+  void beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight, uint32_t AMode) override {
+    makeCurrent(AMode);
+    //glViewport(0,0,AWidth,AHeight);
+//    setViewport(0,0,AWidth,AHeight);
     //setClip(MIP_DRect(AXpos,AYpos,AWidth,AHeight));
   }
 
   //----------
 
-  void endPaint() override {
-    swapBuffers();
+  void endPaint(uint32_t AMode) override {
+    swapBuffers(AMode);
     //resetClip();
-    resetCurrent();
+    resetCurrent(AMode);
   }
 
   //----------
@@ -223,7 +237,7 @@ public:
     (if any) remain unchanged.
   */
 
-  bool makeCurrent() override {
+  bool makeCurrent(uint32_t AMode) override {
     //MIP_PRINT;
     //MPrevContext = glXGetCurrentContext();
     bool res = glXMakeContextCurrent(MDisplay,MDrawable,MDrawable,MContext);
@@ -231,6 +245,7 @@ public:
       MIP_Print("Error: makeCurrent returned false\n");
       return false;
     }
+    MIsCurrent = true;
     return true;
   }
 
@@ -243,7 +258,7 @@ public:
 
   //TODO: restore prev context?
 
-  bool resetCurrent() override {
+  bool resetCurrent(uint32_t AMode) override {
     //MIP_PRINT;
     bool res = glXMakeContextCurrent(MDisplay,0,0,0);
     //bool res = glXMakeContextCurrent(MDisplay,MDrawable,MDrawable,MPrevContext); // error
@@ -251,12 +266,13 @@ public:
       MIP_Print("Error: makeCurrent returned false\n");
       return false;
     }
+    MIsCurrent = false;
     return true;
   }
 
   //----------
 
-  void swapBuffers() override {
+  void swapBuffers(uint32_t AMode) override {
     //MIP_PRINT;
     glXSwapBuffers(MDisplay,MDrawable);
   }

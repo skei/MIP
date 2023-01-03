@@ -189,6 +189,14 @@ public:
 public:
 //------------------------------
 
+  uint32_t getScreenWidth()   { return MScreenWidth; }
+  uint32_t getScreenHeight()  { return MScreenHeight; }
+  int32_t  getScreenDepth()   { return MScreenDepth; }
+
+//------------------------------
+public:
+//------------------------------
+
   //void setFillBackground(bool AFill=true) {
   //  MFillBackground = AFill;
   //}

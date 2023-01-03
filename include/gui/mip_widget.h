@@ -63,6 +63,8 @@ public:
 class MIP_Widget
 : public MIP_WidgetListener {
 
+  friend class MIP_Window;
+
 //------------------------------
 private:
 //------------------------------
@@ -80,6 +82,8 @@ private:
 
   MIP_Parameter*      MParameters[16]   = {0};
   uint32_t            MNumParameters    = 0;
+
+  uint32_t            MDirtyIndex       = 0;
 
 //------------------------------
 protected:
@@ -295,6 +299,8 @@ public:
     if (MWidgetListener) MWidgetListener->do_widget_redraw(this);
   }
 
+  //----------
+
 //------------------------------
 public:
 //------------------------------
@@ -473,6 +479,18 @@ public:
   virtual void on_widget_paint(MIP_PaintContext* AContext) {
     paintChildWidgets(AContext);
   }
+
+  //virtual void on_widget_preFrame(MIP_PaintContext* AContext) {
+  //  for (uint32_t i=0; i<MChildren.size(); i++) {
+  //    MChildren[i]->on_widget_preFrame(AContext);
+  //  }
+  //}
+
+  //virtual void on_widget_postFrame(MIP_PaintContext* AContext) {
+  //  for (uint32_t i=0; i<MChildren.size(); i++) {
+  //    MChildren[i]->on_widget_postFrame(AContext);
+  //  }
+  //}
 
   virtual void on_widget_key_press(uint32_t AKey, uint32_t AState, uint32_t ATime) {
   }

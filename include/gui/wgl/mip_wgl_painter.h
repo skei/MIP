@@ -92,13 +92,16 @@ PIXELFORMATDESCRIPTOR MIP_WglSurfacePFD = {
 class MIP_WglPainter
 : public MIP_BasePainter {
 
+  friend class MIP_NvgPainter;
+
 //------------------------------
 private:
 //------------------------------
 
-  HDC               MDC     = nullptr;
-  HGLRC             MGLRC   = nullptr;
-  MIP_PaintTarget*  MTarget = nullptr;
+  HDC               MDC         = nullptr;
+  HGLRC             MGLRC       = nullptr;
+  MIP_PaintTarget*  MTarget     = nullptr;
+  bool              MIsCurrent  = false;
 
 //------------------------------
 public:
@@ -269,6 +272,8 @@ public:
     wglDeleteContext(temp_ctx);
     wglMakeCurrent(MDC, MGLRC);
 
+    MIsCurrent = true;
+
   }
 
   //----------
@@ -284,20 +289,27 @@ public:
 public:
 //------------------------------
 
-  // w/h = viewport size (not update rect!)
-
-  void beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
-    //MIP_Print("%i,%i - %i,%i\n",AXpos,AYpos,AWidth,AHeight);
-    makeCurrent();
-    glViewport(0,0,AWidth,AHeight);
+  void setViewport(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
+    glViewport(AXpos,AYpos,AWidth,AHeight);
   }
 
   //----------
 
-  void endPaint() override {
+  // w/h = viewport size (not update rect!)
+
+  void beginPaint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight, uint32_t AMode) override {
+    //MIP_Print("%i,%i - %i,%i\n",AXpos,AYpos,AWidth,AHeight);
+    makeCurrent(AMode);
+    //glViewport(0,0,AWidth,AHeight);
+    setViewport(0,0,AWidth,AHeight);
+  }
+
+  //----------
+
+  void endPaint(uint32_t AMode) override {
     //MIP_PRINT;
-    swapBuffers();
-    resetCurrent();
+    swapBuffers(AMode);
+    resetCurrent(AMode);
   }
 
 //------------------------------
@@ -317,17 +329,19 @@ public:
     the rendering context. In this case, hdc is ignored.
   */
 
-  bool makeCurrent() override {
+  bool makeCurrent(uint32_t AMode) override {
     //MIP_Print("\n");
     wglMakeCurrent(MDC, MGLRC);
+    MIsCurrent = true;
     return true;
   }
 
   //----------
 
-  bool resetCurrent() override {
+  bool resetCurrent(uint32_t AMode) override {
     //MIP_Print("\n");
     wglMakeCurrent(nullptr,nullptr);
+    MIsCurrent = false;
     return true;
   }
 
@@ -339,7 +353,7 @@ public:
     context includes a back buffer.
   */
 
-  void swapBuffers() override {
+  void swapBuffers(uint32_t AMode) override {
     //MIP_Print("\n");
     SwapBuffers(MDC);
   }

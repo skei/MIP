@@ -13,6 +13,12 @@
 
 
 
+//#include "../build/test/test_fbo.cpp"
+
+
+
+
+
 //#include "../build/test/test1.cpp"
 //#include "../build/test/plug1.cpp"
 //#include "../build/test/plug2.cpp"

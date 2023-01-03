@@ -213,7 +213,17 @@ public:
           }
         }
 
-        if (ARedraw) widget->redraw(/*MIP_WIDGET_REDRAW_VALUE*/);
+        if (ARedraw) {
+
+          widget->redraw(/*MIP_WIDGET_REDRAW_VALUE*/);
+
+//          MIP_DRect r = widget->getRect();
+//          MWindow->invalidate(r.x,r.y,r.w,r.h);
+//          MWindow->queueDirtyRect(r.x,r.y,r.w,r.h);
+
+        }
+
+
       }
     }
   }
@@ -311,42 +321,57 @@ public: // clap.gui
   */
 
   virtual bool setSize(uint32_t width, uint32_t height) {
+
     //MIP_Print("%i,%i\n",width,height);
     //MEditorWidth = width;
     //MEditorHeight = height;
-    if (MWindow) {
-      if (MIsEditorOpen) {
 
+    if (MWindow) {
+
+      if (MIsEditorOpen) {
         if (MWindow->MModalWidget) {
           MWindow->MModalWidget->on_widget_cancel(0);
         }
-
         MWindow->setSize(width,height);
         //MWindow->invalidate(0,0,width,height);
         //MWindow->getWindowPainter()->setClipRect(MIP_DRect(0,0,width,height));
       }
+
       MIP_Widget* root_widget = MWindow->getRootWidget();
       if (root_widget) {
         //root_widget->setPos(0,0);
         root_widget->setSize(width,height);
         //MWindow->invalidate(0,0,width,height);
       }
+
       double scale = 1.0;
       double aspect = (double)width / (double)height;
       if (aspect >= MAspectRatio) scale = (double)height / (double)MInitialHeight;
       else scale = (double)width / (double)MInitialWidth;
       MWindow->setWindowScale(scale);
+
       //if (MInitialWidth > 0) {
       //  double s = (double)width / (double)MInitialWidth;
       //  MWindow->setWindowScale(s);
       //}
+
+      MEditorWidth = width;
+      MEditorHeight = height;
+
       MIP_Painter* painter = MWindow->getWindowPainter();
       painter->setClipRect(MIP_DRect(0,0,width,height));
+
       //MWindow->on_window_resize(width,height);
       //MIP_Painter* painter = MWindow->getWindowPainter();
       //painter->resetClip();
-      MEditorWidth = width;
-      MEditorHeight = height;
+
+
+//
+//      //painter->makeCurrent(0);
+//      MWindow->resizeRenderBuffer(width,height);
+//      //painter->resetCurrent(0);
+//
+
       // will not redraw when resizing without this
       #ifdef MIP_WIN32
       if (MIsEditorOpen) {
@@ -354,7 +379,9 @@ public: // clap.gui
         MWindow->invalidate(0,0,width,height);
       }
       #endif
+
     }
+
     return true;
   }
 

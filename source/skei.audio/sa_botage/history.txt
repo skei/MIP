@@ -7,6 +7,9 @@
 * colors
 
 0.1.9 -
+* buffered painting
+  - better handling of gui timers & repainting
 * improved waveform drawing
-* preliminary effect widgets (removed effect page/tab)
-* better handling of gui timers & repainting
+* preliminary effect widgets
+  - removed effect page/tab
+  - filter
