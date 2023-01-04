@@ -551,6 +551,12 @@ public: // window
     MMouseDragX = AXpos;
     MMouseDragY = AYpos;
     if (MModalWidget) {
+      if (AButton == MIP_BUTTON_LEFT) {
+        if (!MModalWidget->getRect().contains(AXpos,AYpos)) {
+          MIP_PRINT;
+          MModalWidget->on_widget_cancel(0);
+        }
+      }
       if (AButton == MIP_BUTTON_RIGHT) {
         MIP_PRINT;
         MModalWidget->on_widget_cancel(0);
@@ -603,8 +609,13 @@ public: // window
 
     }
     else {
-      //updateHoverWidget(AXpos,AYpos);
-      if (MCapturedWidget) {
+
+      if (MModalWidget) {
+        updateHoverWidget(AXpos,AYpos,MModalWidget); // only from modal widget and downwards?
+        MModalWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
+      }
+
+      else if (MCapturedWidget) {
         MCapturedWidget->on_widget_mouse_move(AState,AXpos,AYpos,ATime);
       }
       else {
@@ -616,6 +627,7 @@ public: // window
         }
       }
     }
+
     MMousePreviousX = AXpos;
     MMousePreviousY = AYpos;
 
@@ -763,32 +775,21 @@ private:
     // or self if no widget at that point
   */
 
-  void updateHoverWidget(int32_t AXpos, int32_t AYpos) {
+  void updateHoverWidget(int32_t AXpos, int32_t AYpos, MIP_Widget* ARoot=nullptr) {
     if (MRootWidget) {
-      //MIP_Widget* hover = MRootWidget->findChildWidget(AXpos,AYpos,true);
       MIP_Widget* hover = nullptr;
-      //if (MModalWidget) {
-      //  hover = MModalWidget->findChildWidget(AXpos,AYpos,true);
-      //} else {
+      if (ARoot) hover = ARoot->findChildWidget(AXpos,AYpos,true);
+      else
         hover = MRootWidget->findChildWidget(AXpos,AYpos,true);
-      //}
-
-
       if (hover != MHoverWidget) {
-        //if (!MClickedWidget) {
-          if (MHoverWidget) {
-            MHoverWidget->setHovering(false);
-            MHoverWidget->on_widget_leave(AXpos,AYpos);
-          }
-          if (hover) {
-            hover->setHovering(true);
-            hover->on_widget_enter(AXpos,AYpos);
-            //if (hover->hasFlag(MIP_WIDGET_AUTO_SET_CURSOR)) {
-            //  int32_t cursor = hover->getCursor();
-            //  setCursor(cursor);
-            //}
-          }
-        //}
+        if (MHoverWidget) {
+          MHoverWidget->setHovering(false);
+          MHoverWidget->on_widget_leave(AXpos,AYpos);
+        }
+        if (hover) {
+          hover->setHovering(true);
+          hover->on_widget_enter(AXpos,AYpos);
+        }
       }
       MHoverWidget = hover;
     }

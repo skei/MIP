@@ -61,7 +61,7 @@
 
     // loops
 
-    MIP_TextWidget* prob_loops_label = new MIP_TextWidget( MIP_DRect(345,134,135,12), "Loops" );
+    MIP_TextWidget* prob_loops_label = new MIP_TextWidget( MIP_DRect(345,134,135,12), "Split" );
     page_prob->appendChildWidget(prob_loops_label);
     prob_loops_label->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     prob_loops_label->setTextColor(0.8);
@@ -87,7 +87,7 @@
 
     // txt range
 
-    MIP_TextWidget* c1_header = new MIP_TextWidget(MIP_DRect(255,180,103,14),"Range");
+    MIP_TextWidget* c1_header = new MIP_TextWidget(MIP_DRect(255,180,103,14),"Start");
     page_prob->appendChildWidget(c1_header);
     c1_header->setDrawBorder(true);
     c1_header->setBorderColor(0.6);
@@ -99,7 +99,7 @@
 
     // txt loop
 
-    MIP_TextWidget* c2_header = new MIP_TextWidget(MIP_DRect(377,180,103,14),"Loop");
+    MIP_TextWidget* c2_header = new MIP_TextWidget(MIP_DRect(377,180,103,14),"Wrap");
     page_prob->appendChildWidget(c2_header);
     c2_header->setDrawBorder(true);
     c2_header->setBorderColor(0.6);

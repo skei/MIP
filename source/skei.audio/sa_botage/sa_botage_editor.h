@@ -129,6 +129,19 @@ public:
     MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,AWidth,80),descriptor);
     MRootWidget->appendChildWidget(header);
 
+    // hint
+
+    MHintWidget = new MIP_TextWidget(MIP_DRect(210,65,245,10),"Hello world!");
+    MRootWidget->appendChildWidget(MHintWidget);
+    MHintWidget->setFillBackground(true);
+    MHintWidget->setBackgroundColor(0.23);
+    MHintWidget->setDrawBorder(false);
+    MHintWidget->setBorderColor(MIP_COLOR_GRAY);
+    MHintWidget->setTextSize(9);
+    MHintWidget->setTextColor(0.8);
+    MHintWidget->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+    MHintWidget->setTextOffset(MIP_DRect(5,0,0,0));
+
     // c
 
     MIP_TextWidget* c_icon = new MIP_TextWidget(MIP_DRect(475,65,10,10),"c");
@@ -155,18 +168,49 @@ public:
     i_icon->setBackgroundColor(0.2);
     i_icon->setHint("Info");
 
-    // hint
+    // pages
 
-    MHintWidget = new MIP_TextWidget(MIP_DRect(210,65,245,10),"Hello world!");
-    MRootWidget->appendChildWidget(MHintWidget);
-    MHintWidget->setFillBackground(true);
-    MHintWidget->setBackgroundColor(0.23);
-    MHintWidget->setDrawBorder(false);
-    MHintWidget->setBorderColor(MIP_COLOR_GRAY);
-    MHintWidget->setTextSize(9);
-    MHintWidget->setTextColor(0.8);
-    MHintWidget->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-    MHintWidget->setTextOffset(MIP_DRect(5,0,0,0));
+    prob_page_button = new MIP_ButtonWidget(MIP_DRect(240+272,5+60,30,10), "Prob",0);
+    MRootWidget->appendChildWidget(prob_page_button);
+    prob_page_button->setHint("Probabilities");
+    prob_page_button->setFillBackground(true);
+    prob_page_button->setBackgroundColor(0.3);
+    prob_page_button->setDrawBorder(false);
+    prob_page_button->setTextSize(9);
+    prob_page_button->setTextColor(0.6);
+
+    seq_page_button = new MIP_ButtonWidget(MIP_DRect(275+272,5+60,30,10), "Seq",0);
+    MRootWidget->appendChildWidget(seq_page_button);
+    seq_page_button->setHint("Sequence");
+    seq_page_button->setFillBackground(true);
+    seq_page_button->setBackgroundColor(0.25);
+    seq_page_button->setDrawBorder(false);
+    seq_page_button->setTextSize(9);
+    seq_page_button->setTextColor(0.6);
+
+    perf_page_button = new MIP_ButtonWidget(MIP_DRect(310+272,5+60,30,10), "Perf",0);
+    MRootWidget->appendChildWidget(perf_page_button);
+    perf_page_button->setHint("Perform");
+    perf_page_button->setFillBackground(true);
+    perf_page_button->setBackgroundColor(0.25);
+    perf_page_button->setDrawBorder(false);
+    perf_page_button->setTextSize(9);
+    perf_page_button->setTextColor(0.6);
+
+    MPages = new MIP_PagesWidget( MIP_DRect(255,90,357,292));
+    MRootWidget->appendChildWidget(MPages);
+
+    #include "sa_botage_editor_page_prob.h"
+    #include "sa_botage_editor_page_seq.h"
+    #include "sa_botage_editor_page_perf.h"
+
+    MPages->appendPage(page_prob);
+    MPages->appendPage(page_seq);
+    MPages->appendPage(page_perf);
+
+    MPages->setPage(0);
+
+
 
     //------------------------------
     // waveform / buffer
@@ -199,7 +243,7 @@ public:
 
     // slices
 
-    MNumSlicesWidget = new MIP_DragValueWidget( MIP_DRect(130,330,110,16),"Slices");
+    MNumSlicesWidget = new MIP_DragValueWidget( MIP_DRect(130,330,110,16),"Sub Beats");
     MRootWidget->appendChildWidget(MNumSlicesWidget);
     MNumSlicesWidget->setFillBackground(true);
     MNumSlicesWidget->setBackgroundColor( 0.5 );
@@ -214,7 +258,7 @@ public:
 
     // loop env
 
-    MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(10,356,110,16), "L ms", 0.1, 0.9 );
+    MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(10,356,110,16), "Loop", 0.1, 0.9 );
     MRootWidget->appendChildWidget(env1_slider);
     env1_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     env1_slider->setHint("Loop Envelope");
@@ -232,7 +276,7 @@ public:
 
     // slice env
 
-    MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(130,356,110,16), "S %", 0.1, 0.9 );
+    MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(130,356,110,16), "Slice", 0.1, 0.9 );
     MRootWidget->appendChildWidget(env2_slider);
     env2_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
     env2_slider->setHint("Slice envelope");
@@ -248,52 +292,13 @@ public:
     connect( env2_slider, 0, AParameters->getItem(PAR_SLICE_ENV_ATTACK) );
     connect( env2_slider, 1, AParameters->getItem(PAR_SLICE_ENV_DECAY) );
 
-    // pages
-
-    prob_page_button = new MIP_ButtonWidget(MIP_DRect(240,5,30,15), "Prob",0);
-    MRootWidget->appendChildWidget(prob_page_button);
-    prob_page_button->setHint("Probabilities");
-    prob_page_button->setFillBackground(true);
-    prob_page_button->setBackgroundColor(0.3);
-    prob_page_button->setDrawBorder(false);
-    prob_page_button->setTextSize(10);
-    prob_page_button->setTextColor(0.6);
-
-    seq_page_button = new MIP_ButtonWidget(MIP_DRect(275,5,30,15), "Seq",0);
-    MRootWidget->appendChildWidget(seq_page_button);
-    seq_page_button->setHint("Sequence");
-    seq_page_button->setFillBackground(true);
-    seq_page_button->setBackgroundColor(0.25);
-    seq_page_button->setDrawBorder(false);
-    seq_page_button->setTextSize(10);
-    seq_page_button->setTextColor(0.6);
-
-    perf_page_button = new MIP_ButtonWidget(MIP_DRect(310,5,30,15), "Perf",0);
-    MRootWidget->appendChildWidget(perf_page_button);
-    perf_page_button->setHint("Perform");
-    perf_page_button->setFillBackground(true);
-    perf_page_button->setBackgroundColor(0.25);
-    perf_page_button->setDrawBorder(false);
-    perf_page_button->setTextSize(10);
-    perf_page_button->setTextColor(0.6);
-
-    MPages = new MIP_PagesWidget( MIP_DRect(255,90,357,292));
-    MRootWidget->appendChildWidget(MPages);
-
-    #include "sa_botage_editor_page_prob.h"
-    #include "sa_botage_editor_page_seq.h"
-    #include "sa_botage_editor_page_perf.h"
-
-    MPages->appendPage(page_prob);
-    MPages->appendPage(page_seq);
-    MPages->appendPage(page_perf);
-
-    MPages->setPage(0);
-
     // footer
+
     //double height = ARootWidget->getHeight();
     //sa_botage_footer* footer  = new sa_botage_footer(MIP_DRect(0,(height - SA_BOTAGE_FOOTER_HEIGHT),width,SA_BOTAGE_FOOTER_HEIGHT));
     //ARootWidget->appendChildWidget(footer);
+
+    // menu
 
     MRootWidget->appendChildWidget(fx_type_menu);
 
