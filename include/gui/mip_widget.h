@@ -295,6 +295,12 @@ public:
 
   //----------
 
+  virtual void update() {
+    if (MWidgetListener) MWidgetListener->do_widget_update(this);
+  }
+
+  //----------
+
   virtual void redraw() {
     if (MWidgetListener) MWidgetListener->do_widget_redraw(this);
   }

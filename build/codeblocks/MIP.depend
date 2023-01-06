@@ -656,7 +656,7 @@
 	"gui/cairo/mip_cairo.h"
 	"extern/stb/stb_image.h"
 
-1672678917 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
+1672868370 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
 	"base/mip.h"
 	"gui/base/mip_base_window.h"
 	"gui/mip_paint_context.h"
@@ -719,7 +719,7 @@
 	"base/mip.h"
 	"gui/mip_widget.h"
 
-1672513553 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob_widget.h
+1672887180 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_drag_value_widget.h"
 
@@ -819,7 +819,7 @@
 	"gui/mip_paint_context.h"
 	"gui/widgets/mip_panel_widget.h"
 
-1672435704 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_button_row_widget.h
+1672942095 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_button_row_widget.h
 	"gui/widgets/mip_grid_widget.h"
 
 1672322455 /DISKS/sda2/code/git/MIP/include/gui/mip_widgets.h
@@ -847,7 +847,7 @@
 	"gui/widgets/mip_value_widget.h"
 	"gui/widgets/mip_waveform_widget.h"
 
-1672792089 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_menu_widget.h
+1672873458 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_menu_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_panel_widget.h"
 	"gui/widgets/mip_menu_item_widget.h"
@@ -880,7 +880,7 @@
 	"sa_botage/sa_botage_editor.h"
 	"plugin/mip_entry.h"
 
-1672791704 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
+1672920620 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
 	"base/mip.h"
 	"gui/mip_widgets.h"
 	"plugin/mip_editor.h"
@@ -926,12 +926,12 @@
 	"base/mip.h"
 	"gui/widgets/mip_slider_widget.h"
 
-1672785233 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_parameters.h
+1672941384 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_parameters.h
 	"base/mip.h"
 	"plugin/mip_parameter.h"
 	"plugin/mip_plugin.h"
 
-1672742227 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_processor.h
+1672920645 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_processor.h
 	"base/mip.h"
 	"audio/old/filters/mip_svf_filter.h"
 
@@ -1096,7 +1096,7 @@
 1653251521 /DISKS/sda2/code/git/MIP/include/audio/old/filters/mip_rc_filter.h
 	<math.h>
 
-1652293315 /DISKS/sda2/code/git/MIP/include/audio/old/filters/mip_svf_filter.h
+1672870820 /DISKS/sda2/code/git/MIP/include/audio/old/filters/mip_svf_filter.h
 	"base/utils/mip_math.h"
 
 1672225519 /DISKS/sda2/code/git/MIP/include/audio/old/processing/mip_delay.h
@@ -1365,7 +1365,7 @@
 	<cairo/cairo.h>
 	<cairo/cairo-xcb.h>
 
-1672792826 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_prob.h
+1672941485 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_prob.h
 
 1672434710 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_fx.h
 

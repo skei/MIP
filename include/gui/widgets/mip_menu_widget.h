@@ -125,8 +125,8 @@ public:
       uint32_t winw = 0;
       uint32_t winh = 0;
       window->getSize(&winw,&winh);
-      if ((x + mrect.w) > winw) { x = winw - mrect.w; }
-      if ((y + mrect.h) > winh) { y = winh - mrect.h; }
+      if ((x + mrect.w) > winw) { x = winw - mrect.w - 10; }
+      if ((y + mrect.h) > winh) { y = winh - mrect.h - 10; }
     }
 //    setWidgetPos(x,y);
 //    alignChildWidgets();

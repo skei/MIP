@@ -553,12 +553,12 @@ public: // window
     if (MModalWidget) {
       if (AButton == MIP_BUTTON_LEFT) {
         if (!MModalWidget->getRect().contains(AXpos,AYpos)) {
-          MIP_PRINT;
+          //MIP_PRINT;
           MModalWidget->on_widget_cancel(0);
         }
       }
       if (AButton == MIP_BUTTON_RIGHT) {
-        MIP_PRINT;
+        //MIP_PRINT;
         MModalWidget->on_widget_cancel(0);
       }
     }

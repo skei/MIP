@@ -108,6 +108,9 @@ private:
   MIP_DualSliderWidget*       MLoopOffsetValueWidget    = nullptr;
   MIP_DualSliderWidget*       MLoopFXValueWidget        = nullptr;
 
+  MIP_SelectorWidget*         MFXTypeSelector[5]        = {0};
+  MIP_KnobWidget*             MFXProbKnob[5]            = {0};
+  MIP_KnobWidget*             MFXArgKnob[5*3]           = {0};
 //------------------------------
 public:
 //------------------------------
@@ -330,18 +333,24 @@ public:
   //----------
 
   void do_widget_update(MIP_Widget* AWidget, uint32_t AMode=0) override {
+
     MIP_Editor::do_widget_update(AWidget,AMode);
+
     if (AWidget == MNumBeatsWidget) {
       double value = AWidget->getValue();
       MWaveformWidget->setGrid(value);
       MWaveformWidget->redraw();
+      return;
     }
-    else if (AWidget == MNumSlicesWidget) {
+
+    if (AWidget == MNumSlicesWidget) {
       double value = AWidget->getValue();
       MWaveformWidget->setSubGrid(value);
       MWaveformWidget->redraw();
+      return;
     }
-    else if (AWidget == prob_page_button) {
+
+    if (AWidget == prob_page_button) {
       MCurrentPage = 0;
       MPages->setPage(0);
       MPages->redraw();
@@ -351,8 +360,10 @@ public:
       prob_page_button->redraw();
       seq_page_button->redraw();
       perf_page_button->redraw();
+      return;
     }
-    else if (AWidget == seq_page_button)  {
+
+    if (AWidget == seq_page_button)  {
       MCurrentPage = 1;
       MPages->setPage(2); MPages->redraw();
       prob_page_button->setBackgroundColor(0.25);
@@ -361,8 +372,10 @@ public:
       prob_page_button->redraw();
       seq_page_button->redraw();
       perf_page_button->redraw();
+      return;
     }
-    else if (AWidget == perf_page_button) {
+
+    if (AWidget == perf_page_button) {
       MCurrentPage = 2;
       MPages->setPage(3); MPages->redraw();
       prob_page_button->setBackgroundColor(0.25);
@@ -371,8 +384,60 @@ public:
       prob_page_button->redraw();
       seq_page_button->redraw();
       perf_page_button->redraw();
+      return;
     }
 
+    for (uint32_t i=0; i<5; i++) {
+      if (AWidget == MFXTypeSelector[i]) {
+        uint32_t it = MFXTypeSelector[i]->getValue();
+        for (uint32_t j=0; j<5; j++) {
+          if (i != j) {
+            // i=clicked, j=other
+            uint32_t jt = MFXTypeSelector[j]->getValue();
+            if (it == jt) {
+              //MIP_Print("swap effect %i <-> %i\n",i,j);
+
+              if (it != 0) {
+
+                MFXTypeSelector[j]->setSelected(0);
+                MFXTypeSelector[j]->update();
+                MFXTypeSelector[j]->redraw();
+
+                //double iv1 = 0;//MFXArgKnob[(i*3)  ]->getValue();
+                //double iv2 = 0;//MFXArgKnob[(i*3)+1]->getValue();
+                //double iv3 = 0;//MFXArgKnob[(i*3)+2]->getValue();
+                double jv1 = MFXArgKnob[(j*3)  ]->getValue();
+                double jv2 = MFXArgKnob[(j*3)+1]->getValue();
+                double jv3 = MFXArgKnob[(j*3)+2]->getValue();
+
+                MFXArgKnob[(i*3)  ]->setValue(jv1);
+                MFXArgKnob[(i*3)+1]->setValue(jv2);
+                MFXArgKnob[(i*3)+2]->setValue(jv3);
+                MFXArgKnob[(i*3)  ]->update();
+                MFXArgKnob[(i*3)+1]->update();
+                MFXArgKnob[(i*3)+2]->update();
+                MFXArgKnob[(i*3)  ]->redraw();
+                MFXArgKnob[(i*3)+1]->redraw();
+                MFXArgKnob[(i*3)+2]->redraw();
+
+                //MFXArgKnob[(j*3)+0]->setValue(iv1);
+                //MFXArgKnob[(j*3)+1]->setValue(iv2);
+                //MFXArgKnob[(j*3)+2]->setValue(iv3);
+                //MFXArgKnob[(j*3)  ]->update();
+                //MFXArgKnob[(j*3)+1]->update();
+                //MFXArgKnob[(j*3)+2]->update();
+                //MFXArgKnob[(j*3)  ]->redraw();
+                //MFXArgKnob[(j*3)+1]->redraw();
+                //MFXArgKnob[(j*3)+2]->redraw();
+
+              } // it!=0
+
+
+            } // it==jt
+          } // i"=j
+        } // for j
+      } // AWidget
+    } // for i
   }
 
   //----------
@@ -485,6 +550,36 @@ public:
         if (processor->rnd_range_fx_on) MRangeFXValueWidget->setIndicatorValue(processor->rnd_range_fx_value);
         else MRangeFXValueWidget->setIndicatorValue(-1);
 
+//------------------------------
+
+        if (processor->rnd_range_fx_on) {
+          MFXProbKnob[0]->setIndicatorValue(processor->rnd_fx1);
+          MFXProbKnob[1]->setIndicatorValue(processor->rnd_fx2);
+          MFXProbKnob[2]->setIndicatorValue(processor->rnd_fx3);
+          MFXProbKnob[3]->setIndicatorValue(processor->rnd_fx4);
+          MFXProbKnob[4]->setIndicatorValue(processor->rnd_fx5);
+        }
+        else {
+          MFXProbKnob[0]->setIndicatorValue(-1);
+          MFXProbKnob[1]->setIndicatorValue(-1);
+          MFXProbKnob[2]->setIndicatorValue(-1);
+          MFXProbKnob[3]->setIndicatorValue(-1);
+          MFXProbKnob[4]->setIndicatorValue(-1);
+        }
+
+//        if (processor->rnd_fx1_on) MFXProbKnob[0]->setIndicatorValue(processor->rnd_fx1);
+//        else MFXProbKnob[0]->setIndicatorValue(-1);
+//        if (processor->rnd_fx2_on) MFXProbKnob[1]->setIndicatorValue(processor->rnd_fx2);
+//        else MFXProbKnob[1]->setIndicatorValue(-1);
+//        if (processor->rnd_fx3_on) MFXProbKnob[2]->setIndicatorValue(processor->rnd_fx3);
+//        else MFXProbKnob[2]->setIndicatorValue(-1);
+//        if (processor->rnd_fx4_on) MFXProbKnob[3]->setIndicatorValue(processor->rnd_fx4);
+//        else MFXProbKnob[3]->setIndicatorValue(-1);
+//        if (processor->rnd_fx5_on) MFXProbKnob[4]->setIndicatorValue(processor->rnd_fx5);
+//        else MFXProbKnob[4]->setIndicatorValue(-1);
+
+//------------------------------
+
         if (processor->MLoopWrapped) {
           MLoopSizeWidget->setIndicatorValue(processor->rnd_loop_size);
           MLoopSpeedWidget->setIndicatorValue(processor->rnd_loop_speed);
@@ -513,6 +608,7 @@ public:
           MLoopOffsetValueWidget->setIndicatorValue(-1);
           MLoopFXValueWidget->setIndicatorValue(-1);
         }
+
       }
       else { // ! range
 
@@ -541,6 +637,13 @@ public:
         MLoopSpeedValueWidget->setIndicatorValue(-1);
         MLoopOffsetValueWidget->setIndicatorValue(-1);
         MLoopFXValueWidget->setIndicatorValue(-1);
+
+        MFXProbKnob[0]->setIndicatorValue(-1);
+        MFXProbKnob[1]->setIndicatorValue(-1);
+        MFXProbKnob[2]->setIndicatorValue(-1);
+        MFXProbKnob[3]->setIndicatorValue(-1);
+        MFXProbKnob[4]->setIndicatorValue(-1);
+
       }
 
     } // page == 0

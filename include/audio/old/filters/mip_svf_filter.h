@@ -42,6 +42,14 @@ class MIP_SvfFilter {
       //z2    = 0;
     }
 
+  public:
+
+    uint32_t getMode()  { return MMode; }
+    uint32_t getFreq()  { return MFreq; }
+    uint32_t getBW()    { return MBW; }
+
+  public:
+
     void reset(void) {
       z1 = 0;
       z2 = 0;

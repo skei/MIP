@@ -438,380 +438,405 @@
     connect( MLoopFXValueWidget, 1, AParameters->getItem(PAR_PROB_FX_MAX_LOOP) );
 
     //------------------------------
-    //
+    // Effects
     //------------------------------
 
-    MIP_ButtonRowWidget* fx_mode_buttons = new MIP_ButtonRowWidget( MIP_DRect(499,154,103,10), 3, fx_mode_text, MIP_BUTTON_ROW_SINGLE );
+    MIP_ButtonRowWidget* fx_mode_buttons = new MIP_ButtonRowWidget( MIP_DRect(499,154,103,10), FX_MODE_COUNT, fx_mode_text, MIP_BUTTON_ROW_SINGLE );
     page_prob->appendChildWidget(fx_mode_buttons);
-    fx_mode_buttons->selectButton(0);
+    //fx_mode_buttons->setValue(0);
+    //fx_mode_buttons->selectButton(0);
     fx_mode_buttons->setTextSize(8);
+    fx_mode_buttons->setValueIsBits(false);//(true,8);
     //fx_mode_buttons->setAllowZeroBits(false);
-    //fx_mode_buttons->setValueIsBits(true,8);
+
+    connect( fx_mode_buttons, AParameters->getItem(PAR_FX_MODE) );
+
+    //------------------------------
 
     // FX 1
 
-    MIP_KnobWidget* fx1_knob = new MIP_KnobWidget(MIP_DRect(499,205,33,33),"%", 0.0);
-    page_prob->appendChildWidget(fx1_knob);
-    fx1_knob->setArcThickness(7);
-    fx1_knob->setValueColor(0.8);
-    fx1_knob->setTextColor(0.6);
-    fx1_knob->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx1_knob->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx1_knob->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXProbKnob[0] = new MIP_KnobWidget(MIP_DRect(499,205,33,33),"%", 0.0);
+    page_prob->appendChildWidget(MFXProbKnob[0]);
+    MFXProbKnob[0]->setArcThickness(7);
+    MFXProbKnob[0]->setValueColor(0.8);
+    MFXProbKnob[0]->setTextColor(0.6);
+    MFXProbKnob[0]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXProbKnob[0]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXProbKnob[0]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx1_knob, AParameters->getItem(PAR_FX1_PROB) );
+    connect( MFXProbKnob[0], AParameters->getItem(PAR_FX1_PROB) );
 
-    MIP_SelectorWidget* fx1_type = new MIP_SelectorWidget(MIP_DRect(537,205,66,11), "Off", fx_type_menu);
-    page_prob->appendChildWidget(fx1_type);
-    fx1_type->setDrawBorder(true);
-    fx1_type->setBorderColor(0.4);
-    fx1_type->setBorderEdges(MIP_EDGE_BOTTOM);
-    fx1_type->setFillBackground(false);
-    fx1_type->setBackgroundColor(0.5);
-    fx1_type->setTextColor(0.8);
-    fx1_type->setTextSize(9);
-    fx1_type->setTextOffset(MIP_DRect(2,0,0,0));
-    fx1_type->setDrawArrow(true);
-    fx1_type->setArrowColor(0.5);
+    MFXTypeSelector[0] = new MIP_SelectorWidget(MIP_DRect(537,205,66,11), "Off", fx_type_menu);
+    page_prob->appendChildWidget(MFXTypeSelector[0]);
+    MFXTypeSelector[0]->setDrawBorder(true);
+    MFXTypeSelector[0]->setBorderColor(0.4);
+    MFXTypeSelector[0]->setBorderEdges(MIP_EDGE_BOTTOM);
+    MFXTypeSelector[0]->setFillBackground(false);
+    MFXTypeSelector[0]->setBackgroundColor(0.5);
+    MFXTypeSelector[0]->setTextColor(0.8);
+    MFXTypeSelector[0]->setTextSize(9);
+    MFXTypeSelector[0]->setTextOffset(MIP_DRect(2,0,0,0));
+    MFXTypeSelector[0]->setDrawArrow(true);
+    MFXTypeSelector[0]->setArrowColor(0.5);
 
-    connect( fx1_type, AParameters->getItem(PAR_FX1_TYPE) );
+    connect( MFXTypeSelector[0], AParameters->getItem(PAR_FX1_TYPE) );
 
     // fx1 par 1
 
-    MIP_KnobWidget* fx1_par1 = new MIP_KnobWidget(MIP_DRect(537,220,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx1_par1);
-    fx1_par1->setDrawText(false);
-    fx1_par1->setDrawValue(false);
-    fx1_par1->setArcThickness(4);
-    fx1_par1->setValueColor(0.8);
-    fx1_par1->setTextColor(0.6);
-    fx1_par1->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx1_par1->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx1_par1->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(0*3)+0] = new MIP_KnobWidget(MIP_DRect(537,220,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(0*3)+0]);
+    MFXArgKnob[(0*3)+0]->setDrawText(false);
+    MFXArgKnob[(0*3)+0]->setDrawValue(false);
+    MFXArgKnob[(0*3)+0]->setArcThickness(4);
+    MFXArgKnob[(0*3)+0]->setValueColor(0.8);
+    MFXArgKnob[(0*3)+0]->setTextColor(0.6);
+    MFXArgKnob[(0*3)+0]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(0*3)+0]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(0*3)+0]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx1_par1, AParameters->getItem(PAR_FX1_PAR1) );
+    connect( MFXArgKnob[(0*3)+0], AParameters->getItem(PAR_FX1_PAR1) );
 
     // fx1 par 2
 
-    MIP_KnobWidget* fx1_par2 = new MIP_KnobWidget(MIP_DRect(557,220,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx1_par2);
-    fx1_par2->setDrawText(false);
-    fx1_par2->setDrawValue(false);
-    fx1_par2->setArcThickness(4);
-    fx1_par2->setValueColor(0.8);
-    fx1_par2->setTextColor(0.6);
-    fx1_par2->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx1_par2->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx1_par2->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(0*3)+1] = new MIP_KnobWidget(MIP_DRect(557,220,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(0*3)+1]);
+    MFXArgKnob[(0*3)+1]->setDrawText(false);
+    MFXArgKnob[(0*3)+1]->setDrawValue(false);
+    MFXArgKnob[(0*3)+1]->setArcThickness(4);
+    MFXArgKnob[(0*3)+1]->setValueColor(0.8);
+    MFXArgKnob[(0*3)+1]->setTextColor(0.6);
+    MFXArgKnob[(0*3)+1]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(0*3)+1]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(0*3)+1]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx1_par2, AParameters->getItem(PAR_FX1_PAR2) );
+    connect( MFXArgKnob[(0*3)+1], AParameters->getItem(PAR_FX1_PAR2) );
 
     // fx1 par 3
 
-    MIP_KnobWidget* fx1_par3 = new MIP_KnobWidget(MIP_DRect(577,220,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx1_par3);
-    fx1_par3->setDrawText(false);
-    fx1_par3->setDrawValue(false);
-    fx1_par3->setArcThickness(4);
-    fx1_par3->setValueColor(0.8);
-    fx1_par3->setTextColor(0.6);
-    fx1_par3->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx1_par3->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx1_par3->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(0*3)+2] = new MIP_KnobWidget(MIP_DRect(577,220,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(0*3)+2]);
+    MFXArgKnob[(0*3)+2]->setDrawText(false);
+    MFXArgKnob[(0*3)+2]->setDrawValue(false);
+    MFXArgKnob[(0*3)+2]->setArcThickness(4);
+    MFXArgKnob[(0*3)+2]->setValueColor(0.8);
+    MFXArgKnob[(0*3)+2]->setTextColor(0.6);
+    MFXArgKnob[(0*3)+2]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(0*3)+2]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(0*3)+2]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    //MFXArgKnob[(0*3)+2]->setBipolar(true);
+    //MFXArgKnob[(0*3)+2]->setSnap(true);
+    //MFXArgKnob[(0*3)+2]->setSnapPos(0.5);
+    //MFXArgKnob[(0*3)+2]->setSnapDist(0.07);
 
-    connect( fx1_par3, AParameters->getItem(PAR_FX1_PAR3) );
+    connect( MFXArgKnob[(0*3)+2], AParameters->getItem(PAR_FX1_PAR3) );
 
     // FX 2
 
-    MIP_KnobWidget* fx2_knob = new MIP_KnobWidget(MIP_DRect(499,205+35,33,33),"%", 0.0);
-    page_prob->appendChildWidget(fx2_knob);
-    fx2_knob->setArcThickness(7);
-    fx2_knob->setValueColor(0.8);
-    fx2_knob->setTextColor(0.6);
-    fx2_knob->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx2_knob->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx2_knob->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXProbKnob[1] = new MIP_KnobWidget(MIP_DRect(499,205+35,33,33),"%", 0.0);
+    page_prob->appendChildWidget(MFXProbKnob[1]);
+    MFXProbKnob[1]->setArcThickness(7);
+    MFXProbKnob[1]->setValueColor(0.8);
+    MFXProbKnob[1]->setTextColor(0.6);
+    MFXProbKnob[1]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXProbKnob[1]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXProbKnob[1]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx2_knob, AParameters->getItem(PAR_FX2_PROB) );
+    connect( MFXProbKnob[1], AParameters->getItem(PAR_FX2_PROB) );
 
-    MIP_SelectorWidget* fx2_type = new MIP_SelectorWidget(MIP_DRect(537,205+35,66,11), "Off", fx_type_menu);
-    page_prob->appendChildWidget(fx2_type);
-    fx2_type->setDrawBorder(true);
-    fx2_type->setBorderColor(0.4);
-    fx2_type->setBorderEdges(MIP_EDGE_BOTTOM);
-    fx2_type->setFillBackground(false);
-    fx2_type->setBackgroundColor(0.5);
-    fx2_type->setTextColor(0.8);
-    fx2_type->setTextSize(9);
-    fx2_type->setTextOffset(MIP_DRect(2,0,0,0));
-    fx2_type->setDrawArrow(true);
-    fx2_type->setArrowColor(0.5);
+    MFXTypeSelector[1] = new MIP_SelectorWidget(MIP_DRect(537,205+35,66,11), "Off", fx_type_menu);
+    page_prob->appendChildWidget(MFXTypeSelector[1]);
+    MFXTypeSelector[1]->setDrawBorder(true);
+    MFXTypeSelector[1]->setBorderColor(0.4);
+    MFXTypeSelector[1]->setBorderEdges(MIP_EDGE_BOTTOM);
+    MFXTypeSelector[1]->setFillBackground(false);
+    MFXTypeSelector[1]->setBackgroundColor(0.5);
+    MFXTypeSelector[1]->setTextColor(0.8);
+    MFXTypeSelector[1]->setTextSize(9);
+    MFXTypeSelector[1]->setTextOffset(MIP_DRect(2,0,0,0));
+    MFXTypeSelector[1]->setDrawArrow(true);
+    MFXTypeSelector[1]->setArrowColor(0.5);
 
-    connect( fx2_type, AParameters->getItem(PAR_FX2_TYPE) );
+    connect( MFXTypeSelector[1], AParameters->getItem(PAR_FX2_TYPE) );
 
     // fx2 par 1
 
-    MIP_KnobWidget* fx2_par1 = new MIP_KnobWidget(MIP_DRect(537,220+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx2_par1);
-    fx2_par1->setDrawText(false);
-    fx2_par1->setDrawValue(false);
-    fx2_par1->setArcThickness(4);
-    fx2_par1->setValueColor(0.8);
-    fx2_par1->setTextColor(0.6);
-    fx2_par1->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx2_par1->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx2_par1->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(1*3)+0] = new MIP_KnobWidget(MIP_DRect(537,220+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(1*3)+0]);
+    MFXArgKnob[(1*3)+0]->setDrawText(false);
+    MFXArgKnob[(1*3)+0]->setDrawValue(false);
+    MFXArgKnob[(1*3)+0]->setArcThickness(4);
+    MFXArgKnob[(1*3)+0]->setValueColor(0.8);
+    MFXArgKnob[(1*3)+0]->setTextColor(0.6);
+    MFXArgKnob[(1*3)+0]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(1*3)+0]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(1*3)+0]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx2_par1, AParameters->getItem(PAR_FX2_PAR1) );
+    connect( MFXArgKnob[(1*3)+0], AParameters->getItem(PAR_FX2_PAR1) );
 
     // fx2 par 2
 
-    MIP_KnobWidget* fx2_par2 = new MIP_KnobWidget(MIP_DRect(557,220+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx2_par2);
-    fx2_par2->setDrawText(false);
-    fx2_par2->setDrawValue(false);
-    fx2_par2->setArcThickness(4);
-    fx2_par2->setValueColor(0.8);
-    fx2_par2->setTextColor(0.6);
-    fx2_par2->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx2_par2->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx2_par2->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(1*3)+1] = new MIP_KnobWidget(MIP_DRect(557,220+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(1*3)+1]);
+    MFXArgKnob[(1*3)+1]->setDrawText(false);
+    MFXArgKnob[(1*3)+1]->setDrawValue(false);
+    MFXArgKnob[(1*3)+1]->setArcThickness(4);
+    MFXArgKnob[(1*3)+1]->setValueColor(0.8);
+    MFXArgKnob[(1*3)+1]->setTextColor(0.6);
+    MFXArgKnob[(1*3)+1]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(1*3)+1]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(1*3)+1]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx2_par2, AParameters->getItem(PAR_FX2_PAR2) );
+    connect( MFXArgKnob[(1*3)+1], AParameters->getItem(PAR_FX2_PAR2) );
 
     // fx2 par 3
 
-    MIP_KnobWidget* fx2_par3 = new MIP_KnobWidget(MIP_DRect(577,220+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx2_par3);
-    fx2_par3->setDrawText(false);
-    fx2_par3->setDrawValue(false);
-    fx2_par3->setArcThickness(4);
-    fx2_par3->setValueColor(0.8);
-    fx2_par3->setTextColor(0.6);
-    fx2_par3->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx2_par3->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx2_par3->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(1*3)+2] = new MIP_KnobWidget(MIP_DRect(577,220+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(1*3)+2]);
+    MFXArgKnob[(1*3)+2]->setDrawText(false);
+    MFXArgKnob[(1*3)+2]->setDrawValue(false);
+    MFXArgKnob[(1*3)+2]->setArcThickness(4);
+    MFXArgKnob[(1*3)+2]->setValueColor(0.8);
+    MFXArgKnob[(1*3)+2]->setTextColor(0.6);
+    MFXArgKnob[(1*3)+2]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(1*3)+2]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(1*3)+2]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    //MFXArgKnob[(1*3)+2]->setBipolar(true);
+    //MFXArgKnob[(1*3)+2]->setSnap(true);
+    //MFXArgKnob[(1*3)+2]->setSnapPos(0.5);
+    //MFXArgKnob[(1*3)+2]->setSnapDist(0.07);
 
-    connect( fx2_par3, AParameters->getItem(PAR_FX2_PAR3) );
+    connect( MFXArgKnob[(1*3)+2], AParameters->getItem(PAR_FX2_PAR3) );
 
     // FX 3
 
-    MIP_KnobWidget* fx3_knob = new MIP_KnobWidget(MIP_DRect(499,205+35+35,33,33),"%", 0.0);
-    page_prob->appendChildWidget(fx3_knob);
-    fx3_knob->setArcThickness(7);
-    fx3_knob->setValueColor(0.8);
-    fx3_knob->setTextColor(0.6);
-    fx3_knob->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx3_knob->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx3_knob->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXProbKnob[2] = new MIP_KnobWidget(MIP_DRect(499,205+35+35,33,33),"%", 0.0);
+    page_prob->appendChildWidget(MFXProbKnob[2]);
+    MFXProbKnob[2]->setArcThickness(7);
+    MFXProbKnob[2]->setValueColor(0.8);
+    MFXProbKnob[2]->setTextColor(0.6);
+    MFXProbKnob[2]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXProbKnob[2]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXProbKnob[2]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx3_knob, AParameters->getItem(PAR_FX3_PROB) );
+    connect( MFXProbKnob[2], AParameters->getItem(PAR_FX3_PROB) );
 
-    MIP_SelectorWidget* fx3_type = new MIP_SelectorWidget(MIP_DRect(537,205+35+35,66,11), "Off", fx_type_menu);
-    page_prob->appendChildWidget(fx3_type);
-    fx3_type->setDrawBorder(true);
-    fx3_type->setBorderColor(0.4);
-    fx3_type->setBorderEdges(MIP_EDGE_BOTTOM);
-    fx3_type->setFillBackground(false);
-    fx3_type->setBackgroundColor(0.5);
-    fx3_type->setTextColor(0.8);
-    fx3_type->setTextSize(9);
-    fx3_type->setTextOffset(MIP_DRect(2,0,0,0));
-    fx3_type->setDrawArrow(true);
-    fx3_type->setArrowColor(0.5);
+    MFXTypeSelector[2] = new MIP_SelectorWidget(MIP_DRect(537,205+35+35,66,11), "Off", fx_type_menu);
+    page_prob->appendChildWidget(MFXTypeSelector[2]);
+    MFXTypeSelector[2]->setDrawBorder(true);
+    MFXTypeSelector[2]->setBorderColor(0.4);
+    MFXTypeSelector[2]->setBorderEdges(MIP_EDGE_BOTTOM);
+    MFXTypeSelector[2]->setFillBackground(false);
+    MFXTypeSelector[2]->setBackgroundColor(0.5);
+    MFXTypeSelector[2]->setTextColor(0.8);
+    MFXTypeSelector[2]->setTextSize(9);
+    MFXTypeSelector[2]->setTextOffset(MIP_DRect(2,0,0,0));
+    MFXTypeSelector[2]->setDrawArrow(true);
+    MFXTypeSelector[2]->setArrowColor(0.5);
 
-    connect( fx3_type, AParameters->getItem(PAR_FX3_TYPE) );
+    connect( MFXTypeSelector[2], AParameters->getItem(PAR_FX3_TYPE) );
 
     // fx3 par 1
 
-    MIP_KnobWidget* fx3_par1 = new MIP_KnobWidget(MIP_DRect(537,220+35+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx3_par1);
-    fx3_par1->setDrawText(false);
-    fx3_par1->setDrawValue(false);
-    fx3_par1->setArcThickness(4);
-    fx3_par1->setValueColor(0.8);
-    fx3_par1->setTextColor(0.6);
-    fx3_par1->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx3_par1->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx3_par1->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(2*3)+0] = new MIP_KnobWidget(MIP_DRect(537,220+35+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(2*3)+0]);
+    MFXArgKnob[(2*3)+0]->setDrawText(false);
+    MFXArgKnob[(2*3)+0]->setDrawValue(false);
+    MFXArgKnob[(2*3)+0]->setArcThickness(4);
+    MFXArgKnob[(2*3)+0]->setValueColor(0.8);
+    MFXArgKnob[(2*3)+0]->setTextColor(0.6);
+    MFXArgKnob[(2*3)+0]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(2*3)+0]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(2*3)+0]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx3_par1, AParameters->getItem(PAR_FX3_PAR1) );
+    connect( MFXArgKnob[(2*3)+0], AParameters->getItem(PAR_FX3_PAR1) );
 
     // fx3 par 2
 
-    MIP_KnobWidget* fx3_par2 = new MIP_KnobWidget(MIP_DRect(557,220+35+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx3_par2);
-    fx3_par2->setDrawText(false);
-    fx3_par2->setDrawValue(false);
-    fx3_par2->setArcThickness(4);
-    fx3_par2->setValueColor(0.8);
-    fx3_par2->setTextColor(0.6);
-    fx3_par2->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx3_par2->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx3_par2->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(2*3)+1] = new MIP_KnobWidget(MIP_DRect(557,220+35+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(2*3)+1]);
+    MFXArgKnob[(2*3)+1]->setDrawText(false);
+    MFXArgKnob[(2*3)+1]->setDrawValue(false);
+    MFXArgKnob[(2*3)+1]->setArcThickness(4);
+    MFXArgKnob[(2*3)+1]->setValueColor(0.8);
+    MFXArgKnob[(2*3)+1]->setTextColor(0.6);
+    MFXArgKnob[(2*3)+1]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(2*3)+1]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(2*3)+1]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx3_par2, AParameters->getItem(PAR_FX3_PAR2) );
+    connect( MFXArgKnob[(2*3)+1], AParameters->getItem(PAR_FX3_PAR2) );
 
     // fx3 par 3
 
-    MIP_KnobWidget* fx3_par3 = new MIP_KnobWidget(MIP_DRect(577,220+35+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx3_par3);
-    fx3_par3->setDrawText(false);
-    fx3_par3->setDrawValue(false);
-    fx3_par3->setArcThickness(4);
-    fx3_par3->setValueColor(0.8);
-    fx3_par3->setTextColor(0.6);
-    fx3_par3->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx3_par3->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx3_par3->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(2*3)+2] = new MIP_KnobWidget(MIP_DRect(577,220+35+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(2*3)+2]);
+    MFXArgKnob[(2*3)+2]->setDrawText(false);
+    MFXArgKnob[(2*3)+2]->setDrawValue(false);
+    MFXArgKnob[(2*3)+2]->setArcThickness(4);
+    MFXArgKnob[(2*3)+2]->setValueColor(0.8);
+    MFXArgKnob[(2*3)+2]->setTextColor(0.6);
+    MFXArgKnob[(2*3)+2]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(2*3)+2]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(2*3)+2]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    //MFXArgKnob[(2*3)+2]->setBipolar(true);
+    //MFXArgKnob[(2*3)+2]->setSnap(true);
+    //MFXArgKnob[(2*3)+2]->setSnapPos(0.5);
+    //MFXArgKnob[(2*3)+2]->setSnapDist(0.07);
 
-    connect( fx3_par3, AParameters->getItem(PAR_FX3_PAR3) );
+    connect( MFXArgKnob[(2*3)+2], AParameters->getItem(PAR_FX3_PAR3) );
 
     // FX 4
 
-    MIP_KnobWidget* fx4_knob = new MIP_KnobWidget(MIP_DRect(499,205+35+35+35,33,33),"%", 0.0);
-    page_prob->appendChildWidget(fx4_knob);
-    fx4_knob->setArcThickness(7);
-    fx4_knob->setValueColor(0.8);
-    fx4_knob->setTextColor(0.6);
-    fx4_knob->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx4_knob->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx4_knob->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXProbKnob[3] = new MIP_KnobWidget(MIP_DRect(499,205+35+35+35,33,33),"%", 0.0);
+    page_prob->appendChildWidget(MFXProbKnob[3]);
+    MFXProbKnob[3]->setArcThickness(7);
+    MFXProbKnob[3]->setValueColor(0.8);
+    MFXProbKnob[3]->setTextColor(0.6);
+    MFXProbKnob[3]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXProbKnob[3]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXProbKnob[3]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx4_knob, AParameters->getItem(PAR_FX4_PROB) );
+    connect( MFXProbKnob[3], AParameters->getItem(PAR_FX4_PROB) );
 
-    MIP_SelectorWidget* fx4_type = new MIP_SelectorWidget(MIP_DRect(537,205+35+35+35,66,11), "Off", fx_type_menu);
-    page_prob->appendChildWidget(fx4_type);
-    fx4_type->setDrawBorder(true);
-    fx4_type->setBorderColor(0.4);
-    fx4_type->setBorderEdges(MIP_EDGE_BOTTOM);
-    fx4_type->setFillBackground(false);
-    fx4_type->setBackgroundColor(0.5);
-    fx4_type->setTextColor(0.8);
-    fx4_type->setTextSize(9);
-    fx4_type->setTextOffset(MIP_DRect(2,0,0,0));
-    fx4_type->setDrawArrow(true);
-    fx4_type->setArrowColor(0.5);
+    MFXTypeSelector[3] = new MIP_SelectorWidget(MIP_DRect(537,205+35+35+35,66,11), "Off", fx_type_menu);
+    page_prob->appendChildWidget(MFXTypeSelector[3]);
+    MFXTypeSelector[3]->setDrawBorder(true);
+    MFXTypeSelector[3]->setBorderColor(0.4);
+    MFXTypeSelector[3]->setBorderEdges(MIP_EDGE_BOTTOM);
+    MFXTypeSelector[3]->setFillBackground(false);
+    MFXTypeSelector[3]->setBackgroundColor(0.5);
+    MFXTypeSelector[3]->setTextColor(0.8);
+    MFXTypeSelector[3]->setTextSize(9);
+    MFXTypeSelector[3]->setTextOffset(MIP_DRect(2,0,0,0));
+    MFXTypeSelector[3]->setDrawArrow(true);
+    MFXTypeSelector[3]->setArrowColor(0.5);
 
-    connect( fx4_type, AParameters->getItem(PAR_FX4_TYPE) );
+    connect( MFXTypeSelector[3], AParameters->getItem(PAR_FX4_TYPE) );
 
     // fx4 par 1
 
-    MIP_KnobWidget* fx4_par1 = new MIP_KnobWidget(MIP_DRect(537,220+35+35+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx4_par1);
-    fx4_par1->setDrawText(false);
-    fx4_par1->setDrawValue(false);
-    fx4_par1->setArcThickness(4);
-    fx4_par1->setValueColor(0.8);
-    fx4_par1->setTextColor(0.6);
-    fx4_par1->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx4_par1->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx4_par1->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(3*3)+0] = new MIP_KnobWidget(MIP_DRect(537,220+35+35+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(3*3)+0]);
+    MFXArgKnob[(3*3)+0]->setDrawText(false);
+    MFXArgKnob[(3*3)+0]->setDrawValue(false);
+    MFXArgKnob[(3*3)+0]->setArcThickness(4);
+    MFXArgKnob[(3*3)+0]->setValueColor(0.8);
+    MFXArgKnob[(3*3)+0]->setTextColor(0.6);
+    MFXArgKnob[(3*3)+0]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(3*3)+0]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(3*3)+0]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx4_par1, AParameters->getItem(PAR_FX4_PAR1) );
+    connect( MFXArgKnob[(3*3)+0], AParameters->getItem(PAR_FX4_PAR1) );
 
     // fx4 par 2
 
-    MIP_KnobWidget* fx4_par2 = new MIP_KnobWidget(MIP_DRect(557,220+35+35+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx4_par2);
-    fx4_par2->setDrawText(false);
-    fx4_par2->setDrawValue(false);
-    fx4_par2->setArcThickness(4);
-    fx4_par2->setValueColor(0.8);
-    fx4_par2->setTextColor(0.6);
-    fx4_par2->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx4_par2->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx4_par2->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(3*3)+1] = new MIP_KnobWidget(MIP_DRect(557,220+35+35+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(3*3)+1]);
+    MFXArgKnob[(3*3)+1]->setDrawText(false);
+    MFXArgKnob[(3*3)+1]->setDrawValue(false);
+    MFXArgKnob[(3*3)+1]->setArcThickness(4);
+    MFXArgKnob[(3*3)+1]->setValueColor(0.8);
+    MFXArgKnob[(3*3)+1]->setTextColor(0.6);
+    MFXArgKnob[(3*3)+1]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(3*3)+1]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(3*3)+1]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx4_par2, AParameters->getItem(PAR_FX4_PAR2) );
+    connect( MFXArgKnob[(3*3)+1], AParameters->getItem(PAR_FX4_PAR2) );
 
     // fx4 par 3
 
-    MIP_KnobWidget* fx4_par3 = new MIP_KnobWidget(MIP_DRect(577,220+35+35+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx4_par3);
-    fx4_par3->setDrawText(false);
-    fx4_par3->setDrawValue(false);
-    fx4_par3->setArcThickness(4);
-    fx4_par3->setValueColor(0.8);
-    fx4_par3->setTextColor(0.6);
-    fx4_par3->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx4_par3->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx4_par3->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(3*3)+2] = new MIP_KnobWidget(MIP_DRect(577,220+35+35+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(3*3)+2]);
+    MFXArgKnob[(3*3)+2]->setDrawText(false);
+    MFXArgKnob[(3*3)+2]->setDrawValue(false);
+    MFXArgKnob[(3*3)+2]->setArcThickness(4);
+    MFXArgKnob[(3*3)+2]->setValueColor(0.8);
+    MFXArgKnob[(3*3)+2]->setTextColor(0.6);
+    MFXArgKnob[(3*3)+2]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(3*3)+2]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(3*3)+2]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    //MFXArgKnob[(3*3)+2]->setBipolar(true);
+    //MFXArgKnob[(3*3)+2]->setSnap(true);
+    //MFXArgKnob[(3*3)+2]->setSnapPos(0.5);
+    //MFXArgKnob[(3*3)+2]->setSnapDist(0.07);
 
-    connect( fx4_par3, AParameters->getItem(PAR_FX4_PAR3) );
+    connect( MFXArgKnob[(3*3)+2], AParameters->getItem(PAR_FX4_PAR3) );
 
     // FX 5
 
-    MIP_KnobWidget* fx5_knob = new MIP_KnobWidget(MIP_DRect(499,205+35+35+35+35,33,33),"%", 0.0);
-    page_prob->appendChildWidget(fx5_knob);
-    fx5_knob->setArcThickness(7);
-    fx5_knob->setValueColor(0.8);
-    fx5_knob->setTextColor(0.6);
-    fx5_knob->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx5_knob->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx5_knob->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXProbKnob[4] = new MIP_KnobWidget(MIP_DRect(499,205+35+35+35+35,33,33),"%", 0.0);
+    page_prob->appendChildWidget(MFXProbKnob[4]);
+    MFXProbKnob[4]->setArcThickness(7);
+    MFXProbKnob[4]->setValueColor(0.8);
+    MFXProbKnob[4]->setTextColor(0.6);
+    MFXProbKnob[4]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXProbKnob[4]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXProbKnob[4]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx5_knob, AParameters->getItem(PAR_FX5_PROB) );
+    connect( MFXProbKnob[4], AParameters->getItem(PAR_FX5_PROB) );
 
-    MIP_SelectorWidget* fx5_type = new MIP_SelectorWidget(MIP_DRect(537,205+35+35+35+35,66,11), "Off", fx_type_menu);
-    page_prob->appendChildWidget(fx5_type);
-    fx5_type->setDrawBorder(true);
-    fx5_type->setBorderColor(0.4);
-    fx5_type->setBorderEdges(MIP_EDGE_BOTTOM);
-    fx5_type->setFillBackground(false);
-    fx5_type->setBackgroundColor(0.5);
-    fx5_type->setTextColor(0.8);
-    fx5_type->setTextSize(9);
-    fx5_type->setTextOffset(MIP_DRect(2,0,0,0));
-    fx5_type->setDrawArrow(true);
-    fx5_type->setArrowColor(0.5);
+    MFXTypeSelector[4] = new MIP_SelectorWidget(MIP_DRect(537,205+35+35+35+35,66,11), "Off", fx_type_menu);
+    page_prob->appendChildWidget(MFXTypeSelector[4]);
+    MFXTypeSelector[4]->setDrawBorder(true);
+    MFXTypeSelector[4]->setBorderColor(0.4);
+    MFXTypeSelector[4]->setBorderEdges(MIP_EDGE_BOTTOM);
+    MFXTypeSelector[4]->setFillBackground(false);
+    MFXTypeSelector[4]->setBackgroundColor(0.5);
+    MFXTypeSelector[4]->setTextColor(0.8);
+    MFXTypeSelector[4]->setTextSize(9);
+    MFXTypeSelector[4]->setTextOffset(MIP_DRect(2,0,0,0));
+    MFXTypeSelector[4]->setDrawArrow(true);
+    MFXTypeSelector[4]->setArrowColor(0.5);
 
-    connect( fx5_type, AParameters->getItem(PAR_FX5_TYPE) );
+    connect( MFXTypeSelector[4], AParameters->getItem(PAR_FX5_TYPE) );
 
     // fx4 par 1
 
-    MIP_KnobWidget* fx5_par1 = new MIP_KnobWidget(MIP_DRect(537,220+35+35+35+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx5_par1);
-    fx5_par1->setDrawText(false);
-    fx5_par1->setDrawValue(false);
-    fx5_par1->setArcThickness(4);
-    fx5_par1->setValueColor(0.8);
-    fx5_par1->setTextColor(0.6);
-    fx5_par1->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx5_par1->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx5_par1->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(4*3)+0] = new MIP_KnobWidget(MIP_DRect(537,220+35+35+35+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(4*3)+0]);
+    MFXArgKnob[(4*3)+0]->setDrawText(false);
+    MFXArgKnob[(4*3)+0]->setDrawValue(false);
+    MFXArgKnob[(4*3)+0]->setArcThickness(4);
+    MFXArgKnob[(4*3)+0]->setValueColor(0.8);
+    MFXArgKnob[(4*3)+0]->setTextColor(0.6);
+    MFXArgKnob[(4*3)+0]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(4*3)+0]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(4*3)+0]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx5_par1, AParameters->getItem(PAR_FX5_PAR1) );
+    connect( MFXArgKnob[(4*3)+0], AParameters->getItem(PAR_FX5_PAR1) );
 
     // fx4 par 2
 
-    MIP_KnobWidget* fx5_par2 = new MIP_KnobWidget(MIP_DRect(557,220+35+35+35+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx5_par2);
-    fx5_par2->setDrawText(false);
-    fx5_par2->setDrawValue(false);
-    fx5_par2->setArcThickness(4);
-    fx5_par2->setValueColor(0.8);
-    fx5_par2->setTextColor(0.6);
-    fx5_par2->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx5_par2->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx5_par2->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(4*3)+1] = new MIP_KnobWidget(MIP_DRect(557,220+35+35+35+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(4*3)+1]);
+    MFXArgKnob[(4*3)+1]->setDrawText(false);
+    MFXArgKnob[(4*3)+1]->setDrawValue(false);
+    MFXArgKnob[(4*3)+1]->setArcThickness(4);
+    MFXArgKnob[(4*3)+1]->setValueColor(0.8);
+    MFXArgKnob[(4*3)+1]->setTextColor(0.6);
+    MFXArgKnob[(4*3)+1]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(4*3)+1]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(4*3)+1]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
 
-    connect( fx5_par2, AParameters->getItem(PAR_FX5_PAR2) );
+    connect( MFXArgKnob[(4*3)+1], AParameters->getItem(PAR_FX5_PAR2) );
 
     // fx4 par 3
 
-    MIP_KnobWidget* fx5_par3 = new MIP_KnobWidget(MIP_DRect(577,220+35+35+35+35,18,18),"", 0.0);
-    page_prob->appendChildWidget(fx5_par3);
-    fx5_par3->setDrawText(false);
-    fx5_par3->setDrawValue(false);
-    fx5_par3->setArcThickness(4);
-    fx5_par3->setValueColor(0.8);
-    fx5_par3->setTextColor(0.6);
-    fx5_par3->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
-    fx5_par3->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
-    fx5_par3->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    MFXArgKnob[(4*3)+2] = new MIP_KnobWidget(MIP_DRect(577,220+35+35+35+35,18,18),"", 0.0);
+    page_prob->appendChildWidget(MFXArgKnob[(4*3)+2]);
+    MFXArgKnob[(4*3)+2]->setDrawText(false);
+    MFXArgKnob[(4*3)+2]->setDrawValue(false);
+    MFXArgKnob[(4*3)+2]->setArcThickness(4);
+    MFXArgKnob[(4*3)+2]->setValueColor(0.8);
+    MFXArgKnob[(4*3)+2]->setTextColor(0.6);
+    MFXArgKnob[(4*3)+2]->setArcBackColor(             MIP_Color(0.5, 0.5, 0.5) );
+    MFXArgKnob[(4*3)+2]->setArcValueColor(            MIP_Color(0.7, 0.7, 0.7) );
+    MFXArgKnob[(4*3)+2]->setInteractiveArcValueColor( MIP_Color(0.9, 0.9, 0.9) );
+    //MFXArgKnob[(4*3)+2]->setBipolar(true);
+    //MFXArgKnob[(4*3)+2]->setSnap(true);
+    //MFXArgKnob[(4*3)+2]->setSnapPos(0.5);
+    //MFXArgKnob[(4*3)+2]->setSnapDist(0.07);
 
-    connect( fx5_par3, AParameters->getItem(PAR_FX5_PAR3) );
+    connect( MFXArgKnob[(4*3)+2], AParameters->getItem(PAR_FX5_PAR3) );
 
 //
 

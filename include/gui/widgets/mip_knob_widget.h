@@ -108,11 +108,6 @@ public:
 
     // draw value arc
 
-    double a1 = 0.35 + (value * 0.8);
-    double a2 =        (value * 0.8);
-    a1 *= MIP_PI2;
-    a2 *= MIP_PI2;
-
     painter->setLineWidth(thick);
 
     if (MIsInteracting) {
@@ -126,24 +121,48 @@ public:
       painter->setDrawColor(color);
     }
 
-    painter->drawArc(cx,cy,r,a1,a2);
+    // a1 = start, from 3.oclock, counterclockwise
+    // a2 = length of arc
+    // curve is a1 'back' from end of a2
+
+    double a1 = (0.35 + (value * 0.8)) * MIP_PI2;
+    double a2 = (       (value * 0.8)) * MIP_PI2;
+
+    if (MBipolar) {
+      if (value < 0.5) {
+        double vvv = 0.5 - value;
+        double aa1 = (0.35 + (0.5 * 0.8)) * MIP_PI2;
+        double aa2 = (       (vvv * 0.8)) * MIP_PI2;
+        painter->drawArc(cx,cy,r,aa1,aa2);
+      }
+      else if (value > 0.5) {
+        double vvv = (value - 0.5) * 2.0; // -> 0..1
+        double aa1 = (0.75 + (vvv * 0.4)) * MIP_PI2;
+        double aa2 = (       (vvv * 0.4)) * MIP_PI2;
+        painter->drawArc(cx,cy,r,aa1,aa2);
+      }
+    }
+    else {
+      painter->drawArc(cx,cy,r,a1,a2);
+    }
 
     // draw modulation
 
-    if (MDrawModulation) {
-      if (!isDisabled()) {
-        double v = value + MModulations[0];
-        v = MIP_Clamp(v,0,1);
-        a1 = 0.35 + (v * 0.8);
-        a2 = 0.02;//       (MIndicatorValue * 0.8);
-        a1 *= MIP_PI2;
-        a2 *= MIP_PI2;
-        painter->setLineWidth(thick);
-        color = MModulationColor;
-        painter->setDrawColor(color);
-        painter->drawArc(cx,cy,r,a1,a2);
-      }
-    }
+
+//    if (MDrawModulation) {
+//      if (!isDisabled()) {
+//        double v = value + MModulations[0];
+//        v = MIP_Clamp(v,0,1);
+//        a1 = 0.35 + (v * 0.8);
+//        a2 = 0.02;//       (MIndicatorValue * 0.8);
+//        a1 *= MIP_PI2;
+//        a2 *= MIP_PI2;
+//        painter->setLineWidth(thick);
+//        color = MModulationColor;
+//        painter->setDrawColor(color);
+//        painter->drawArc(cx,cy,r,a1,a2);
+//      }
+//    }
 
     // draw indicator
 

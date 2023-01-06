@@ -30,8 +30,8 @@ protected:
   MIP_Color   MBackgroundCellColor    = MIP_Color(0.3);//MIP_COLOR_LIGHT_GRAY;
   MIP_Color   MActiveCellColor        = MIP_Color(0.5);//MIP_COLOR_GRAY;
 
-  bool        MValueIsBits            = true;
-  uint32_t    MNumBits                = 8;
+  bool        MValueIsBits            = false;//true;
+  uint32_t    MNumBits                = 8;//8;
 
   bool        MDrawRoundedBottom      = true;
   float       MRounded                = 8;
@@ -176,7 +176,7 @@ public:
   //----------
 
   void setValue(double AValue) override {
-    //MIP_PRINT;
+    //MIP_Print("value %.3f\n",AValue);
     if (MValueIsBits) {
       int i = (int)AValue;
       setButtonBits(i);
@@ -191,37 +191,53 @@ public:
   //----------
 
   void setValue(uint32_t AIndex,double AValue) override {
-    //MIP_PRINT;
     setValue(AValue);
   }
 
   //----------
 
   void selectButton(int32_t index) {
+    //MIP_Print("index %i\n",index);
     MSelected = index;
 
     if (MMode == MIP_BUTTON_ROW_SINGLE) {
+
       for (int32_t i=0; i<MNumColumns; i++) {
-        if (i==MSelected) MStates[i] = true;
-        else MStates[i] = false;
+        if (i==MSelected) {
+          MStates[i] = true;
+//          MValues[0] = i;
+        }
+        else {
+          MStates[i] = false;
+        }
       }
+      MValues[0] = MSelected;
+
 //      float v = (float)MSelected / ((float)MNumColumns - 1.0f);
 //      MIP_Widget::setValue(v);
     }
-    else {
+    else { // MULTI
+
       MStates[MSelected] = MStates[MSelected] ? false : true;
       if ( !MAllowZeroBits && (getNumActiveBits() == 0) ) {
         MStates[MSelected] = true;
       }
+      //calcBitValue();
+      MValues[0] = getButtonBits();
+
     }
   }
 
   //----------
 
+  // value = 0..1
+
   void selectValue(float AValue) {
-    float num = AValue * MNumColumns;
-    num = MIP_Min(num,float(MNumColumns-1));
-    selectButton( (int)num );
+    //MIP_Print("value %.3f\n",AValue);
+//    float num = AValue * MNumColumns;
+//    num = MIP_Min(num,float(MNumColumns-1));
+//    selectButton( (int)num );
+    selectButton( (int)AValue );
   }
 
 //------------------------------
@@ -229,9 +245,13 @@ public:
 //------------------------------
 
   void on_clickCell(int32_t AX, int32_t AY, int32_t AB) override {
-    selectButton(AX);
-    do_widget_update(this);
-    do_widget_redraw(this);
+    //MIP_Print("AX %i\n",AX);
+    if (AB == MIP_BUTTON_LEFT) {
+      selectButton(AX);
+      //setValue();
+      do_widget_update(this);
+      do_widget_redraw(this);
+    }
   }
 
   //----------

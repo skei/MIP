@@ -200,12 +200,67 @@ private:
   bool rnd_loop_reverse_on      = false;
   bool rnd_loop_fx_on           = false;
 
+  //
+
+  uint32_t fx_mode = 0;
+
+  double rnd_fx1        = 0.0;
+  bool   rnd_fx1_on     = false; // true;
+  //double rnd_fx1_value  = 0.0;
+
+  double rnd_fx2        = 0.0;
+  bool   rnd_fx2_on     = false;
+  //double rnd_fx2_value  = 0.0;
+
+  double rnd_fx3        = 0.0;
+  bool   rnd_fx3_on     = false; // true;
+  //double rnd_fx3_value  = 0.0;
+
+  double rnd_fx4        = 0.0;
+  bool   rnd_fx4_on     = false; // true;
+  //double rnd_fx4_value  = 0.0;
+
+  double rnd_fx5        = 0.0;
+  bool   rnd_fx5_on     = false; // true;
+  //double rnd_fx5_value  = 0.0;
+
 //------------------------------
 private:
 //------------------------------
 
-  MIP_SvfFilter   MFilter0  = {};
-  MIP_SvfFilter   MFilter1  = {};
+  MIP_SvfFilter MFX_LP0  = {};
+  MIP_SvfFilter MFX_LP1  = {};
+
+  MIP_SvfFilter MFX_HP0  = {};
+  MIP_SvfFilter MFX_HP1  = {};
+
+  MIP_SvfFilter MFX_BP0  = {};
+  MIP_SvfFilter MFX_BP1 = {};
+
+  double        MFX_LP_Input    = 0.0;
+  double        MFX_LP_Prev     = 0.0;
+  double        MFX_LP_Freq     = 0.0;
+  double        MFX_LP_BW       = 0.0;
+  double        MFX_LP_Movement = 0.0;
+  double        MFX_LP_Current  = 0.0;
+
+  double        MFX_HP_Input    = 0.0;
+  double        MFX_HP_Prev     = 0.0;
+  double        MFX_HP_Freq     = 0.0;
+  double        MFX_HP_BW       = 0.0;
+  double        MFX_HP_Movement = 0.0;
+  double        MFX_HP_Current  = 0.0;
+
+  double        MFX_BP_Input    = 0.0;
+  double        MFX_BP_Prev     = 0.0;
+  double        MFX_BP_Freq     = 0.0;
+  double        MFX_BP_BW       = 0.0;
+  double        MFX_BP_Movement = 0.0;
+  double        MFX_BP_Current  = 0.0;
+
+  double        MFX_Dist_Input  = 0.0;
+  double        MFX_Dist_Amount = 0.0;
+  double        MFX_Dist_Limit  = 0.0;
 
 //------------------------------
 public:
@@ -276,6 +331,8 @@ public:
       case PAR_PROB_FX_PROB_LOOP        : par_prob_fx_prob_loop       = value; break;
       case PAR_PROB_FX_MIN_LOOP         : par_prob_fx_min_loop        = value; break;
       case PAR_PROB_FX_MAX_LOOP         : par_prob_fx_max_loop        = value; break;
+
+      case PAR_FX_MODE                  : fx_mode                     = value; break; //
 
       case PAR_FX1_PROB                 : par_fx1_prob                = value; break;
       case PAR_FX1_TYPE                 : par_fx1_type                = value; break;
@@ -442,12 +499,11 @@ public:
           //}
         }
 
-        // envelopes
-        float env = handleEnvelopes();
+        process_effects(&out0,&out1);
+
+        float env = process_envelopes();
         out0 *= env;
         out1 *= env;
-
-        handleEffects(&out0,&out1);
 
         // finat output
 
@@ -585,8 +641,14 @@ private:
     rnd_main_slices = num_slices;
     rnd_main_subdiv = num_loops;
 
-    MFilter0.reset();
-    MFilter1.reset();
+    MFX_LP0.reset();
+    MFX_LP1.reset();
+
+    MFX_HP0.reset();
+    MFX_HP1.reset();
+
+    MFX_BP0.reset();
+    MFX_BP1.reset();
 
   }
 
@@ -622,7 +684,16 @@ private:
     rnd_range_offset_on   = false;
     rnd_range_reverse_on  = false;
     rnd_range_fx_on       = false;
-    //fx_rnd_value          = 1.0;
+
+    rnd_fx1_on            = false;
+    rnd_fx2_on            = false;
+    rnd_fx3_on            = false;
+    rnd_fx4_on            = false;
+    rnd_fx5_on            = false;
+
+    MFX_LP_Current        = 0.0;
+    MFX_HP_Current        = 0.0;
+    MFX_BP_Current        = 0.0;
 
     // size
     rnd_range_size = MIP_Random();
@@ -691,6 +762,60 @@ private:
       //MLoopLength = MIP_MaxI(MLoopLength,MIN_LOOP_LENGTH);
     }
 
+    //
+    //
+    //
+
+    // fx
+
+    if (rnd_range_fx_on) {
+      switch (fx_mode) {
+        case 0: { // single
+          double s1  =      par_fx1_prob;
+          double s2  = s1 + par_fx2_prob;
+          double s3  = s2 + par_fx3_prob;
+          double s4  = s3 + par_fx4_prob;
+          double s5  = s4 + par_fx5_prob;
+          if (s5 > 0) {
+            double r = MIP_RandomRange(0,s5);
+            if ((par_fx1_prob > 0) && (r <= s1)) {  rnd_fx1_on = true; break; }
+            if ((par_fx2_prob > 0) && (r <= s2)) {  rnd_fx2_on = true; break; }
+            if ((par_fx3_prob > 0) && (r <= s3)) {  rnd_fx3_on = true; break; }
+            if ((par_fx4_prob > 0) && (r <= s4)) {  rnd_fx4_on = true; break; }
+            if ((par_fx5_prob > 0)             ) {  rnd_fx5_on = true; break; }
+          }
+          break;
+        }
+        case 1: { // multi
+          rnd_fx1 = MIP_Random();
+          rnd_fx2 = MIP_Random();
+          rnd_fx3 = MIP_Random();
+          rnd_fx4 = MIP_Random();
+          rnd_fx5 = MIP_Random();
+          if (rnd_fx1 < par_fx1_prob) rnd_fx1_on = true;
+          if (rnd_fx2 < par_fx2_prob) rnd_fx2_on = true;
+          if (rnd_fx3 < par_fx3_prob) rnd_fx3_on = true;
+          if (rnd_fx4 < par_fx4_prob) rnd_fx4_on = true;
+          if (rnd_fx5 < par_fx5_prob) rnd_fx5_on = true;
+          break;
+        }
+        case 2: { // all
+          rnd_fx1 = 1;
+          rnd_fx2 = 1;
+          rnd_fx3 = 1;
+          rnd_fx4 = 1;
+          rnd_fx5 = 1;
+          rnd_fx1_on = true;
+          rnd_fx2_on = true;
+          rnd_fx3_on = true;
+          rnd_fx4_on = true;
+          rnd_fx5_on = true;
+          break;
+        }
+      } // fx
+
+    } // switch range fx
+
   }
 
   //------------------------------
@@ -704,6 +829,10 @@ private:
     MLoopWrapped = true;
     //MLoopCounter = 0.0;
     MLoopCount = 0;
+
+//    MFX_LP_Current        = 0.0;
+//    MFX_HP_Current        = 0.0;
+//    MFX_BP_Current        = 0.0;
 
     if (MReadSpeed < 0.0) MReadPos = MLoopStart + MLoopLength;
     //else MReadPos = MLoopStart;
@@ -802,19 +931,25 @@ private:
 //------------------------------
 
   //float handleEnvelopes(float ASliceFract, float ALoopFract) {
-  float handleEnvelopes() {
+  float process_envelopes() {
     float env = 1.0f;
+
+    // slice env
 
     float sa = par_slice_env_attack;  // * MSliceLength;
     float sd = par_slice_env_decay;   // * MSliceLength;
+
     if ((sa > 0) && (MSliceFract < sa)) {
       env *= (MSliceFract / sa);
     }
+
     if ((sd > 0) && (MSliceFract >= (1.0 - sd))) {
       env *= ((1.0 - MSliceFract) / sd);
     }
 
-    if (MLoop && (MLoopLength > 0.0)) {
+    // loop env
+
+    if (/*MLoopWrapped &&*/ MLoop && (MLoopLength > 0.0)) {
       double loop_count = (double)MLoopCount;
       double la = par_loop_env_attack * (MSampleRate * 0.001); // samples
       double ld = par_loop_env_decay  * (MSampleRate * 0.001);
@@ -834,37 +969,61 @@ private:
 private:
 //------------------------------
 
-  void process_effect(uint32_t type, double par1, double par2, double par3, float* in0, float* in1) {
+  void prepare_effect(uint32_t type, double par1, double par2, double par3, float* in0, float* in1) {
     switch (type) {
       case FX_OFF: {
         break;
       }
-      case FX_VOLUME: {
-        double v = MIP_Clamp(par1 * fx_rnd_value, 0,1);
-        *in0 *= v;
-        *in1 *= v;
+      case FX_LP: {
+        MFX_LP_Input    = 1.0;
+        double freq     = MIP_Curve(par1,0.2);
+        double f2       = freq * fx_rnd_value; // * 0.5 .. 2
+        double diff     = freq - f2;
+        MFX_LP_Freq     = f2;
+        MFX_LP_BW       = 1.0 - MIP_Curve(par2,0.9);
+        MFX_LP_Movement = diff / MRangeLength;
+        MFX_LP_Movement *= par3;
+
         break;
       }
-      case FX_PAN: {
-        double v = MIP_Clamp(par1 * fx_rnd_value, 0,1);
-        *in0 *= (1.0 - v);
-        *in1 *= v;
+      case FX_HP: {
+        MFX_HP_Input    = 1.0;
+        double freq     = MIP_Curve(par1,0.2);
+        double f2       = freq * fx_rnd_value; // * 0.5 .. 2
+        double diff     = freq - f2;
+        MFX_HP_Freq     = f2;
+        MFX_HP_BW       = 1.0 - MIP_Curve(par2,0.9);
+        MFX_HP_Movement = diff / MRangeLength;
+        MFX_HP_Movement *= par3;
+
         break;
       }
-      case FX_LP_FILTER: {
-        double freq = MIP_Clamp(par1 * fx_rnd_value, 0,1);
-        double bw   = par2;//MIP_Clamp(par2, 0,1);
-        freq  = MIP_Curve(freq,0.2);
-        //bw    = 1.0 - bw;
-        bw    = 1.0 - MIP_Curve(bw,0.9);
-        MFilter0.setMode(1); // lp
-        MFilter0.setFreq(freq);
-        MFilter0.setBW(bw);
-        MFilter1.setMode(1); // lp
-        MFilter1.setFreq(freq);
-        MFilter1.setBW(bw);
-        *in0 = MFilter0.process(*in0);
-        *in1 = MFilter1.process(*in1);
+      case FX_BP: {
+        MFX_BP_Input    = 1.0;
+        double freq     = MIP_Curve(par1,0.2);
+        double f2       = freq * fx_rnd_value; // * 0.5 .. 2
+        double diff     = freq - f2;
+        MFX_BP_Freq     = f2;
+        MFX_BP_BW       = 1.0 - MIP_Curve(par2,0.9);
+        MFX_BP_Movement = diff / MRangeLength;
+        MFX_BP_Movement *= par3;
+
+        break;
+      }
+      case FX_DIST: {
+        MFX_Dist_Input  = 1.0;
+        MFX_Dist_Amount   = MIP_Clamp(par1 * fx_rnd_value, 0,1);
+        MFX_Dist_Limit    = 1.0 - par2;
+
+        break;
+      }
+      case FX_5: {
+        break;
+      }
+      case FX_6: {
+        break;
+      }
+      case FX_7: {
         break;
       }
     } // switch
@@ -872,14 +1031,121 @@ private:
 
   //----------
 
-  void handleEffects(float* in0, float* in1) {
+  void process_effects(float* in0, float* in1) {
+
     if (rnd_range_fx_on) {
-      process_effect(par_fx1_type,par_fx1_par1,par_fx1_par2,par_fx1_par3,in0,in1);
-      process_effect(par_fx2_type,par_fx2_par1,par_fx2_par2,par_fx2_par3,in0,in1);
-      process_effect(par_fx3_type,par_fx3_par1,par_fx3_par2,par_fx3_par3,in0,in1);
-      process_effect(par_fx4_type,par_fx4_par1,par_fx4_par2,par_fx4_par3,in0,in1);
-      process_effect(par_fx5_type,par_fx5_par1,par_fx5_par2,par_fx5_par3,in0,in1);
-    }
+
+      MFX_LP_Input    = 0.0;
+      MFX_HP_Input    = 0.0;
+      MFX_BP_Input    = 0.0;
+      MFX_Dist_Input  = 0.0;
+
+      //
+
+      if (rnd_fx1_on) prepare_effect(par_fx1_type,par_fx1_par1,par_fx1_par2,par_fx1_par3,in0,in1);
+      if (rnd_fx2_on) prepare_effect(par_fx2_type,par_fx2_par1,par_fx2_par2,par_fx2_par3,in0,in1);
+      if (rnd_fx3_on) prepare_effect(par_fx3_type,par_fx3_par1,par_fx3_par2,par_fx3_par3,in0,in1);
+      if (rnd_fx4_on) prepare_effect(par_fx4_type,par_fx4_par1,par_fx4_par2,par_fx4_par3,in0,in1);
+      if (rnd_fx5_on) prepare_effect(par_fx5_type,par_fx5_par1,par_fx5_par2,par_fx5_par3,in0,in1);
+
+//      switch (fx_mode) {
+//        case FX_MODE_SINGLE: {
+//          break;
+//        }
+//        case FX_MODE_MULTI: {
+//          break;
+//        }
+//        case FX_MODE_ALL: {
+//          break;
+//        }
+//      }
+
+      // process
+
+      if (MFX_LP_Input != MFX_LP_Prev) {
+        MFX_LP0.reset();
+        MFX_LP1.reset();
+      }
+      MFX_LP_Prev = MFX_LP_Input;
+
+      if (MFX_LP_Input > 0.0) {
+        double f = MIP_Clamp(MFX_LP_Freq + MFX_LP_Current,0,1);
+        MFX_LP0.setMode(1); // lp
+        MFX_LP0.setFreq(f);
+        MFX_LP0.setBW(MFX_LP_BW);
+        MFX_LP1.setMode(1); // lp
+        MFX_LP1.setFreq(f);
+        MFX_LP1.setBW(MFX_LP_BW);
+        *in0 = MFX_LP0.process(*in0);
+        *in1 = MFX_LP1.process(*in1);
+        MFX_LP_Current += MFX_LP_Movement;
+        //MFX_LP_Freq = MIP_Clamp(MFX_LP_Freq,0,1);
+      }
+
+      //
+
+      if (MFX_HP_Input != MFX_HP_Prev) {
+        MFX_HP0.reset();
+        MFX_HP1.reset();
+        MFX_HP_Prev = MFX_HP_Input;
+      }
+
+      if (MFX_HP_Input > 0.0) {
+        double f = MIP_Clamp(MFX_HP_Freq + MFX_HP_Current,0,1);
+        MFX_HP0.setMode(2); // lp
+        MFX_HP0.setFreq(f);
+        MFX_HP0.setBW(MFX_HP_BW);
+        MFX_HP1.setMode(2); // lp
+        MFX_HP1.setFreq(f);
+        MFX_HP1.setBW(MFX_HP_BW);
+        *in0 = MFX_HP0.process(*in0);
+        *in1 = MFX_HP1.process(*in1);
+        MFX_HP_Current += MFX_HP_Movement;
+        //MFX_HP_Freq = MIP_Clamp(MFX_HP_Freq,0,1);
+      }
+
+      //
+
+      if (MFX_BP_Input != MFX_BP_Prev) {
+        MFX_BP0.reset();
+        MFX_BP1.reset();
+        MFX_BP_Prev = MFX_BP_Input;
+      }
+
+      if (MFX_BP_Input > 0.0) {
+        double f = MIP_Clamp(MFX_BP_Freq + MFX_BP_Current,0,1);
+        MFX_BP0.setMode(3); // lp
+        MFX_BP0.setFreq(f);
+        MFX_BP0.setBW(MFX_BP_BW);
+        MFX_BP1.setMode(3); // lp
+        MFX_BP1.setFreq(f);
+        MFX_BP1.setBW(MFX_BP_BW);
+        *in0 = MFX_BP0.process(*in0);
+        *in1 = MFX_BP1.process(*in1);
+        MFX_BP_Current += MFX_BP_Movement;
+        //MFX_BP_Freq = MIP_Clamp(MFX_BP_Freq,0,1);
+      }
+
+      //
+
+      if (MFX_Dist_Input > 0.0) {
+        float s = MIP_Sign(*in0);
+        float a = abs(*in0);
+        a *= 1.0 + (MFX_Dist_Amount * 2.0);
+        if (a > 1.0) {
+          a = 1.0 + (1.0 - a);
+        }
+        *in0 = (a * s * MFX_Dist_Limit);
+        s = MIP_Sign(*in1);
+        a = abs(*in1);
+        a *= 1.0 + (MFX_Dist_Amount * 2.0);
+        if (a > 1.0) {
+          a = 1.0 + (1.0 - a);
+        }
+        *in1 = (a * s * MFX_Dist_Limit);
+      }
+
+    } // fx on
   }
 
 };

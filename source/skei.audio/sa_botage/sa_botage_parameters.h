@@ -8,12 +8,16 @@
 
 //----------------------------------------------------------------------
 
-#define SA_BOTAGE_FX_TYPE_COUNT 4
+#define SA_BOTAGE_FX_TYPE_COUNT 8
 const char* fx_type_text[SA_BOTAGE_FX_TYPE_COUNT] = {
   "Off",
-  "Filter",
-  "Volume",
-  "Pan"
+  "Lowpass",
+  "Highpass",
+  "Bandpass",
+  "Distortion",
+  "fx6",
+  "fx7",
+  "fx8"
   //"Delay",
   //"Distortion",
   //"Bitcrusher",
@@ -22,19 +26,32 @@ const char* fx_type_text[SA_BOTAGE_FX_TYPE_COUNT] = {
 
 enum fx_type_enums {
   FX_OFF = 0,
-  FX_LP_FILTER,
-  FX_VOLUME,
-  FX_PAN,
+  FX_LP,
+  FX_HP,
+  FX_BP,
+  FX_DIST,
+  FX_5,
+  FX_6,
+  FX_7,
   //FX_DELAY,
   //FX_DISTORTION,
   //FX_BITCRUSHER,
   //FX_COMBFILTER
 };
 
-const char* fx_mode_text[3] = {
-  "All",
+enum fx_mode_enums {
+  FX_MODE_SINGLE  = 0,
+  FX_MODE_MULTI,
+  FX_MODE_ALL,
+  FX_MODE_COUNT
+};
+
+
+//#define SA_BOTAGE_FX_MODE_COUNT 3
+const char* fx_mode_text[FX_MODE_COUNT] = {
+  "Single",
   "Multi",
-  "Single"
+  "All"
 };
 
 //----------------------------------------------------------------------
@@ -88,6 +105,8 @@ enum sa_botage_params_e {
   PAR_PROB_FX_PROB_LOOP,
   PAR_PROB_FX_MIN_LOOP,
   PAR_PROB_FX_MAX_LOOP,
+
+  PAR_FX_MODE,
 
   PAR_FX1_PROB,
   PAR_FX1_TYPE,
@@ -277,35 +296,37 @@ void sa_botage_init_parameters(MIP_Plugin* APlugin) {
 
   // ----- effects
 
+  APlugin->appendParameter(new MIP_TextParameter(             "FX Mode",              0,          0, FX_MODE_COUNT-1, fx_mode_text ));
+
   APlugin->appendParameter(new MIP_SA_PercentParameter(       "FX1 Prob",             0,          0, 1 ));
   APlugin->appendParameter(new MIP_TextParameter(             "FX1 Type",             1,          0, SA_BOTAGE_FX_TYPE_COUNT-1, fx_type_text ));
   APlugin->appendParameter(new MIP_Parameter(                 "FX1 Param1",           0.6,        0, 1 ));
   APlugin->appendParameter(new MIP_Parameter(                 "FX1 Param2",           0.4,        0, 1 ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX1 Param3",           0,          0, 1 ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX1 Param3",           0.0,        0, 1 ));
 
   APlugin->appendParameter(new MIP_SA_PercentParameter(       "FX2 Prob",             0,          0, 1 ));
-  APlugin->appendParameter(new MIP_TextParameter(             "FX2 Type",             0,          0, SA_BOTAGE_FX_TYPE_COUNT-1, fx_type_text ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX2 Param1",           0,          0, 1 ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX2 Param2",           0,          0, 1 ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX2 Param3",           0,          0, 1 ));
+  APlugin->appendParameter(new MIP_TextParameter(             "FX2 Type",             2,          0, SA_BOTAGE_FX_TYPE_COUNT-1, fx_type_text ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX2 Param1",           0.6,        0, 1 ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX2 Param2",           0.4,        0, 1 ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX2 Param3",           0.2,        0, 1 ));
 
   APlugin->appendParameter(new MIP_SA_PercentParameter(       "FX3 Prob",             0,          0, 1 ));
-  APlugin->appendParameter(new MIP_TextParameter(             "FX3 Type",             0,          0, SA_BOTAGE_FX_TYPE_COUNT-1, fx_type_text ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX3 Param1",           0,          0, 1 ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX3 Param2",           0,          0, 1 ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX3 Param3",           0,          0, 1 ));
+  APlugin->appendParameter(new MIP_TextParameter(             "FX3 Type",             3,          0, SA_BOTAGE_FX_TYPE_COUNT-1, fx_type_text ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX3 Param1",           0.6,        0, 1 ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX3 Param2",           0.4,        0, 1 ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX3 Param3",           0.8,        0, 1 ));
 
   APlugin->appendParameter(new MIP_SA_PercentParameter(       "FX4 Prob",             0,          0, 1 ));
-  APlugin->appendParameter(new MIP_TextParameter(             "FX4 Type",             0,          0, SA_BOTAGE_FX_TYPE_COUNT-1, fx_type_text ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX4 Param1",           0,          0, 1 ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX4 Param2",           0,          0, 1 ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX4 Param3",           0,          0, 1 ));
+  APlugin->appendParameter(new MIP_TextParameter(             "FX4 Type",             4,          0, SA_BOTAGE_FX_TYPE_COUNT-1, fx_type_text ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX4 Param1",           0.5,        0, 1 ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX4 Param2",           0.5,        0, 1 ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX4 Param3",           0.0,        0, 1 ));
 
   APlugin->appendParameter(new MIP_SA_PercentParameter(       "FX5 Prob",             0,          0, 1 ));
   APlugin->appendParameter(new MIP_TextParameter(             "FX5 Type",             0,          0, SA_BOTAGE_FX_TYPE_COUNT-1, fx_type_text ));
   APlugin->appendParameter(new MIP_Parameter(                 "FX5 Param1",           0,          0, 1 ));
   APlugin->appendParameter(new MIP_Parameter(                 "FX5 Param2",           0,          0, 1 ));
-  APlugin->appendParameter(new MIP_Parameter(                 "FX5 Param3",           0,          0, 1 ));
+  APlugin->appendParameter(new MIP_Parameter(                 "FX5 Param3",           0.0,        0, 1 ));
 
   MIP_Assert( APlugin->getParameterCount() == SA_BOTAGE_PARAM_COUNT );
 
