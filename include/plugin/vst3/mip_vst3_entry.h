@@ -82,7 +82,7 @@ private:
   //----------
 
   bool isInstrument(const clap_plugin_descriptor_t* descriptor) {
-    const char** feature = descriptor->features;
+    const char* const* feature = descriptor->features;
     uint32_t index = 0;
     while (feature[index]) {
       if (strcmp(feature[index], "instrument") == 0) return true;

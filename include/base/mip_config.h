@@ -146,11 +146,12 @@
 //#define MIP_NO_REGISTRY
 
   // we always want to export the clap entry
-
   #define MIP_PLUGIN_CLAP
+
 //#define MIP_PLUGIN_EXE
-//#define MIP_PLUGIN_VST2
-//#define MIP_PLUGIN_VST3
+  #define MIP_PLUGIN_VST2
+  #define MIP_PLUGIN_VST3
+
 //#define MIP_PLUGIN_GENERIC_EDITOR
 //#define MIP_VST2_FST
 //#define MIP_VST2_SDK
