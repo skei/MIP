@@ -212,30 +212,31 @@ public: // plugin
 
   const void* get_extension(const char *id) override {
     LOG.print("CLAP: get_extension \"%s\"\n",id);
-    if (strcmp(id,CLAP_EXT_AMBISONIC)           == 0) return &MAmbisonic;       // draft
-    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG)  == 0) return &MAudioPortsConfig;
-    if (strcmp(id,CLAP_EXT_AUDIO_PORTS)         == 0) return &MAudioPorts;
-    if (strcmp(id,CLAP_EXT_CHECK_FOR_UPDATE)    == 0) return &MCheckForUpdate;  // draft
-    if (strcmp(id,CLAP_EXT_CV)                  == 0) return &MCV;              // draft
-    //if (strcmp(id,CLAP_EXT_FILE_REFERENCE)      == 0) return &MFileReference;   // draft
+    if (strcmp(id,CLAP_EXT_AMBISONIC)               == 0) return &MAmbisonic;             // draft
+    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_ACTIVATION)  == 0) return &MAudioPortsActivation;  // draft
+    if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG)      == 0) return &MAudioPortsConfig;
+    if (strcmp(id,CLAP_EXT_AUDIO_PORTS)             == 0) return &MAudioPorts;
+    if (strcmp(id,CLAP_EXT_CHECK_FOR_UPDATE)        == 0) return &MCheckForUpdate;        // draft
+    if (strcmp(id,CLAP_EXT_CV)                      == 0) return &MCV;                    // draft
     #ifndef MIP_NO_GUI
-    if (strcmp(id,CLAP_EXT_GUI)                 == 0) return &MGui;
+    if (strcmp(id,CLAP_EXT_GUI)                     == 0) return &MGui;
     #endif
-    if (strcmp(id,CLAP_EXT_LATENCY)             == 0) return &MLatency;
-    if (strcmp(id,CLAP_EXT_MIDI_MAPPINGS)       == 0) return &MMidiMappings;    // draft
-    if (strcmp(id,CLAP_EXT_NOTE_NAME)           == 0) return &MNoteName;
-    if (strcmp(id,CLAP_EXT_NOTE_PORTS)          == 0) return &MNotePorts;
-    if (strcmp(id,CLAP_EXT_PARAMS)              == 0) return &MParams;
-    if (strcmp(id,CLAP_EXT_PRESET_LOAD)         == 0) return &MPresetLoad;      // draft
-    //if (strcmp(id,CLAP_EXT_QUICK_CONTROLS)      == 0) return &MQuickControls;   // draft
-    if (strcmp(id,CLAP_EXT_RENDER)              == 0) return &MRender;
-    if (strcmp(id,CLAP_EXT_STATE)               == 0) return &MState;
-    if (strcmp(id,CLAP_EXT_SURROUND)            == 0) return &MSurround;        // draft
-    if (strcmp(id,CLAP_EXT_THREAD_POOL)         == 0) return &MThreadPool;
-    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT)       == 0) return &MTimerSupport;
-    if (strcmp(id,CLAP_EXT_TRACK_INFO)          == 0) return &MTrackInfo;       // draft
-    if (strcmp(id,CLAP_EXT_TUNING)              == 0) return &MTuning;          // draft
-    if (strcmp(id,CLAP_EXT_VOICE_INFO)          == 0) return &MVoiceInfo;       // draft
+    if (strcmp(id,CLAP_EXT_LATENCY)                 == 0) return &MLatency;
+    if (strcmp(id,CLAP_EXT_MIDI_MAPPINGS)           == 0) return &MMidiMappings;          // draft
+    if (strcmp(id,CLAP_EXT_NOTE_NAME)               == 0) return &MNoteName;
+    if (strcmp(id,CLAP_EXT_NOTE_PORTS)              == 0) return &MNotePorts;
+    if (strcmp(id,CLAP_EXT_PARAM_INDICATION)        == 0) return &MParamIndication;       // draft
+    if (strcmp(id,CLAP_EXT_PARAMS)                  == 0) return &MParams;
+    if (strcmp(id,CLAP_EXT_PRESET_LOAD)             == 0) return &MPresetLoad;            // draft
+    if (strcmp(id,CLAP_EXT_REMOTE_CONTROLS)         == 0) return &MRemoteControls;        // draft
+    if (strcmp(id,CLAP_EXT_RENDER)                  == 0) return &MRender;
+    if (strcmp(id,CLAP_EXT_STATE)                   == 0) return &MState;
+    if (strcmp(id,CLAP_EXT_SURROUND)                == 0) return &MSurround;              // draft
+    if (strcmp(id,CLAP_EXT_THREAD_POOL)             == 0) return &MThreadPool;
+    if (strcmp(id,CLAP_EXT_TIMER_SUPPORT)           == 0) return &MTimerSupport;
+    if (strcmp(id,CLAP_EXT_TRACK_INFO)              == 0) return &MTrackInfo;             // draft
+    if (strcmp(id,CLAP_EXT_TUNING)                  == 0) return &MTuning;                // draft
+    if (strcmp(id,CLAP_EXT_VOICE_INFO)              == 0) return &MVoiceInfo;             // draft
     return nullptr;
   }
 
@@ -250,6 +251,17 @@ public: // draft ambisonic
 
   bool ambisonic_get_info(bool is_input,  uint32_t port_index, clap_ambisonic_info_t *info) override {
     return false;
+  }
+
+//------------------------------
+public: // draft audio-ports-activation
+//------------------------------
+
+  bool audio_ports_activation_can_activate_while_processing() override {
+    return false;
+  }
+
+  void audio_ports_activation_set_active(bool is_input, uint32_t port_index, bool is_active) override {
   }
 
 //------------------------------
@@ -614,6 +626,18 @@ public: // ext note-ports
   }
 
 //------------------------------
+public: // draft param-indication
+//------------------------------
+
+  void param_indication_set_mapping(clap_id param_id, bool has_mapping, const clap_color_t *color, const char *label, const char *description) override {
+    MIP_Print("id %i mapping %i color %i.%i.%i label '%s' description '%s'\n",param_id,has_mapping,color->red,color->green,color->blue,label,description);
+  }
+
+  void param_indication_set_automation(clap_id param_id, uint32_t automation_state, const clap_color_t *color) override {
+    MIP_Print("id %i state %i color %i.%i.%i\n",param_id,automation_state,color->red,color->green,color->blue);
+  }
+
+//------------------------------
 public: // ext params
 //------------------------------
 
@@ -684,31 +708,32 @@ public: // draft preset-load
   }
 
 //------------------------------
-public: // draft quick-controls
+public: // draft remote-controls
 //------------------------------
 
-  /*
-
-  uint32_t quick_controls_count() override {
+  uint32_t remote_controls_count() override {
+    MIP_PRINT;
     return 1;
   }
 
-  //----------
-
-  bool quick_controls_get(uint32_t page_index, clap_quick_controls_page_t *page) override {
-    switch (page_index) {
-      case 0:
-        page->id = 0;
-        strcpy(page->name,"page1");
-        for (uint32_t i=0; i<CLAP_QUICK_CONTROLS_COUNT; i++) {
-          page->param_ids[i] = i;
-        }
-        return true;
+  bool remote_controls_get(uint32_t page_index, clap_remote_controls_page_t *page) override {
+    MIP_PRINT;
+    if (page_index == 0) {
+      strcpy(page->section_name,"SectionName");
+      page->page_id = 0;
+      strcpy(page->page_name,"PageName");
+      page->param_ids[0] = 0;
+      page->param_ids[1] = 1;
+      page->param_ids[2] = 2;
+      page->param_ids[3] = 3;
+      page->param_ids[4] = 4;
+      page->param_ids[5] = 5;
+      page->param_ids[6] = 6;
+      page->param_ids[7] = 7;
+      return true;
     }
     return false;
   }
-
-  */
 
 //------------------------------
 public: // ext render

@@ -5,7 +5,10 @@
 #include "plugin/mip_note.h"
 #include "plugin/mip_voice.h"
 
-typedef MIP_Queue<MIP_Note,1024> MIP_NoteQueue;
+#define MIP_VOICE_MANAGER_MAX_EVENTS_PER_BLOCK  1024
+#define MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE 4096
+
+typedef MIP_Queue<MIP_Note,MIP_VOICE_MANAGER_MAX_EVENTS_PER_BLOCK> MIP_NoteQueue;
 
 //----------------------------------------------------------------------
 //
@@ -20,20 +23,20 @@ class MIP_VoiceManager {
 private:
 //------------------------------
 
-  MIP_Voice<VOICE>              MVoices[COUNT]          = {};
-  MIP_VoiceContext              MVoiceContext           = {};
-  MIP_NoteQueue                 MNoteEndQueue           = {};
+  MIP_Voice<VOICE>              MVoices[COUNT]        = {};
+  MIP_VoiceContext              MVoiceContext         = {};
+  float                         MVoiceBuffer[COUNT * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE] = {0};
 
-  const clap_plugin_t*          MClapPlugin             = nullptr;
-  const clap_host_t*            MClapHost               = nullptr;
-  const clap_host_thread_pool*  MThreadPool             = nullptr;
 
-  uint32_t                      MNumPlayingVoices       = 0;
-  uint32_t                      MNumReleasedVoices      = 0;
+  MIP_NoteQueue                 MNoteEndQueue         = {};
 
-  bool                          MProcessThreaded        = false;
-  uint32_t                      MNumThreadedVoices      = 0;
-  uint32_t                      MThreadedVoices[COUNT]  = {};
+  const clap_plugin_t*          MClapPlugin           = nullptr;
+  const clap_host_t*            MClapHost             = nullptr;
+  const clap_host_thread_pool*  MThreadPool           = nullptr;
+
+  bool                          MProcessThreaded      = true;
+  uint32_t                      MNumActiveVoices      = 0;
+  uint32_t                      MActiveVoices[COUNT]  = {};
 
 //------------------------------
 public:
@@ -51,150 +54,283 @@ public:
 public:
 //------------------------------
 
+
+
+//------------------------------
+public:
+//------------------------------
+
   void init(const clap_plugin_t* APlugin, const clap_host_t* AHost) {
     MClapPlugin = APlugin;
     MClapHost = AHost;
+    MThreadPool = (const clap_host_thread_pool*)MClapHost->get_extension(AHost,CLAP_EXT_THREAD_POOL);
   }
 
   //----------
 
-  void activate(double ASampleRate, uint32_t AMinFrameSize, uint32_t AMaxFrameSize) {
+  void activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) {
+    MVoiceContext.process_context   = nullptr; //
+    MVoiceContext.buffer            = MVoiceBuffer;
+    MVoiceContext.min_frames_count  = min_frames_count;
+    MVoiceContext.max_frames_count  = max_frames_count;
+    MVoiceContext.samplerate        = sample_rate;
+    for (uint32_t i=0; i<COUNT; i++) {
+      MVoices[i].init(i,&MVoiceContext);
+    }
   }
 
-  //------------------------------
-  //
-  //------------------------------
+//------------------------------
+public:
+//------------------------------
+
+  void processNoteOn(const clap_event_note_t* event) {
+    int32_t voice = findFreeVoice();
+    if (voice >= 0) {
+      //MIP_Print("voice %i\n",voice);
+      MVoices[voice].state = MIP_VOICE_WAITING;
+      MVoices[voice].env_level = 0.0;
+      MVoices[voice].events.write(&event->header);
+      MVoices[voice].note.port = event->port_index;
+      MVoices[voice].note.channel = event->channel;
+      MVoices[voice].note.key = event->key;
+      MVoices[voice].note.noteid = event->note_id;
+    }
+  }
+
+  //----------
+
+  void processNoteOff(const clap_event_note_t* event) {
+    int32_t voice = findVoice(event->port_index,event->channel,event->key,event->note_id);
+    if (voice >= 0) {
+      //MIP_Print("voice %i\n",voice);
+      MVoices[voice].events.write(&event->header);
+    }
+  }
+
+  //----------
+
+  void processNoteChoke(const clap_event_note_t* event) {
+    int32_t voice = findVoice(event->port_index,event->channel,event->key,event->note_id);
+    if (voice >= 0) {
+      //MIP_Print("voice %i\n",voice);
+      MVoices[voice].events.write(&event->header);
+    }
+  }
+
+  //----------
+
+  //void processNoteEnd(const clap_event_note_t* event) {
+  //}
+
+  //----------
+
+  void processNoteExpression(const clap_event_note_expression_t* event) {
+    int32_t voice = findVoice(event->port_index,event->channel,event->key,event->note_id);
+    if (voice >= 0) {
+      //MIP_Print("voice %i\n",voice);
+      MVoices[voice].events.write(&event->header);
+    }
+  }
+
+  //----------
+
+  void processParamValue(const clap_event_param_value_t* event) {
+    int32_t voice = findVoice(event->port_index,event->channel,event->key,event->note_id);
+    if (voice >= 0) {
+      //MIP_Print("voice %i\n",voice);
+      MVoices[voice].events.write(&event->header);
+    }
+  }
+
+  //----------
+
+  void processParamMod(const clap_event_param_mod_t* event) {
+    int32_t voice = findVoice(event->port_index,event->channel,event->key,event->note_id);
+    if (voice >= 0) {
+      //MIP_Print("voice %i\n",voice);
+      MVoices[voice].events.write(&event->header);
+    }
+  }
+
+  //----------
+
+  //void processParamGestureBegin(const clap_event_param_gesture_t* event) {
+  //  MIP_PRINT;
+  //}
+
+  //----------
+
+  //void processParamGestureEnd(const clap_event_param_gesture_t* event) {
+  //  MIP_PRINT;
+  //}
+
+  //----------
+
+  //void processTransport(const clap_event_transport_t* event) {
+  //  //MIP_PRINT;
+  //}
+
+  //----------
+
+  void processMidi(const clap_event_midi_t* event) {
+    MIP_PRINT;
+  }
+
+  //----------
+
+  void processMidiSysex(const clap_event_midi_sysex_t* event) {
+    MIP_PRINT;
+  }
+
+  //----------
+
+  void processMidi2(const clap_event_midi2_t* event) {
+    MIP_PRINT;
+  }
+
+//------------------------------
+public:
+//------------------------------
 
   void preProcessEvents(const clap_input_events_t* in_events, const clap_output_events_t* out_events) {
   }
 
   //----------
 
-  void processNoteOn(const clap_event_note_t* event) {}
-  void processNoteOff(const clap_event_note_t* event) {}
-  void processNoteChoke(const clap_event_note_t* event) {}
-  void processNoteEnd(const clap_event_note_t* event) {}
-  void processNoteExpression(const clap_event_note_expression_t* event) {}
-  void processParamValue(const clap_event_param_value_t* event) {}
-  void processParamMod(const clap_event_param_mod_t* event) {}
-  void processParamGestureBegin(const clap_event_param_gesture_t* event) {}
-  void processParamGestureEnd(const clap_event_param_gesture_t* event) {}
-  void processTransport(const clap_event_transport_t* event) {}
-  void processMidi(const clap_event_midi_t* event) {}
-  void processMidiSysex(const clap_event_midi_sysex_t* event) {}
-  void processMidi2(const clap_event_midi2_t* event) {}
-
-  //----------
-
-  //void processEvents(const clap_input_events_t* in_events, const clap_output_events_t* out_events) {
-  //  uint32_t num_events = in_events->size(in_events);
-  //  for (uint32_t i=0; i<num_events; i++) {
-  //    const clap_event_header_t* header = in_events->get(in_events,i);
-  //    if (header->space_id == CLAP_CORE_EVENT_SPACE_ID) {
-  //      processEvent(header);
-  //    }
-  //  }
-  //}
-
-  //void processEvent(const clap_event_header_t* header) {
-  //  switch (header->type) {
-  //    case CLAP_EVENT_NOTE_ON:              processNoteOnEvent(             (const clap_event_note_t*)            header  );  break;
-  //    case CLAP_EVENT_NOTE_OFF:             processNoteOffEvent(            (const clap_event_note_t*)            header  );  break;
-  //    case CLAP_EVENT_NOTE_CHOKE:           processNoteChokeEvent(          (const clap_event_note_t*)            header  );  break;
-  //    case CLAP_EVENT_NOTE_END:             processNoteEndEvent(            (const clap_event_note_t*)            header  );  break;
-  //    case CLAP_EVENT_NOTE_EXPRESSION:      processNoteExpressionEvent(     (const clap_event_note_expression_t*) header  );  break;
-  //    case CLAP_EVENT_PARAM_VALUE:          processParamValueEvent(         (const clap_event_param_value_t*)     header  );  break;
-  //    case CLAP_EVENT_PARAM_MOD:            processParamModEvent(           (const clap_event_param_mod_t*)       header  );  break;
-  //    case CLAP_EVENT_PARAM_GESTURE_BEGIN:  processParamGestureBeginEvent(  (const clap_event_param_gesture_t*)   header  );  break;
-  //    case CLAP_EVENT_PARAM_GESTURE_END:    processParamGestureEndEvent(    (const clap_event_param_gesture_t*)   header  );  break;
-  //    case CLAP_EVENT_TRANSPORT:            processTransportEvent(          (const clap_event_transport_t*)       header  );  break;
-  //    case CLAP_EVENT_MIDI:                 processMidiEvent(               (const clap_event_midi_t*)            header  );  break;
-  //    case CLAP_EVENT_MIDI_SYSEX:           processMidiSysexEvent(          (const clap_event_midi_sysex_t*)      header  );  break;
-  //    case CLAP_EVENT_MIDI2:                processMidi2Event(              (const clap_event_midi2_t*)           header  );  break;
-  //  }
-  //}
-
-
-  //----------
-
   void postProcessEvents(const clap_input_events_t* in_events, const clap_output_events_t* out_events) {
     for (uint32_t i=0; i<COUNT; i++) {
-      //if (MVoices[i].state == MIP_VOICE_WAITING) {
-      //}
+      if (MVoices[i].state == MIP_VOICE_WAITING) {
+        // still waiting, not started? something might be wrong..
+        MVoices[i].state = MIP_VOICE_OFF;
+      }
       if (MVoices[i].state == MIP_VOICE_FINISHED) {
         MVoices[i].state = MIP_VOICE_OFF;
-        MThreadedVoices[MNumThreadedVoices++] = i;
+        queueNoteEnd(MVoices[i].note);
+        //MNumReleasedVoices -= 1;
       }
     }
     flushNoteEnds(out_events);
   }
 
-  //------------------------------
-  //
-  //------------------------------
+//------------------------------
+public:
+//------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AProcessContext) {
     MVoiceContext.process_context = AProcessContext;
 
+    uint32_t len = AProcessContext->process->frames_count;
+    float* out0 = AProcessContext->process->audio_outputs[0].data32[0];
+    float* out1 = AProcessContext->process->audio_outputs[0].data32[1];
+    MIP_ClearMonoBuffer(out0,len);
+    MIP_ClearMonoBuffer(out1,len);
+
+    //float** output = AProcessContext->process->audio_outputs[0].data32;
+    //MIP_ClearStereoBuffer(output,len);
+
     // set up threaded voices
 
-    MNumThreadedVoices = 0;
+    MNumActiveVoices = 0;
     for (uint32_t i=0; i<COUNT; i++) {
       if ((MVoices[i].state == MIP_VOICE_WAITING) || (MVoices[i].state == MIP_VOICE_PLAYING) || (MVoices[i].state == MIP_VOICE_RELEASED)) {
-        MThreadedVoices[MNumThreadedVoices++] = i;
+        MActiveVoices[MNumActiveVoices++] = i;
       }
     }
 
     // process threaded voices
 
-    bool processed = false;
-    if (MProcessThreaded) {
-      // thread pool
-      processed = MThreadPool->request_exec(MClapHost,MNumThreadedVoices);
-    }
-    if (!processed) {
-      // manual
-      for (uint32_t i=0; i<MNumThreadedVoices; i++) {
-        uint32_t v = MThreadedVoices[i];
-        process_voice(v);
+    if (MNumActiveVoices > 0) {
+
+      // thread-pool
+
+      bool processed = false;
+      if (MProcessThreaded) {
+        processed = MThreadPool->request_exec(MClapHost,MNumActiveVoices);
+        //MIP_Print("request_exec(%i) returned %s\n", MNumActiveVoices, processed ? "true" : "false" );
       }
-    }
 
-    //post process
+      // manually
 
-    post_process_voices();
+      if (!processed) {
+        for (uint32_t i=0; i<MNumActiveVoices; i++) {
+          uint32_t v = MActiveVoices[i];
+          process_voice(v);
+        }
+      }
+
+      // mix
+
+      for (uint32_t i=0; i<MNumActiveVoices; i++) {
+        uint32_t index = MActiveVoices[i];
+        //process_voice(v);
+        float* ptr = MVoiceBuffer;
+        ptr += (index * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
+        MIP_AddMonoBuffer(out0,ptr,len);
+        MIP_AddMonoBuffer(out1,ptr,len);
+      }
+
+    } // num voices > 0
   }
 
 //------------------------------
-public: // thread-pool
-//------------------------------
-
-  // AIndex = task_index
-
-  void thread_pool_exec(uint32_t AIndex) {
-    uint32_t v = MThreadedVoices[AIndex];
-    process_voice(v);
-  }
-
-//------------------------------
-private:
+//private:
+public:
 //------------------------------
 
   // (potentially) called in separate threads for each voice
 
   void process_voice(uint32_t i) {
-    MVoices[i].process(&MVoiceContext);
+    MVoices[i].process();
   };
 
   //----------
 
-  void post_process_voices() {
-    // mix
-  };
+  // AIndex = task_index
 
-//------------------------------
-private:
-//------------------------------
+  void thread_pool_exec(uint32_t AIndex) {
+    uint32_t v = MActiveVoices[AIndex];
+    process_voice(v);
+  }
+
+  //----------
+
+  int32_t findVoice(int32_t port, int32_t chan, int32_t key, int32_t id) {
+    //MIP_Print("port %i chan %i key %i id %i\n",port,chan,key,id);
+    for (uint32_t i=0; i<COUNT; i++) {
+      if ((port == -1) || (port == MVoices[i].note.port)) {
+        if ((chan == -1) || (chan == MVoices[i].note.channel)) {
+          if ((key == -1) || (key == MVoices[i].note.key)) {
+            if ((id == -1) || (id == MVoices[i].note.noteid)) {
+              return i;
+            }
+          }
+        }
+      }
+    }
+    return -1;
+  }
+
+  //----------
+
+  int32_t findFreeVoice(bool AReleased=false) {
+    for (uint32_t i=0; i<COUNT; i++) {
+      if (MVoices[i].state == MIP_VOICE_OFF) return i;
+    }
+    if (AReleased) {
+      int32_t lowest_index = -1;
+      double  lowest_level = 666.0;
+      for (uint32_t i=0; i<COUNT; i++) {
+        if (MVoices[i].env_level < lowest_level) {
+          lowest_index = i;
+          lowest_level = MVoices[i].env_level;
+        }
+      }
+      if (lowest_index >= 0) return lowest_index;
+    }
+    return -1;
+  }
+
+  //----------
 
   void queueNoteEnd(MIP_Note ANote) {
     MNoteEndQueue.write(ANote);
