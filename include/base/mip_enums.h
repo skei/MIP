@@ -230,6 +230,12 @@ enum MIP_EWidgetFlags {
   MIP_WIDGET_FLAG_AUTO_LOCK_CURSOR   = 0x04
 };
 
+enum MIP_EWidgetNotifications {
+  MIP_WIDGET_NOTIFY_NONE             = 0,
+  MIP_WIDGET_NOTIFY_SELECT           = 1,
+  MIP_WIDGET_NOTIFY_CANCEL           = 2
+};
+
 /*
 enum MIP_EWidgetAlignment {
   MIP_WIDGET_ALIGN_NONE               = 0,  // relative to window

@@ -66,7 +66,6 @@ public:
       appendStereoInput();
       appendStereoOutput();
       appendParameter( new MIP_Parameter("Gain", 0.5) );
-      //setDefaultParameterValues(); // called in activate()
     }
     return result;
   }

@@ -246,7 +246,7 @@ public:
 
     // slices
 
-    MNumSlicesWidget = new MIP_DragValueWidget( MIP_DRect(130,330,110,16),"Sub Beats");
+    MNumSlicesWidget = new MIP_DragValueWidget( MIP_DRect(130,330,110,16),"Split Beats");
     MRootWidget->appendChildWidget(MNumSlicesWidget);
     MNumSlicesWidget->setFillBackground(true);
     MNumSlicesWidget->setBackgroundColor( 0.5 );
@@ -261,39 +261,87 @@ public:
 
     // loop env
 
-    MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(10,356,110,16), "Loop", 0.1, 0.9 );
-    MRootWidget->appendChildWidget(env1_slider);
-    env1_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    env1_slider->setHint("Loop Envelope");
-    env1_slider->setBackgroundColor(0.4);
-    env1_slider->setSliderColor(0.6);
-    env1_slider->setTextColor(MIP_Color(0,0,0,0.5));
-    env1_slider->setTextSize(9);
-    env1_slider->setValueColor(0.2);
-    env1_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
-    env1_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
-    env1_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
+//    MIP_EnvSliderWidget* env1_slider = new MIP_EnvSliderWidget( MIP_DRect(10,356,110,16), "Loop", 0.1, 0.9 );
+//    MRootWidget->appendChildWidget(env1_slider);
+//    env1_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+//    env1_slider->setHint("Loop Envelope");
+//    env1_slider->setBackgroundColor(0.4);
+//    env1_slider->setSliderColor(0.6);
+//    env1_slider->setTextColor(MIP_Color(0,0,0,0.5));
+//    env1_slider->setTextSize(9);
+//    env1_slider->setValueColor(0.2);
+//    env1_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
+//    env1_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
+//    env1_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
+//
+//    connect( env1_slider, 0, AParameters->getItem(PAR_LOOP_ENV_ATTACK) );
+//    connect( env1_slider, 1, AParameters->getItem(PAR_LOOP_ENV_DECAY) );
 
-    connect( env1_slider, 0, AParameters->getItem(PAR_LOOP_ENV_ATTACK) );
-    connect( env1_slider, 1, AParameters->getItem(PAR_LOOP_ENV_DECAY) );
+    MIP_SliderWidget* env1a_slider = new MIP_SliderWidget( MIP_DRect(10,356,50,16), "Loop Start", 0.1 );
+    MRootWidget->appendChildWidget(env1a_slider);
+    env1a_slider->setTextColor(MIP_Color(0,0,0,0.5));
+    env1a_slider->setTextSize(9);
+    env1a_slider->setDrawValue(false);
+    env1a_slider->setValueColor(0.2);
+    env1a_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
+    env1a_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
+    env1a_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
+
+    connect( env1a_slider, AParameters->getItem(PAR_LOOP_ENV_ATTACK) );
+
+    MIP_SliderWidget* env1d_slider = new MIP_SliderWidget( MIP_DRect(10+60,356,50,16), "Loop End", 0.9 );
+    MRootWidget->appendChildWidget(env1d_slider);
+    env1d_slider->setTextColor(MIP_Color(0,0,0,0.5));
+    env1d_slider->setTextSize(9);
+    env1d_slider->setDrawValue(false);
+    env1d_slider->setValueColor(0.2);
+    env1d_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
+    env1d_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
+    env1d_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
+
+    connect( env1d_slider, AParameters->getItem(PAR_LOOP_ENV_DECAY) );
 
     // slice env
 
-    MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(130,356,110,16), "Slice", 0.1, 0.9 );
-    MRootWidget->appendChildWidget(env2_slider);
-    env2_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
-    env2_slider->setHint("Slice envelope");
-    env2_slider->setBackgroundColor(0.4);
-    env2_slider->setSliderColor(0.6);
-    env2_slider->setTextColor(MIP_Color(0,0,0,0.5));
-    env2_slider->setTextSize(9);
-    env2_slider->setValueColor(0.2);
-    env2_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
-    env2_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
-    env2_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
+//    MIP_EnvSliderWidget* env2_slider = new MIP_EnvSliderWidget( MIP_DRect(130,356,110,16), "Slice", 0.1, 0.9 );
+//    MRootWidget->appendChildWidget(env2_slider);
+//    env2_slider->setCursor(MIP_CURSOR_ARROW_LEFT_RIGHT);
+//    env2_slider->setHint("Slice envelope");
+//    env2_slider->setBackgroundColor(0.4);
+//    env2_slider->setSliderColor(0.6);
+//    env2_slider->setTextColor(MIP_Color(0,0,0,0.5));
+//    env2_slider->setTextSize(9);
+//    env2_slider->setValueColor(0.2);
+//    env2_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
+//    env2_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
+//    env2_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
+//
+//    connect( env2_slider, 0, AParameters->getItem(PAR_SLICE_ENV_ATTACK) );
+//    connect( env2_slider, 1, AParameters->getItem(PAR_SLICE_ENV_DECAY) );
 
-    connect( env2_slider, 0, AParameters->getItem(PAR_SLICE_ENV_ATTACK) );
-    connect( env2_slider, 1, AParameters->getItem(PAR_SLICE_ENV_DECAY) );
+    MIP_SliderWidget* env2a_slider = new MIP_SliderWidget( MIP_DRect(130,356,50,16), "Slice Start", 0.1 );
+    MRootWidget->appendChildWidget(env2a_slider);
+    env2a_slider->setTextColor(MIP_Color(0,0,0,0.5));
+    env2a_slider->setTextSize(9);
+    env2a_slider->setDrawValue(false);
+    env2a_slider->setValueColor(0.2);
+    env2a_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
+    env2a_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
+    env2a_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
+
+    connect( env2a_slider, AParameters->getItem(PAR_SLICE_ENV_ATTACK) );
+
+    MIP_SliderWidget* env2d_slider = new MIP_SliderWidget( MIP_DRect(130+60,356,50,16), "Slice End", 0.9 );
+    MRootWidget->appendChildWidget(env2d_slider);
+    env2d_slider->setTextColor(MIP_Color(0,0,0,0.5));
+    env2d_slider->setTextSize(9);
+    env2d_slider->setDrawValue(false);
+    env2d_slider->setValueColor(0.2);
+    env2d_slider->setBackgroundColor( MIP_Color(0.0, 0.5, 0.5) );
+    env2d_slider->setSliderColor( MIP_Color(0.0, 0.7, 0.7) );
+    env2d_slider->setInteractiveSliderColor( MIP_Color(0.0, 0.9, 0.9) );
+
+    connect( env2d_slider, AParameters->getItem(PAR_SLICE_ENV_DECAY) );
 
     // footer
 

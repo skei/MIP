@@ -68,161 +68,146 @@ private:
 private:
 //------------------------------
 
-  // these are not automatically initialized..
+  uint32_t      par_num_beats               = 0;
+  uint32_t      par_num_slices              = 0;
 
-  uint32_t  par_num_beats               = 0;
-  uint32_t  par_num_slices              = 0;
+  double        par_range_prob              = 0.0;
+  uint32_t      par_range_slice_count       = 0;
+  uint32_t      par_range_loop_count        = 0;
 
-  double    par_range_prob              = 0.0;
-  uint32_t  par_range_slice_count       = 0;
-  uint32_t  par_range_loop_count        = 0;
+  double        par_loop_env_attack         = 0.0;
+  double        par_loop_env_decay          = 0.0;
+  double        par_slice_env_attack        = 0.0;
+  double        par_slice_env_decay         = 0.0;
 
-  double    par_loop_env_attack         = 0.0;
-  double    par_loop_env_decay          = 0.0;
-  double    par_slice_env_attack        = 0.0;
-  double    par_slice_env_decay         = 0.0;
+  double        par_fx_filter_prob          = 0.0;
+  uint32_t      par_fx_filter_type          = 0;
+  double        par_fx_filter_freq          = 0.0;
+  double        par_fx_filter_bw            = 0.0;
 
-  double    par_fx_filter_prob          = 0.0;
-  uint32_t  par_fx_filter_type          = 0;
-  double    par_fx_filter_freq          = 0.0;
-  double    par_fx_filter_bw            = 0.0;
+  double        par_prob_size_prob_range    = 0.0;
+  double        par_prob_size_min_range     = 0.0;
+  double        par_prob_size_max_range     = 0.0;
+  double        par_prob_size_prob_loop     = 0.0;
+  double        par_prob_size_min_loop      = 0.0;
+  double        par_prob_size_max_loop      = 0.0;
 
-  double    par_prob_size_prob_range    = 0.0;
-  double    par_prob_size_min_range     = 0.0;
-  double    par_prob_size_max_range     = 0.0;
-  double    par_prob_size_prob_loop     = 0.0;
-  double    par_prob_size_min_loop      = 0.0;
-  double    par_prob_size_max_loop      = 0.0;
+  double        par_prob_speed_prob_range   = 0.0;
+  double        par_prob_speed_min_range    = 0.0;
+  double        par_prob_speed_max_range    = 0.0;
+  double        par_prob_speed_prob_loop    = 0.0;
+  double        par_prob_speed_min_loop     = 0.0;
+  double        par_prob_speed_max_loop     = 0.0;
 
-  double    par_prob_speed_prob_range   = 0.0;
-  double    par_prob_speed_min_range    = 0.0;
-  double    par_prob_speed_max_range    = 0.0;
-  double    par_prob_speed_prob_loop    = 0.0;
-  double    par_prob_speed_min_loop     = 0.0;
-  double    par_prob_speed_max_loop     = 0.0;
+  double        par_prob_offset_prob_range  = 0.0;
+  double        par_prob_offset_min_range   = 0.0;
+  double        par_prob_offset_max_range   = 0.0;
+  double        par_prob_offset_prob_loop   = 0.0;
+  double        par_prob_offset_min_loop    = 0.0;
+  double        par_prob_offset_max_loop    = 0.0;
 
-  double    par_prob_offset_prob_range  = 0.0;
-  double    par_prob_offset_min_range   = 0.0;
-  double    par_prob_offset_max_range   = 0.0;
-  double    par_prob_offset_prob_loop   = 0.0;
-  double    par_prob_offset_min_loop    = 0.0;
-  double    par_prob_offset_max_loop    = 0.0;
+  double        par_prob_reverse_prob_range = 0.0;
+  double        par_prob_reverse_prob_loop  = 0.0;
 
-  double    par_prob_reverse_prob_range = 0.0;
-  double    par_prob_reverse_prob_loop  = 0.0;
+  double        par_prob_fx_prob_range      = 0.0;
+  double        par_prob_fx_min_range       = 0.0;
+  double        par_prob_fx_max_range       = 0.0;
+  double        par_prob_fx_prob_loop       = 0.0;
+  double        par_prob_fx_min_loop        = 0.0;
+  double        par_prob_fx_max_loop        = 0.0;
 
-  double    par_prob_fx_prob_range      = 0.0;
-  double    par_prob_fx_min_range       = 0.0;
-  double    par_prob_fx_max_range       = 0.0;
-  double    par_prob_fx_prob_loop       = 0.0;
-  double    par_prob_fx_min_loop        = 0.0;
-  double    par_prob_fx_max_loop        = 0.0;
+  uint32_t      par_fx_mode                 = 0;
 
-  double    par_fx1_prob                = 0.0;
-  uint32_t  par_fx1_type                = 0.0;
-  double    par_fx1_par1                = 0.0;
-  double    par_fx1_par2                = 0.0;
-  double    par_fx1_par3                = 0.0;
+  double        par_fx1_prob                = 0.0;
+  uint32_t      par_fx1_type                = 0.0;
+  double        par_fx1_par1                = 0.0;
+  double        par_fx1_par2                = 0.0;
+  double        par_fx1_par3                = 0.0;
 
-  double    par_fx2_prob                = 0.0;
-  uint32_t  par_fx2_type                = 0.0;
-  double    par_fx2_par1                = 0.0;
-  double    par_fx2_par2                = 0.0;
-  double    par_fx2_par3                = 0.0;
+  double        par_fx2_prob                = 0.0;
+  uint32_t      par_fx2_type                = 0.0;
+  double        par_fx2_par1                = 0.0;
+  double        par_fx2_par2                = 0.0;
+  double        par_fx2_par3                = 0.0;
 
-  double    par_fx3_prob                = 0.0;
-  uint32_t  par_fx3_type                = 0.0;
-  double    par_fx3_par1                = 0.0;
-  double    par_fx3_par2                = 0.0;
-  double    par_fx3_par3                = 0.0;
+  double        par_fx3_prob                = 0.0;
+  uint32_t      par_fx3_type                = 0.0;
+  double        par_fx3_par1                = 0.0;
+  double        par_fx3_par2                = 0.0;
+  double        par_fx3_par3                = 0.0;
 
-  double    par_fx4_prob                = 0.0;
-  uint32_t  par_fx4_type                = 0.0;
-  double    par_fx4_par1                = 0.0;
-  double    par_fx4_par2                = 0.0;
-  double    par_fx4_par3                = 0.0;
+  double        par_fx4_prob                = 0.0;
+  uint32_t      par_fx4_type                = 0.0;
+  double        par_fx4_par1                = 0.0;
+  double        par_fx4_par2                = 0.0;
+  double        par_fx4_par3                = 0.0;
 
-  double    par_fx5_prob                = 0.0;
-  uint32_t  par_fx5_type                = 0.0;
-  double    par_fx5_par1                = 0.0;
-  double    par_fx5_par2                = 0.0;
-  double    par_fx5_par3                = 0.0;
+  double        par_fx5_prob                = 0.0;
+  uint32_t      par_fx5_type                = 0.0;
+  double        par_fx5_par1                = 0.0;
+  double        par_fx5_par2                = 0.0;
+  double        par_fx5_par3                = 0.0;
 
 //------------------------------
 private:
 //------------------------------
 
-  double rnd_main_prob            = 0.0;
-  double rnd_main_slices          = 0.0;
-  double rnd_main_subdiv          = 0.0;
+  double        rnd_main_prob            = 0.0;
+  double        rnd_main_slices          = 0.0;
+  double        rnd_main_subdiv          = 0.0;
 
-  double rnd_range_size           = 0.0;
-  double rnd_range_speed          = 0.0;
-  double rnd_range_offset         = 0.0;
-  double rnd_range_reverse        = 0.0;
-  double rnd_range_fx             = 0.0;
+  double        rnd_range_size           = 0.0;
+  double        rnd_range_speed          = 0.0;
+  double        rnd_range_offset         = 0.0;
+  double        rnd_range_reverse        = 0.0;
+  double        rnd_range_fx             = 0.0;
 
-  double rnd_loop_size            = 0.0;
-  double rnd_loop_speed           = 0.0;
-  double rnd_loop_offset          = 0.0;
-  double rnd_loop_reverse         = 0.0;
-  double rnd_loop_fx              = 0.0;
+  double        rnd_loop_size            = 0.0;
+  double        rnd_loop_speed           = 0.0;
+  double        rnd_loop_offset          = 0.0;
+  double        rnd_loop_reverse         = 0.0;
+  double        rnd_loop_fx              = 0.0;
 
-  double rnd_range_size_value     = 0.0;
-  double rnd_range_speed_value    = 0.0;
-  double rnd_range_offset_value   = 0.0;
-  double rnd_range_reverse_value  = 0.0;
-  double rnd_range_fx_value       = 0.0;
+  double        rnd_range_size_value     = 0.0;
+  double        rnd_range_speed_value    = 0.0;
+  double        rnd_range_offset_value   = 0.0;
+  double        rnd_range_reverse_value  = 0.0;
+  double        rnd_range_fx_value       = 0.0;
 
-  double rnd_loop_size_value      = 0.0;
-  double rnd_loop_speed_value     = 0.0;
-  double rnd_loop_offset_value    = 0.0;
-  double rnd_loop_reverse_value   = 0.0;
-  double rnd_loop_fx_value        = 0.0;
+  double        rnd_loop_size_value      = 0.0;
+  double        rnd_loop_speed_value     = 0.0;
+  double        rnd_loop_offset_value    = 0.0;
+  double        rnd_loop_reverse_value   = 0.0;
+  double        rnd_loop_fx_value        = 0.0;
 
-  //double fx_loop_value           = 0.0;
-  //double fx_range_value          = 0.0;
-  double fx_rnd_value           = 0.0;
+  double        rnd_fx_value             = 0.0;
 
-  //
+  bool          rnd_slice_on             = false;
 
-  bool rnd_slice_on             = false;
+  bool          rnd_range_size_on        = false;
+  bool          rnd_range_speed_on       = false;
+  bool          rnd_range_offset_on      = false;
+  bool          rnd_range_reverse_on     = false;
+  bool          rnd_range_fx_on          = false;
 
-  bool rnd_range_size_on        = false;
-  bool rnd_range_speed_on       = false;
-  bool rnd_range_offset_on      = false;
-  bool rnd_range_reverse_on     = false;
-  bool rnd_range_fx_on          = false;
-
-  bool rnd_loop_size_on         = false;
-  bool rnd_loop_speed_on        = false;
-  bool rnd_loop_offset_on       = false;
-  bool rnd_loop_reverse_on      = false;
-  bool rnd_loop_fx_on           = false;
+  bool          rnd_loop_size_on         = false;
+  bool          rnd_loop_speed_on        = false;
+  bool          rnd_loop_offset_on       = false;
+  bool          rnd_loop_reverse_on      = false;
+  bool          rnd_loop_fx_on           = false;
 
   //
 
-  uint32_t fx_mode = 0;
-
-  double rnd_fx1        = 0.0;
-  bool   rnd_fx1_on     = false; // true;
-  //double rnd_fx1_value  = 0.0;
-
-  double rnd_fx2        = 0.0;
-  bool   rnd_fx2_on     = false;
-  //double rnd_fx2_value  = 0.0;
-
-  double rnd_fx3        = 0.0;
-  bool   rnd_fx3_on     = false; // true;
-  //double rnd_fx3_value  = 0.0;
-
-  double rnd_fx4        = 0.0;
-  bool   rnd_fx4_on     = false; // true;
-  //double rnd_fx4_value  = 0.0;
-
-  double rnd_fx5        = 0.0;
-  bool   rnd_fx5_on     = false; // true;
-  //double rnd_fx5_value  = 0.0;
+  double        rnd_fx1        = 0.0;
+  bool          rnd_fx1_on     = false;
+  double        rnd_fx2        = 0.0;
+  bool          rnd_fx2_on     = false;
+  double        rnd_fx3        = 0.0;
+  bool          rnd_fx3_on     = false;
+  double        rnd_fx4        = 0.0;
+  bool          rnd_fx4_on     = false;
+  double        rnd_fx5        = 0.0;
+  bool          rnd_fx5_on     = false;
 
 //------------------------------
 private:
@@ -332,7 +317,7 @@ public:
       case PAR_PROB_FX_MIN_LOOP         : par_prob_fx_min_loop        = value; break;
       case PAR_PROB_FX_MAX_LOOP         : par_prob_fx_max_loop        = value; break;
 
-      case PAR_FX_MODE                  : fx_mode                     = value; break; //
+      case PAR_FX_MODE                  : par_fx_mode                 = value; break; //
 
       case PAR_FX1_PROB                 : par_fx1_prob                = value; break;
       case PAR_FX1_TYPE                 : par_fx1_type                = value; break;
@@ -665,7 +650,7 @@ private:
     MReadPos        = MWritePos;
     MReadSpeed      = 1.0;
     rnd_range_fx_on = false;
-    //fx_rnd_value    = 1.0;
+    //rnd_fx_value    = 1.0;
   }
 
 //------------------------------
@@ -757,7 +742,7 @@ private:
       s *= rnd_range_fx_value;
       s += par_prob_fx_min_range;
       float n = powf(0.5,-s);
-      fx_rnd_value = n;
+      rnd_fx_value = n;
       //MLoopLength *= n;
       //MLoopLength = MIP_MaxI(MLoopLength,MIN_LOOP_LENGTH);
     }
@@ -769,7 +754,7 @@ private:
     // fx
 
     if (rnd_range_fx_on) {
-      switch (fx_mode) {
+      switch (par_fx_mode) {
         case 0: { // single
           double s1  =      par_fx1_prob;
           double s2  = s1 + par_fx2_prob;
@@ -845,7 +830,7 @@ private:
     rnd_loop_offset_on  = false;
     rnd_loop_reverse_on = false;
     rnd_loop_fx_on      = false;
-    //fx_rnd_value        = 1.0;
+    //rnd_fx_value        = 1.0;
 
     // size
     rnd_loop_size = MIP_Random();
@@ -908,7 +893,7 @@ private:
       s *= rnd_loop_fx_value;
       s += par_prob_fx_min_loop;
       float n = powf(0.5,-s);
-      fx_rnd_value *= n;
+      rnd_fx_value *= n;
       //MIP_Print("rnd_fx_value: %.3f\n",rnd_loop_value);
       //MLoopLength *= n;
       //MLoopLength = MIP_MaxI(MLoopLength,MIN_LOOP_LENGTH);
@@ -936,8 +921,8 @@ private:
 
     // slice env
 
-    float sa = par_slice_env_attack;  // * MSliceLength;
-    float sd = par_slice_env_decay;   // * MSliceLength;
+    float sa = par_slice_env_attack;        // * MSliceLength;
+    float sd = (1.0 - par_slice_env_decay); // * MSliceLength;
 
     if ((sa > 0) && (MSliceFract < sa)) {
       env *= (MSliceFract / sa);
@@ -952,7 +937,7 @@ private:
     if (/*MLoopWrapped &&*/ MLoop && (MLoopLength > 0.0)) {
       double loop_count = (double)MLoopCount;
       double la = par_loop_env_attack * (MSampleRate * 0.001); // samples
-      double ld = par_loop_env_decay  * (MSampleRate * 0.001);
+      double ld = (25.0 - par_loop_env_decay)  * (MSampleRate * 0.001);
       //float loop_pos = ALoopFract * MLoopLength;
       if ((la > 0) && (loop_count < la)) {
         env *= (loop_count / la);
@@ -977,7 +962,7 @@ private:
       case FX_LP: {
         MFX_LP_Input    = 1.0;
         double freq     = MIP_Curve(par1,0.2);
-        double f2       = freq * fx_rnd_value; // * 0.5 .. 2
+        double f2       = freq * rnd_fx_value; // * 0.5 .. 2
         double diff     = freq - f2;
         MFX_LP_Freq     = f2;
         MFX_LP_BW       = 1.0 - MIP_Curve(par2,0.9);
@@ -989,7 +974,7 @@ private:
       case FX_HP: {
         MFX_HP_Input    = 1.0;
         double freq     = MIP_Curve(par1,0.2);
-        double f2       = freq * fx_rnd_value; // * 0.5 .. 2
+        double f2       = freq * rnd_fx_value; // * 0.5 .. 2
         double diff     = freq - f2;
         MFX_HP_Freq     = f2;
         MFX_HP_BW       = 1.0 - MIP_Curve(par2,0.9);
@@ -1001,7 +986,7 @@ private:
       case FX_BP: {
         MFX_BP_Input    = 1.0;
         double freq     = MIP_Curve(par1,0.2);
-        double f2       = freq * fx_rnd_value; // * 0.5 .. 2
+        double f2       = freq * rnd_fx_value; // * 0.5 .. 2
         double diff     = freq - f2;
         MFX_BP_Freq     = f2;
         MFX_BP_BW       = 1.0 - MIP_Curve(par2,0.9);
@@ -1012,7 +997,7 @@ private:
       }
       case FX_DIST: {
         MFX_Dist_Input  = 1.0;
-        MFX_Dist_Amount   = MIP_Clamp(par1 * fx_rnd_value, 0,1);
+        MFX_Dist_Amount   = MIP_Clamp(par1 * rnd_fx_value, 0,1);
         MFX_Dist_Limit    = 1.0 - par2;
 
         break;
@@ -1087,8 +1072,8 @@ private:
       if (MFX_HP_Input != MFX_HP_Prev) {
         MFX_HP0.reset();
         MFX_HP1.reset();
-        MFX_HP_Prev = MFX_HP_Input;
       }
+      MFX_HP_Prev = MFX_HP_Input;
 
       if (MFX_HP_Input > 0.0) {
         double f = MIP_Clamp(MFX_HP_Freq + MFX_HP_Current,0,1);
@@ -1109,8 +1094,8 @@ private:
       if (MFX_BP_Input != MFX_BP_Prev) {
         MFX_BP0.reset();
         MFX_BP1.reset();
-        MFX_BP_Prev = MFX_BP_Input;
       }
+      MFX_BP_Prev = MFX_BP_Input;
 
       if (MFX_BP_Input > 0.0) {
         double f = MIP_Clamp(MFX_BP_Freq + MFX_BP_Current,0,1);

@@ -554,12 +554,12 @@ public: // window
       if (AButton == MIP_BUTTON_LEFT) {
         if (!MModalWidget->getRect().contains(AXpos,AYpos)) {
           //MIP_PRINT;
-          MModalWidget->on_widget_cancel(0);
+          MModalWidget->on_widget_notify(0,0);
         }
       }
       if (AButton == MIP_BUTTON_RIGHT) {
         //MIP_PRINT;
-        MModalWidget->on_widget_cancel(0);
+        MModalWidget->on_widget_notify(0,0);
       }
     }
     if (MHoverWidget) {
@@ -763,7 +763,7 @@ public: // widget listener
 
   //----------
 
-  void do_widget_notify(MIP_Widget* AWidget, int32_t AValue) override {
+  void do_widget_notify(MIP_Widget* AWidget, uint32_t AReason, int32_t AValue) override {
   }
 
 //------------------------------

@@ -332,7 +332,7 @@ public: // clap.gui
 
       if (MIsEditorOpen) {
         if (MWindow->MModalWidget) {
-          MWindow->MModalWidget->on_widget_cancel(0);
+          MWindow->MModalWidget->on_widget_notify(0,0);
         }
         MWindow->setSize(width,height);
         //MWindow->invalidate(0,0,width,height);
@@ -542,8 +542,8 @@ public: // widget listener
 //    if (MWindow) MWindow->do_widget_set_timer(AWidget,ATime);
 //  }
 
-  void do_widget_notify(MIP_Widget* AWidget, int32_t AValue) override {
-    if (MWindow) MWindow->do_widget_notify(AWidget,AValue);
+  void do_widget_notify(MIP_Widget* AWidget, uint32_t AReason, int32_t AValue) override {
+    if (MWindow) MWindow->do_widget_notify(AWidget,AReason,AValue);
   }
 
 };

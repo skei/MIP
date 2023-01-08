@@ -1,6 +1,8 @@
 
+//----------------------------------------------------------------------
+//
 // inline
-
+//
 //----------------------------------------------------------------------
 
     // fx type
@@ -39,7 +41,7 @@
 
     // slices
 
-    MIP_TextWidget* prob_slices_label = new MIP_TextWidget( MIP_DRect(345,95,135,12), "Slices" );
+    MIP_TextWidget* prob_slices_label = new MIP_TextWidget( MIP_DRect(345,95,135,12), "Range (# slices)" );
     page_prob->appendChildWidget(prob_slices_label);
     prob_slices_label->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     prob_slices_label->setTextColor(0.8);
@@ -61,7 +63,7 @@
 
     // loops
 
-    MIP_TextWidget* prob_loops_label = new MIP_TextWidget( MIP_DRect(345,134,135,12), "Split" );
+    MIP_TextWidget* prob_loops_label = new MIP_TextWidget( MIP_DRect(345,134,135,12), "Split Range" );
     page_prob->appendChildWidget(prob_loops_label);
     prob_loops_label->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
     prob_loops_label->setTextColor(0.8);
@@ -838,5 +840,8 @@
 
     connect( MFXArgKnob[(4*3)+2], AParameters->getItem(PAR_FX5_PAR3) );
 
+//----------------------------------------------------------------------
 //
-
+//
+//
+//----------------------------------------------------------------------

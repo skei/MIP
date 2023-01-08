@@ -17,15 +17,15 @@ class MIP_ClapPlugin {
 protected:
 //------------------------------
 
-  //const clap_host_t* MHost = nullptr;
+  const clap_host_t* MHost = nullptr;
 
 //------------------------------
 public:
 //------------------------------
 
-  MIP_ClapPlugin(const clap_plugin_descriptor_t* descriptor/*, const clap_host_t* host*/) {
+  MIP_ClapPlugin(const clap_plugin_descriptor_t* descriptor, const clap_host_t* host) {
     LOG.print("MIP_ClapPlugin()\n");
-    //MHost = host;
+    MHost = host;
     MPlugin.desc = descriptor;
   }
 
@@ -41,6 +41,12 @@ public:
 
   const clap_plugin_t* getClapPlugin() {
     return &MPlugin;
+  }
+
+  //----------
+
+  const clap_host_t* getClapHost() {
+    return MHost;
   }
 
   //----------

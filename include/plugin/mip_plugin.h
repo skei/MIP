@@ -80,9 +80,10 @@ public:
 //------------------------------
 
   MIP_Plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
-  : MIP_ClapPlugin(ADescriptor) {
+  : MIP_ClapPlugin(ADescriptor,AHost) {
     //MIP_PRINT;
     // TODO: implenent MExeHost
+    //TODO: setInitialEditorSize
     #ifndef MIP_EXE
       LOG.print("  CLAP: host.name:    %s\n",AHost->name);
       LOG.print("  CLAP: host.vendor:  %s\n",AHost->vendor);

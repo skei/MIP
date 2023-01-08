@@ -8,7 +8,7 @@
 
 #define SA_BOTAGE_NAME          "sa_botage"
 #define SA_BOTAGE_VENDOR        "skei.audio"
-#define SA_BOTAGE_VERSION       "0.1.10"
+#define SA_BOTAGE_VERSION       "0.1.11"
 #define SA_BOTAGE_EDITOR_WIDTH  490 + 132
 #define SA_BOTAGE_EDITOR_HEIGHT 392
 

@@ -90,12 +90,12 @@ public:
       value = param->normalizeValue(value);
     }
 
-    double thick  = MArcThickness * S;
+    double thickness  = MArcThickness * S;
     //double bthick = MArcThickness * S * 0.5;
 
     double cx = mrect.x + (mrect.w * 0.5);
     double cy = mrect.y + (mrect.h * 0.5);
-    double r  = (mrect.w - thick)  * 0.5;
+    double r  = (mrect.w - thickness)  * 0.5;
     //double br = (mrect.w - bthick) * 0.5;
 
     // draw background arc
@@ -103,12 +103,12 @@ public:
     MIP_Color color = MArcBackColor;
     if (isDisabled()) color.blend(MDisabledColor,MDisabledAlpha);
     painter->setDrawColor(color);
-    painter->setLineWidth(thick);
+    painter->setLineWidth(thickness);
     painter->drawArc(cx,cy,r,0.15*MIP_PI2,0.8*MIP_PI2);
 
     // draw value arc
 
-    painter->setLineWidth(thick);
+    painter->setLineWidth(thickness);
 
     if (MIsInteracting) {
       MIP_Color color = MInteractiveArcValueColor;
@@ -125,8 +125,6 @@ public:
     // a2 = length of arc
     // curve is a1 'back' from end of a2
 
-    double a1 = (0.35 + (value * 0.8)) * MIP_PI2;
-    double a2 = (       (value * 0.8)) * MIP_PI2;
 
     if (MBipolar) {
       if (value < 0.5) {
@@ -143,11 +141,12 @@ public:
       }
     }
     else {
+      double a1 = (0.35 + (value * 0.8)) * MIP_PI2;
+      double a2 = (       (value * 0.8)) * MIP_PI2;
       painter->drawArc(cx,cy,r,a1,a2);
     }
 
     // draw modulation
-
 
 //    if (MDrawModulation) {
 //      if (!isDisabled()) {
@@ -169,11 +168,10 @@ public:
     if (MDrawIndicator) {
       if (!isDisabled()) {
         if (MIndicatorValue >= 0.0) {
-          a1 = 0.35 + (MIndicatorValue * 0.8);
-          a2 = 0.02;//       (MIndicatorValue * 0.8);
-          a1 *= MIP_PI2;
-          a2 *= MIP_PI2;
-          painter->setLineWidth(thick);
+          double iv = MIndicatorValue + (0.02 * 0.5);
+          double a1 = (0.35 + (iv * 0.8)) * MIP_PI2;
+          double a2 =  0.02 * MIP_PI2;
+          painter->setLineWidth(thickness);
           color = MIndicatorColor;
           painter->setDrawColor(color);
           painter->drawArc(cx,cy,r,a1,a2);

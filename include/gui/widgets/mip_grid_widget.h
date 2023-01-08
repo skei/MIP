@@ -344,18 +344,6 @@ public:
     }
   }
 
-
-//------------------------------
-public: // child to parent
-//------------------------------
-
-//  void do_widget_update(MIP_Widget* ASender, uint32_t AMode=0) override {}
-//  void do_widget_redraw(MIP_Widget* ASender, uint32_t AMode=0) override {}
-//  void do_widget_modal(MIP_Widget* ASender, uint32_t AMode=0) override {}
-//  void do_widget_cursor(MIP_Widget* ASender, uint32_t ACursor) override {}
-//  void do_widget_hint(MIP_Widget* ASender, const char* AHint) override {}
-//  void do_widget_notify(MIP_Widget* ASender, uint32_t AMode, int32_t AValue) override {}
-
 };
 
 //----------------------------------------------------------------------

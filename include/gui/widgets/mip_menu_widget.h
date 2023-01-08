@@ -85,7 +85,7 @@ public: // parent to child
 //    close(true);
 //  }
 
-  void on_widget_cancel(uint32_t AReason=0) override {
+  void on_widget_notify(uint32_t AReason=0, int32_t AValue=0) override {
     //MIP_Print("unmodal\n");
     close(true);
   }
@@ -95,7 +95,9 @@ public: // parent to child
 public: // child to parent
 //------------------------------
 
-  void do_widget_notify(MIP_Widget* ASender, int32_t AValue) override {
+  //if reason == MIP_WIDGET_NOTIFY_SELECT
+
+  void do_widget_notify(MIP_Widget* ASender, uint32_t AReason=0, int32_t AValue=0) override {
     //if (MParent) MParent->do_widget_update(ASender,AMode);
     int32_t index = AValue;//ASender->getWidgetIndex();
     if (index < 0) {

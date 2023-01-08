@@ -51,7 +51,7 @@ public:
   virtual void do_widget_set_modal(MIP_Widget* AWidget, uint32_t AMode=0) {}
   virtual void do_widget_set_hint(MIP_Widget* AWidget, const char* AHint) {}
   //virtual void do_widget_set_timer(MIP_Widget* AWidget, uint32_t ATime) {}
-  virtual void do_widget_notify(MIP_Widget* AWidget, int32_t AValue) {}
+  virtual void do_widget_notify(MIP_Widget* AWidget, uint32_t AReason, int32_t AValue) {}
 };
 
 //----------------------------------------------------------------------
@@ -535,7 +535,7 @@ public:
     }
   }
 
-  virtual void on_widget_cancel(uint32_t AReason=0) {
+  virtual void on_widget_notify(uint32_t AReason=0, int32_t AValue=0) {
   }
 
 //------------------------------
@@ -574,8 +574,8 @@ public:
 //    if (MWidgetListener) MWidgetListener->do_widget_set_timer(AWidget,ATime);
 //  }
 
-  void do_widget_notify(MIP_Widget* AWidget, int32_t AValue) override {
-    if (MWidgetListener) MWidgetListener->do_widget_notify(AWidget,AValue);
+  void do_widget_notify(MIP_Widget* AWidget, uint32_t AReason, int32_t AValue) override {
+    if (MWidgetListener) MWidgetListener->do_widget_notify(AWidget,AReason,AValue);
   }
 
 };

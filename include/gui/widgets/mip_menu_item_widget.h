@@ -61,10 +61,10 @@ public: // parent to child
   void on_widget_mouse_click(uint32_t AButton, uint32_t AState, double AXpos, double AYpos, uint32_t ATime) override {
     switch (AButton) {
       case MIP_BUTTON_LEFT:
-        do_widget_notify(this,getIndex());
+        do_widget_notify(this,MIP_WIDGET_NOTIFY_SELECT,getIndex());
         break;
       case MIP_BUTTON_RIGHT:
-        do_widget_notify(this,-1);
+        do_widget_notify(this,MIP_WIDGET_NOTIFY_CANCEL,-1);
         break;
     }
     //do_widget_update(this);
