@@ -7,7 +7,16 @@
 
 //----------------------------------------------------------------------
 
-#define MIP_VOICE_MAX_EVENTS_PER_BLOCK 256
+// max evenets per voice, per block
+// we can get setParameter for all events, maybe modulation
+// expressions..
+
+#define MIP_VOICE_MAX_EVENTS_PER_BLOCK  256
+
+#define MIP_VOICE_EVENT_MODE_BLOCK       0
+#define MIP_VOICE_EVENT_MODE_INTERLEAVED 1
+#define MIP_VOICE_EVENT_MODE_QUANTIZED   2
+
 typedef MIP_Queue<const clap_event_header_t*,MIP_VOICE_MAX_EVENTS_PER_BLOCK> MIP_ClapEventQueue;
 
 //----------------------------------------------------------------------
@@ -23,18 +32,20 @@ class MIP_Voice {
 public:
 //------------------------------
 
-  MYVOICE   voice     = {};
-  uint32_t  index     = 0;
-  uint32_t  state     = MIP_VOICE_OFF;
-  MIP_Note  note      = {0};
-  double    env_level = 0.0;
+  MYVOICE   voice       = {};
+  uint32_t  index       = 0;
+  uint32_t  state       = MIP_VOICE_OFF;
+  MIP_Note  note        = {0};
+  double    env_level   = 0.0;
+  uint32_t  event_mode  = MIP_VOICE_EVENT_MODE_BLOCK;
 
-  double velocity     = 0.0;
-  double pressure     = 0.0;
-  double brightness   = 0.0;
-  double tuning       = 0.0;
+  double    velocity    = 0.0;
+  double    pressure    = 0.0;
+  double    brightness  = 0.0;
+  double    tuning      = 0.0;
 
   MIP_ClapEventQueue  events = {};
+  MIP_VoiceContext*   context = nullptr;
 
 //------------------------------
 public:
@@ -52,106 +63,113 @@ public:
 public:
 //------------------------------
 
-  void handleAllEvents() {
-    const clap_event_header_t* header = nullptr;
-    while (events.read(&header)) {
-      switch(header->type) {
+  void init(uint32_t AIndex, MIP_VoiceContext* AContext) {
+    context = AContext;
+    voice.init(AIndex,context);
+  }
 
-        case CLAP_EVENT_NOTE_ON: {
-          //MIP_Print("%i NOTE_ON\n",index);
-          const clap_event_note_t* note_event = (const clap_event_note_t*)header;
-          state = voice.noteOn(note_event->key,note_event->velocity);
-          break;
-        }
+  //----------
 
-        case CLAP_EVENT_NOTE_OFF: {
-          //MIP_Print("%i NOTE_OFF\n",index);
-          const clap_event_note_t* note_event = (const clap_event_note_t*)header;
-          state = voice.noteOff(note_event->key,note_event->velocity);
-          break;
-        }
+  /*
+    event handling
+    1) all at beginning of buffer
+    2) split at event offsets, process inbetween
+    3) quantize to n samples, handla all events for current slice
+       at beginning of slice..
+       a) further: hardcoding..
+  */
 
-        case CLAP_EVENT_NOTE_CHOKE: {
-          //MIP_Print("%i NOTE_CHOKE\n",index);
-          const clap_event_note_t* note_event = (const clap_event_note_t*)header;
-          voice.noteChoke(note_event->key,note_event->velocity);
-          state = MIP_VOICE_OFF;
-          break;
-        }
-
-        //case CLAP_EVENT_NOTE_END: {
-        //  MIP_Print("%i NOTE_END\n",index);
-        //  break;
-        //}
-
-        case CLAP_EVENT_NOTE_EXPRESSION: {
-          //MIP_Print("%i NOTE_EXPRESSION\n",index);
-          const clap_event_note_expression_t* expression_event = (const clap_event_note_expression_t*)header;
-          voice.noteExpression(expression_event->expression_id,expression_event->value);
-          break;
-        }
-
-        case CLAP_EVENT_PARAM_VALUE: {
-          //MIP_Print("%i PARAM_VALUE\n",index);
-          const clap_event_param_value_t* param_event = (const clap_event_param_value_t*)header;
-          voice.parameter(param_event->param_id,param_event->value); // cookie?
-          break;
-        }
-
-        case CLAP_EVENT_PARAM_MOD: {
-          //MIP_Print("%i PARAM_MOD\n",index);
-          const clap_event_param_mod_t* mod_event = (const clap_event_param_mod_t*)header;
-          voice.modulation(mod_event->param_id,mod_event->amount);
-          break;
-        }
-
-        //case CLAP_EVENT_PARAM_GESTURE_BEGIN:
-        //  MIP_Print("%i PARAM_GESTURE_BEGIN\n",index);
-        //  break;
-        //}
-
-        //case CLAP_EVENT_PARAM_GESTURE_END: {
-        //  MIP_Print("%i PARAM_GESTURE_END\n",index);
-        //  break;
-        //}
-
-        //case CLAP_EVENT_TRANSPORT: {
-        //  MIP_Print("%i TRANSPORT\n",index);
-        //  break;
-        //}
-
-        //case CLAP_EVENT_MIDI: {
-        //  MIP_Print("%i MIDI\n",index);
-        //  break;
-        //}
-
-        //case CLAP_EVENT_MIDI_SYSEX: {
-        //  MIP_Print("%i MIDI_SYSEX\n",index);
-        //  break;
-        //}
-
-        //case CLAP_EVENT_MIDI2: {
-        //  MIP_Print("%i MIDI2\n",index);
-        //  break;
-        //}
-
+  void process() {
+    switch (event_mode) {
+      case MIP_VOICE_EVENT_MODE_BLOCK: {
+        handleAllEvents();
+        break;
+      }
+      case MIP_VOICE_EVENT_MODE_INTERLEAVED: {
+        handleInterleavedEvents();
+        break;
+      }
+      case MIP_VOICE_EVENT_MODE_QUANTIZED: {
+        handleQuantizedEvents();
+        break;
       }
     }
   }
 
 //------------------------------
-public:
+private:
 //------------------------------
 
-  void init(uint32_t AIndex, MIP_VoiceContext* AContext) {
-    voice.init(AIndex,AContext);
+  void handleEvent(const clap_event_header_t* header) {
+    switch(header->type) {
+      case CLAP_EVENT_NOTE_ON: {
+        const clap_event_note_t* note_event = (const clap_event_note_t*)header;
+        state = voice.noteOn(note_event->key,note_event->velocity);
+        break;
+      }
+      case CLAP_EVENT_NOTE_OFF: {
+        const clap_event_note_t* note_event = (const clap_event_note_t*)header;
+        state = voice.noteOff(note_event->key,note_event->velocity);
+        break;
+      }
+      case CLAP_EVENT_NOTE_CHOKE: {
+        const clap_event_note_t* note_event = (const clap_event_note_t*)header;
+        voice.noteChoke(note_event->key,note_event->velocity);
+        state = MIP_VOICE_OFF;
+        break;
+      }
+      //case CLAP_EVENT_NOTE_END:
+      case CLAP_EVENT_NOTE_EXPRESSION: {
+        const clap_event_note_expression_t* expression_event = (const clap_event_note_expression_t*)header;
+        voice.noteExpression(expression_event->expression_id,expression_event->value);
+        break;
+      }
+      case CLAP_EVENT_PARAM_VALUE: {
+        const clap_event_param_value_t* param_event = (const clap_event_param_value_t*)header;
+        voice.parameter(param_event->param_id,param_event->value); // cookie?
+        break;
+      }
+      case CLAP_EVENT_PARAM_MOD: {
+        const clap_event_param_mod_t* mod_event = (const clap_event_param_mod_t*)header;
+        voice.modulation(mod_event->param_id,mod_event->amount);
+        break;
+      }
+      //case CLAP_EVENT_PARAM_GESTURE_BEGIN:
+      //case CLAP_EVENT_PARAM_GESTURE_END:
+      //case CLAP_EVENT_TRANSPORT: {
+      //case CLAP_EVENT_MIDI: {
+      //case CLAP_EVENT_MIDI_SYSEX: {
+      //case CLAP_EVENT_MIDI2: {
+    } // switch
   }
 
+  //----------
 
+  void handleAllEvents() {
+    const clap_event_header_t* header = nullptr;
+    while (events.read(&header)) {
+      handleEvent(header);
+    }
+    uint32_t length = context->process_context->process->frames_count;
+    voice.process(0,length);
+  }
 
-  void process() {
-    handleAllEvents();
-    voice.process();
+  //----------
+
+  void handleInterleavedEvents() {
+    //const clap_event_header_t* header = nullptr;
+    //while (events.read(&header)) {
+    //  handleEvent(header);
+    //}
+  }
+
+  //----------
+
+  void handleQuantizedEvents() {
+    //const clap_event_header_t* header = nullptr;
+    //while (events.read(&header)) {
+    //  handleEvent(header);
+    //}
   }
 
 };

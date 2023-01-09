@@ -34,7 +34,7 @@ private:
   const clap_host_t*            MClapHost             = nullptr;
   const clap_host_thread_pool*  MThreadPool           = nullptr;
 
-  bool                          MProcessThreaded      = true;
+  bool                          MProcessThreaded      = false;
   uint32_t                      MNumActiveVoices      = 0;
   uint32_t                      MActiveVoices[COUNT]  = {};
 
@@ -54,7 +54,9 @@ public:
 public:
 //------------------------------
 
-
+  void setProcessThreaded(bool AThreaded=true) {
+    MProcessThreaded = AThreaded;
+  }
 
 //------------------------------
 public:
@@ -63,7 +65,9 @@ public:
   void init(const clap_plugin_t* APlugin, const clap_host_t* AHost) {
     MClapPlugin = APlugin;
     MClapHost = AHost;
-    MThreadPool = (const clap_host_thread_pool*)MClapHost->get_extension(AHost,CLAP_EXT_THREAD_POOL);
+    if (MClapHost) {
+      MThreadPool = (const clap_host_thread_pool*)MClapHost->get_extension(MClapHost,CLAP_EXT_THREAD_POOL);
+    }
   }
 
   //----------
@@ -78,6 +82,10 @@ public:
       MVoices[i].init(i,&MVoiceContext);
     }
   }
+
+//------------------------------
+public:
+//------------------------------
 
 //------------------------------
 public:
@@ -136,8 +144,8 @@ public:
 
   void processParamValue(const clap_event_param_value_t* event) {
     int32_t voice = findVoice(event->port_index,event->channel,event->key,event->note_id);
+    //MIP_Print("voice %i\n",voice);
     if (voice >= 0) {
-      //MIP_Print("voice %i\n",voice);
       MVoices[voice].events.write(&event->header);
     }
   }
@@ -220,15 +228,14 @@ public:
     MVoiceContext.process_context = AProcessContext;
 
     uint32_t len = AProcessContext->process->frames_count;
+    //float** output = AProcessContext->process->audio_outputs[0].data32;
+    //MIP_ClearStereoBuffer(output,len);
     float* out0 = AProcessContext->process->audio_outputs[0].data32[0];
     float* out1 = AProcessContext->process->audio_outputs[0].data32[1];
     MIP_ClearMonoBuffer(out0,len);
     MIP_ClearMonoBuffer(out1,len);
 
-    //float** output = AProcessContext->process->audio_outputs[0].data32;
-    //MIP_ClearStereoBuffer(output,len);
-
-    // set up threaded voices
+    // set up active voices
 
     MNumActiveVoices = 0;
     for (uint32_t i=0; i<COUNT; i++) {
@@ -237,16 +244,17 @@ public:
       }
     }
 
-    // process threaded voices
+    // process active voices
 
     if (MNumActiveVoices > 0) {
 
       // thread-pool
 
       bool processed = false;
-      if (MProcessThreaded) {
+      //if (MProcessThreaded && MThreadPool && MClapHost) {
+      if (MProcessThreaded && MThreadPool) {
         processed = MThreadPool->request_exec(MClapHost,MNumActiveVoices);
-        //MIP_Print("request_exec(%i) returned %s\n", MNumActiveVoices, processed ? "true" : "false" );
+        MIP_Print("request_exec(%i) returned %s\n", MNumActiveVoices, processed ? "true" : "false" );
       }
 
       // manually

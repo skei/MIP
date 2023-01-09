@@ -33,8 +33,8 @@ const clap_plugin_descriptor_t my_descriptor = {
   .features     = (const char*[]){CLAP_PLUGIN_FEATURE_INSTRUMENT,nullptr}
 };
 
-#define MY_PLUGIN_EDITOR_WIDTH    400
-#define MY_PLUGIN_EDITOR_HEIGHT   500
+#define MY_PLUGIN_EDITOR_WIDTH    500
+#define MY_PLUGIN_EDITOR_HEIGHT   400
 #define MY_PLUGIN_MAX_VOICES      32
 
 //----------------------------------------------------------------------
@@ -111,11 +111,14 @@ public:
   // don't touch stuff other voices might be touching!
   // calculate to separate buffer!
 
-  void process() {
+  void process(uint32_t offset, uint32_t length) {
     float* out = MContext->buffer;
     out += (MIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
-    uint32_t num = MContext->process_context->process->frames_count;
-    for (uint32_t i=0; i<num; i++) {
+    out += offset;
+
+    //uint32_t length = MContext->process_context->process->frames_count;
+
+    for (uint32_t i=0; i<length; i++) {
       ph = MIP_Fract(ph);
 
       //float v = sin(ph * MIP_PI2);
@@ -158,9 +161,19 @@ class my_plugin
 private:
 //------------------------------
 
-  //double gain = 0.0;
+  myVoiceManager        MVoiceManager = {};
 
-  myVoiceManager  MVoiceManager = {};
+  MIP_Parameter*        par_gain    = nullptr;
+  MIP_Parameter*        par_thread  = nullptr;
+  MIP_Parameter*        par_render  = nullptr;
+
+  MIP_KnobWidget*       wdg_gain    = nullptr;
+  MIP_DragValueWidget*  wdg_thread  = nullptr;
+  MIP_DragValueWidget*  wdg_render  = nullptr;
+
+  double    p_gain    = 0.0;
+  uint32_t  p_thread  = 0;
+  uint32_t  p_render  = 0;
 
 //------------------------------
 public:
@@ -169,23 +182,34 @@ public:
   my_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
     setInitialEditorSize(MY_PLUGIN_EDITOR_WIDTH,MY_PLUGIN_EDITOR_HEIGHT);
-    //MVoiceManager->setThreadPool(MThreadPool);
+    MVoiceManager.setProcessThreaded(true);
   }
 
 //------------------------------
 public:
 //------------------------------
 
+  const char* thread_text[2] = {
+    "No",
+    "Yes"
+  };
+
+  const char* render_text[3] = {
+    "Block",
+    "Interleaved",
+    "Quantized"
+  };
+
   bool init() final {
     bool result = MIP_Plugin::init();
     if (result) {
       appendNoteInput();
       appendStereoOutput();
-
-      MIP_Parameter* param = appendParameter( new MIP_Parameter("Gain", 0.5) );
-      param->setFlag(CLAP_PARAM_IS_MODULATABLE);
-      param->setFlag(CLAP_PARAM_IS_MODULATABLE_PER_NOTE_ID);
-
+      par_gain    = appendParameter( new MIP_Parameter(     "Gain",         1, 0,1) );
+      par_thread  = appendParameter( new MIP_TextParameter( "Thread Pool",  0, 0,1, thread_text ));
+      par_render  = appendParameter( new MIP_TextParameter( "Render Mode",  0, 0,2, render_text) );
+      par_gain->setFlag(CLAP_PARAM_IS_MODULATABLE);
+      par_gain->setFlag(CLAP_PARAM_IS_MODULATABLE_PER_NOTE_ID);
       MVoiceManager.init(getClapPlugin(),getClapHost());
     }
     return result;
@@ -207,13 +231,37 @@ public:
     MIsEditorOpen = false;
     MEditor = new MIP_Editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
     if (MEditor) {
+
       MIP_PanelWidget* background = new MIP_PanelWidget(MIP_DRect(0,0, MY_PLUGIN_EDITOR_WIDTH, MY_PLUGIN_EDITOR_HEIGHT));
       MEditor->setRootWidget(background);
-      //MIP_KnobWidget* knob = new MIP_KnobWidget( MIP_DRect(50,50,300,400) );
-      //background->appendChildWidget(knob);
-      //knob->setArcThickness(40);
-      //knob->setValueSize(75);
-      //MEditor->connect( knob, MParameters[0] );
+
+      wdg_gain   = new MIP_KnobWidget(   MIP_DRect(     10,10,  200,200 ));
+      wdg_thread = new MIP_DragValueWidget( MIP_DRect(  220,10,  200, 20 ));
+      wdg_render = new MIP_DragValueWidget( MIP_DRect(  220,40,  200, 20 ));
+
+      background->appendChildWidget(wdg_gain);
+      background->appendChildWidget(wdg_thread);
+      background->appendChildWidget(wdg_render);
+
+      wdg_gain->setArcThickness(40);
+      wdg_gain->setValueSize(50);
+
+      wdg_thread->setDrawBorder(true);
+      wdg_thread->setBorderColor(0);
+      wdg_thread->setText("ThreadPool");
+      wdg_thread->setTextColor(0);
+      wdg_thread->setValueColor(0);
+
+      wdg_render->setDrawBorder(true);
+      wdg_render->setBorderColor(0);
+      wdg_render->setText("EventMode");
+      wdg_render->setTextColor(0);
+      wdg_render->setValueColor(0);
+
+      MEditor->connect( wdg_gain,   MParameters[0] );
+      MEditor->connect( wdg_thread, MParameters[1] );
+      MEditor->connect( wdg_render, MParameters[2] );
+
     }
     return (MEditor);
   }
@@ -241,8 +289,6 @@ public: // events
     MVoiceManager.preProcessEvents(in_events,out_events);
   }
 
-  //----------
-
   void postProcessEvents(const clap_input_events_t* in_events, const clap_output_events_t* out_events) final {
     MVoiceManager.postProcessEvents(in_events,out_events);
   }
@@ -261,15 +307,23 @@ public: // events
     MVoiceManager.processNoteChoke(event);
   }
 
-  //void processNoteEnd(const clap_event_note_t* event) final {
-  //  MVoiceManager.processNoteEnd(event);
-  //}
-
   void processNoteExpression(const clap_event_note_expression_t* event) final {
     MVoiceManager.processNoteExpression(event);
   }
 
   void processParamValue(const clap_event_param_value_t* event) final {
+
+    switch (event->param_id) {
+      case 0: // gain
+        p_gain = event->value;
+        break;
+      case 1: //thread
+        p_thread = event->value;
+        break;
+      case 2: // render
+        p_render = event->value;
+        break;
+    }
     MVoiceManager.processParamValue(event);
   }
 
@@ -277,35 +331,29 @@ public: // events
     MVoiceManager.processParamMod(event);
   }
 
-  //void processParamGestureBegin(const clap_event_param_gesture_t* event) final {
-  //  MVoiceManager.processParamGestureBegin(event);
+  //void processMidi(const clap_event_midi_t* event) final {
+  //  MVoiceManager.processMidi(event);
   //}
 
-  //void processParamGestureEnd(const clap_event_param_gesture_t* event) final {
-  //  MVoiceManager.processParamGestureEnd(event);
+  //void processMidiSysex(const clap_event_midi_sysex_t* event) final {
+  //  MVoiceManager.processMidiSysex(event);
   //}
 
-  //void processTransport(const clap_event_transport_t* event) final {
-  //  MVoiceManager.processTransport(event);
+  //void processMidi2(const clap_event_midi2_t* event) final {
+  //  MVoiceManager.processMidi2(event);
   //}
-
-  void processMidi(const clap_event_midi_t* event) final {
-    MVoiceManager.processMidi(event);
-  }
-
-  void processMidiSysex(const clap_event_midi_sysex_t* event) final {
-    MVoiceManager.processMidiSysex(event);
-  }
-
-  void processMidi2(const clap_event_midi2_t* event) final {
-    MVoiceManager.processMidi2(event);
-  }
 
 //------------------------------
 public: // audio
 //------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
+
+    bool t;
+    if (p_thread > 0.5) t = true;
+    else t = false;
+    MVoiceManager.setProcessThreaded(t);
+
     MVoiceManager.processAudioBlock(AContext);
   }
 
