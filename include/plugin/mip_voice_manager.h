@@ -5,10 +5,8 @@
 #include "plugin/mip_note.h"
 #include "plugin/mip_voice.h"
 
-#define MIP_VOICE_MANAGER_MAX_EVENTS_PER_BLOCK  1024
-#define MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE 4096
-
-typedef MIP_Queue<MIP_Note,MIP_VOICE_MANAGER_MAX_EVENTS_PER_BLOCK> MIP_NoteQueue;
+//typedef MIP_Queue<MIP_Note,MIP_VOICE_MANAGER_MAX_EVENTS_PER_BLOCK> MIP_NoteQueue;
+typedef MIP_Queue<MIP_Note,MIP_PLUGIN_MAX_PARAM_EVENTS> MIP_NoteQueue;
 
 //----------------------------------------------------------------------
 //
@@ -59,6 +57,10 @@ public:
   }
 
   //----------
+
+  //#define MIP_VOICE_EVENT_MODE_BLOCK       0
+  //#define MIP_VOICE_EVENT_MODE_INTERLEAVED 1
+  //#define MIP_VOICE_EVENT_MODE_QUANTIZED   2
 
   void setEventMode(uint32_t AMode) {
     for (uint32_t i=0; i<COUNT; i++) {
@@ -249,6 +251,7 @@ public:
     for (uint32_t i=0; i<COUNT; i++) {
       if ((MVoices[i].state == MIP_VOICE_WAITING) || (MVoices[i].state == MIP_VOICE_PLAYING) || (MVoices[i].state == MIP_VOICE_RELEASED)) {
         MActiveVoices[MNumActiveVoices++] = i;
+        //MVoices[i].setVoiceBuffer();
       }
     }
 
@@ -278,7 +281,7 @@ public:
 
       for (uint32_t i=0; i<MNumActiveVoices; i++) {
         uint32_t index = MActiveVoices[i];
-        //process_voice(v);
+        //MVoices[i].getVoiceBuffer();
         float* ptr = MVoiceBuffer;
         ptr += (index * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
         MIP_AddMonoBuffer(out0,ptr,len);
@@ -296,6 +299,7 @@ public:
   // (potentially) called in separate threads for each voice
 
   void process_voice(uint32_t i) {
+    //MVoices[i].setVoiceBuffer();
     MVoices[i].process();
   };
 

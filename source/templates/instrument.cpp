@@ -116,8 +116,8 @@ public:
   uint32_t process(uint32_t AState, uint32_t AOffset, uint32_t ALength) {
 
     float* buffer = MContext->buffer;
-    buffer += (MIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
     buffer += AOffset;
+    buffer += (MIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
 
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
 

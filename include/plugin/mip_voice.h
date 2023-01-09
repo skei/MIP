@@ -7,16 +7,6 @@
 
 //----------------------------------------------------------------------
 
-// max evenets per voice, per block
-// we can get setParameter for all events, maybe modulation
-// expressions..
-
-#define MIP_VOICE_MAX_EVENTS_PER_BLOCK  256
-
-#define MIP_VOICE_EVENT_MODE_BLOCK       0
-#define MIP_VOICE_EVENT_MODE_INTERLEAVED 1
-#define MIP_VOICE_EVENT_MODE_QUANTIZED   2
-
 typedef MIP_Queue<const clap_event_header_t*,MIP_VOICE_MAX_EVENTS_PER_BLOCK> MIP_ClapEventQueue;
 
 //----------------------------------------------------------------------
