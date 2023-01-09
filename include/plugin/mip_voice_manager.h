@@ -58,6 +58,14 @@ public:
     MProcessThreaded = AThreaded;
   }
 
+  //----------
+
+  void setEventMode(uint32_t AMode) {
+    for (uint32_t i=0; i<COUNT; i++) {
+      MVoices[i].event_mode = AMode;
+    }
+  }
+
 //------------------------------
 public:
 //------------------------------

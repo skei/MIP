@@ -114,8 +114,7 @@ private:
       }
       case CLAP_EVENT_NOTE_CHOKE: {
         const clap_event_note_t* note_event = (const clap_event_note_t*)header;
-        voice.noteChoke(note_event->key,note_event->velocity);
-        state = MIP_VOICE_OFF;
+        state = voice.noteChoke(note_event->key,note_event->velocity);
         break;
       }
       //case CLAP_EVENT_NOTE_END:
@@ -146,26 +145,47 @@ private:
   //----------
 
   void handleAllEvents() {
+    MIP_PRINT;
     const clap_event_header_t* header = nullptr;
     while (events.read(&header)) {
       handleEvent(header);
     }
     uint32_t length = context->process_context->process->frames_count;
-    voice.process(0,length);
+    state = voice.process(state,0,length);
   }
 
   //----------
 
   void handleInterleavedEvents() {
-    //const clap_event_header_t* header = nullptr;
-    //while (events.read(&header)) {
-    //  handleEvent(header);
-    //}
+    MIP_PRINT;
+    uint32_t current_time = 0;
+    uint32_t remaining = context->process_context->process->frames_count;
+    const clap_event_header_t* header = nullptr;
+    while (remaining > 0) {
+      if (events.read(&header)) {
+        int32_t length = header->time - current_time;
+        if (length > 0) {
+          state = voice.process(state,current_time,length);
+          remaining -= length;
+          current_time += length;
+        }
+        handleEvent(header);
+      } // event
+      else {
+        // no more events
+        int32_t length = remaining;
+        state = voice.process(state,current_time,length);
+        remaining -= length;
+        current_time += length;
+      } // !event
+    } // remaining > 0
+    //MIP_Assert( events.read(&header) == false );
   }
 
   //----------
 
   void handleQuantizedEvents() {
+    MIP_PRINT;
     //const clap_event_header_t* header = nullptr;
     //while (events.read(&header)) {
     //  handleEvent(header);

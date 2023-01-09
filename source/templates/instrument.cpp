@@ -88,7 +88,9 @@ public:
 
   //----------
 
-  void noteChoke(uint32_t AKey, double AVelocity) {
+  uint32_t noteChoke(uint32_t AKey, double AVelocity) {
+    return MIP_VOICE_OFF;
+
   }
 
   //----------
@@ -111,33 +113,43 @@ public:
   // don't touch stuff other voices might be touching!
   // calculate to separate buffer!
 
-  void process(uint32_t offset, uint32_t length) {
-    float* out = MContext->buffer;
-    out += (MIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
-    out += offset;
+  uint32_t process(uint32_t AState, uint32_t AOffset, uint32_t ALength) {
 
-    //uint32_t length = MContext->process_context->process->frames_count;
+    float* buffer = MContext->buffer;
+    buffer += (MIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
+    buffer += AOffset;
 
-    for (uint32_t i=0; i<length; i++) {
-      ph = MIP_Fract(ph);
+    if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
 
-      //float v = sin(ph * MIP_PI2);
-      float v = (ph * 2.0) - 1.0;  // 0..1 -> -1..1
+      for (uint32_t i=0; i<ALength; i++) {
+        ph = MIP_Fract(ph);
 
-      { // test: waste cpu
-        #define NUM 250
-        float p = ph - (phadd * 0.5);
-        float pa = (phadd / NUM);
-        for (uint32_t j=0; j<NUM; j++) {
-          v += sin(p * MIP_PI2) / NUM;
-          p += pa;
+        float v = sin(ph * MIP_PI2);
+        //float v = (ph * 2.0) - 1.0;  // 0..1 -> -1..1
+
+        { // test: waste cpu
+          #define NUM 250
+          float p = ph - (phadd * 0.5);
+          float pa = (phadd / NUM);
+          for (uint32_t j=0; j<NUM; j++) {
+            v += sin(p * MIP_PI2) / NUM;
+            p += pa;
+          }
+          #undef NUM
         }
-        #undef NUM
+
+        *buffer++ = v * 0.1;
+        ph += phadd;
       }
 
-      *out++ = v * 0.1;
-      ph += phadd;
+    } // playing
+
+    else {
+      memset(buffer,0,ALength * sizeof(float));
     }
+
+    return AState;
+
   }
 
   //----------
@@ -312,17 +324,10 @@ public: // events
   }
 
   void processParamValue(const clap_event_param_value_t* event) final {
-
     switch (event->param_id) {
-      case 0: // gain
-        p_gain = event->value;
-        break;
-      case 1: //thread
-        p_thread = event->value;
-        break;
-      case 2: // render
-        p_render = event->value;
-        break;
+      case 0: p_gain   = event->value; break;
+      case 1: p_thread = event->value; break;
+      case 2: p_render = event->value; break;
     }
     MVoiceManager.processParamValue(event);
   }
@@ -349,10 +354,10 @@ public: // audio
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
 
-    bool t;
-    if (p_thread > 0.5) t = true;
-    else t = false;
-    MVoiceManager.setProcessThreaded(t);
+    if (p_thread > 0.5) MVoiceManager.setProcessThreaded(true);
+    else MVoiceManager.setProcessThreaded(false);
+
+    MVoiceManager.setEventMode(p_render);
 
     MVoiceManager.processAudioBlock(AContext);
   }

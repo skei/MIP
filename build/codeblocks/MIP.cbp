@@ -662,6 +662,7 @@
 		<Unit filename="../../include/gui/mip_paint_source.h" />
 		<Unit filename="../../include/gui/mip_paint_target.h" />
 		<Unit filename="../../include/gui/mip_painter.h" />
+		<Unit filename="../../include/gui/mip_skin.h" />
 		<Unit filename="../../include/gui/mip_surface.h" />
 		<Unit filename="../../include/gui/mip_widget.h" />
 		<Unit filename="../../include/gui/mip_widgets.h" />
@@ -735,6 +736,9 @@
 		<Unit filename="../../include/plugin/mip_plugin.h" />
 		<Unit filename="../../include/plugin/mip_process_context.h" />
 		<Unit filename="../../include/plugin/mip_registry.h" />
+		<Unit filename="../../include/plugin/mip_voice.h" />
+		<Unit filename="../../include/plugin/mip_voice_context.h" />
+		<Unit filename="../../include/plugin/mip_voice_manager.h" />
 		<Unit filename="../../include/plugin/vst2/mip_hosted_vst2_plugin.h" />
 		<Unit filename="../../include/plugin/vst2/mip_vst2.h" />
 		<Unit filename="../../include/plugin/vst2/mip_vst2_entry.h" />
