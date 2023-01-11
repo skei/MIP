@@ -7,7 +7,7 @@
 
 //----------------------------------------------------------------------
 
-#define MIP_VOICE_MAX_EVENTS_PER_BLOCK 256
+//#define MIP_VOICE_MAX_EVENTS_PER_BLOCK 256
 
 //----------
 

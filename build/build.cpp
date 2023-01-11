@@ -99,6 +99,7 @@
 //#include "../source/skei.audio/sa_botage.cpp"
 //#include "../source/skei.audio/sa_bulum.cpp"
 //#include "../source/skei.audio/sa_cred.cpp"
+#include "../source/skei.audio/sa_mael.cpp"
 //#include "../source/skei.audio/sa_tyr.cpp"
 
 //
@@ -121,7 +122,7 @@
 
 //#include "../source/templates/analyzer.cpp"
 //#include "../source/templates/audio_effect.cpp"
-#include "../source/templates/instrument.cpp"
+//#include "../source/templates/instrument.cpp"
 //#include "../source/templates/note_effect.cpp"
 
 

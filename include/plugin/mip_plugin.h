@@ -132,6 +132,7 @@ public: // plugin
     if (!MIsInitialized) {
       MIsInitialized = true;
     }
+    MProcessContext.parameters = &MParameters;
     return true;
   }
 

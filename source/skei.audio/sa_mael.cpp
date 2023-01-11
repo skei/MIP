@@ -22,14 +22,14 @@
 
 const clap_plugin_descriptor_t my_descriptor = {
   .clap_version = CLAP_VERSION,
-  .id           = "me/my_plugin/0.0.0",
-  .name         = "my_plugin",
-  .vendor       = "me",
+  .id           = "skei.audio/sa_mael/0.0.0",
+  .name         = "sa_mael",
+  .vendor       = "skei.audio",
   .url          = "",
   .manual_url   = "",
   .support_url  = "",
   .version      = "0.0.0",
-  .description  = "my amazing plugin!",
+  .description  = "...",
   .features     = (const char*[]){CLAP_PLUGIN_FEATURE_INSTRUMENT,nullptr}
 };
 
@@ -114,10 +114,14 @@ public:
   // calculate to separate buffer!
 
   uint32_t process(uint32_t AState, uint32_t AOffset, uint32_t ALength) {
-
     float* buffer = MContext->buffer;
-    buffer += AOffset;
+    //MIP_Print("AOffset %i ALength %i\n",AOffset,ALength);
+    //MIP_Assert(buffer);
+    //MIP_Assert(MIndex < MY_PLUGIN_MAX_VOICES);
+    //MIP_Assert(AOffset < ALength);
     buffer += (MIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
+    buffer += AOffset;
+
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
       for (uint32_t i=0; i<ALength; i++) {
         ph = MIP_Fract(ph);
@@ -165,8 +169,8 @@ public:
   my_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
     setInitialEditorSize(MY_PLUGIN_EDITOR_WIDTH,MY_PLUGIN_EDITOR_HEIGHT);
-    //MVoiceManager.setProcessThreaded(true);
-    //MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_INTERLEAVED);
+    MVoiceManager.setProcessThreaded(true);
+    MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_INTERLEAVED);
   }
 
 //------------------------------
@@ -178,7 +182,7 @@ public:
     if (result) {
       appendNoteInput();
       appendStereoOutput();
-      par_gain = appendParameter(new MIP_Parameter("Gain",1,0,1));
+      par_gain = appendParameter( new MIP_Parameter( "Gain", 1, 0,1 ));
       par_gain->setFlag(CLAP_PARAM_IS_MODULATABLE);
       par_gain->setFlag(CLAP_PARAM_IS_MODULATABLE_PER_NOTE_ID);
       MVoiceManager.init(getClapPlugin(),getClapHost());
@@ -206,13 +210,12 @@ public:
       MIP_PanelWidget* background = new MIP_PanelWidget(MIP_DRect(0,0, MY_PLUGIN_EDITOR_WIDTH, MY_PLUGIN_EDITOR_HEIGHT));
       MEditor->setRootWidget(background);
 
-      wdg_gain = new MIP_KnobWidget(MIP_DRect(10,10,200,200));
-      background->appendChildWidget(wdg_gain);
-      wdg_gain->setArcThickness(40);
+      wdg_gain   = new MIP_KnobWidget(MIP_DRect(10,10,200,200));
+      //wdg_gain->setArcThickness(40);
       wdg_gain->setValueSize(50);
-
-      //MEditor->connect(wdg_gain,par_gainMParameters[0]);
-      MEditor->connect(wdg_gain,par_gain);
+      wdg_gain->setDrawModulation(true);
+      background->appendChildWidget(wdg_gain);
+      MEditor->connect( wdg_gain, par_gain );
 
     }
     return (MEditor);
@@ -291,10 +294,13 @@ public: // audio
 //------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
+
     MVoiceManager.processAudioBlock(AContext);
+
     uint32_t length = AContext->process->frames_count;
     float** buffer = AContext->process->audio_outputs[0].data32;
     MIP_ScaleStereoBuffer(buffer,p_gain,length);
+
   }
 
 };
@@ -311,4 +317,5 @@ public: // audio
   MIP_DEFAULT_ENTRY(my_descriptor,my_plugin);
 
 //#endif // MIP_NO_ENTRY
+
 

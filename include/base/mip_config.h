@@ -35,24 +35,13 @@
   #define MIP_PLUGIN_MAX_GUI_EVENTS                 32
   #define MIP_PLUGIN_MAX_PARAM_EVENTS               4096
   #define MIP_PLUGIN_GENERIC_EDITOR_WIDTH           500
-
-//#define MIP_VOICE_MAX_EVENTS_PER_BLOCK            256
-//#define MIP_VOICE_MAX_FRAME_BUFFER_SIZE           4096
-
-#define MIP_VOICE_MAX_EVENTS_PER_BLOCK              256
-
-//  #define MIP_VOICE_MANAGER_MAX_EVENTS_PER_BLOCK    4096
+  #define MIP_VOICE_MAX_EVENTS_PER_BLOCK            4096
+  #define MIP_VOICE_MANAGER_MAX_EVENTS_PER_BLOCK    4096
   #define MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE   4096
-
-//#define MIP_VOICE_EVENT_MODE_BLOCK       0
-//#define MIP_VOICE_EVENT_MODE_INTERLEAVED 1
-//#define MIP_VOICE_EVENT_MODE_QUANTIZED   2
-
-
-  #define MIP_WINDOW_MAX_DIRTY_RECTS      1024
-  #define MIP_WINDOW_MAX_DIRTY_WIDGETS    1024
-  #define MIP_WINDOW_TIMER_MS             30
-  #define MIP_WINDOW_TIMER_ID             333
+  #define MIP_WINDOW_MAX_DIRTY_RECTS                1024
+  #define MIP_WINDOW_MAX_DIRTY_WIDGETS              1024
+  #define MIP_WINDOW_TIMER_MS                       30
+  #define MIP_WINDOW_TIMER_ID                       333
 
 //----------------------------------------------------------------------
 //

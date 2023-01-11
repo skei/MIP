@@ -24,13 +24,15 @@ protected:
 //------------------------------
 
 
-  bool      MDrawArc        = true;
-  MIP_Color MArcBackColor   = MIP_COLOR_DARK_GRAY;
-  MIP_Color MArcValueColor  = MIP_COLOR_LIGHT_GRAY;
+  bool      MDrawArc                  = true;
+  MIP_Color MArcBackColor             = MIP_COLOR_DARK_GRAY;
+  MIP_Color MArcValueColor            = MIP_COLOR_LIGHT_GRAY;
   MIP_Color MInteractiveArcValueColor = MIP_COLOR_WHITE;
-  double    MArcThickness   = 10.0;
+  double    MArcThickness             = 10.0;
 
-
+  double    MModArcOffset             = 13.0;
+  double    MModArcThickness          = 2.0;
+  MIP_Color MModArcColor              = MIP_COLOR_BLACK;
 
 //------------------------------
 public:
@@ -148,20 +150,31 @@ public:
 
     // draw modulation
 
-//    if (MDrawModulation) {
-//      if (!isDisabled()) {
-//        double v = value + MModulations[0];
-//        v = MIP_Clamp(v,0,1);
-//        a1 = 0.35 + (v * 0.8);
-//        a2 = 0.02;//       (MIndicatorValue * 0.8);
-//        a1 *= MIP_PI2;
-//        a2 *= MIP_PI2;
-//        painter->setLineWidth(thick);
-//        color = MModulationColor;
-//        painter->setDrawColor(color);
-//        painter->drawArc(cx,cy,r,a1,a2);
-//      }
-//    }
+    if (MDrawModulation) {
+      if (!isDisabled()) {
+
+        painter->setLineWidth(MModArcThickness*S);
+        painter->setDrawColor(MModArcColor);
+
+        double modulation = MModulations[0];
+
+        if (modulation < 0) {
+          if ((value + modulation) < 0) modulation = - value;
+          double aa1 = (0.35 + ((value)  * 0.8)) * MIP_PI2;
+          double aa2 = (       ((-modulation) * 0.8)) * MIP_PI2;
+          painter->drawArc(cx,cy,r - (MModArcOffset*S),aa1,aa2);
+        }
+        else if (modulation > 0) {
+          if ((value + modulation) > 1) modulation = 1 - value;
+          double aa1 = (0.35 + ((value+modulation)  * 0.8)) * MIP_PI2;
+          double aa2 = (       ((modulation) * 0.8)) * MIP_PI2;
+          painter->drawArc(cx,cy,r - (MModArcOffset*S),aa1,aa2);
+        }
+        //else {
+        //}
+
+      }
+    }
 
     // draw indicator
 

@@ -112,7 +112,7 @@ protected:
   MIP_Color           MDisabledColor    = MIP_Color(0.5);
   double              MDisabledAlpha    = 0.5;
 
-  bool                MDrawIndicator    = true;//false;
+  bool                MDrawIndicator    = false;
   double              MIndicatorValue   = 0.0;
   MIP_Color           MIndicatorColor   = MIP_Color(1.0, 1.0, 1.0, 0.5);
 

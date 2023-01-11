@@ -237,10 +237,8 @@ public:
     if (parameter) {
       MIP_Widget* widget = parameter->getWidget();
       if (widget) {
-
         //TODO: like parameters above
         widget->setModulation(AValue);
-
         if (ARedraw) widget->redraw(/*MIP_WIDGET_REDRAW_MODULATION*/);
       }
     }

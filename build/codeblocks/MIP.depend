@@ -1,6 +1,6 @@
 # depslib dependency file v1.0
-1673120401 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../source/templates/instrument.cpp"
+1673304808 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../source/skei.audio/sa_mael.cpp"
 
 1670414796 /DISKS/sda2/code/git/MIP/build/test/test1.cpp
 	"gui/mip_window.h"
@@ -35,13 +35,13 @@
 	"base/mip_test.h"
 	"plugin/mip_registry.h"
 
-1673201627 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
+1673293569 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
 
 1641519085 /DISKS/sda2/code/git/MIP/include/base/mip_attributes.h
 
 1671248207 /DISKS/sda2/code/git/MIP/include/base/mip_const.h
 
-1673106635 /DISKS/sda2/code/git/MIP/include/base/mip_enums.h
+1673293498 /DISKS/sda2/code/git/MIP/include/base/mip_enums.h
 
 1668375951 /DISKS/sda2/code/git/MIP/include/base/mip_linux.h
 
@@ -656,7 +656,7 @@
 	"gui/cairo/mip_cairo.h"
 	"extern/stb/stb_image.h"
 
-1673106277 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
+1673308204 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
 	"base/mip.h"
 	"gui/base/mip_base_window.h"
 	"gui/mip_paint_context.h"
@@ -719,7 +719,7 @@
 	"base/mip.h"
 	"gui/mip_widget.h"
 
-1673021349 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob_widget.h
+1673308427 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_drag_value_widget.h"
 
@@ -759,7 +759,7 @@
 1673187935 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_plugin.h
 	"plugin/clap/mip_clap.h"
 
-1673106317 /DISKS/sda2/code/git/MIP/include/plugin/mip_editor.h
+1673305331 /DISKS/sda2/code/git/MIP/include/plugin/mip_editor.h
 	"base/mip.h"
 	"plugin/clap/mip_clap.h"
 	"gui/mip_window.h"
@@ -1454,11 +1454,11 @@
 	"plugin/mip_voice_manager.h"
 	"plugin/mip_entry.h"
 
-1673213367 /DISKS/sda2/code/git/MIP/include/plugin/mip_voice_manager.h
+1673293586 /DISKS/sda2/code/git/MIP/include/plugin/mip_voice_manager.h
 	"plugin/mip_note.h"
 	"plugin/mip_voice.h"
 
-1673213300 /DISKS/sda2/code/git/MIP/include/plugin/mip_voice.h
+1673312121 /DISKS/sda2/code/git/MIP/include/plugin/mip_voice.h
 	"plugin/mip_process_context.h"
 	"plugin/mip_voice_context.h"
 
@@ -1466,4 +1466,13 @@
 	"base/mip.h"
 	"plugin/clap/mip_clap.h"
 	"plugin/mip_process_context.h"
+
+1673311252 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_mael.cpp
+	"audio/mip_audio_math.h"
+	"audio/mip_audio_utils.h"
+	"plugin/mip_plugin.h"
+	"gui/mip_widgets.h"
+	"audio/mip_audio_utils.h"
+	"plugin/mip_voice_manager.h"
+	"plugin/mip_entry.h"
 

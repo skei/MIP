@@ -784,6 +784,10 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="../../source/skei.audio/sa_mael.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="../../source/skei.audio/sa_mini/sa_pitch.h" />
 		<Unit filename="../../source/skei.audio/sa_mini/sa_transpose.h" />
 		<Unit filename="../../source/skei.audio/sa_nity/sa_nity_editor.h" />
