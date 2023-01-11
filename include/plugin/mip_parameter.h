@@ -34,20 +34,22 @@ protected:
     /*.default_value  =*/ 0.0
   };
 
-  MIP_Widget*       MWidget           = nullptr;
-  int32_t           MIndex            = -1;
-  double            MValue            = 0.0;
-  double            MModulation       = 0.0;
+  MIP_Widget*       MWidget             = nullptr;
+  int32_t           MIndex              = -1;
+  double            MValue              = 0.0;
+  double            MModulation         = 0.0;
 
-  double            MValueTarget      = 0.0;
-  double            MValueFactor      = 0.0;
-  double            MValueSmoothed    = 0.0;
+  double            MValueTarget        = 0.0;
+  double            MValueFactor        = 0.0;
+  double            MValueSmoothed      = 0.0;
 
-  double            MModulationTarget = 0.0;
-  double            MModulationSmooth = 0.0;
-  double            MModulationFactor = 0.0;
+  double            MModulationTarget   = 0.0;
+  double            MModulationSmooth   = 0.0;
+  double            MModulationFactor   = 0.0;
 
-  char              MValueText[256]   = {0};
+  uint32_t          MModulationCounter  = 0;
+
+  char              MValueText[256]     = {0};
 
 
 //------------------------------
@@ -83,6 +85,7 @@ public:
   virtual void        setValueFactor(double AValue)           { MValueFactor = AValue; }
   virtual void        setModulationTarget(double AValue)      { MModulationTarget = AValue; }
   virtual void        setModulationFactor(double AValue)      { MModulationFactor = AValue; }
+  virtual void        setModulationCounter(uint32_t ACount)   { MModulationCounter = ACount; }
 
   virtual void        setId(uint32_t AId)                     { MParamInfo.id = AId; }
   virtual void        setFlags(uint32_t AFlags)               { MParamInfo.flags = AFlags; }
@@ -91,6 +94,7 @@ public:
   virtual void        setDefValue(double AValue)              { MParamInfo.default_value = AValue; }
   virtual void        setMinValue(double AValue)              { MParamInfo.min_value = AValue; }
   virtual void        setMaxValue(double AValue)              { MParamInfo.max_value = AValue; }
+
 
   // expressions?
 
@@ -111,25 +115,26 @@ public:
 public:
 //------------------------------
 
-  virtual MIP_Widget* getWidget()           { return MWidget; }
-  virtual int32_t     getIndex()            { return MIndex; }
-  virtual double      getValue()            { return MValue; }
-  virtual double      getModulation()       { return MModulation; }
+  virtual MIP_Widget* getWidget()             { return MWidget; }
+  virtual int32_t     getIndex()              { return MIndex; }
+  virtual double      getValue()              { return MValue; }
+  virtual double      getModulation()         { return MModulation; }
 
-  virtual double      getValueSmoothed()    { return MValueSmoothed; }
-  virtual double      getModulationSmooth() { return MModulationSmooth; }
+  virtual double      getValueSmoothed()      { return MValueSmoothed; }
+  virtual double      getModulationSmooth()   { return MModulationSmooth; }
+  virtual uint32_t    getModulationCounter()  { return MModulationCounter; }
 
-  virtual uint32_t    getId()               { return MParamInfo.id; }
-  virtual uint32_t    getFlags()            { return MParamInfo.flags; }
-  virtual const char* getName()             { return MParamInfo.name; }
-  virtual const char* getModule()           { return MParamInfo.module; }
-  virtual double      getDefValue()         { return MParamInfo.default_value; }
-  virtual double      getMinValue()         { return MParamInfo.min_value; }
-  virtual double      getMaxValue()         { return MParamInfo.max_value; }
+  virtual uint32_t    getId()                 { return MParamInfo.id; }
+  virtual uint32_t    getFlags()              { return MParamInfo.flags; }
+  virtual const char* getName()               { return MParamInfo.name; }
+  virtual const char* getModule()             { return MParamInfo.module; }
+  virtual double      getDefValue()           { return MParamInfo.default_value; }
+  virtual double      getMinValue()           { return MParamInfo.min_value; }
+  virtual double      getMaxValue()           { return MParamInfo.max_value; }
 
-  virtual bool        isAutomatable()       { return MParamInfo.flags & CLAP_PARAM_IS_AUTOMATABLE; }
-  virtual bool        isHidden()            { return MParamInfo.flags & CLAP_PARAM_IS_HIDDEN; }
-  virtual bool        isModulatable()       { return MParamInfo.flags & CLAP_PARAM_IS_MODULATABLE; }
+  virtual bool        isAutomatable()         { return MParamInfo.flags & CLAP_PARAM_IS_AUTOMATABLE; }
+  virtual bool        isHidden()              { return MParamInfo.flags & CLAP_PARAM_IS_HIDDEN; }
+  virtual bool        isModulatable()         { return MParamInfo.flags & CLAP_PARAM_IS_MODULATABLE; }
 
 //------------------------------
 public:

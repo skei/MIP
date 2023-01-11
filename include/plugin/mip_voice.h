@@ -28,14 +28,14 @@ typedef MIP_Queue<MIP_VoiceEvent,MIP_VOICE_MAX_EVENTS_PER_BLOCK> MIP_VoiceEventQ
 //
 //----------------------------------------------------------------------
 
-template <class MYVOICE>
+template <class VOICE>
 class MIP_Voice {
 
 //------------------------------
 public:
 //------------------------------
 
-  MYVOICE             voice       = {};
+  VOICE               voice       = {};
   uint32_t            index       = 0;
   uint32_t            state       = MIP_VOICE_OFF;
   MIP_Note            note        = {};

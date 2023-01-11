@@ -196,7 +196,6 @@ public: // plugin
   //----------
 
   clap_process_status process(const clap_process_t *process) override {
-    MProcessContext.counter += 1;
     MProcessContext.process = process;
     processTransport(process->transport);
     preProcessEvents(process->in_events,process->out_events);
@@ -206,6 +205,7 @@ public: // plugin
     postProcessEvents(process->in_events,process->out_events);
     flushHostParams(process->out_events);
     MProcessContext.process = nullptr;
+    MProcessContext.counter += 1;
     return CLAP_PROCESS_CONTINUE;
   }
 
@@ -755,6 +755,12 @@ public: // ext render
 public: // ext state
 //------------------------------
 
+  /*
+    uint32_t  version
+    uint32_t  num params
+    double    param_values
+  */
+
   bool state_save(const clap_ostream_t *stream) override {
     //MIP_PRINT;
     uint32_t written = 0;
@@ -820,6 +826,7 @@ public: // ext state
       MParameters[i]->setValue(value);
     }
     updateParameterValues();
+    //updateEditorParameterValues();
     return true;
   }
 
@@ -925,33 +932,6 @@ public: // editor listener
       flushGuiMods();
     }
   }
-
-//------------------------------
-public: // timer listener
-//------------------------------
-
-  /*
-    called from our (separate) timer thread..
-  */
-
-//  #ifndef MIP_NO_GUI
-//
-//  void on_timer_callback(MIP_Timer* ATimer) override {
-//    MIP_Print("we don't need this?\n");
-//    if (ATimer == &MGuiTimer) {
-//      if (MIsEditorOpen) { //  && !MIsEditorBusy) {
-//        //MEditor->updateTimer();
-//        //MEditor.updateWaveformWidget(sa_botage_processor* process) {
-//        flushGuiParams();
-//        flushGuiMods();
-//        //MIP_Window* window = MEditor->getWindow();
-//        //window->flushDirtyRects();
-//      }
-//    }
-//    //MIP_PRINT;
-//  }
-//
-//  #endif
 
 //------------------------------
 public: // parameters

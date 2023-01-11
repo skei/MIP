@@ -1,5 +1,6 @@
 // 174 LOC
 
+#include "base/mip.h"
 #include "audio/mip_audio_math.h"
 #include "audio/mip_audio_utils.h"
 #include "plugin/mip_plugin.h"
@@ -14,19 +15,19 @@
 
 #define MY_PLUGIN_EDITOR_WIDTH    500
 #define MY_PLUGIN_EDITOR_HEIGHT   500
-#define MY_PLUGIN_MAX_VOICES      1024
+#define MY_PLUGIN_MAX_VOICES      128
 
 //----------
 
 const clap_plugin_descriptor_t my_descriptor = {
   .clap_version = CLAP_VERSION,
-  .id           = "skei.audio/sa_mael/0.0.0",
+  .id           = "skei.audio/sa_mael/0.0.1",
   .name         = "sa_mael",
   .vendor       = "skei.audio",
   .url          = "",
   .manual_url   = "",
   .support_url  = "",
-  .version      = "0.0.0",
+  .version      = "0.0.1",
   .description  = "...",
   .features     = (const char*[]){CLAP_PLUGIN_FEATURE_INSTRUMENT,nullptr}
 };
@@ -107,10 +108,12 @@ public:
     buffer += AOffset;
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
       for (uint32_t i=0; i<ALength; i++) {
+
         ph = MIP_Fract(ph);           // wrap phase
         float v = (ph * 2.0) - 1.0;   // 0..1 -> -1..1
         *buffer++ = v * 0.1;          // scale it down a bit
         ph += phadd;                  // advance phase
+
       } // for voices
     } // playing
     else {
@@ -187,11 +190,9 @@ public:
     MIsEditorOpen = false;
     MEditor = new MIP_Editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
     if (MEditor) {
-
       MIP_PanelWidget* background = new MIP_PanelWidget(MIP_DRect(0,0, MY_PLUGIN_EDITOR_WIDTH, MY_PLUGIN_EDITOR_HEIGHT));
       MEditor->setRootWidget(background);
-
-      wdg_gain   = new MIP_KnobWidget(MIP_DRect(50,50,400,400));
+      wdg_gain = new MIP_KnobWidget(MIP_DRect(50,50,400,400));
       wdg_gain->setArcThickness(10);
       wdg_gain->setValueSize(100);
       wdg_gain->setDrawModulation(true);
@@ -247,6 +248,8 @@ public: // events
     MVoiceManager.processNoteExpression(event);
   }
 
+  // can we trust the 'cookie' event field?
+
   void processParamValue(const clap_event_param_value_t* event) final {
     switch (event->param_id) {
       case 0: p_gain = event->value; break;
@@ -275,7 +278,9 @@ public: // audio
 //------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
+    // process and mix voices
     MVoiceManager.processAudioBlock(AContext);
+    // post-process
     uint32_t length = AContext->process->frames_count;
     float** buffer = AContext->process->audio_outputs[0].data32;
     MIP_ScaleStereoBuffer(buffer,p_gain,length);

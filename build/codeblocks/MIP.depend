@@ -14,7 +14,7 @@
 	"gui/win32/mip_win32_window.h"
 	"gui/xcb/mip_xcb_window.h"
 
-1672453474 /DISKS/sda2/code/git/MIP/include/base/mip.h
+1673401886 /DISKS/sda2/code/git/MIP/include/base/mip.h
 	<stdarg.h>
 	<stdlib.h>
 	<stdint.h>
@@ -777,7 +777,7 @@
 	"plugin/vst2/mip_vst2_entry.h"
 	"plugin/vst3/mip_vst3_entry.h"
 
-1671707959 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_entry.h
+1673401516 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_entry.h
 	"base/mip.h"
 	"plugin/mip_registry.h"
 	"plugin/clap/mip_clap.h"
@@ -1454,7 +1454,7 @@
 	"plugin/mip_voice_manager.h"
 	"plugin/mip_entry.h"
 
-1673400674 /DISKS/sda2/code/git/MIP/include/plugin/mip_voice_manager.h
+1673401633 /DISKS/sda2/code/git/MIP/include/plugin/mip_voice_manager.h
 	"plugin/mip_note.h"
 	"plugin/mip_voice.h"
 
@@ -1467,12 +1467,12 @@
 	"plugin/clap/mip_clap.h"
 	"plugin/mip_process_context.h"
 
-1673400920 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_mael.cpp
+1673403922 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_mael.cpp
+	"base/mip.h"
 	"audio/mip_audio_math.h"
 	"audio/mip_audio_utils.h"
 	"plugin/mip_plugin.h"
-	"gui/mip_widgets.h"
-	"audio/mip_audio_utils.h"
 	"plugin/mip_voice_manager.h"
+	"gui/mip_widgets.h"
 	"plugin/mip_entry.h"
 

@@ -242,16 +242,6 @@ public: // gui
 
   //----------
 
-//  void on_timer_callback(MIP_Timer* ATimer) override {
-//    if (MEditor && MEditor->isEditorOpen()) {
-//      sa_tyr_editor* editor = (sa_tyr_editor*)MEditor;
-//      editor->timer_update(&MVoices);
-//      //editor->updateWaveformWidget(&MProcessor);
-//      //editor->updateProbIndicators(&MProcessor);
-//    }
-//    MIP_Plugin::on_timer_callback(ATimer);
-//  }
-
   void on_editor_timer() override {
     //MIP_PRINT;
     if (MEditor && MEditor->isEditorOpen()) {
