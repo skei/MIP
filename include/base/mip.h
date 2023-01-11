@@ -27,6 +27,14 @@
 //
 //------------------------------
 
+// nc -U -l -k /tmp/mip.socket
+#ifdef MIP_PLUGIN
+  #define MIP_DEBUG_PRINT_SOCKET
+#endif
+
+//------------------------------
+//
+//------------------------------
 
 #ifdef MIP_LINUX
   #include "mip_linux.h"

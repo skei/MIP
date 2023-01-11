@@ -1,24 +1,22 @@
-
-// nc -U -l -k /tmp/mip.socket
-#ifdef MIP_PLUGIN
-  #define MIP_DEBUG_PRINT_SOCKET
-#endif
-
-//----------------------------------------------------------------------
+// 174 LOC
 
 #include "audio/mip_audio_math.h"
 #include "audio/mip_audio_utils.h"
 #include "plugin/mip_plugin.h"
-#include "gui/mip_widgets.h"
-#include "audio/mip_audio_utils.h"
-
 #include "plugin/mip_voice_manager.h"
+#include "gui/mip_widgets.h"
 
 //----------------------------------------------------------------------
 //
-// descriptor
+//
 //
 //----------------------------------------------------------------------
+
+#define MY_PLUGIN_EDITOR_WIDTH    500
+#define MY_PLUGIN_EDITOR_HEIGHT   500
+#define MY_PLUGIN_MAX_VOICES      1024
+
+//----------
 
 const clap_plugin_descriptor_t my_descriptor = {
   .clap_version = CLAP_VERSION,
@@ -32,10 +30,6 @@ const clap_plugin_descriptor_t my_descriptor = {
   .description  = "...",
   .features     = (const char*[]){CLAP_PLUGIN_FEATURE_INSTRUMENT,nullptr}
 };
-
-#define MY_PLUGIN_EDITOR_WIDTH    500
-#define MY_PLUGIN_EDITOR_HEIGHT   400
-#define MY_PLUGIN_MAX_VOICES      32
 
 //----------------------------------------------------------------------
 //
@@ -52,14 +46,10 @@ private:
   uint32_t          MIndex    = 0;
   MIP_VoiceContext* MContext  = nullptr;
 
-//------------------------------
-private:
-//------------------------------
+  //----------
 
-  // 'synth'
-
-  double ph = 0.0;
-  double phadd = 0.0;
+  double ph     = 0.0;
+  double phadd  = 0.0;
 
 //------------------------------
 public:
@@ -90,7 +80,6 @@ public:
 
   uint32_t noteChoke(uint32_t AKey, double AVelocity) {
     return MIP_VOICE_OFF;
-
   }
 
   //----------
@@ -111,32 +100,24 @@ public:
   //----------
 
   // don't touch stuff other voices might be touching!
-  // calculate to separate buffer!
 
   uint32_t process(uint32_t AState, uint32_t AOffset, uint32_t ALength) {
     float* buffer = MContext->buffer;
-    //MIP_Print("AOffset %i ALength %i\n",AOffset,ALength);
-    //MIP_Assert(buffer);
-    //MIP_Assert(MIndex < MY_PLUGIN_MAX_VOICES);
-    //MIP_Assert(AOffset < ALength);
     buffer += (MIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
     buffer += AOffset;
-
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
       for (uint32_t i=0; i<ALength; i++) {
-        ph = MIP_Fract(ph);
-        float v = (ph * 2.0) - 1.0;  // 0..1 -> -1..1
-        *buffer++ = v * 0.1;
-        ph += phadd;
-      }
+        ph = MIP_Fract(ph);           // wrap phase
+        float v = (ph * 2.0) - 1.0;   // 0..1 -> -1..1
+        *buffer++ = v * 0.1;          // scale it down a bit
+        ph += phadd;                  // advance phase
+      } // for voices
     } // playing
     else {
       memset(buffer,0,ALength * sizeof(float));
     }
     return AState;
   }
-
-  //----------
 
 };
 
@@ -169,7 +150,7 @@ public:
   my_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
     setInitialEditorSize(MY_PLUGIN_EDITOR_WIDTH,MY_PLUGIN_EDITOR_HEIGHT);
-    MVoiceManager.setProcessThreaded(true);
+    //MVoiceManager.setProcessThreaded(true);
     MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_INTERLEAVED);
   }
 
@@ -210,9 +191,9 @@ public:
       MIP_PanelWidget* background = new MIP_PanelWidget(MIP_DRect(0,0, MY_PLUGIN_EDITOR_WIDTH, MY_PLUGIN_EDITOR_HEIGHT));
       MEditor->setRootWidget(background);
 
-      wdg_gain   = new MIP_KnobWidget(MIP_DRect(10,10,200,200));
-      //wdg_gain->setArcThickness(40);
-      wdg_gain->setValueSize(50);
+      wdg_gain   = new MIP_KnobWidget(MIP_DRect(50,50,400,400));
+      wdg_gain->setArcThickness(10);
+      wdg_gain->setValueSize(100);
       wdg_gain->setDrawModulation(true);
       background->appendChildWidget(wdg_gain);
       MEditor->connect( wdg_gain, par_gain );
@@ -277,30 +258,27 @@ public: // events
     MVoiceManager.processParamMod(event);
   }
 
-  //void processMidi(const clap_event_midi_t* event) final {
-  //  MVoiceManager.processMidi(event);
-  //}
+  void processMidi(const clap_event_midi_t* event) final {
+    MVoiceManager.processMidi(event);
+  }
 
-  //void processMidiSysex(const clap_event_midi_sysex_t* event) final {
-  //  MVoiceManager.processMidiSysex(event);
-  //}
+  void processMidiSysex(const clap_event_midi_sysex_t* event) final {
+    MVoiceManager.processMidiSysex(event);
+  }
 
-  //void processMidi2(const clap_event_midi2_t* event) final {
-  //  MVoiceManager.processMidi2(event);
-  //}
+  void processMidi2(const clap_event_midi2_t* event) final {
+    MVoiceManager.processMidi2(event);
+  }
 
 //------------------------------
 public: // audio
 //------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
-
     MVoiceManager.processAudioBlock(AContext);
-
     uint32_t length = AContext->process->frames_count;
     float** buffer = AContext->process->audio_outputs[0].data32;
     MIP_ScaleStereoBuffer(buffer,p_gain,length);
-
   }
 
 };
@@ -311,11 +289,6 @@ public: // audio
 //
 //----------------------------------------------------------------------
 
-//#ifndef MIP_NO_ENTRY
-
-  #include "plugin/mip_entry.h"
-  MIP_DEFAULT_ENTRY(my_descriptor,my_plugin);
-
-//#endif // MIP_NO_ENTRY
-
+#include "plugin/mip_entry.h"
+MIP_DEFAULT_ENTRY(my_descriptor,my_plugin);
 

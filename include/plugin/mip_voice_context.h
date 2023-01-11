@@ -18,8 +18,8 @@ struct MIP_VoiceContext {
   double              samplerate        = 0.0;
   uint32_t            min_frames_count  = 0;
   uint32_t            max_frames_count  = 0;
-  //uint32_t            offset            = 0;
-  //uint32_t            length            = 0;
+//uint32_t            offset            = 0;
+//uint32_t            length            = 0;
 };
 
 
