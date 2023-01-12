@@ -25,6 +25,7 @@
 #include "gui/widgets/mip_slider_widget.h"
 #include "gui/widgets/mip_text_widget.h"
 #include "gui/widgets/mip_value_widget.h"
+#include "gui/widgets/mip_voices_widget.h"
 #include "gui/widgets/mip_waveform_widget.h"
 
 //----------------------------------------------------------------------

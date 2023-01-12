@@ -14,8 +14,8 @@
 //----------------------------------------------------------------------
 
 #define MY_PLUGIN_EDITOR_WIDTH    500
-#define MY_PLUGIN_EDITOR_HEIGHT   500
-#define MY_PLUGIN_MAX_VOICES      128
+#define MY_PLUGIN_EDITOR_HEIGHT   530
+#define MY_PLUGIN_MAX_VOICES      32
 
 //----------
 
@@ -103,21 +103,65 @@ public:
   // don't touch stuff other voices might be touching!
 
   uint32_t process(uint32_t AState, uint32_t AOffset, uint32_t ALength) {
+    //MIP_Print("state %i offset %i length %i\n",AState,AOffset,ALength);
     float* buffer = MContext->buffer;
     buffer += (MIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
     buffer += AOffset;
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
       for (uint32_t i=0; i<ALength; i++) {
-
         ph = MIP_Fract(ph);           // wrap phase
+        //float v = sin(ph * MIP_PI2);
         float v = (ph * 2.0) - 1.0;   // 0..1 -> -1..1
+
+        // waste some cpu for testing..
+        /*
+        double r = MIP_RandomSigned();
+        for (uint32_t test_i=0; test_i<200; test_i++) {
+          v += (r * 0.0001);
+          r += 0.001;
+        }
+        */
+
         *buffer++ = v * 0.1;          // scale it down a bit
         ph += phadd;                  // advance phase
+
 
       } // for voices
     } // playing
     else {
       memset(buffer,0,ALength * sizeof(float));
+    }
+    return AState;
+  }
+
+  //----------
+
+  uint32_t processSlice(uint32_t AState, uint32_t AOffset) {
+    //MIP_Print("state %i offset %i\n",AState,AOffset);
+    float* buffer = MContext->buffer;
+    buffer += (MIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
+    buffer += AOffset;
+    if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
+      for (uint32_t i=0; i<MIP_AUDIO_SLICE_SIZE; i++) {
+        ph = MIP_Fract(ph);           // wrap phase
+        //float v = sin(ph * MIP_PI2);
+        float v = (ph * 2.0) - 1.0;   // 0..1 -> -1..1
+
+        // waste some cpu for testing..
+        /*
+        double r = MIP_RandomSigned();
+        for (uint32_t test_i=0; test_i<200; test_i++) {
+          v += (r * 0.0001);
+          r += 0.001;
+        }
+        */
+
+        *buffer++ = v * 0.1;          // scale it down a bit
+        ph += phadd;                  // advance phase
+      } // for voices
+    } // playing
+    else {
+      memset(buffer,0,MIP_AUDIO_SLICE_SIZE * sizeof(float));
     }
     return AState;
   }
@@ -141,10 +185,14 @@ class my_plugin
 private:
 //------------------------------
 
-  myVoiceManager  MVoiceManager = {};
-  MIP_Parameter*  par_gain      = nullptr;
-  MIP_KnobWidget* wdg_gain      = nullptr;
-  double          p_gain        = 0.0;
+  myVoiceManager    MVoiceManager   = {};
+  MIP_Parameter*    par_gain        = nullptr;
+  double            p_gain          = 0.0;
+  MIP_KnobWidget*   wdg_gain        = nullptr;
+  MIP_VoicesWidget* wdg_voices      = nullptr;
+  MIP_ValueWidget*  wdg_voices_txt1 = nullptr;
+  MIP_ValueWidget*  wdg_voices_txt2 = nullptr;
+  MIP_ValueWidget*  wdg_voices_txt3 = nullptr;
 
 //------------------------------
 public:
@@ -153,8 +201,8 @@ public:
   my_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
     setInitialEditorSize(MY_PLUGIN_EDITOR_WIDTH,MY_PLUGIN_EDITOR_HEIGHT);
-    //MVoiceManager.setProcessThreaded(true);
-    MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_INTERLEAVED);
+    MVoiceManager.setProcessThreaded(false);
+    MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_QUANTIZED);
   }
 
 //------------------------------
@@ -192,11 +240,43 @@ public:
     if (MEditor) {
       MIP_PanelWidget* background = new MIP_PanelWidget(MIP_DRect(0,0, MY_PLUGIN_EDITOR_WIDTH, MY_PLUGIN_EDITOR_HEIGHT));
       MEditor->setRootWidget(background);
-      wdg_gain = new MIP_KnobWidget(MIP_DRect(50,50,400,400));
+
+      wdg_voices = new MIP_VoicesWidget(MIP_DRect(50,20,400,20),MY_PLUGIN_MAX_VOICES);
+      background->appendChildWidget(wdg_voices);
+
+      {
+        wdg_voices_txt1 = new MIP_ValueWidget(MIP_DRect(50,50,125,20),"Playing:",0);
+        wdg_voices_txt1->setTextColor(0);
+        wdg_voices_txt1->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+        wdg_voices_txt1->setNumDigits(0);
+        wdg_voices_txt1->setFillBackground(true);
+        wdg_voices_txt1->setBackgroundColor(0.45);
+        background->appendChildWidget(wdg_voices_txt1);
+
+        wdg_voices_txt2 = new MIP_ValueWidget(MIP_DRect(50+130,50,125,20),"Released:",0);
+        wdg_voices_txt2->setTextColor(0);
+        wdg_voices_txt2->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+        wdg_voices_txt2->setNumDigits(0);
+        wdg_voices_txt2->setFillBackground(true);
+        wdg_voices_txt2->setBackgroundColor(0.45);
+        background->appendChildWidget(wdg_voices_txt2);
+
+        wdg_voices_txt3 = new MIP_ValueWidget(MIP_DRect(50+260,50,125,20),"Total:",0);
+        wdg_voices_txt3->setTextColor(0);
+        wdg_voices_txt3->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+        wdg_voices_txt3->setNumDigits(0);
+        wdg_voices_txt3->setFillBackground(true);
+        wdg_voices_txt3->setBackgroundColor(0.45);
+        background->appendChildWidget(wdg_voices_txt3);
+      }
+
+      wdg_gain = new MIP_KnobWidget(MIP_DRect(50,100,400,400));
       wdg_gain->setArcThickness(10);
       wdg_gain->setValueSize(100);
       wdg_gain->setDrawModulation(true);
+      wdg_gain->setSnap(true);
       background->appendChildWidget(wdg_gain);
+
       MEditor->connect( wdg_gain, par_gain );
 
     }
@@ -217,6 +297,31 @@ public:
     info->flags           = CLAP_VOICE_INFO_SUPPORTS_OVERLAPPING_NOTES;
     return true;
   }
+
+//------------------------------
+public:
+//------------------------------
+
+  void on_editor_timer() override {
+    if (MEditor && MEditor->isEditorOpen()) {
+      uint32_t num = MVoiceManager.getMaxVoices();
+      for (uint32_t i=0; i<num; i++) {
+        uint32_t state = MVoiceManager.getVoiceState(i);
+        wdg_voices->setVoiceState(i,state);
+      }
+      uint32_t num_playing = MVoiceManager.getNumPlayingVoices();
+      uint32_t num_released = MVoiceManager.getNumReleasedVoices();
+      wdg_voices_txt1->setValue(num_playing);
+      wdg_voices_txt2->setValue(num_released);
+      wdg_voices_txt3->setValue(num_playing + num_released);
+      wdg_voices->redraw();
+      wdg_voices_txt1->redraw();
+      wdg_voices_txt2->redraw();
+      wdg_voices_txt3->redraw();
+    }
+    MIP_Plugin::on_editor_timer();
+  }
+
 
 //------------------------------
 public: // events

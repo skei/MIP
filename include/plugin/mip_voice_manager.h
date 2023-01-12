@@ -35,6 +35,8 @@ private:
   MIP_VoiceContext              MVoiceContext         = {};
   float                         MVoiceBuffer[COUNT * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE] = {0};
 
+  uint32_t                      MNumPlayingVoices     = 0;
+  uint32_t                      MNumReleasedVoices    = 0;
 
   MIP_NoteQueue                 MNoteEndQueue         = {};
 
@@ -76,6 +78,22 @@ public:
     for (uint32_t i=0; i<COUNT; i++) {
       MVoices[i].event_mode = AMode;
     }
+  }
+
+  uint32_t getMaxVoices() {
+    return COUNT;
+  }
+
+  uint32_t getNumPlayingVoices() {
+    return MNumPlayingVoices;
+  }
+
+  uint32_t getNumReleasedVoices() {
+    return MNumReleasedVoices;
+  }
+
+  uint32_t getVoiceState(uint32_t AIndex) {
+    return MVoices[AIndex].state;
   }
 
 //------------------------------
@@ -289,30 +307,49 @@ public:
     float* out1 = AProcessContext->process->audio_outputs[0].data32[1];
     MIP_ClearMonoBuffer(out0,len);
     MIP_ClearMonoBuffer(out1,len);
+
     // set up active voices
+
     MNumActiveVoices = 0;
+    uint32_t num_playing = 0;
+    uint32_t num_released = 0;
+
     for (uint32_t i=0; i<COUNT; i++) {
-      if ((MVoices[i].state == MIP_VOICE_WAITING) || (MVoices[i].state == MIP_VOICE_PLAYING) || (MVoices[i].state == MIP_VOICE_RELEASED)) {
+      //if ((MVoices[i].state == MIP_VOICE_WAITING) || (MVoices[i].state == MIP_VOICE_PLAYING) || (MVoices[i].state == MIP_VOICE_RELEASED)) {
+      if ((MVoices[i].state != MIP_VOICE_OFF) && (MVoices[i].state != MIP_VOICE_FINISHED)) {
         MActiveVoices[MNumActiveVoices++] = i;
         //MVoices[i].setVoiceBuffer();
+        if (MVoices[i].state == MIP_VOICE_PLAYING) num_playing += 1;
+        if (MVoices[i].state == MIP_VOICE_RELEASED) num_released += 1;
       }
     }
+
+    MNumPlayingVoices = num_playing;
+    MNumReleasedVoices = num_released;
+
     // process active voices
+
     if (MNumActiveVoices > 0) {
+
       // thread-pool
+
       bool processed = false;
       if (MProcessThreaded && MThreadPool) {
         processed = MThreadPool->request_exec(MClapHost,MNumActiveVoices);
         //MIP_Print("request_exec(%i) returned %s\n", MNumActiveVoices, processed ? "true" : "false" );
       }
+
       // manually
+
       if (!processed) {
         for (uint32_t i=0; i<MNumActiveVoices; i++) {
           uint32_t v = MActiveVoices[i];
           process_voice(v);
         }
       }
-      // mix
+
+      // mix, post-process
+
       for (uint32_t i=0; i<MNumActiveVoices; i++) {
         uint32_t index = MActiveVoices[i];
         //MVoices[i].getVoiceBuffer();

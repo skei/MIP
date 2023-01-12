@@ -169,7 +169,43 @@ private:
   //----------
 
   void handleQuantizedEvents() {
-    //MIP_PRINT;
+    uint32_t        buffer_length = context->process_context->process->frames_count;
+    uint32_t        current_time  = 0;
+    uint32_t        remaining     = buffer_length;
+    uint32_t        next_event    = 0;
+    MIP_VoiceEvent  event         = {};
+    if (events.read(&event)) {
+      next_event = event.time;
+      do {
+        // process events for next slice
+        while (next_event < (current_time + MIP_AUDIO_SLICE_SIZE)) {
+          handleEvent(event);
+          if (events.read(&event)) next_event = event.time;
+          else next_event = buffer_length; // ???
+        }
+        // process next slice
+        if (remaining < MIP_AUDIO_SLICE_SIZE) {
+          state = voice.process(state,current_time,remaining);
+          current_time += remaining;
+          remaining = 0;
+        }
+        else {
+          state = voice.processSlice(state,current_time);
+          current_time += MIP_AUDIO_SLICE_SIZE;
+          remaining -= MIP_AUDIO_SLICE_SIZE;
+        }
+      } while (remaining > 0);
+    }
+    else {
+      // no events..
+      do {
+        if (remaining < MIP_AUDIO_SLICE_SIZE) state = voice.process(state,current_time,remaining);
+        else state = voice.processSlice(state,current_time);
+        current_time += MIP_AUDIO_SLICE_SIZE;
+        remaining -= MIP_AUDIO_SLICE_SIZE;
+      } while (remaining > 0);
+    }
+    //MIP_Assert( events.read(&event) == false );
   }
 
 };

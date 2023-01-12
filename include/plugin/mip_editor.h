@@ -462,6 +462,10 @@ public: // window listener
 
   void do_window_listener_timer() override {
     //MIP_PRINT;
+    //uint32_t num = MRegisteredTimers.size();
+    //for (uint32-t i=0; i<num; i++) {
+    //  MRegisteredTimers[i]->on_widget_timer();
+    //}
     if (MEditorListener) MEditorListener->on_editor_timer();
   }
 
