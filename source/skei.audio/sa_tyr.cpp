@@ -36,8 +36,11 @@
 #include "plugin/mip_plugin.h"
 #include "plugin/mip_note.h"
 
-#include "audio/old/mip_voice_manager.h"
-#include "audio/old/mip_voice.h"
+//#include "audio/old/mip_voice_manager.h"
+//#include "audio/old/mip_voice.h"
+
+#include "plugin/mip_voice_manager.h"
+#include "plugin/mip_voice.h"
 
 #ifndef MIP_NO_GUI
   #include "plugin/mip_editor.h"
@@ -49,7 +52,7 @@
 
 #define SA_TYR_EDITOR_WIDTH   836
 #define SA_TYR_EDITOR_HEIGHT  703
-#define SA_TYR_NUM_VOICES     32
+#define SA_TYR_NUM_VOICES     64
 
 #define SA_TYR_PLUGIN_NAME    "sa_tyr"
 #define SA_TYR_PLUGIN_VERSION "0.0.12"
@@ -101,8 +104,11 @@ private:
 //------------------------------
 
   //__MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
-  //MIP_VoiceManager<sa_tyr_voice<double>,NUM_VOICES> MVoices = {};
-  sa_tyr_voice_manager MVoices = {};
+  //MIP_VoiceManager<sa_tyr_voice<double>,SA_TYR_NUM_VOICES> MVoiceManager = {};
+
+  //  sa_tyr_voice_manager MVoices = {};
+  sa_tyr_voice_manager MVoiceManager = {};
+
 
   //---------------
   // parameters
@@ -156,6 +162,10 @@ public:
     //MEditorWidth = SA_TYR_EDITOR_WIDTH;
     //MEditorHeight = SA_TYR_EDITOR_HEIGHT;
     setInitialEditorSize(SA_TYR_EDITOR_WIDTH,SA_TYR_EDITOR_HEIGHT);
+
+    MVoiceManager.setProcessThreaded(true);
+    MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_INTERLEAVED);
+
   }
 
   //----------
@@ -169,27 +179,30 @@ public: // plugin
 
   bool init() final {
     bool result = MIP_Plugin::init();
-    //appendAudioInputPort( &gain_audioInputPorts[0] );
-    //appendAudioOutputPort(&gain_audioOutputPorts[0]);
-    //appendNoteInputPort(  &gain_noteInputPorts[0]  );
-    //appendNoteOutputPort( &gain_noteOutputPorts[0] );
-    appendAudioInputPort( new MIP_AudioPort() );
-    appendAudioOutputPort( new MIP_AudioPort() );
-    appendNoteInputPort( new MIP_NotePort() );
-    appendNoteOutputPort( new MIP_NotePort() );
-    for (uint32_t i=0; i<PARAM_COUNT; i++) {
-      const char* name = sa_tyr_parameters[i].name;
-      double val       = sa_tyr_parameters[i].default_value;
-      double minval    = sa_tyr_parameters[i].min_value;
-      double maxval    = sa_tyr_parameters[i].max_value;
-      uint32_t flags   = sa_tyr_parameters[i].flags;
-      MIP_Parameter* parameter = nullptr;
-      if (flags & CLAP_PARAM_IS_STEPPED) parameter = new MIP_IntParameter(name,val,minval,maxval);
-      else parameter = new MIP_Parameter(name,val,minval,maxval);
-      parameter->setFlags(flags);
-      appendParameter(parameter);
+    if (result) {
+      //appendAudioInputPort( &gain_audioInputPorts[0] );
+      //appendAudioOutputPort(&gain_audioOutputPorts[0]);
+      //appendNoteInputPort(  &gain_noteInputPorts[0]  );
+      //appendNoteOutputPort( &gain_noteOutputPorts[0] );
+      appendAudioInputPort( new MIP_AudioPort() );
+      appendAudioOutputPort( new MIP_AudioPort() );
+      appendNoteInputPort( new MIP_NotePort() );
+      appendNoteOutputPort( new MIP_NotePort() );
+      for (uint32_t i=0; i<PARAM_COUNT; i++) {
+        const char* name = sa_tyr_parameters[i].name;
+        double val       = sa_tyr_parameters[i].default_value;
+        double minval    = sa_tyr_parameters[i].min_value;
+        double maxval    = sa_tyr_parameters[i].max_value;
+        uint32_t flags   = sa_tyr_parameters[i].flags;
+        MIP_Parameter* parameter = nullptr;
+        if (flags & CLAP_PARAM_IS_STEPPED) parameter = new MIP_IntParameter(name,val,minval,maxval);
+        else parameter = new MIP_Parameter(name,val,minval,maxval);
+        parameter->setFlags(flags);
+        appendParameter(parameter);
+      }
+      setDefaultParameterValues();
+      MVoiceManager.init(getClapPlugin(),getClapHost());
     }
-    setDefaultParameterValues();
     return result;
   }
 
@@ -197,7 +210,7 @@ public: // plugin
 
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) final {
     MIP_Plugin::activate(sample_rate,min_frames_count,max_frames_count);
-    MVoices.setup(sample_rate,min_frames_count,max_frames_count,&MParameters);
+    MVoiceManager.activate(sample_rate,min_frames_count,max_frames_count,&MParameters);
     return true;
   }
 
@@ -214,7 +227,6 @@ public: // gui
     MIsEditorOpen = false;
     MEditor = new sa_tyr_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters,getClapDescriptor());
     return (MEditor);
-
     //MEditor->setCanResizeEditor(true);
     //MEditor->setResizeProportional(true);
     //MEditor->setProportionalSize(EDITOR_WIDTH,EDITOR_HEIGHT);
@@ -225,28 +237,11 @@ public: // gui
 
   //----------
 
-//  #ifndef MIP_NO_GUI
-//
-//  // we read from MProcess directly... :-/
-//  void on_timerCallback(MIP_Timer* ATimer) final {
-//    //
-//    MIP_Plugin::on_timerCallback(ATimer);
-//    if (ATimer == &MGuiTimer) {
-//      //MIP_Plugin::on_timerCallback(ATimer); // flush queues
-//      sa_tyr_editor* editor = (sa_tyr_editor*)MEditor;
-//      if (editor) editor->timer_update(&MVoices);//(&MProcess);
-//    }
-//  }
-//
-//  #endif
-
-  //----------
-
   void on_editor_timer() override {
     //MIP_PRINT;
     if (MEditor && MEditor->isEditorOpen()) {
       sa_tyr_editor* editor = (sa_tyr_editor*)MEditor;
-      editor->timer_update(&MVoices);
+      editor->timer_update(&MVoiceManager);
       //editor->updateWaveformWidget(&MProcessor);
       //editor->updateProbIndicators(&MProcessor);
     }
@@ -272,57 +267,8 @@ public: // voice into
 public:
 //------------------------------
 
-  void processNoteOn(const clap_event_note_t* event) final {
-    MVoices.handleNoteOn(event);
-  }
-
-  void processNoteOff(const clap_event_note_t* event) final {
-    MVoices.handleNoteOff(event);
-  }
-
-  void processNoteChoke(const clap_event_note_t* event) final {
-    MVoices.handleNoteChoke(event);
-  }
-
-  void processNoteExpression(const clap_event_note_expression_t* event) final {
-    MVoices.handleNoteExpression(event);
-  }
-
-  //----------
-
-  void processParamValue(const clap_event_param_value_t* event) final {
-    MVoices.handleParamValue(event);
-  }
-
-  void processParamMod(const clap_event_param_mod_t* event) final {
-    MVoices.handleParamMod(event);
-  }
-
-  //----------
-
-  //void processParamGestureBegin(const clap_event_param_gesture_t* event) final {
-  //}
-
-  //void processParamGestureEnd(const clap_event_param_gesture_t* event) final {
-  //}
-
-  //----------
-
-  void processTransport(const clap_event_transport_t* event) final {
-  }
-
-  //----------
-
-  void processMidi(const clap_event_midi_t* event) final {
-    MVoices.handleMidi(event);
-  }
-
-  void processMidiSysex(const clap_event_midi_sysex_t* event) final {
-    MVoices.handleMidiSysex(event);
-  }
-
-  void processMidi2(const clap_event_midi2_t* event) final {
-    MVoices.handleMidi2(event);
+  void thread_pool_exec(uint32_t task_index) final {
+    MVoiceManager.thread_pool_exec(task_index);
   }
 
 //------------------------------
@@ -330,94 +276,57 @@ public: // events
 //------------------------------
 
   void preProcessEvents(const clap_input_events_t* in_events, const clap_output_events_t* out_events) final {
-    //handleParamValueModEvents(in_events);
-    MVoices.preProcessEvents(in_events,out_events);
+    MVoiceManager.preProcessEvents(in_events,out_events);
   }
-
-  //----------
-
-  //#ifndef MIP_NO_GUI
-
-  // todo: MIP_Plugin::processGuiEvents()
-
-  void processEvents(const clap_input_events_t* in_events, const clap_output_events_t* out_events) final {
-
-    uint32_t num_events = in_events->size(in_events);
-    for (uint32_t i=0; i<num_events; i++) {
-      const clap_event_header_t* header = in_events->get(in_events,i);
-      if (header->space_id == CLAP_CORE_EVENT_SPACE_ID) {
-
-        switch (header->type) {
-
-          case CLAP_EVENT_PARAM_VALUE: {
-            const clap_event_param_value_t* event = (const clap_event_param_value_t*)header;
-            uint32_t index = event->param_id;
-            double value = event->value;
-            setParameterValue(index,value);
-            #ifndef MIP_NO_GUI
-            //MIP_Print("%i = %f\n",index,value);
-            queueGuiParam(index,value);
-            #endif
-            break;
-          }
-
-          case CLAP_EVENT_PARAM_MOD: {
-            const clap_event_param_mod_t* event = (const clap_event_param_mod_t*)header;
-            uint32_t index = event->param_id;
-            double value = event->amount;
-            setParameterModulation(index,value);
-            #ifndef MIP_NO_GUI
-            queueGuiMod(index,value);
-            #endif
-            break;
-          }
-
-        } // switch
-
-      }
-    }
-
-  }
-
-  //#endif // MIP_NO_GUI
-
-  //----------
 
   void postProcessEvents(const clap_input_events_t* in_events, const clap_output_events_t* out_events) final {
-    MVoices.postProcessEvents(in_events,out_events);
+    MVoiceManager.postProcessEvents(in_events,out_events);
+  }
+
+  //----------
+
+  void processNoteOn(const clap_event_note_t* event) final {
+    MVoiceManager.processNoteOn(event);
+  }
+
+  void processNoteOff(const clap_event_note_t* event) final {
+    MVoiceManager.processNoteOff(event);
+  }
+
+  void processNoteChoke(const clap_event_note_t* event) final {
+    MVoiceManager.processNoteChoke(event);
+  }
+
+  void processNoteExpression(const clap_event_note_expression_t* event) final {
+    MVoiceManager.processNoteExpression(event);
+  }
+
+  void processParamValue(const clap_event_param_value_t* event) final {
+    MVoiceManager.processParamValue(event);
+  }
+
+  void processParamMod(const clap_event_param_mod_t* event) final {
+    MVoiceManager.processParamMod(event);
+  }
+
+  void processMidi(const clap_event_midi_t* event) final {
+    MVoiceManager.processMidi(event);
+  }
+
+  void processMidiSysex(const clap_event_midi_sysex_t* event) final {
+    MVoiceManager.processMidiSysex(event);
+  }
+
+  void processMidi2(const clap_event_midi2_t* event) final {
+    MVoiceManager.processMidi2(event);
   }
 
 //------------------------------
-public: // process
+public: // audio
 //------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
-    const clap_process_t* process = AContext->process;
-
-    //MVoices.prepareEvents(AContext);
-    //MVoices.processPreparedVoices(AContext);
-
-    MVoices.processAudioBlock(AContext);
-
-    float* buffer = MVoices.getFrameBuffer();
-    uint32_t length = process->frames_count;
-
-    float* output0  = process->audio_outputs[0].data32[0];
-    float* output1  = process->audio_outputs[0].data32[1];
-    //float* output0  = outputs[0];
-    //float* output1  = outputs[1];
-
-    MIP_CopyMonoBuffer(output0,buffer,length);
-    MIP_CopyMonoBuffer(output1,buffer,length);
-
-    float v = MParameters[PAR_MASTER_VOL]->getValue();  // vol
-    float p = MParameters[PAR_MASTER_PAN]->getValue();  // pan
-    float l = v * (1.0 - p);
-    float r = v * (      p);
-
-    float** outputs = process->audio_outputs[0].data32;
-    MIP_ScaleStereoBuffer(outputs,l,r,length);
-
+    MVoiceManager.processAudioBlock(AContext);
   }
 
 };

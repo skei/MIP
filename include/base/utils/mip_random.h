@@ -17,67 +17,30 @@ int32   MIP_RandomSignedInt(void);
 int32   MIP_RandomRangeInt(int32 minval, int32 maxval);
 */
 
+//#define MIP_Random           MIP_Random_System
+//#define MIP_RandomSigned     MIP_RandomSigned_System
+//#define MIP_RandomRange      MIP_RandomRange_System
+//#define MIP_RandomInt        MIP_RandomInt_System
+//#define MIP_RandomSignedInt  MIP_RandomSignedInt_System
+//#define MIP_RandomRangeInt   MIP_RandomRangeInt_System
 
-//#define MIP_RANDOM_SYSTEM
-//#define MIP_RANDOM_XORSHIFT
-// etc..
+float   MIP_Random_LCG();
+float   MIP_RandomSigned_LCG();
+float   MIP_RandomRange_LCG(float minval, float maxval);
+int32_t MIP_RandomInt_LCG();
+int32_t MIP_RandomSignedInt_LCG();
+int32_t MIP_RandomRangeInt_LCG(int32_t minval, int32_t maxval);
 
-
-//#ifdef MIP_RANDOM_SYSTEM
-  #define MIP_Random           MIP_Random_System
-  #define MIP_RandomSigned     MIP_RandomSigned_System
-  #define MIP_RandomRange      MIP_RandomRange_System
-  #define MIP_RandomInt        MIP_RandomInt_System
-  #define MIP_RandomSignedInt  MIP_RandomSignedInt_System
-  #define MIP_RandomRangeInt   MIP_RandomRangeInt_System
-//#endif
-
-//----------------------------------------------------------------------
-// MIP_Random
-//----------------------------------------------------------------------
-
-#include <stdlib.h> // rand
-
-/*
-class MIP_Random_Rand {
-  public:
-
-    MIP_Random_Rand() {
-    }
-
-    virtual ~MIP_Random_Rand() {
-    }
-
-    inline void  randomice(void) {
-    }
-
-    inline float random(void) {
-      return (float)rand() / (float)RAND_MAX;
-    }
-
-    inline float randomSigned(void) {
-      float r = (float)rand() / (float)RAND_MAX;
-      return r * 2 - 1;
-    }
-
-};
-*/
-
-//----------
-
-//static MIP_Random_Rand MIP_RANDOM;
-//inline float MIP_Random(void) { return MIP_RANDOM.random(); }
-//inline float MIP_RandomSigned(void) { return MIP_RANDOM.randomSigned(); }
+#define MIP_Random           MIP_Random_LCG
+#define MIP_RandomSigned     MIP_RandomSigned_LCG
+#define MIP_RandomRange      MIP_RandomRange_LCG
+#define MIP_RandomInt        MIP_RandomInt_LCG
+#define MIP_RandomSignedInt  MIP_RandomSignedInt_LCG
+#define MIP_RandomRangeInt   MIP_RandomRangeInt_LCG
 
 //----------------------------------------------------------------------
 // system
 //----------------------------------------------------------------------
-
-/*
-  is there something weird with this?
-    1 / RAND_MAX is very small -> rounding errors?
-    todo: double?
-*/
 
 float MIP_Random_System(void) {
   float rnd = (float)rand();
@@ -170,11 +133,54 @@ float SRandFloat(int* a_Seed) {
 // http://en.wikipedia.org/wiki/Park%E2%80%93Miller_random_number_generator
 //----------------------------------------------------------------------
 
-/*
-  uint32_t lcg_rand(uint32_t a) {
-    return ((uint64_t)a * 279470273UL) % 4294967291UL;
-  }
-*/
+uint32_t rand_lcg_seed = 666;
+
+uint32_t rand_lcg() {
+  rand_lcg_seed = ((uint64_t)rand_lcg_seed * 279470273UL) % 4294967291UL;
+  return rand_lcg_seed;
+}
+
+//
+
+float MIP_Random_LCG(void) {
+  float rnd = (float)rand_lcg();
+  float result = rnd * (float)MIP_INVRANDMAX;
+  return result;
+}
+
+//----------
+
+float MIP_RandomSigned_LCG(void) {
+  float r = (float)rand_lcg() * (float)MIP_INVRANDMAX;// / (float)RAND_MAX;
+  return r * 2.0f - 1.0f;
+}
+
+// inclusive
+
+float MIP_RandomRange_LCG(float minval, float maxval) {
+  return minval + (MIP_Random_LCG() * (maxval - minval) );
+}
+
+//----------
+
+int32_t MIP_RandomInt_LCG(void) {
+  return rand_lcg();// & 0x7fffffff;
+}
+
+// -MIP_RandomMax..MIP_RandomMax
+
+int32_t MIP_RandomSignedInt_LCG(void) {
+  return rand_lcg();
+}
+
+// inclusive
+
+int32_t MIP_RandomRangeInt_LCG(int32_t minval, int32_t maxval) {
+  int32_t range = maxval - minval + 1;
+  if (range <= 0) return minval;
+  //else return minval + SModulo(MIP_RandomInt(),range);
+  else return minval + ( MIP_RandomInt_LCG() % range );
+}
 
 //----------------------------------------------------------------------
 // linear feedback shift register

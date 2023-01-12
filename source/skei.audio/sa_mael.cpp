@@ -15,7 +15,7 @@
 
 #define MY_PLUGIN_EDITOR_WIDTH    500
 #define MY_PLUGIN_EDITOR_HEIGHT   530
-#define MY_PLUGIN_MAX_VOICES      32
+#define MY_PLUGIN_MAX_VOICES      128
 
 //----------
 
@@ -104,9 +104,11 @@ public:
 
   uint32_t process(uint32_t AState, uint32_t AOffset, uint32_t ALength) {
     //MIP_Print("state %i offset %i length %i\n",AState,AOffset,ALength);
+
     float* buffer = MContext->buffer;
     buffer += (MIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
     buffer += AOffset;
+
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
       for (uint32_t i=0; i<ALength; i++) {
         ph = MIP_Fract(ph);           // wrap phase
@@ -201,7 +203,7 @@ public:
   my_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
     setInitialEditorSize(MY_PLUGIN_EDITOR_WIDTH,MY_PLUGIN_EDITOR_HEIGHT);
-    MVoiceManager.setProcessThreaded(false);
+    MVoiceManager.setProcessThreaded(true);
     MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_QUANTIZED);
   }
 
@@ -227,7 +229,7 @@ public:
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) final {
     bool result = MIP_Plugin::activate(sample_rate,min_frames_count,max_frames_count);
     if (result) {
-      MVoiceManager.activate(sample_rate,min_frames_count,max_frames_count);
+      MVoiceManager.activate(sample_rate,min_frames_count,max_frames_count,&MParameters);
     }
     return result;
   }
@@ -321,7 +323,6 @@ public:
     }
     MIP_Plugin::on_editor_timer();
   }
-
 
 //------------------------------
 public: // events

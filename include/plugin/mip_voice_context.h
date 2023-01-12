@@ -20,6 +20,8 @@ struct MIP_VoiceContext {
   uint32_t            max_frames_count  = 0;
 //uint32_t            offset            = 0;
 //uint32_t            length            = 0;
+  MIP_ParameterArray* parameters        = nullptr;
+
 };
 
 

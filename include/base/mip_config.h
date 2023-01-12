@@ -24,7 +24,7 @@
 
   #define MIP_ALIGNMENT_SIMD                        16
   #define MIP_ALIGNMENT_CACHE                       64
-  #define MIP_AUDIO_SLICE_SIZE                      32
+  #define MIP_AUDIO_SLICE_SIZE                      16
   #define MIP_CLIP_RECT_STACK_SIZE                  1024
 //#define MIP_EDITOR_TIMER_MS                       30
 //#define MIP_EDITOR_TIMER_ID                       333

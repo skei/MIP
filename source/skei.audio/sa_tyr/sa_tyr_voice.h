@@ -4,6 +4,7 @@
 
 #include "base/mip.h"
 #include "audio/mip_audio_math.h"
+
 #include "audio/old/filters/mip_allpass_filter.h"
 #include "audio/old/filters/mip_rc_filter.h"
 #include "audio/old/filters/mip_svf_filter.h"
@@ -11,8 +12,9 @@
 #include "audio/old/synthesis/mip_oscillator2.h"
 #include "audio/old/modulation/mip_envelope.h"
 #include "audio/old/waveforms/mip_polyblep_waveform.h"
-#include "audio/old/mip_voice.h"
-//#include "plugin/mip_voice_manager.h"
+
+//#include "audio/old/mip_voice.h"
+#include "plugin/mip_voice_manager.h"
 
 //----------------------------------------------------------------------
 
@@ -48,7 +50,8 @@ private:
 private:
 //------------------------------
 
-  float*            MVoiceBuffer    = nullptr;
+//  float*            MVoiceBuffer    = nullptr;
+//  uint32_t MIndex = 0;
 
   T*                MParameters     = nullptr;
   T*                MModulations    = nullptr;
@@ -118,16 +121,21 @@ public:
 public:
 //------------------------------
 
-  void setup(uint32_t AIndex, MIP_VoiceContext* AContext) {
+//  void setup(uint32_t AIndex, MIP_VoiceContext* AContext) {
+//    MVoiceIndex = AIndex;
+//    MContext = AContext;
+
+  void init(uint32_t AIndex, MIP_VoiceContext* AContext) {
+    MIP_PRINT;
     MVoiceIndex = AIndex;
     MContext = AContext;
 
-    // define in voice_manager
-    #ifdef MIP_VOICE_ADD_TO_BUFFER
-      MVoiceBuffer = AContext->voicebuffer;
-    #else
-      MVoiceBuffer = AContext->voicebuffer + (AIndex * MIP_VOICE_MAX_FRAMESIZE);
-    #endif
+//    // define in voice_manager
+//    #ifdef MIP_VOICE_ADD_TO_BUFFER
+//      MVoiceBuffer = AContext->voicebuffer;
+//    #else
+//      MVoiceBuffer = AContext->voicebuffer + (AIndex * MIP_VOICE_MAX_FRAMESIZE);
+//    #endif
 
     MOscillator1.setSampleRate(MContext->samplerate);
     MOscillator2.setSampleRate(MContext->samplerate);
@@ -170,8 +178,8 @@ public:
 
   //todo: reset modulations
 
-  uint32_t note_on(int32_t key, T velocity) {
-    //MIP_Print("%i velocity %.3f\n",MIndex,velocity);
+  uint32_t noteOn(int32_t key, T velocity) {
+    MIP_Print("%i velocity %.3f\n",MVoiceIndex,velocity);
 
     note_key          = key;
     note_onvel        = velocity;
@@ -216,7 +224,7 @@ public:
 
   //----------
 
-  uint32_t note_off(T velocity) {
+  uint32_t noteOff(int32_t key, T velocity) {
     //MIP_Print("%i velocity %.3f\n",MIndex,velocity);
     note_offvel = velocity;
     MAmpEnvelope.noteOff();
@@ -225,8 +233,13 @@ public:
 
   //----------
 
-  void note_choke() {
+  void noteChoke(int32_t expr, T amount) {
     //MIP_Print("%i\n",MIndex);
+  }
+
+  //----------
+
+  void noteExpression(int32_t expr, T value) {
   }
 
   //----------
@@ -288,7 +301,7 @@ public:
   //----------
 
   void parameter(uint32_t index, T value) {
-    //MIP_Print("index %i value %f\n",index,value);
+    MIP_Print("index %i value %f\n",index,value);
 
     MParameters[index] = value;
     //MParameterTargets[index] = value;
@@ -323,13 +336,26 @@ public:
 public:
 //------------------------------
 
-  uint32_t process(uint32_t AState, uint32_t ALength, uint32_t AOffset) {
+  uint32_t process(uint32_t AState, uint32_t AOffset, uint32_t ALength) {
 
-    MIP_Assert(note_key >= 0);
+    //MIP_Assert(note_key >= 0);
 
-    float* input0 = MContext->process->audio_inputs->data32[0];
-    float* input1 = MContext->process->audio_inputs->data32[1];
-    float* output = MVoiceBuffer + AOffset;
+//    float* input0 = MContext->process->audio_inputs->data32[0];
+//    float* input1 = MContext->process->audio_inputs->data32[1];
+//    float* output = MVoiceBuffer + AOffset;
+
+    //MIP_Print("voice index %i buffer %p offset %i length %i\n",MVoiceIndex,MContext->buffer,AOffset,ALength);
+
+    float* input0 = MContext->process_context->process->audio_inputs->data32[0];
+    float* input1 = MContext->process_context->process->audio_inputs->data32[1];
+    float* output = MContext->buffer;
+    output += (MVoiceIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
+    output += AOffset;
+
+    //MIP_Print("MVoiceIndex %i output %p\n",MVoiceIndex,output);
+
+
+    //MIP_Print("MVoiceIndex %i SIZE %i\n",MVoiceIndex,MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
 
     //output += (MVoiceIndex * MIP_VOICE_MAX_FRAMESIZE);
     //MIP_Assert(output);
@@ -598,6 +624,8 @@ public:
 
       // out
 
+//      out = MIP_RandomSigned() * 0.1;
+
       // define in voice_manager
       #ifdef MIP_VOICE_ADD_TO_BUFFER
         *output++ += out;
@@ -618,8 +646,18 @@ public:
     uint32_t stage = MAmpEnvelope.getStage();
     if (stage == MIP_ENVELOPE_FINISHED) return MIP_VOICE_FINISHED;
     else return AState;
-
   }
+
+  //----------
+
+  uint32_t processSlice(uint32_t AState, uint32_t AOffset) {
+    return process(AState,AOffset,MIP_AUDIO_SLICE_SIZE);
+  }
+
+
+
+
+
 
 };
 

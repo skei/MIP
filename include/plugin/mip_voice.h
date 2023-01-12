@@ -36,16 +36,16 @@ public:
 //------------------------------
 
   VOICE               voice       = {};
-  uint32_t            index       = 0;
+  //uint32_t            index       = 0;
   uint32_t            state       = MIP_VOICE_OFF;
   MIP_Note            note        = {};
   double              env_level   = 0.0;
   uint32_t            event_mode  = MIP_VOICE_EVENT_MODE_BLOCK;
 
-  double              velocity    = 0.0;
-  double              pressure    = 0.0;
-  double              brightness  = 0.0;
-  double              tuning      = 0.0;
+  //double              velocity    = 0.0;
+  //double              pressure    = 0.0;
+  //double              brightness  = 0.0;
+  //double              tuning      = 0.0;
 
   MIP_VoiceEventQueue events      = {};
   MIP_VoiceContext*   context     = nullptr;
@@ -66,9 +66,10 @@ public:
 public:
 //------------------------------
 
-  void init(uint32_t AIndex, MIP_VoiceContext* AContext) {
+  void init(uint32_t AIndex, MIP_VoiceContext* AContext, MIP_ParameterArray* AParameters) {
+    //index = AIndex;
     context = AContext;
-    voice.init(AIndex,context);
+    voice.init(AIndex,context/*,AParameters*/);
   }
 
   //----------
@@ -105,7 +106,8 @@ private:
         break;
       }
       case CLAP_EVENT_NOTE_CHOKE: {
-        state = voice.noteChoke(event.index,event.value);
+        //state = voice.noteChoke(event.index,event.value);
+        voice.noteChoke(event.index,event.value);
         break;
       }
       //case CLAP_EVENT_NOTE_END:
@@ -147,6 +149,7 @@ private:
     MIP_VoiceEvent event = {};
     while (remaining > 0) {
       if (events.read(&event)) {
+        //MIP_Print("event\n");
         int32_t length = event.time - current_time;
         if (length > 0) {
           state = voice.process(state,current_time,length);

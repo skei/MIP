@@ -111,14 +111,15 @@ public:
 
   //----------
 
-  void activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) {
+  void activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count, MIP_ParameterArray* AParameters) {
     MVoiceContext.process_context   = nullptr; //
     MVoiceContext.buffer            = MVoiceBuffer;
     MVoiceContext.min_frames_count  = min_frames_count;
     MVoiceContext.max_frames_count  = max_frames_count;
     MVoiceContext.samplerate        = sample_rate;
+    MVoiceContext.parameters        = AParameters;
     for (uint32_t i=0; i<COUNT; i++) {
-      MVoices[i].init(i,&MVoiceContext);
+      MVoices[i].init(i,&MVoiceContext,AParameters);
     }
   }
 
@@ -222,10 +223,14 @@ public:
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_VALUE, event->header.time, event->param_id, event->value);
         MVoices[voice].events.write(ve);
       }
-//      else {
-//        MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_VALUE, event->header.time, event->param_id, event->value);
-//        MVoices[voice].events.write(ve);
-//      }
+
+// todo: we're currently sending param/mod to all voices..
+// let covoices look up 'global' stuff themselves..
+
+      else {
+        MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_VALUE, event->header.time, event->param_id, event->value);
+        MVoices[voice].events.write(ve);
+      }
     }
   }
 
@@ -249,10 +254,15 @@ public:
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_MOD, event->header.time, event->param_id, event->amount);
         MVoices[voice].events.write(ve);
       }
-//      else {
-//        MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_MOD, event->header.time, event->param_id, event->amount);
-//        MVoices[voice].events.write(ve);
-//      }
+
+// todo: we're currently sending param/mod to all voices..
+// let covoices look up 'global' stuff themselves..
+
+      else {
+        MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_MOD, event->header.time, event->param_id, event->amount);
+        MVoices[voice].events.write(ve);
+      }
+
     }
   }
 
@@ -285,6 +295,7 @@ public:
       if (MVoices[i].state == MIP_VOICE_WAITING) {
         // still waiting, not started? something might be wrong..
         MVoices[i].state = MIP_VOICE_OFF;
+        MIP_Print("voice %i -> OFF\n",i);
       }
       if (MVoices[i].state == MIP_VOICE_FINISHED) {
         MVoices[i].state = MIP_VOICE_OFF;
@@ -299,14 +310,19 @@ public:
 //------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AProcessContext) {
+
+    //MIP_Print("MVoiceBuffer %p\n",MVoiceBuffer);
+
     MVoiceContext.process_context = AProcessContext;
     uint32_t len = AProcessContext->process->frames_count;
-    //float** output = AProcessContext->process->audio_outputs[0].data32;
-    //MIP_ClearStereoBuffer(output,len);
-    float* out0 = AProcessContext->process->audio_outputs[0].data32[0];
-    float* out1 = AProcessContext->process->audio_outputs[0].data32[1];
-    MIP_ClearMonoBuffer(out0,len);
-    MIP_ClearMonoBuffer(out1,len);
+
+    float** output = AProcessContext->process->audio_outputs[0].data32;
+    MIP_ClearStereoBuffer(output,len);
+
+    //float* out0 = AProcessContext->process->audio_outputs[0].data32[0];
+    //float* out1 = AProcessContext->process->audio_outputs[0].data32[1];
+    //MIP_ClearMonoBuffer(out0,len);
+    //MIP_ClearMonoBuffer(out1,len);
 
     // set up active voices
 
@@ -315,7 +331,6 @@ public:
     uint32_t num_released = 0;
 
     for (uint32_t i=0; i<COUNT; i++) {
-      //if ((MVoices[i].state == MIP_VOICE_WAITING) || (MVoices[i].state == MIP_VOICE_PLAYING) || (MVoices[i].state == MIP_VOICE_RELEASED)) {
       if ((MVoices[i].state != MIP_VOICE_OFF) && (MVoices[i].state != MIP_VOICE_FINISHED)) {
         MActiveVoices[MNumActiveVoices++] = i;
         //MVoices[i].setVoiceBuffer();
@@ -351,13 +366,15 @@ public:
       // mix, post-process
 
       for (uint32_t i=0; i<MNumActiveVoices; i++) {
-        uint32_t index = MActiveVoices[i];
-        //MVoices[i].getVoiceBuffer();
+        uint32_t v = MActiveVoices[i];
         float* ptr = MVoiceBuffer;
-        ptr += (index * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
-        MIP_AddMonoBuffer(out0,ptr,len);
-        MIP_AddMonoBuffer(out1,ptr,len);
+        ptr += (v * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
+        //MIP_Print("voice %i ptr %p\n",v,ptr);
+        //MIP_AddMonoBuffer(out0,ptr,len);
+        //MIP_AddMonoBuffer(out1,ptr,len);
+        MIP_AddMonoToStereoBuffer(output,ptr,len);
       }
+
     } // num voices > 0
   }
 
@@ -386,7 +403,10 @@ public:
 
   int32_t findFreeVoice(bool AReleased=false) {
     for (uint32_t i=0; i<COUNT; i++) {
-      if (MVoices[i].state == MIP_VOICE_OFF) return i;
+      if (MVoices[i].state == MIP_VOICE_OFF) {
+        //MIP_Print("voice[%i].state == MIP_VOICE_OFF\n",i);
+        return i;
+      }
     }
     if (AReleased) {
       int32_t lowest_index = -1;
