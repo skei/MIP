@@ -52,7 +52,7 @@
 
 #define SA_TYR_EDITOR_WIDTH   836
 #define SA_TYR_EDITOR_HEIGHT  703
-#define SA_TYR_NUM_VOICES     64
+#define SA_TYR_NUM_VOICES     32
 
 #define SA_TYR_PLUGIN_NAME    "sa_tyr"
 #define SA_TYR_PLUGIN_VERSION "0.0.12"
@@ -164,7 +164,8 @@ public:
     setInitialEditorSize(SA_TYR_EDITOR_WIDTH,SA_TYR_EDITOR_HEIGHT);
 
     MVoiceManager.setProcessThreaded(true);
-    MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_INTERLEAVED);
+    //MVoiceManager.setEventVoiceSplit(true);
+    MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_QUANTIZED);
 
   }
 

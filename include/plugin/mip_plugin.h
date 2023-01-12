@@ -533,16 +533,16 @@ public: // ext gui
     updateEditorParameterValues();
     bool result = MEditor->show();
     if (result) {
-//      #ifdef MIP_LINUX
-//        LOG.print("PLUGIN: Starting gui timer\n");
-//        MGuiTimer.start(MIP_EDITOR_TIMER_MS);
-//      #endif
-//      #ifdef MIP_WIN32
-//        MIP_Win32Window* window = MEditor->getWindow();
-//        HWND hwnd = window->getHandle();
-//        LOG.print("PLUGIN: Starting gui timer\n");
-//        MGuiTimer.start(MIP_EDITOR_TIMER_MS,hwnd);
-//      #endif
+      //#ifdef MIP_LINUX
+      //  LOG.print("PLUGIN: Starting gui timer\n");
+      //  MGuiTimer.start(MIP_EDITOR_TIMER_MS);
+      //#endif
+      //#ifdef MIP_WIN32
+      //  MIP_Win32Window* window = MEditor->getWindow();
+      //  HWND hwnd = window->getHandle();
+      //  LOG.print("PLUGIN: Starting gui timer\n");
+      //  MGuiTimer.start(MIP_EDITOR_TIMER_MS,hwnd);
+      //#endif
       MIsEditorOpen = true;
     }
     return result;

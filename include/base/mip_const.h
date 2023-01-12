@@ -2,18 +2,10 @@
 #define mip_const_included
 //----------------------------------------------------------------------
 
-//#include "base/mip_types.h"
-//#include <inttypes.h> // uint8_t
-
-//----------------------------------------------------------------------
-
-const char*   MIP_VERSION    = "0.1.0";
-
-
-//const uint8_t MIP_NULL_ID[16]    = {0};
-const char    MIP_HEX_TABLE[]    = "0123456789ABCDEF";
-const char    MIP_CSYMBOLS[]     = "________________________________________________0123456789_______ABCDEFGHIJKLMNOPQRSTUVWXYZ______abcdefghijklmnopqrstuvwxyz_____";
-const char    MIP_NULL_STRING[]  = "";
+const char* MIP_VERSION       = "0.1.0";
+const char  MIP_HEX_TABLE[]   = "0123456789ABCDEF";
+const char  MIP_CSYMBOLS[]    = "________________________________________________0123456789_______ABCDEFGHIJKLMNOPQRSTUVWXYZ______abcdefghijklmnopqrstuvwxyz_____";
+const char  MIP_NULL_STRING[] = "";
 
 // 4           4  5         5
 // 123456789abcdef0123456789a
@@ -25,9 +17,7 @@ const char    MIP_NULL_STRING[]  = "";
 #define MIP_MAGIC_M_PL   0x4d5f504c    // M_PL   // plugin
 #define MIP_MAGIC_M_ED   0x4d5f4544    // M_ED   // editor
 
-//#ifdef MIP_CPP11
-//  #define nullptr nullptr
-//#else
+//#ifndef MIP_CPP11
 //  #define nullptr 0
 //#endif
 

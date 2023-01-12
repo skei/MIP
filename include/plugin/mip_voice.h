@@ -36,19 +36,11 @@ public:
 //------------------------------
 
   VOICE               voice       = {};
-  //uint32_t            index       = 0;
-  uint32_t            state       = MIP_VOICE_OFF;
-  MIP_Note            note        = {};
-  double              env_level   = 0.0;
-  uint32_t            event_mode  = MIP_VOICE_EVENT_MODE_BLOCK;
-
-  //double              velocity    = 0.0;
-  //double              pressure    = 0.0;
-  //double              brightness  = 0.0;
-  //double              tuning      = 0.0;
-
-  MIP_VoiceEventQueue events      = {};
   MIP_VoiceContext*   context     = nullptr;
+  MIP_Note            note        = {};
+  uint32_t            state       = MIP_VOICE_OFF;
+  uint32_t            event_mode  = MIP_VOICE_EVENT_MODE_BLOCK;
+  MIP_VoiceEventQueue events      = {};
 
 //------------------------------
 public:
@@ -69,7 +61,7 @@ public:
   void init(uint32_t AIndex, MIP_VoiceContext* AContext, MIP_ParameterArray* AParameters) {
     //index = AIndex;
     context = AContext;
-    voice.init(AIndex,context/*,AParameters*/);
+    voice.init(AIndex,context);
   }
 
   //----------
@@ -91,6 +83,12 @@ public:
     }
   }
 
+  //----------
+
+  float getEnvLevel() {
+    return voice.getEnvLevel();
+  }
+
 //------------------------------
 private:
 //------------------------------
@@ -106,13 +104,12 @@ private:
         break;
       }
       case CLAP_EVENT_NOTE_CHOKE: {
-        //state = voice.noteChoke(event.index,event.value);
-        voice.noteChoke(event.index,event.value);
+        /*state =*/ voice.noteChoke(event.index,event.value);
         break;
       }
       //case CLAP_EVENT_NOTE_END:
       case CLAP_EVENT_NOTE_EXPRESSION: {
-        voice.noteExpression(event.index,event.value);
+        /*state =*/ voice.noteExpression(event.index,event.value);
         break;
       }
       case CLAP_EVENT_PARAM_VALUE: {
@@ -125,10 +122,10 @@ private:
       }
       //case CLAP_EVENT_PARAM_GESTURE_BEGIN:
       //case CLAP_EVENT_PARAM_GESTURE_END:
-      //case CLAP_EVENT_TRANSPORT: {
-      //case CLAP_EVENT_MIDI: {
-      //case CLAP_EVENT_MIDI_SYSEX: {
-      //case CLAP_EVENT_MIDI2: {
+      //case CLAP_EVENT_TRANSPORT:
+      //case CLAP_EVENT_MIDI:
+      //case CLAP_EVENT_MIDI_SYSEX:
+      //case CLAP_EVENT_MIDI2:
     } // switch
   }
 
@@ -210,6 +207,8 @@ private:
     }
     //MIP_Assert( events.read(&event) == false );
   }
+
+  //----------
 
 };
 

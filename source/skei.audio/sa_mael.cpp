@@ -63,6 +63,12 @@ public:
 
   //----------
 
+  float getEnvLevel() {
+    return 1.0;
+  }
+
+  //----------
+
   uint32_t noteOn(uint32_t AKey, double AVelocity) {
     float hz = MIP_NoteToHz(AKey);
     float srate = MContext->samplerate;
@@ -145,9 +151,9 @@ public:
     buffer += AOffset;
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
       for (uint32_t i=0; i<MIP_AUDIO_SLICE_SIZE; i++) {
-        ph = MIP_Fract(ph);           // wrap phase
+        ph = MIP_Fract(ph);
         //float v = sin(ph * MIP_PI2);
-        float v = (ph * 2.0) - 1.0;   // 0..1 -> -1..1
+        float v = (ph * 2.0) - 1.0;
 
         // waste some cpu for testing..
         /*
@@ -158,8 +164,8 @@ public:
         }
         */
 
-        *buffer++ = v * 0.1;          // scale it down a bit
-        ph += phadd;                  // advance phase
+        *buffer++ = v * 0.1;
+        ph += phadd;
       } // for voices
     } // playing
     else {
@@ -354,8 +360,6 @@ public: // events
     MVoiceManager.processNoteExpression(event);
   }
 
-  // can we trust the 'cookie' event field?
-
   void processParamValue(const clap_event_param_value_t* event) final {
     switch (event->param_id) {
       case 0: p_gain = event->value; break;
@@ -384,9 +388,7 @@ public: // audio
 //------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
-    // process and mix voices
     MVoiceManager.processAudioBlock(AContext);
-    // post-process
     uint32_t length = AContext->process->frames_count;
     float** buffer = AContext->process->audio_outputs[0].data32;
     MIP_ScaleStereoBuffer(buffer,p_gain,length);

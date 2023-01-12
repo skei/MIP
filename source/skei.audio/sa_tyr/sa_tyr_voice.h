@@ -41,10 +41,11 @@ class sa_tyr_voice {
 private:
 //------------------------------
 
-  uint32_t          MVoiceIndex   = 0;
-  MIP_VoiceContext* MContext      = nullptr;
+  __MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
+  float MSliceBuffer[MIP_AUDIO_SLICE_SIZE] = {0};
 
-  MIP_Queue<const clap_event_note_t*,256> MEvents;
+  MIP_VoiceContext* MContext      = nullptr;
+  uint32_t          MVoiceIndex   = 0;
 
 //------------------------------
 private:
@@ -126,7 +127,6 @@ public:
 //    MContext = AContext;
 
   void init(uint32_t AIndex, MIP_VoiceContext* AContext) {
-    MIP_PRINT;
     MVoiceIndex = AIndex;
     MContext = AContext;
 
@@ -179,7 +179,7 @@ public:
   //todo: reset modulations
 
   uint32_t noteOn(int32_t key, T velocity) {
-    MIP_Print("%i velocity %.3f\n",MVoiceIndex,velocity);
+    //MIP_Print("%i velocity %.3f\n",MVoiceIndex,velocity);
 
     note_key          = key;
     note_onvel        = velocity;
@@ -301,7 +301,7 @@ public:
   //----------
 
   void parameter(uint32_t index, T value) {
-    MIP_Print("index %i value %f\n",index,value);
+    //MIP_Print("index %i value %f\n",index,value);
 
     MParameters[index] = value;
     //MParameterTargets[index] = value;
@@ -348,17 +348,13 @@ public:
 
     float* input0 = MContext->process_context->process->audio_inputs->data32[0];
     float* input1 = MContext->process_context->process->audio_inputs->data32[1];
+
     float* output = MContext->buffer;
     output += (MVoiceIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
     output += AOffset;
 
-    //MIP_Print("MVoiceIndex %i output %p\n",MVoiceIndex,output);
-
-
-    //MIP_Print("MVoiceIndex %i SIZE %i\n",MVoiceIndex,MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
-
-    //output += (MVoiceIndex * MIP_VOICE_MAX_FRAMESIZE);
-    //MIP_Assert(output);
+    float* output_buffer = output;
+    output = MSliceBuffer;
 
     //------------------------------
     // per sample
@@ -624,20 +620,18 @@ public:
 
       // out
 
-//      out = MIP_RandomSigned() * 0.1;
-
-      // define in voice_manager
-      #ifdef MIP_VOICE_ADD_TO_BUFFER
-        *output++ += out;
-      #else
+      //#ifdef MIP_VOICE_ADD_TO_BUFFER
+      //  *output++ += out;
+      //#else
         *output++ = out;
-      #endif
+      //#endif
 
       // prepare for next sample
-
       //
 
     }
+
+    memcpy(output_buffer,MSliceBuffer,MIP_AUDIO_SLICE_SIZE*sizeof(float));
 
     //------------------------------
     //
@@ -650,14 +644,21 @@ public:
 
   //----------
 
+  /*
+    will the optimizer pick up the const buffersize across the methods?
+    we can also do a kind of inverse scheme, where we always calculate
+    a certain size, but copy only the part we need, and keep track of how
+    many are left.. next process call, if we need more than the currently
+    available samples, we calculate another const size buffer (we need two
+    scratch buffers), and copy the end of bufer 1 and the start of bufer 2..
+    too much hassle?
+    or two separate functions..
+    tempated? macros? think.. think..
+  */
+
   uint32_t processSlice(uint32_t AState, uint32_t AOffset) {
     return process(AState,AOffset,MIP_AUDIO_SLICE_SIZE);
   }
-
-
-
-
-
 
 };
 

@@ -1,6 +1,6 @@
 # depslib dependency file v1.0
-1673548463 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../source/skei.audio/sa_tyr.cpp"
+1673557853 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../source/skei.audio/sa_botage.cpp"
 
 1670414796 /DISKS/sda2/code/git/MIP/build/test/test1.cpp
 	"gui/mip_window.h"
@@ -35,11 +35,11 @@
 	"base/mip_test.h"
 	"plugin/mip_registry.h"
 
-1673486397 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
+1673557796 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
 
 1641519085 /DISKS/sda2/code/git/MIP/include/base/mip_attributes.h
 
-1671248207 /DISKS/sda2/code/git/MIP/include/base/mip_const.h
+1673557841 /DISKS/sda2/code/git/MIP/include/base/mip_const.h
 
 1673293498 /DISKS/sda2/code/git/MIP/include/base/mip_enums.h
 
@@ -162,7 +162,7 @@
 	"base/utils/mip_random.h"
 	<iconv.h>
 
-1673550829 /DISKS/sda2/code/git/MIP/include/base/utils/mip_random.h
+1673556718 /DISKS/sda2/code/git/MIP/include/base/utils/mip_random.h
 	"base/mip.h"
 	<stdint.h>
 	<stdint.h>
@@ -732,7 +732,7 @@
 	"gui/mip_widgets.h"
 	"plugin/mip_entry.h"
 
-1673454189 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
+1673557709 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
 	"base/mip.h"
 	"base/system/mip_timer.h"
 	"plugin/mip_parameter.h"
@@ -872,7 +872,7 @@
 
 1672175500 /DISKS/sda2/code/git/MIP/include/plugin/exe/mip_exe.h
 
-1672995933 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
+1673451958 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
 	"plugin/mip_plugin.h"
 	"audio/mip_audio_utils.h"
 	"sa_botage/sa_botage_parameters.h"
@@ -880,7 +880,7 @@
 	"sa_botage/sa_botage_editor.h"
 	"plugin/mip_entry.h"
 
-1673021945 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
+1673030841 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor.h
 	"base/mip.h"
 	"gui/mip_widgets.h"
 	"plugin/mip_editor.h"
@@ -926,12 +926,12 @@
 	"base/mip.h"
 	"gui/widgets/mip_slider_widget.h"
 
-1672951260 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_parameters.h
+1673051309 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_parameters.h
 	"base/mip.h"
 	"plugin/mip_parameter.h"
 	"plugin/mip_plugin.h"
 
-1672951472 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_processor.h
+1673092643 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_processor.h
 	"base/mip.h"
 	"audio/old/filters/mip_svf_filter.h"
 
@@ -1366,13 +1366,13 @@
 	<cairo/cairo.h>
 	<cairo/cairo-xcb.h>
 
-1673000895 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_prob.h
+1673091747 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_prob.h
 
 1672434710 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_fx.h
 
-1672434725 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_seq.h
+1673091759 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_seq.h
 
-1672434717 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_perf.h
+1673091730 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage/sa_botage_editor_page_perf.h
 
 1672051212 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_lad.cpp
 	"plugin/mip_registry.h"

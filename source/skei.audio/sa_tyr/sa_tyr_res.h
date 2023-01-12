@@ -28,6 +28,7 @@ public:
 
     T process(T x) {
       T r = MIP_Random();
+      //MIP_Print("r %.2f rough %.2f\n",r,rough);
       if (r >= rough) x = -x;
 
 //      T s = (shape*shape*shape*shape);

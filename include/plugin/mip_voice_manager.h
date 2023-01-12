@@ -31,9 +31,11 @@ class MIP_VoiceManager {
 private:
 //------------------------------
 
+  __MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
+  float MVoiceBuffer[COUNT * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE] = {0};
+
   MIP_Voice<VOICE>              MVoices[COUNT]        = {};
   MIP_VoiceContext              MVoiceContext         = {};
-  float                         MVoiceBuffer[COUNT * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE] = {0};
 
   uint32_t                      MNumPlayingVoices     = 0;
   uint32_t                      MNumReleasedVoices    = 0;
@@ -67,12 +69,6 @@ public:
   void setProcessThreaded(bool AThreaded=true) {
     MProcessThreaded = AThreaded;
   }
-
-  //----------
-
-  // MIP_VOICE_EVENT_MODE_BLOCK         0
-  // MIP_VOICE_EVENT_MODE_INTERLEAVED   1
-  // MIP_VOICE_EVENT_MODE_QUANTIZED     2
 
   void setEventMode(uint32_t AMode) {
     for (uint32_t i=0; i<COUNT; i++) {
@@ -128,11 +124,9 @@ public:
 //------------------------------
 
   void processNoteOn(const clap_event_note_t* event) {
-    int32_t voice = findFreeVoice();
+    int32_t voice = findFreeVoice(MIP_VOICE_MANAGER_STEAL_VOICES);
     if (voice >= 0) {
-      //MIP_Print("voice %i time %i event %p\n",voice,event->header.time,event);
       MVoices[voice].state        = MIP_VOICE_WAITING;
-      MVoices[voice].env_level    = 0.0;
       MVoices[voice].note.port    = event->port_index;
       MVoices[voice].note.channel = event->channel;
       MVoices[voice].note.key     = event->key;
@@ -207,10 +201,6 @@ public:
 
   //----------
 
-  /*
-    should we send parameter values to all voices if no specific noteid or pck destination?
-  */
-
   void processParamValue(const clap_event_param_value_t* event) {
     bool has_noteid = (event->note_id != -1);
     bool has_pck = ((event->port_index != -1) && (event->channel != -1) && (event->key != -1));
@@ -224,13 +214,13 @@ public:
         MVoices[voice].events.write(ve);
       }
 
-// todo: we're currently sending param/mod to all voices..
-// let covoices look up 'global' stuff themselves..
-
+      #ifdef MIP_VOICE_MANAGER_SEND_PARAMS_TO_ALL_VOICES
       else {
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_VALUE, event->header.time, event->param_id, event->value);
         MVoices[voice].events.write(ve);
       }
+      #endif
+
     }
   }
 
@@ -255,13 +245,12 @@ public:
         MVoices[voice].events.write(ve);
       }
 
-// todo: we're currently sending param/mod to all voices..
-// let covoices look up 'global' stuff themselves..
-
+      #ifdef MIP_VOICE_MANAGER_SEND_MODS_TO_ALL_VOICES
       else {
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_MOD, event->header.time, event->param_id, event->amount);
         MVoices[voice].events.write(ve);
       }
+      #endif
 
     }
   }
@@ -269,6 +258,47 @@ public:
   //----------
 
   void processMidi(const clap_event_midi_t* event) {
+    #ifdef MIP_VOICE_MANAGER_CONVERT_MIDI
+    uint8_t msg   = event->data[0] & 0xf0;
+    uint8_t chan  = event->data[0] & 0x0f;
+    uint8_t index = event->data[1]; // & 0x7f;
+    uint8_t val   = event->data[2]; // & 0x7f;
+    switch (msg) {
+      case MIP_MIDI_NOTE_OFF:
+        MIP_Print("MIDI NOTE OFF chan %i index %i val %i\n",chan,index,val);
+        //processNoteOff
+        break;
+      case MIP_MIDI_NOTE_ON:
+        MIP_Print("MIDI NOTE ON chan %i index %i val %i\n",chan,index,val);
+        //processNoteOn
+        break;
+      case MIP_MIDI_POLY_AFTERTOUCH:
+        MIP_Print("MIDI POLY AFTERTOUCH chan %i index %i val %i\n",chan,index,val);
+        //processNoteExpression
+        break;
+      case MIP_MIDI_CONTROL_CHANGE:
+        MIP_Print("MIDI CONTROL CHANGE chan %i index %i val %i\n",chan,index,val);
+        // 74 : processNoteExpression
+        // midi mapping
+        break;
+      case MIP_MIDI_PROGRAM_CHANGE:
+        MIP_Print("MIDI PROGRAM CHANGE chan %i index %i val %i\n",chan,index,val);
+        // ?
+        break;
+      case MIP_MIDI_CHANNEL_AFTERTOUCH:
+        MIP_Print("MIDI CHANNEL AFTERTOUCH chan %i index %i val %i\n",chan,index,val);
+        //processNoteExpression
+        break;
+      case MIP_MIDI_PITCHBEND:
+        MIP_Print("MIDI PITCHBEND chan %i index %i val %i\n",chan,index,val);
+        //processNoteExpression
+        break;
+      case MIP_MIDI_SYS:
+        MIP_Print("MIDI SYS chan %i index %i val %i\n",chan,index,val);
+        //processMidiSysex
+        break;
+    }
+    #endif
   }
 
   //----------
@@ -295,6 +325,7 @@ public:
       if (MVoices[i].state == MIP_VOICE_WAITING) {
         // still waiting, not started? something might be wrong..
         MVoices[i].state = MIP_VOICE_OFF;
+        //queueNoteEnd(MVoices[i].note);      // ???
         MIP_Print("voice %i -> OFF\n",i);
       }
       if (MVoices[i].state == MIP_VOICE_FINISHED) {
@@ -310,101 +341,77 @@ public:
 //------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AProcessContext) {
-
-    //MIP_Print("MVoiceBuffer %p\n",MVoiceBuffer);
-
     MVoiceContext.process_context = AProcessContext;
-    uint32_t len = AProcessContext->process->frames_count;
-
-    float** output = AProcessContext->process->audio_outputs[0].data32;
-    MIP_ClearStereoBuffer(output,len);
-
-    //float* out0 = AProcessContext->process->audio_outputs[0].data32[0];
-    //float* out1 = AProcessContext->process->audio_outputs[0].data32[1];
-    //MIP_ClearMonoBuffer(out0,len);
-    //MIP_ClearMonoBuffer(out1,len);
-
+    uint32_t blocksize = AProcessContext->process->frames_count;
     // set up active voices
-
     MNumActiveVoices = 0;
     uint32_t num_playing = 0;
     uint32_t num_released = 0;
-
     for (uint32_t i=0; i<COUNT; i++) {
       if ((MVoices[i].state != MIP_VOICE_OFF) && (MVoices[i].state != MIP_VOICE_FINISHED)) {
         MActiveVoices[MNumActiveVoices++] = i;
-        //MVoices[i].setVoiceBuffer();
         if (MVoices[i].state == MIP_VOICE_PLAYING) num_playing += 1;
         if (MVoices[i].state == MIP_VOICE_RELEASED) num_released += 1;
       }
     }
-
     MNumPlayingVoices = num_playing;
     MNumReleasedVoices = num_released;
-
     // process active voices
-
     if (MNumActiveVoices > 0) {
-
-      // thread-pool
-
+      // thread-pool..
       bool processed = false;
       if (MProcessThreaded && MThreadPool) {
         processed = MThreadPool->request_exec(MClapHost,MNumActiveVoices);
         //MIP_Print("request_exec(%i) returned %s\n", MNumActiveVoices, processed ? "true" : "false" );
       }
-
-      // manually
-
+      // ..or manually
       if (!processed) {
         for (uint32_t i=0; i<MNumActiveVoices; i++) {
           uint32_t v = MActiveVoices[i];
           process_voice(v);
         }
       }
-
-      // mix, post-process
-
+      // mix, (post-process)
+      float** output = AProcessContext->process->audio_outputs[0].data32;
+      MIP_ClearStereoBuffer(output,blocksize);
       for (uint32_t i=0; i<MNumActiveVoices; i++) {
-        uint32_t v = MActiveVoices[i];
-        float* ptr = MVoiceBuffer;
-        ptr += (v * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
-        //MIP_Print("voice %i ptr %p\n",v,ptr);
-        //MIP_AddMonoBuffer(out0,ptr,len);
-        //MIP_AddMonoBuffer(out1,ptr,len);
-        MIP_AddMonoToStereoBuffer(output,ptr,len);
+        uint32_t voice = MActiveVoices[i];
+        float* buffer = MVoiceBuffer;
+        buffer += (voice * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
+        MIP_AddMonoToStereoBuffer(output,buffer,blocksize);
       }
-
     } // num voices > 0
   }
 
 //------------------------------
-//private:
 public:
 //------------------------------
 
-  // (potentially) called in separate threads for each voice
-
-  void process_voice(uint32_t i) {
-    //MVoices[i].setVoiceBuffer();
-    MVoices[i].process();
-  };
-
-  //----------
-
-  // AIndex = task_index
+  // called by host
+  // separate thread for each task/voice
 
   void thread_pool_exec(uint32_t AIndex) {
     uint32_t v = MActiveVoices[AIndex];
     process_voice(v);
   }
 
+//------------------------------
+//public:
+private:
+//------------------------------
+
+  // if threaded: separate threads for each voice
+  // else:        one voice after another
+
+  void process_voice(uint32_t i) {
+    MVoices[i].process();
+  };
+
   //----------
 
   int32_t findFreeVoice(bool AReleased=false) {
     for (uint32_t i=0; i<COUNT; i++) {
       if (MVoices[i].state == MIP_VOICE_OFF) {
-        //MIP_Print("voice[%i].state == MIP_VOICE_OFF\n",i);
         return i;
       }
     }
@@ -412,9 +419,12 @@ public:
       int32_t lowest_index = -1;
       double  lowest_level = 666.0;
       for (uint32_t i=0; i<COUNT; i++) {
-        if (MVoices[i].env_level < lowest_level) {
-          lowest_index = i;
-          lowest_level = MVoices[i].env_level;
+        if (MVoices[i].state == MIP_VOICE_RELEASED) {
+          float env_level = MVoices[i].getEnvLevel();
+          if (env_level < lowest_level) {
+            lowest_index = i;
+            lowest_level = env_level;
+          }
         }
       }
       if (lowest_index >= 0) return lowest_index;

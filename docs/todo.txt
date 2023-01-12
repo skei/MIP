@@ -1,12 +1,11 @@
 
 roadmap (?)
 
+0.1.0 re-re-relaunch
 0.2.0 vst3 wrapper
 0.3.0 vst2 wrapper
 0.4.0 standalone (audio/midi)
 
-0.?.0 voices
-0.?.0 slice-processing
 0.?.0 modular/codegen
 
 ----------------------------------------------------------------------
@@ -44,7 +43,6 @@ GUI
 * scale widget
 * multiple snap points
 * stepped drawing
-* modulation
 
 --------------------
 opengl (glx/wgl)

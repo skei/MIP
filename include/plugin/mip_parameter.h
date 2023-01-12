@@ -2,6 +2,13 @@
 #define mip_parameter_included
 //----------------------------------------------------------------------
 
+/*
+  todo:
+    setFormatString()
+*/
+
+//----------------------------------------------------------------------
+
 #include "base/mip.h"
 #include "plugin/clap/mip_clap.h"
 
@@ -34,22 +41,22 @@ protected:
     /*.default_value  =*/ 0.0
   };
 
-  MIP_Widget*       MWidget             = nullptr;
-  int32_t           MIndex              = -1;
-  double            MValue              = 0.0;
-  double            MModulation         = 0.0;
+  MIP_Widget*       MWidget                     = nullptr;
+  int32_t           MIndex                      = -1;
+  double            MValue                      = 0.0;
+  double            MModulation                 = 0.0;
 
-  double            MValueTarget        = 0.0;
-  double            MValueFactor        = 0.0;
-  double            MValueSmoothed      = 0.0;
+  double            MValueTarget                = 0.0;
+  double            MValueSmoothed              = 0.0;
+  double            MValueSmoothingFactor       = 0.0;
 
-  double            MModulationTarget   = 0.0;
-  double            MModulationSmooth   = 0.0;
-  double            MModulationFactor   = 0.0;
+  double            MModulationTarget           = 0.0;
+  double            MModulationSmoothed         = 0.0;
+  double            MModulationSmoothingFactor  = 0.0;
 
-  uint32_t          MModulationCounter  = 0;
+  uint32_t          MModulationCounter          = 0;
 
-  char              MValueText[256]     = {0};
+  char              MValueText[256]             = {0};
 
 
 //------------------------------
@@ -59,8 +66,7 @@ public:
   MIP_Parameter(const char* AName="", double AValue=0.0, double AMin=0.0, double AMax=1.0) {
     setName(AName);
     //setValue(AValue);
-//    AValue = normalizeValue(AValue);
-//    MIP_Print("v %f\n",v);
+    //AValue = normalizeValue(AValue);
     setValue(AValue);
     setDefValue(AValue);
     setValueRange(AMin,AMax);
@@ -75,25 +81,25 @@ public:
 public:
 //------------------------------
 
-  virtual void        setWidget(MIP_Widget* AWidget)          { MWidget = AWidget; }
-  virtual void        setIndex(int32_t AIndex)                { MIndex = AIndex; }
+  virtual void        setWidget(MIP_Widget* AWidget)              { MWidget = AWidget; }
+  virtual void        setIndex(int32_t AIndex)                    { MIndex = AIndex; }
 
-  virtual void        setValue(double AValue)                 { MValue = AValue; }
-  virtual void        setModulation(double AValue)            { MModulation = AValue; }
+  virtual void        setValue(double AValue)                     { MValue = AValue; }
+  virtual void        setModulation(double AValue)                { MModulation = AValue; }
 
-  virtual void        setValueTarget(double AValue)           { MValueTarget = AValue; }
-  virtual void        setValueFactor(double AValue)           { MValueFactor = AValue; }
-  virtual void        setModulationTarget(double AValue)      { MModulationTarget = AValue; }
-  virtual void        setModulationFactor(double AValue)      { MModulationFactor = AValue; }
-  virtual void        setModulationCounter(uint32_t ACount)   { MModulationCounter = ACount; }
+  virtual void        setValueTarget(double AValue)               { MValueTarget = AValue; }
+  virtual void        setValueSmoothingFactor(double AValue)      { MValueSmoothingFactor = AValue; }
+  virtual void        setModulationTarget(double AValue)          { MModulationTarget = AValue; }
+  virtual void        setModulationSmoothingFactor(double AValue) { MModulationSmoothingFactor = AValue; }
+  virtual void        setModulationCounter(uint32_t ACount)       { MModulationCounter = ACount; }
 
-  virtual void        setId(uint32_t AId)                     { MParamInfo.id = AId; }
-  virtual void        setFlags(uint32_t AFlags)               { MParamInfo.flags = AFlags; }
-  virtual void        setName(const char* AName)              { strncpy(MParamInfo.name,AName,CLAP_NAME_SIZE-1); }
-  virtual void        setModule(const char* AModule)          { strncpy(MParamInfo.module,AModule,CLAP_PATH_SIZE-1); }
-  virtual void        setDefValue(double AValue)              { MParamInfo.default_value = AValue; }
-  virtual void        setMinValue(double AValue)              { MParamInfo.min_value = AValue; }
-  virtual void        setMaxValue(double AValue)              { MParamInfo.max_value = AValue; }
+  virtual void        setId(uint32_t AId)                         { MParamInfo.id = AId; }
+  virtual void        setFlags(uint32_t AFlags)                   { MParamInfo.flags = AFlags; }
+  virtual void        setName(const char* AName)                  { strncpy(MParamInfo.name,AName,CLAP_NAME_SIZE-1); }
+  virtual void        setModule(const char* AModule)              { strncpy(MParamInfo.module,AModule,CLAP_PATH_SIZE-1); }
+  virtual void        setDefValue(double AValue)                  { MParamInfo.default_value = AValue; }
+  virtual void        setMinValue(double AValue)                  { MParamInfo.min_value = AValue; }
+  virtual void        setMaxValue(double AValue)                  { MParamInfo.max_value = AValue; }
 
 
   // expressions?
@@ -121,7 +127,7 @@ public:
   virtual double      getModulation()         { return MModulation; }
 
   virtual double      getValueSmoothed()      { return MValueSmoothed; }
-  virtual double      getModulationSmooth()   { return MModulationSmooth; }
+  virtual double      getModulationSmoothed() { return MModulationSmoothed; }
   virtual uint32_t    getModulationCounter()  { return MModulationCounter; }
 
   virtual uint32_t    getId()                 { return MParamInfo.id; }
@@ -181,6 +187,18 @@ public:
 
   double getDenormalizedValue() {
     return denormalizeValue(MValue);
+  }
+
+  //----------
+
+  void updateValueSmoothing() {
+    MValueSmoothed += ((MValueTarget - MValueSmoothed) * MValueSmoothingFactor);
+  }
+
+  //----------
+
+  void updateModulationSmoothing() {
+    MModulationSmoothed += ((MModulationTarget - MModulationSmoothed) * MModulationSmoothingFactor);
   }
 
 };

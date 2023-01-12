@@ -135,24 +135,24 @@ float SRandFloat(int* a_Seed) {
 
 uint32_t rand_lcg_seed = 666;
 
-uint32_t rand_lcg() {
+int32_t rand_lcg() {
   rand_lcg_seed = ((uint64_t)rand_lcg_seed * 279470273UL) % 4294967291UL;
-  return rand_lcg_seed;
+  return (int32_t)rand_lcg_seed;
 }
 
 //
 
 float MIP_Random_LCG(void) {
-  float rnd = (float)rand_lcg();
-  float result = rnd * (float)MIP_INVRANDMAX;
-  return result;
+  float result = (float)rand_lcg() * (float)MIP_INVRANDMAX;
+  return abs(result);
 }
 
 //----------
 
 float MIP_RandomSigned_LCG(void) {
-  float r = (float)rand_lcg() * (float)MIP_INVRANDMAX;// / (float)RAND_MAX;
-  return r * 2.0f - 1.0f;
+  float result = (float)rand_lcg() * (float)MIP_INVRANDMAX;// / (float)RAND_MAX;
+  //return r * 2.0f - 1.0f;
+  return result;
 }
 
 // inclusive

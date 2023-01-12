@@ -26,8 +26,6 @@
   #define MIP_ALIGNMENT_CACHE                       64
   #define MIP_AUDIO_SLICE_SIZE                      16
   #define MIP_CLIP_RECT_STACK_SIZE                  1024
-//#define MIP_EDITOR_TIMER_MS                       30
-//#define MIP_EDITOR_TIMER_ID                       333
   #define MIP_LOGFILE_NAME                          "mip.log"
   #define MIP_MAX_PATH_LENGTH                       512
   #define MIP_MAX_STRING_LENGTH                     256
@@ -39,6 +37,7 @@
   #define MIP_VOICE_MAX_EVENTS_PER_BLOCK            4096
   #define MIP_VOICE_MANAGER_MAX_EVENTS_PER_BLOCK    4096
   #define MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE   4096
+  #define MIP_VOICE_MANAGER_STEAL_VOICES            true
   #define MIP_WINDOW_MAX_DIRTY_RECTS                1024
   #define MIP_WINDOW_MAX_DIRTY_WIDGETS              1024
   #define MIP_WINDOW_TIMER_MS                       30
@@ -97,8 +96,6 @@
 //
 //----------------------------------------------------------------------
 
-
-
 //#define MIP_GUI_WIN32
 //#define MIP_GUI_XCB
 //#define MIP_MOUSE_DOUBLECLICK
@@ -124,20 +121,11 @@
 //#define MIP_USE_XCB
 //#define MIP_WIN32_GDIPLUS
 //#define MIP_WIN32_INVALIDATE_WHEN_RESIZING
-
 //#define MIP_WINDOW_BUFFERED
-
   //#define MIP_WINDOW_COMBINE_UPDATE_RECTS
   #define MIP_WINDOW_FULL_UPDATE_RECT
-
 //#define MIP_XCB_USE_STB_TRUETYPE
-
-  // was:
-  // black screen when hiding/showing gui
-  // (bitwig add modulator)
-  // is this fixed?
-
-#define MIP_XCB_WAIT_FOR_MAPNOTIFY
+  #define MIP_XCB_WAIT_FOR_MAPNOTIFY
 
 //----------------------------------------------------------------------
 //
@@ -148,15 +136,14 @@
 //#define MIP_NO_ENTRY
 //#define MIP_NO_PLUGIN
 //#define MIP_NO_REGISTRY
-
-  // we always want to export the clap entry
   #define MIP_PLUGIN_CLAP
-
 //#define MIP_PLUGIN_EXE
   #define MIP_PLUGIN_VST2
   #define MIP_PLUGIN_VST3
-
 //#define MIP_PLUGIN_GENERIC_EDITOR
+//#define MIP_VOICE_MANAGER_CONVERT_MIDI
+  #define MIP_VOICE_MANAGER_SEND_PARAMS_TO_ALL_VOICES
+  #define MIP_VOICE_MANAGER_SEND_MODS_TO_ALL_VOICES
 //#define MIP_VST2_FST
 //#define MIP_VST2_SDK
 //#define MIP_VST2_VESTIGE
