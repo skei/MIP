@@ -35,6 +35,8 @@ class MIP_Voice {
 public:
 //------------------------------
 
+  __MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
+
   VOICE               voice       = {};
   MIP_VoiceContext*   context     = nullptr;
   MIP_Note            note        = {};
@@ -151,9 +153,7 @@ private:
         //MIP_Print("event\n");
         int32_t length = event.time - current_time;
         if (length > 0) {
-//MIP_Print("state %i current_time %i length %i\n",state,current_time,length);
           state = voice.process(state,current_time,length);
-//MIP_PRINT;
           remaining -= length;
           current_time += length;
         }

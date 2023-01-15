@@ -40,66 +40,66 @@ class sa_tyr_voice {
 private:
 //------------------------------
 
-  //__MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
-  //float MSliceBuffer[MIP_AUDIO_SLICE_SIZE] = {0};
-  float MSliceBuffer[MIP_AUDIO_MAX_BLOCK_SIZE] = {0};
+  __MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
+  float             MSliceBuffer[MIP_AUDIO_MAX_BLOCK_SIZE]  = {0};
+//float             MSliceBuffer[MIP_AUDIO_SLICE_SIZE]      = {0};
 
-  MIP_VoiceContext* MContext      = nullptr;
-  uint32_t          MVoiceIndex   = 0;
+  MIP_VoiceContext* MContext                                = nullptr;
+  uint32_t          MVoiceIndex                             = 0;
 
 //------------------------------
 private:
 //------------------------------
 
-//  float*            MVoiceBuffer    = nullptr;
-//  uint32_t MIndex = 0;
+//float*              MVoiceBuffer    = nullptr;
+//uint32_t            MIndex = 0;
 
-  double*                MParameters     = nullptr;
-  double*                MModulations    = nullptr;
-  double*                MParMod         = nullptr;
-  double*                MParModTargets  = nullptr;
-  double*                MParModFactors  = nullptr;
+  double*             MParameters     = nullptr;
+  double*             MModulations    = nullptr;
+  double*             MParMod         = nullptr;
+  double*             MParModTargets  = nullptr;
+  double*             MParModFactors  = nullptr;
 
-  sa_tyr_osc<float>     MOscillator1    = {};
-  sa_tyr_osc<float>     MOscillator2    = {};
-  sa_tyr_res<float>     MResonator1     = {};
-  sa_tyr_res<float>     MResonator2     = {};
+  sa_tyr_osc<float>   MOscillator1    = {};
+  sa_tyr_osc<float>   MOscillator2    = {};
+  sa_tyr_res<float>   MResonator1     = {};
+  sa_tyr_res<float>   MResonator2     = {};
 
-  MIP_Envelope<float>   MAmpEnvelope    = {};
-  MIP_SvfFilter         MFilter         = {};
-  MIP_RcFilter<float>   MO1InputFilter  = {};
-  MIP_RcFilter<float>   MO2InputFilter  = {};
-  MIP_RcFilter<float>   MR1InputFilter  = {};
-  MIP_RcFilter<float>   MR2InputFilter  = {};
+  MIP_Envelope<float> MAmpEnvelope    = {};
+  MIP_SvfFilter       MFilter         = {};
+  MIP_RcFilter<float> MO1InputFilter  = {};
+  MIP_RcFilter<float> MO2InputFilter  = {};
+  MIP_RcFilter<float> MR1InputFilter  = {};
+  MIP_RcFilter<float> MR2InputFilter  = {};
 
-  int32_t           note_key        = -1;
-  double            note_onvel      = 0.0;
-  double            note_offvel     = 0.0;
+  int32_t             note_key        = -1;
+  double              note_onvel      = 0.0;
+  double              note_offvel     = 0.0;
 
   // note expressions
 
-  double                 note_vol        = 0.0;
-  double                 note_pan        = 0.0;
-  double                 note_tuning     = 0.0;
-  double                 note_vibr       = 0.0;
-  double                 note_expr       = 0.0;
-  double                 note_bright     = 0.0;
-  double                 note_press      = 0.0;
+  double              note_vol        = 0.0;
+  double              note_pan        = 0.0;
+  double              note_tuning     = 0.0;
+  double              note_vibr       = 0.0;
+  double              note_expr       = 0.0;
+  double              note_bright     = 0.0;
+  double              note_press      = 0.0;
 
-  double                 note_vol_tgt    = 0.0;
-  double                 note_pan_tgt    = 0.0;
-  double                 note_tuning_tgt = 0.0;
-  double                 note_vibr_tgt   = 0.0;
-  double                 note_expr_tgt   = 0.0;
-  double                 note_bright_tgt = 0.0;
-  double                 note_press_tgt  = 0.0;
+  double              note_vol_tgt    = 0.0;
+  double              note_pan_tgt    = 0.0;
+  double              note_tuning_tgt = 0.0;
+  double              note_vibr_tgt   = 0.0;
+  double              note_expr_tgt   = 0.0;
+  double              note_bright_tgt = 0.0;
+  double              note_press_tgt  = 0.0;
 
   // processing
 
-  float             O1              = 0.0;
-  float             O2              = 0.0;
-  float             R1              = 0.0;
-  float             R2              = 0.0;
+  float               O1              = 0.0;
+  float               O2              = 0.0;
+  float               R1              = 0.0;
+  float               R2              = 0.0;
 
 //------------------------------
 public:
@@ -213,8 +213,8 @@ public:
     R2 = 0.0;
 
     for (uint32_t i=0; i<PARAM_COUNT; i++) {
-      MModulations[i] = 0.0;
-      MParMod[i] = MParameters[i];
+      MModulations[i]   = 0.0;
+      MParMod[i]        = MParameters[i];
       MParModTargets[i] = MParameters[i];
     }
 
@@ -356,6 +356,36 @@ public:
     float* output_buffer = output;
     output = MSliceBuffer;
 
+    bool osc1_used = false;
+    bool osc2_used = false;
+    bool res1_used = false;
+    bool res2_used = false;
+
+    if ((   MParameters[PAR_MASTER_OSC1_OUT]
+          + MParameters[PAR_OSC1_IN_O1]
+          + MParameters[PAR_OSC2_IN_O1]
+          + MParameters[PAR_RES1_IN_O1]
+          + MParameters[PAR_RES2_IN_O1]) > 0.0) osc1_used = true;
+
+    if ((   MParameters[PAR_MASTER_OSC2_OUT]
+          + MParameters[PAR_OSC1_IN_O2]
+          + MParameters[PAR_OSC2_IN_O2]
+          + MParameters[PAR_RES1_IN_O2]
+          + MParameters[PAR_RES2_IN_O2]) > 0.0) osc2_used = true;
+
+    if ((   MParameters[PAR_MASTER_RES1_OUT]
+          + MParameters[PAR_OSC1_IN_R1]
+          + MParameters[PAR_OSC2_IN_R1]
+          + MParameters[PAR_RES1_IN_R1]
+          + MParameters[PAR_RES2_IN_R1]) > 0.0) res1_used = true;
+
+    if ((   MParameters[PAR_MASTER_RES2_OUT]
+          + MParameters[PAR_OSC1_IN_R2]
+          + MParameters[PAR_OSC2_IN_R2]
+          + MParameters[PAR_RES1_IN_R2]
+          + MParameters[PAR_RES2_IN_R2]) > 0.0) res2_used = true;
+
+
     //------------------------------
     // per sample
     //------------------------------
@@ -398,9 +428,11 @@ public:
 
       // prepare osc 1
 
+if (osc1_used) {
+
       float o1_pitch  = ((int)MParMod[PAR_OSC1_OCT]  * 12.0)
-                  + ((int)MParMod[PAR_OSC1_SEMI] * 1.0 )
-                  + (     MParMod[PAR_OSC1_CENT]       );
+                      + ((int)MParMod[PAR_OSC1_SEMI] * 1.0 )
+                      + (     MParMod[PAR_OSC1_CENT]       );
 
       float osc1_hz = MIP_NoteToHz(note_key + note_tuning + o1_pitch);
       osc1_hz = MIP_Clamp(osc1_hz,20,20000);
@@ -420,6 +452,8 @@ public:
       o1_mode = MIP_Clamp( o1_mode, 0, SA_TYR_OSC_TYPE_COUNT - 1);
       MOscillator1.setType(o1_mode);
 
+}
+
       float o1s = MIP_Clamp( MParMod[PAR_OSC1_IN_S], 0, 1 );
       o1s   = 1.0 - o1s;
       o1s   = (o1s * o1s * o1s * o1s);
@@ -427,9 +461,11 @@ public:
 
       // prepare osc 2
 
+if (osc2_used) {
+
       float o2_pitch  = ((int)MParMod[PAR_OSC2_OCT]  * 12.0)
-                  + ((int)MParMod[PAR_OSC2_SEMI] * 1.0 )
-                  + (     MParMod[PAR_OSC2_CENT]       );
+                      + ((int)MParMod[PAR_OSC2_SEMI] * 1.0 )
+                      + (     MParMod[PAR_OSC2_CENT]       );
 
       float osc2_hz = MIP_NoteToHz(note_key + note_tuning + o2_pitch);
       osc2_hz = MIP_Clamp(osc2_hz,20,20000);
@@ -449,6 +485,8 @@ public:
       o2_mode = MIP_Clamp( o2_mode, 0, SA_TYR_OSC_TYPE_COUNT - 1);
       MOscillator2.setType(o2_mode);
 
+}
+
       float o2s = MIP_Clamp( MParMod[PAR_OSC2_IN_S], 0, 1 );
       o2s = 1.0 - o2s;
       o2s = (o2s * o2s * o2s * o2s);
@@ -456,9 +494,11 @@ public:
 
       // prepare res 1
 
+if (res1_used) {
+
       float r1_pitch  = ((int)MParMod[PAR_RES1_OCT]  * 12.0)
-                  + ((int)MParMod[PAR_RES1_SEMI] * 1.0 )
-                  + (     MParMod[PAR_RES1_CENT]       );
+                      + ((int)MParMod[PAR_RES1_SEMI] * 1.0 )
+                      + (     MParMod[PAR_RES1_CENT]       );
 
       float res1_hz = MIP_NoteToHz(note_key + note_tuning + r1_pitch);
       res1_hz = MIP_Clamp(res1_hz,20,20000);
@@ -487,15 +527,19 @@ public:
       //imp1 = (imp1 * imp1 * imp1 * imp1 * imp1);
       MResonator1.setImpulse(imp1);
 
+}
+
       float r1_spd = 1.0 - MIP_Clamp(MParMod[PAR_RES1_SPEED],0,1);
       r1_spd = (r1_spd * r1_spd * r1_spd) * 10000;
       MResonator1.setSpeed( r1_spd );
 
       // prepare res 2
 
+if (res2_used) {
+
       float r2_pitch  = ((int)MParMod[PAR_RES2_OCT]  * 12.0)
-                  + ((int)MParMod[PAR_RES2_SEMI] * 1.0 )
-                  + (     MParMod[PAR_RES2_CENT]       );
+                      + ((int)MParMod[PAR_RES2_SEMI] * 1.0 )
+                      + (     MParMod[PAR_RES2_CENT]       );
 
       float res2_hz = MIP_NoteToHz(note_key + note_tuning + r2_pitch);
       res2_hz = MIP_Clamp(res2_hz,20,20000);
@@ -524,6 +568,8 @@ public:
       //imp2 = (imp2 * imp2 * imp2 * imp2 * imp2);
       MResonator2.setImpulse(imp2);
 
+}
+
       float r2_spd = 1.0 - MIP_Clamp( MParMod[PAR_RES2_SPEED], 0,1 );
       r2_spd = (r2_spd * r2_spd * r2_spd) * 10000;
       MResonator2.setSpeed( r2_spd );
@@ -538,73 +584,95 @@ public:
 
       // sum inputs
 
+      float rnd = 0.0;
+      float o1_in = 0.0;
+      float o2_in = 0.0;
+      float r1_in = 0.0;
+      float r2_in = 0.0;
+
       // osc 1
 
-      float rnd = MIP_RandomSigned();
+ if (osc1_used) {
 
-      float o1_in = O1    * MIP_Clamp( MParMod[PAR_OSC1_IN_O1], 0, 1 )
-              + O2    * MIP_Clamp( MParMod[PAR_OSC1_IN_O2], 0, 1 )
-              + R1    * MIP_Clamp( MParMod[PAR_OSC1_IN_R1], 0, 1 )
-              + R2    * MIP_Clamp( MParMod[PAR_OSC1_IN_R2], 0, 1 )
-              + rnd   * MIP_Clamp( MParMod[PAR_OSC1_IN_N],  0, 1 )
-              + input * MIP_Clamp( MParMod[PAR_OSC1_IN_A],  0, 1 );
+      rnd = MIP_RandomSigned();
+
+      o1_in = O1    * MIP_Clamp( MParMod[PAR_OSC1_IN_O1], 0, 1 )
+            + O2    * MIP_Clamp( MParMod[PAR_OSC1_IN_O2], 0, 1 )
+            + R1    * MIP_Clamp( MParMod[PAR_OSC1_IN_R1], 0, 1 )
+            + R2    * MIP_Clamp( MParMod[PAR_OSC1_IN_R2], 0, 1 )
+            + rnd   * MIP_Clamp( MParMod[PAR_OSC1_IN_N],  0, 1 )
+            + input * MIP_Clamp( MParMod[PAR_OSC1_IN_A],  0, 1 );
 
       o1_in = MO1InputFilter.process(o1_in);
       //O1 = MOscillator1.process(o1_in);
 
+}
+
       // osc 2
+
+ if (osc2_used) {
 
       rnd = MIP_RandomSigned();
 
-      float o2_in = O1    * MIP_Clamp( MParMod[PAR_OSC2_IN_O1], 0, 1 )
-              + O2    * MIP_Clamp( MParMod[PAR_OSC2_IN_O2], 0, 1 )
-              + R1    * MIP_Clamp( MParMod[PAR_OSC2_IN_R1], 0, 1 )
-              + R2    * MIP_Clamp( MParMod[PAR_OSC2_IN_R2], 0, 1 )
-              + rnd   * MIP_Clamp( MParMod[PAR_OSC2_IN_N],  0, 1 )
-              + input * MIP_Clamp( MParMod[PAR_OSC2_IN_A],  0, 1 );
+      o2_in = O1    * MIP_Clamp( MParMod[PAR_OSC2_IN_O1], 0, 1 )
+            + O2    * MIP_Clamp( MParMod[PAR_OSC2_IN_O2], 0, 1 )
+            + R1    * MIP_Clamp( MParMod[PAR_OSC2_IN_R1], 0, 1 )
+            + R2    * MIP_Clamp( MParMod[PAR_OSC2_IN_R2], 0, 1 )
+            + rnd   * MIP_Clamp( MParMod[PAR_OSC2_IN_N],  0, 1 )
+            + input * MIP_Clamp( MParMod[PAR_OSC2_IN_A],  0, 1 );
 
       o2_in = MO2InputFilter.process(o2_in);
       //O2 = MOscillator2.process(o2_in);
 
+}
+
       // res 1
+
+if (res1_used) {
 
       rnd = MIP_RandomSigned();
 
-      float r1_in = O1    * MIP_Clamp( MParMod[PAR_RES1_IN_O1], 0, 1 )
-              + O2    * MIP_Clamp( MParMod[PAR_RES1_IN_O2], 0, 1 )
-              + R1    * MIP_Clamp( MParMod[PAR_RES1_IN_R1], 0, 1 )
-              + R2    * MIP_Clamp( MParMod[PAR_RES1_IN_R2], 0, 1 )
-              + rnd   * MIP_Clamp( MParMod[PAR_RES1_IN_N],  0, 1 )
-              + input * MIP_Clamp( MParMod[PAR_RES1_IN_A],  0, 1 );
+      r1_in = O1    * MIP_Clamp( MParMod[PAR_RES1_IN_O1], 0, 1 )
+            + O2    * MIP_Clamp( MParMod[PAR_RES1_IN_O2], 0, 1 )
+            + R1    * MIP_Clamp( MParMod[PAR_RES1_IN_R1], 0, 1 )
+            + R2    * MIP_Clamp( MParMod[PAR_RES1_IN_R2], 0, 1 )
+            + rnd   * MIP_Clamp( MParMod[PAR_RES1_IN_N],  0, 1 )
+            + input * MIP_Clamp( MParMod[PAR_RES1_IN_A],  0, 1 );
 
       r1_in = MR1InputFilter.process(r1_in);
       //R1 = MResonator1.process(r1_in);
 
+}
+
       // res 2
+
+ if (res2_used) {
 
       rnd = MIP_RandomSigned();
 
-      float r2_in = O1    * MIP_Clamp( MParMod[PAR_RES2_IN_O1], 0, 1 )
-              + O2    * MIP_Clamp( MParMod[PAR_RES2_IN_O2], 0, 1 )
-              + R1    * MIP_Clamp( MParMod[PAR_RES2_IN_R1], 0, 1 )
-              + R2    * MIP_Clamp( MParMod[PAR_RES2_IN_R2], 0, 1 )
-              + rnd   * MIP_Clamp( MParMod[PAR_RES2_IN_N],  0, 1 )
-              + input * MIP_Clamp( MParMod[PAR_RES2_IN_A],  0, 1 );
+      r2_in = O1    * MIP_Clamp( MParMod[PAR_RES2_IN_O1], 0, 1 )
+            + O2    * MIP_Clamp( MParMod[PAR_RES2_IN_O2], 0, 1 )
+            + R1    * MIP_Clamp( MParMod[PAR_RES2_IN_R1], 0, 1 )
+            + R2    * MIP_Clamp( MParMod[PAR_RES2_IN_R2], 0, 1 )
+            + rnd   * MIP_Clamp( MParMod[PAR_RES2_IN_N],  0, 1 )
+            + input * MIP_Clamp( MParMod[PAR_RES2_IN_A],  0, 1 );
 
       r2_in = MR2InputFilter.process(r2_in);
       //R2 = MResonator2.process(r2_in);
 
+}
+
       // process
 
-      O1 = MOscillator1.process(o1_in);
-      O2 = MOscillator2.process(o2_in);
-      R1 = MResonator1.process(r1_in);
-      R2 = MResonator2.process(r2_in);
+      if (osc1_used) O1 = MOscillator1.process(o1_in);
+      if (osc2_used) O2 = MOscillator2.process(o2_in);
+      if (res1_used) R1 = MResonator1.process(r1_in);
+      if (res2_used) R2 = MResonator2.process(r2_in);
 
       float out = (O1 * MIP_Clamp( MParMod[PAR_MASTER_OSC1_OUT], 0, 1 ))
-            + (O2 * MIP_Clamp( MParMod[PAR_MASTER_OSC2_OUT], 0, 1 ))
-            + (R1 * MIP_Clamp( MParMod[PAR_MASTER_RES1_OUT], 0, 1 ))
-            + (R2 * MIP_Clamp( MParMod[PAR_MASTER_RES2_OUT], 0, 1 ));
+                + (O2 * MIP_Clamp( MParMod[PAR_MASTER_OSC2_OUT], 0, 1 ))
+                + (R1 * MIP_Clamp( MParMod[PAR_MASTER_RES1_OUT], 0, 1 ))
+                + (R2 * MIP_Clamp( MParMod[PAR_MASTER_RES2_OUT], 0, 1 ));
 
       //------------------------------
       // post
@@ -642,6 +710,12 @@ public:
 
     //memcpy(output_buffer,MSliceBuffer,MIP_AUDIO_SLICE_SIZE*sizeof(float));
     memcpy(output_buffer,MSliceBuffer,ALength*sizeof(float));
+
+    //float* src = MSliceBuffer;
+    //float* dst = output_buffer;
+    //for (uint32_t i=0; i<ALength; i++) {
+    //  *dst++ = *src++;
+    //}
 
     //------------------------------
     //

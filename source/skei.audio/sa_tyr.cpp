@@ -37,7 +37,8 @@ typedef MIP_VoiceManager<sa_tyr_voice,SA_TYR_NUM_VOICES> sa_tyr_voice_manager;
 
 const clap_plugin_descriptor_t sa_tyr_descriptor = {
   .clap_version  = CLAP_VERSION,
-  .id            = "skei.audio/sa_tyr/0.0.9",
+  //.id            = "skei.audio/sa_tyr/0.0.12",
+  .id            = "skei.audio/" SA_TYR_PLUGIN_NAME "/" SA_TYR_PLUGIN_VERSION,
   .name          = SA_TYR_PLUGIN_NAME,
   .vendor        = "skei.audio",
   .url           = "https://torhelgeskei.com",
@@ -80,7 +81,7 @@ public:
   : MIP_Plugin(ADescriptor,AHost) {
     setInitialEditorSize(SA_TYR_EDITOR_WIDTH,SA_TYR_EDITOR_HEIGHT);
     MVoiceManager.setProcessThreaded(true);
-    MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_INTERLEAVED);
+    MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_QUANTIZED);
     //MVoiceManager.setEventVoiceSplit(true);
   }
 

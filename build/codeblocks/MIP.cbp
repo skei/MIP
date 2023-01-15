@@ -110,12 +110,14 @@
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
-					<Add option="-O3" />
+					<Add option="-O2" />
 					<Add option="-fPIC" />
 					<Add option="-DMIP_PLUGIN" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
 					<Add option="-fPIE" />
 					<Add library="pthread" />
 					<Add library="X11" />
@@ -336,7 +338,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-std=c++11" />
+			<Add option="-std=c++17" />
 			<Add option="-Wl,--as-needed" />
 			<Add option="-Wno-unknown-pragmas" />
 			<Add directory="../../include" />
