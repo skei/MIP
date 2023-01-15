@@ -16,7 +16,7 @@ private:
 
   clap_note_port_info_t MNotePortInfo = {
     /*clap_id  .id                    =*/ 0,
-    /*uint32_t .supported_dialects    =*/ CLAP_NOTE_DIALECT_CLAP,
+    /*uint32_t .supported_dialects    =*/ CLAP_NOTE_DIALECT_CLAP, // | CLAP_NOTE_DIALECT_MIDI | CLAP_NOTE_DIALECT_MIDI_MPE,
     /*uint32_t .preferred_dialect     =*/ CLAP_NOTE_DIALECT_CLAP,
     /*char     .name[CLAP_NAME_SIZE]  =*/ "Notes"
   };

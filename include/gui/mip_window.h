@@ -34,12 +34,6 @@ c) do_widget update
   typedef MIP_XcbWindow MIP_ImplementedWindow;
 #endif
 
-//#define MIP_WINDOW_MAX_DIRTY_RECTS 1024
-//#define MIP_WINDOW_TIMER_MS 20
-//#define MIP_WINDOW_TIMER_ID 123
-
-//#define MIP_WINDOW_TIMER_FLUSH_DIRTY_RECTS
-
 //----------------------------------------------------------------------
 //
 //
@@ -104,10 +98,7 @@ private:
 
   int32_t           MCurrentCursor        = MIP_CURSOR_DEFAULT;
 
-  //MIP_IRect MDirtyRects[MIP_MAX_DIRTY_RECTS] = {0};
-  //MIP_Queue<MIP_IRect,MIP_WINDOW_MAX_DIRTY_RECTS> MDirtyRectsQueue = {};
   MIP_Queue<MIP_Widget*,MIP_WINDOW_MAX_DIRTY_WIDGETS> MDirtyWidgetsQueue = {};
-
   uint32_t          MDirtyIndex           = 0xffffffff;
 
   uint32_t          MRenderBufferWidth    = 0;

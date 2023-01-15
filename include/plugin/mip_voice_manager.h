@@ -32,7 +32,7 @@ private:
 //------------------------------
 
   __MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
-  float MVoiceBuffer[COUNT * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE] = {0};
+  float MVoiceBuffer[COUNT * MIP_AUDIO_MAX_BLOCK_SIZE] = {0};
 
   MIP_Voice<VOICE>              MVoices[COUNT]        = {};
   MIP_VoiceContext              MVoiceContext         = {};
@@ -108,6 +108,9 @@ public:
   //----------
 
   void activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count, MIP_ParameterArray* AParameters) {
+
+    MIP_Print("AParameters %p\n",AParameters);
+
     MVoiceContext.process_context   = nullptr; //
     MVoiceContext.buffer            = MVoiceBuffer;
     MVoiceContext.min_frames_count  = min_frames_count;
@@ -115,7 +118,7 @@ public:
     MVoiceContext.samplerate        = sample_rate;
     MVoiceContext.parameters        = AParameters;
     for (uint32_t i=0; i<COUNT; i++) {
-      MVoices[i].init(i,&MVoiceContext,AParameters);
+      MVoices[i].init(i,&MVoiceContext);
     }
   }
 
@@ -325,7 +328,7 @@ public:
       if (MVoices[i].state == MIP_VOICE_WAITING) {
         // still waiting, not started? something might be wrong..
         MVoices[i].state = MIP_VOICE_OFF;
-        //queueNoteEnd(MVoices[i].note);      // ???
+        queueNoteEnd(MVoices[i].note);      // ???
         MIP_Print("voice %i -> OFF\n",i);
       }
       if (MVoices[i].state == MIP_VOICE_FINISHED) {
@@ -377,7 +380,7 @@ public:
       for (uint32_t i=0; i<MNumActiveVoices; i++) {
         uint32_t voice = MActiveVoices[i];
         float* buffer = MVoiceBuffer;
-        buffer += (voice * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
+        buffer += (voice * MIP_AUDIO_MAX_BLOCK_SIZE);
         MIP_AddMonoToStereoBuffer(output,buffer,blocksize);
       }
     } // num voices > 0
@@ -427,7 +430,12 @@ private:
           }
         }
       }
-      if (lowest_index >= 0) return lowest_index;
+
+      if (lowest_index >= 0) {
+        // kill released note..
+        queueNoteEnd( MVoices[lowest_index].note );
+        return lowest_index;
+      }
     }
     return -1;
   }

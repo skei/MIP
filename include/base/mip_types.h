@@ -18,6 +18,9 @@
 
 //----------------------------------------------------------------------
 
+#define MIP_SAMPLE_T  float
+#define MIP_PARAM_T   double
+
 #include "base/types/mip_array.h"
 #include "base/types/mip_assoc_array.h"
 #include "base/types/mip_buffer.h"

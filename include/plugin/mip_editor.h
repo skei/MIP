@@ -204,7 +204,6 @@ public:
     if (parameter) {
       MIP_Widget* widget = parameter->getWidget();
       if (widget) {
-
         // widget->setValue(AValue);
         uint32_t num = widget->getNumParameters();
         for (uint32_t i=0; i<num; i++) {
@@ -212,20 +211,11 @@ public:
             widget->setValue(i,AValue);
           }
         }
-
         if (ARedraw) {
-
           // tell widget to redraw itself
           // (send do_widget_redraw to its parent)
           widget->redraw(/*MIP_WIDGET_REDRAW_VALUE*/);
-
-//          MIP_DRect r = widget->getRect();
-//          MWindow->invalidate(r.x,r.y,r.w,r.h);
-//          MWindow->queueDirtyRect(r.x,r.y,r.w,r.h);
-
         }
-
-
       }
     }
   }
@@ -290,7 +280,7 @@ public: // clap.gui
 
   //----------
 
-  // see also: MIP_Window::on_window_resize
+  // see: MIP_Window::on_window_resize
 
   virtual bool adjustSize(uint32_t *width, uint32_t *height) {
 //    //double s = 1.0;
@@ -364,7 +354,6 @@ public: // clap.gui
       //MWindow->on_window_resize(width,height);
       //MIP_Painter* painter = MWindow->getWindowPainter();
       //painter->resetClip();
-
 
 //
 //      //painter->makeCurrent(0);

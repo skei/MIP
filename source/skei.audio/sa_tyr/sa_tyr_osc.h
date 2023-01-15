@@ -2,6 +2,7 @@
 #define sa_tyr_osc_included
 //----------------------------------------------------------------------
 
+#include "base/utils/mip_fast_math.h"
 #include "base/utils/mip_interpolation.h"
 #include "audio/old/waveforms/mip_dsf_waveform.h"
 
@@ -224,7 +225,9 @@ public:
         //T tri1  = squ1 * (1.0 - _tri) + (z1 * 4.0) * _tri;
         T tri1  = tri_z1 * 4.0;
         // sin
+
         T sin1  = sin(t * MIP_PI2);
+//        T sin1  = MIP_SinF4( t * MIP_PI2);
 
         out     = MIP_Interpolate_Linear(_tri,squ1,tri1);
         out     = MIP_Interpolate_Linear(_sin,out,sin1);

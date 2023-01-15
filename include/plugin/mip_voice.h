@@ -42,6 +42,8 @@ public:
   uint32_t            event_mode  = MIP_VOICE_EVENT_MODE_BLOCK;
   MIP_VoiceEventQueue events      = {};
 
+//MIP_ParameterArray* parameters  = nullptr;
+
 //------------------------------
 public:
 //------------------------------
@@ -58,8 +60,8 @@ public:
 public:
 //------------------------------
 
-  void init(uint32_t AIndex, MIP_VoiceContext* AContext, MIP_ParameterArray* AParameters) {
-    //index = AIndex;
+  void init(uint32_t AIndex, MIP_VoiceContext* AContext) {
+    //parameters = AParameters;
     context = AContext;
     voice.init(AIndex,context);
   }
@@ -149,7 +151,9 @@ private:
         //MIP_Print("event\n");
         int32_t length = event.time - current_time;
         if (length > 0) {
+//MIP_Print("state %i current_time %i length %i\n",state,current_time,length);
           state = voice.process(state,current_time,length);
+//MIP_PRINT;
           remaining -= length;
           current_time += length;
         }

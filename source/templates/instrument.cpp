@@ -117,7 +117,7 @@ public:
 
     float* buffer = MContext->buffer;
     buffer += AOffset;
-    buffer += (MIndex * MIP_VOICE_MANAGER_MAX_FRAME_BUFFER_SIZE);
+    buffer += (MIndex * MIP_VOICE_MANAGER_MAX_BLOCK_SIZE);
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
       for (uint32_t i=0; i<ALength; i++) {
         ph = MIP_Fract(ph);

@@ -4,16 +4,17 @@
 
 #include <math.h>
 #include "base/mip.h"
+#include "base/utils/mip_fast_math.h"
 
 //----------------------------------------------------------------------
 // db
 //----------------------------------------------------------------------
 
-float MIP_DbToVolume(float db) {
+double MIP_DbToVolume(double db) {
   return powf(10.0f,0.05f*db);
 }
 
-float MIP_VolumeToDb(float volume) {
+double MIP_VolumeToDb(double volume) {
   return 20.0f * log10f(volume);
 }
 
@@ -92,13 +93,16 @@ float MIP_KillDenormal2(float val) {
 // hz
 //----------------------------------------------------------------------
 
-float MIP_NoteToHz(float ANote) {
+double MIP_NoteToHz(double ANote) {
+
   return 440.0 * pow(2.0,(ANote - 69) * MIP_INV12F);
+  //return 440.0 * MIP_PowF2(2.0,(ANote - 69) * MIP_INV12F);
+
 }
 
 //----------
 
-float MIP_HzToSamples(float AHertz, float ASampleRate) {
+double MIP_HzToSamples(double AHertz, double ASampleRate) {
   MIP_Assert (AHertz > 0.0f);
   return ASampleRate / AHertz;
 }

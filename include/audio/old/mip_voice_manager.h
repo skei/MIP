@@ -32,17 +32,15 @@ class MIP_VoiceManager {
   // note_end queue
   typedef MIP_Queue<MIP_Note,VOICE_COUNT * 2> MIP_NoteQueue; // why *2 ?
 
-  #define MIP_VOICE_NUM_CHANNELS    16
-  #define MIP_VOICE_NUM_NOTES       128
-  #define MIP_VOICE_MAX_FRAMESIZE   4096
-  #define MIP_VOICE_BUFFERSIZE      (VOICE_COUNT * MIP_VOICE_MAX_FRAMESIZE)
+  #define MIP_VOICE_BUFFERSIZE      (VOICE_COUNT * MIP_VOICE_MANAGER_MAX_BLOCK_SIZE)
 
 //------------------------------
 private:
 //------------------------------
 
+
   /*__MIP_ALIGNED(MIP_ALIGNMENT_CACHE)*/ float MVoiceBuffer[MIP_VOICE_BUFFERSIZE]     = {0};
-  /*__MIP_ALIGNED(MIP_ALIGNMENT_CACHE)*/ float MFrameBuffer[MIP_VOICE_MAX_FRAMESIZE]  = {0};
+  /*__MIP_ALIGNED(MIP_ALIGNMENT_CACHE)*/ float MFrameBuffer[MIP_VOICE_MAX_FRAMESIZE]  = {0}; // -> MIP_VOICE_MANAGER_MAX_BLOCK_SIZE ???
 
   MIP_VoiceContext  MVoiceContext                 = {};
   MIP_NoteQueue     MNoteEndQueue                 = {};

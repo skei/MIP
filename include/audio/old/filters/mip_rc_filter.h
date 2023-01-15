@@ -2,7 +2,8 @@
 #define mip_rc_filter_included
 //----------------------------------------------------------------------
 
-#include <math.h> // expf
+//#include <math.h> // expf
+#include "base/utils/mip_fast_math.h" // MIP_ExpF
 
 //----------
 
@@ -22,9 +23,9 @@ class MIP_RcFilter {
     void  setValue(T AValue)     { MValue = AValue; }
     void  setTarget(T AValue)    { MTarget = AValue; }
     void  setWeight(T AValue)    { MWeight = AValue; }
-    T getValue(void)             { return MValue; }
-    T getTarget(void)            { return MTarget; }
-    T getWeight(void)            { return MWeight; }
+    T     getValue(void)         { return MValue; }
+    T     getTarget(void)        { return MTarget; }
+    T     getWeight(void)         { return MWeight; }
 
   public:
 
@@ -55,7 +56,10 @@ class MIP_RcFilter {
 
     void setFrequency(T AFrequency/*, T ASampleRate*/) {
       //if (ASampleRate > 0)
-        MWeight = 1 - expf(-MIP_PI2 * AFrequency / MSampleRate );
+
+        //MWeight = 1 - expf(-MIP_PI2 * AFrequency / MSampleRate );
+        MWeight = 1 - MIP_ExpF(-MIP_PI2 * AFrequency / MSampleRate );
+
       //else
       //  MWeight = 0;
     }
@@ -66,7 +70,9 @@ class MIP_RcFilter {
     */
 
     void setTime(T ATime) {
-      if (ATime > 0) MWeight = 1 - expf(-1 / ATime);
+
+      //if (ATime > 0) MWeight = 1 - expf(-1 / ATime);
+      if (ATime > 0) MWeight = 1 - MIP_ExpF(-1 / ATime);
       else MWeight = 0;
     }
 

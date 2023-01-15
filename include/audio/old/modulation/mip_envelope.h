@@ -149,7 +149,10 @@ class MIP_Envelope {
       T result = process();
       T target = MStages[MStage].target;
       T rate   = MStages[MStage].rate;
+
       MValue += (target - MValue) * (1 - pow(1 - rate, ASteps));
+      //MValue += (target - MValue) * (1 - MIP_PowF2(1 - rate, ASteps));
+
       return result;
     }
 
