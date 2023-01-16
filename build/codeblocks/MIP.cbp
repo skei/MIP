@@ -13,8 +13,9 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-O3" />
 					<Add option="-fno-pie" />
+					<Add option="-ffast-math" />
 					<Add option="-DMIP_EXE" />
 				</Compiler>
 				<Linker>
@@ -110,8 +111,10 @@
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-O3" />
 					<Add option="-fPIC" />
+					<Add option="-pthread" />
+					<Add option="-ffast-math" />
 					<Add option="-DMIP_PLUGIN" />
 				</Compiler>
 				<Linker>
@@ -209,8 +212,9 @@
 				<Option type="1" />
 				<Option compiler="mingw" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-O3" />
 					<Add option="-fno-pie" />
+					<Add option="-ffast-math" />
 					<Add option="-DMIP_EXE" />
 				</Compiler>
 				<Linker>
@@ -275,8 +279,9 @@
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-O3" />
 					<Add option="-fPIC" />
+					<Add option="-ffast-math" />
 					<Add option="-DMIP_PLUGIN" />
 				</Compiler>
 				<Linker>
@@ -338,7 +343,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-std=c++17" />
+			<Add option="-std=gnu++17" />
 			<Add option="-Wl,--as-needed" />
 			<Add option="-Wno-unknown-pragmas" />
 			<Add directory="../../include" />

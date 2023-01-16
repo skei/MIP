@@ -217,7 +217,7 @@ public:
         MVoices[voice].events.write(ve);
       }
 
-      #ifdef MIP_VOICE_MANAGER_SEND_PARAMS_TO_ALL_VOICES
+      #ifdef MIP_VOICE_MANAGER_SEND_GLOBAL_PARAMS_TO_ALL_VOICES
       else {
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_VALUE, event->header.time, event->param_id, event->value);
         MVoices[voice].events.write(ve);
@@ -248,7 +248,7 @@ public:
         MVoices[voice].events.write(ve);
       }
 
-      #ifdef MIP_VOICE_MANAGER_SEND_MODS_TO_ALL_VOICES
+      #ifdef MIP_VOICE_MANAGER_SEND_GLOBAL_MODS_TO_ALL_VOICES
       else {
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_MOD, event->header.time, event->param_id, event->amount);
         MVoices[voice].events.write(ve);

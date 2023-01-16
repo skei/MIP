@@ -147,7 +147,7 @@ public:
 
       case SA_TYR_PM_TYPE_SYNC_CLAMP: {
         t *= 1.0 + (MPhaseModAmount * 12);
-//        t = MIP_Clamp(t,0,1); // do we need this?
+        t = MIP_Clamp(t,0,1); // do we need this?
         t = MIP_Fract(t);
         break;
       }

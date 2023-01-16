@@ -205,7 +205,12 @@ public:
     MResonator1.restart();
     MResonator2.restart();
     MAmpEnvelope.noteOn();
+
     MFilter.reset();
+    //MO1InputFilter.reset();
+    //MO2InputFilter.reset();
+    //MR1InputFilter.reset();
+    //MR2InputFilter.reset();
 
     O1 = 0.0;
     O2 = 0.0;
@@ -240,6 +245,15 @@ public:
   //----------
 
   void noteExpression(int32_t expr, double value) {
+    switch(expr) {
+      case CLAP_NOTE_EXPRESSION_VOLUME:     volume(value);      break;
+      case CLAP_NOTE_EXPRESSION_PAN:        pan(value);         break;
+      case CLAP_NOTE_EXPRESSION_TUNING:     tuning(value);      break;
+      case CLAP_NOTE_EXPRESSION_VIBRATO:    vibrato(value);     break;
+      case CLAP_NOTE_EXPRESSION_EXPRESSION: expression(value);  break;
+      case CLAP_NOTE_EXPRESSION_BRIGHTNESS: brightness(value);  break;
+      case CLAP_NOTE_EXPRESSION_PRESSURE:   pressure(value);    break;
+    }
   }
 
   //----------
@@ -400,17 +414,7 @@ public:
       // not all parameters are 0..1 !!!
 
       for (uint32_t j=0; j<PARAM_COUNT; j++) {
-        //MParModTargets[j] = MIP_Clamp( (MParameters[j] + MModulations[j]), 0, 1);
-
-        // MParameters = 0x80000000
-
-        //double a = MParModTargets[j];
-        //double b = MParameters[j];
-        //double c = MModulations[j];
-
         MParModTargets[j] = MParameters[j] + MModulations[j];
-
-        //T diff = abs( MParModTargets[j] - MParMod[j] );
         double diff = MParModTargets[j] - MParMod[j];
         if (abs(diff) < 0.001) MParMod[j] = MParModTargets[j];
         else MParMod[j] += (diff * MParModFactors[j]);
@@ -452,12 +456,12 @@ if (osc1_used) {
       o1_mode = MIP_Clamp( o1_mode, 0, SA_TYR_OSC_TYPE_COUNT - 1);
       MOscillator1.setType(o1_mode);
 
-}
-
       float o1s = MIP_Clamp( MParMod[PAR_OSC1_IN_S], 0, 1 );
       o1s   = 1.0 - o1s;
       o1s   = (o1s * o1s * o1s * o1s);
       MO1InputFilter.setWeight(o1s);
+
+}
 
       // prepare osc 2
 
@@ -485,12 +489,12 @@ if (osc2_used) {
       o2_mode = MIP_Clamp( o2_mode, 0, SA_TYR_OSC_TYPE_COUNT - 1);
       MOscillator2.setType(o2_mode);
 
-}
-
       float o2s = MIP_Clamp( MParMod[PAR_OSC2_IN_S], 0, 1 );
       o2s = 1.0 - o2s;
       o2s = (o2s * o2s * o2s * o2s);
       MO2InputFilter.setWeight(o2s);
+
+}
 
       // prepare res 1
 
@@ -514,11 +518,6 @@ if (res1_used) {
       MResonator1.setDamp(r1_damp);
       MResonator1.setRough(r1_rough);
 
-      float r1s = MIP_Clamp( MParMod[PAR_RES1_IN_S], 0, 1 );
-      r1s = 1.0 - r1s;
-      r1s = (r1s * r1s * r1s * r1s);
-      MR1InputFilter.setWeight(r1s);
-
       uint32_t r1_mode = MParMod[PAR_RES1_TYPE];
       r1_mode = MIP_Clamp( r1_mode, 0, SA_TYR_RES_TYPE_COUNT - 1);
       MResonator1.setMode(r1_mode);
@@ -527,11 +526,16 @@ if (res1_used) {
       //imp1 = (imp1 * imp1 * imp1 * imp1 * imp1);
       MResonator1.setImpulse(imp1);
 
-}
-
       float r1_spd = 1.0 - MIP_Clamp(MParMod[PAR_RES1_SPEED],0,1);
       r1_spd = (r1_spd * r1_spd * r1_spd) * 10000;
       MResonator1.setSpeed( r1_spd );
+
+      float r1s = MIP_Clamp( MParMod[PAR_RES1_IN_S], 0, 1 );
+      r1s = 1.0 - r1s;
+      r1s = (r1s * r1s * r1s * r1s);
+      MR1InputFilter.setWeight(r1s);
+
+}
 
       // prepare res 2
 
@@ -555,10 +559,6 @@ if (res2_used) {
       MResonator2.setDamp(r2_damp);
       MResonator2.setRough(r2_rough);
 
-      float r2s = MIP_Clamp( MParMod[PAR_RES2_IN_S], 0, 1 );
-      r2s = 1.0 - r2s;
-      r2s = (r2s * r2s * r2s * r2s);
-      MR2InputFilter.setWeight(r2s);
 
       uint32_t r2_mode = MParMod[PAR_RES2_TYPE];
       r2_mode = MIP_Clamp( r2_mode, 0, SA_TYR_RES_TYPE_COUNT - 1);
@@ -568,23 +568,28 @@ if (res2_used) {
       //imp2 = (imp2 * imp2 * imp2 * imp2 * imp2);
       MResonator2.setImpulse(imp2);
 
-}
-
       float r2_spd = 1.0 - MIP_Clamp( MParMod[PAR_RES2_SPEED], 0,1 );
       r2_spd = (r2_spd * r2_spd * r2_spd) * 10000;
       MResonator2.setSpeed( r2_spd );
+
+      float r2s = MIP_Clamp( MParMod[PAR_RES2_IN_S], 0, 1 );
+      r2s = 1.0 - r2s;
+      r2s = (r2s * r2s * r2s * r2s);
+      MR2InputFilter.setWeight(r2s);
+
+}
 
       //------------------------------
       // processing
       //------------------------------
 
-      float in0 = *input0++;
-      float in1 = *input1++;
-      float input  = (in0 + in1) * 0.5;
+      float in0   = *input0++;
+      float in1   = *input1++;
+      float input = (in0 + in1) * 0.5;
 
       // sum inputs
 
-      float rnd = 0.0;
+      float rnd   = 0.0;
       float o1_in = 0.0;
       float o2_in = 0.0;
       float r1_in = 0.0;

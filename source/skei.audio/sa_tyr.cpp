@@ -81,7 +81,7 @@ public:
   : MIP_Plugin(ADescriptor,AHost) {
     setInitialEditorSize(SA_TYR_EDITOR_WIDTH,SA_TYR_EDITOR_HEIGHT);
     MVoiceManager.setProcessThreaded(true);
-    MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_QUANTIZED);
+    MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_INTERLEAVED);
     //MVoiceManager.setEventVoiceSplit(true);
   }
 
@@ -240,14 +240,19 @@ public: // audio
 //------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
-    MVoiceManager.processAudioBlock(AContext);
+
     float** buffer  = AContext->process->audio_outputs[0].data32;
     uint32_t length = AContext->process->frames_count;
+
+    MIP_ClearStereoBuffer(buffer,length);
+    MVoiceManager.processAudioBlock(AContext);
+
     // gain & pan
     double gain     = MParameters[PAR_MASTER_VOL]->getValue();
     double pan      = MParameters[PAR_MASTER_PAN]->getValue();
     double left     = (1.0 - pan) * gain;
     double right    = (0.0 + pan) * gain;
+
     MIP_ScaleStereoBuffer(buffer,left,right,length);
   }
 
