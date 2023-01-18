@@ -28,11 +28,11 @@ protected:
   MIP_Color MArcBackColor             = MIP_COLOR_DARK_GRAY;
   MIP_Color MArcValueColor            = MIP_COLOR_LIGHT_GRAY;
   MIP_Color MInteractiveArcValueColor = MIP_COLOR_WHITE;
-  double    MArcThickness             = 10.0;
+  double    MArcThickness             = 8.0;
 
-  double    MModArcOffset             = 13.0;
-  double    MModArcThickness          = 2.0;
-  MIP_Color MModArcColor              = MIP_COLOR_BLACK;
+  double    MModArcOffset             = 2.0;// 13.0;
+  double    MModArcThickness          = 4.0;
+  //MIP_Color MModArcColor              = MIP_COLOR_LIGHT_RED;
 
 //------------------------------
 public:
@@ -69,11 +69,13 @@ public:
 public:
 //------------------------------
 
-  virtual void setDrawArc(bool ADraw=true)         { MDrawArc = ADraw; }
-  virtual void setArcBackColor(MIP_Color AColor)   { MArcBackColor = AColor; }
-  virtual void setArcValueColor(MIP_Color AColor)  { MArcValueColor = AColor; }
+  virtual void setDrawArc(bool ADraw=true)                    { MDrawArc = ADraw; }
+  virtual void setArcBackColor(MIP_Color AColor)              { MArcBackColor = AColor; }
+  virtual void setArcValueColor(MIP_Color AColor)             { MArcValueColor = AColor; }
   virtual void setInteractiveArcValueColor(MIP_Color AColor)  { MInteractiveArcValueColor = AColor; }
-  virtual void setArcThickness(double AThickness)  { MArcThickness = AThickness; }
+  virtual void setArcThickness(double AThickness)             { MArcThickness = AThickness; }
+  virtual void setModArcThickness(double AThickness)          { MModArcThickness = AThickness; }
+  virtual void setModArcOffset(double AOffset)                { MModArcOffset = AOffset; }
 
 //------------------------------
 public:
@@ -150,31 +152,31 @@ public:
 
     // draw modulation
 
-    if (MDrawModulation) {
-      if (!isDisabled()) {
-
-        painter->setLineWidth(MModArcThickness*S);
-        painter->setDrawColor(MModArcColor);
-
-        double modulation = MModulations[0];
-
-        if (modulation < 0) {
-          if ((value + modulation) < 0) modulation = - value;
-          double aa1 = (0.35 + ((value)  * 0.8)) * MIP_PI2;
-          double aa2 = (       ((-modulation) * 0.8)) * MIP_PI2;
-          painter->drawArc(cx,cy,r - (MModArcOffset*S),aa1,aa2);
-        }
-        else if (modulation > 0) {
-          if ((value + modulation) > 1) modulation = 1 - value;
-          double aa1 = (0.35 + ((value+modulation)  * 0.8)) * MIP_PI2;
-          double aa2 = (       ((modulation) * 0.8)) * MIP_PI2;
-          painter->drawArc(cx,cy,r - (MModArcOffset*S),aa1,aa2);
-        }
-        //else {
-        //}
-
-      }
-    }
+//    if (MDrawModulation) {
+//      if (!isDisabled()) {
+//
+//        painter->setLineWidth(MModArcThickness*S);
+//        painter->setDrawColor(MModArcColor);
+//
+//        double modulation = MModulations[0];
+//
+//        if (modulation < 0) {
+//          if ((value + modulation) < 0) modulation = - value;
+//          double aa1 = (0.35 + ((value)  * 0.8)) * MIP_PI2;
+//          double aa2 = (       ((-modulation) * 0.8)) * MIP_PI2;
+//          painter->drawArc(cx,cy,r - (MModArcOffset*S),aa1,aa2);
+//        }
+//        else if (modulation > 0) {
+//          if ((value + modulation) > 1) modulation = 1 - value;
+//          double aa1 = (0.35 + ((value+modulation)  * 0.8)) * MIP_PI2;
+//          double aa2 = (       ((modulation) * 0.8)) * MIP_PI2;
+//          painter->drawArc(cx,cy,r - (MModArcOffset*S),aa1,aa2);
+//        }
+//        //else {
+//        //}
+//
+//      }
+//    }
 
     // draw indicator
 
@@ -194,6 +196,55 @@ public:
 
   }
 
+  //----------
+
+  void drawModulation(MIP_PaintContext* AContext) override {
+    MIP_Window* window = (MIP_Window*)getOwnerWindow();
+    double S = window->getWindowScale();
+    MIP_DRect mrect = getRect();
+    MIP_Painter* painter = AContext->painter;
+
+    double value = getValue();
+    MIP_Parameter* param = getParameter();
+    if (param) {
+      value = param->normalizeValue(value);
+    }
+
+    double thickness  = MArcThickness * S;
+    //double bthick = MArcThickness * S * 0.5;
+
+    double cx = mrect.x + (mrect.w * 0.5);
+    double cy = mrect.y + (mrect.h * 0.5);
+    double r  = (mrect.w - thickness)  * 0.5;
+    //double br = (mrect.w - bthick) * 0.5;
+
+    if (!isDisabled()) {
+
+      painter->setLineWidth(MModArcThickness*S);
+      //painter->setDrawColor(MModArcColor);
+      painter->setDrawColor(MModulationColor);
+
+      double modulation = MModulations[0];
+
+      if (modulation < 0) {
+        if ((value + modulation) < 0) modulation = - value;
+        double aa1 = (0.35 + ((value)  * 0.8)) * MIP_PI2;
+        double aa2 = (       ((-modulation) * 0.8)) * MIP_PI2;
+        painter->drawArc(cx,cy,r - (MModArcOffset*S),aa1,aa2);
+      }
+      else if (modulation > 0) {
+        if ((value + modulation) > 1) modulation = 1 - value;
+        double aa1 = (0.35 + ((value+modulation)  * 0.8)) * MIP_PI2;
+        double aa2 = (       ((modulation) * 0.8)) * MIP_PI2;
+        painter->drawArc(cx,cy,r - (MModArcOffset*S),aa1,aa2);
+      }
+      //else {
+      //}
+
+    }
+  }
+
+
 //------------------------------
 public:
 //------------------------------
@@ -203,6 +254,7 @@ public:
     if (MDrawArc) drawArc(AContext);
     if (MDrawText) drawText(AContext);
     if (MDrawValue) drawValue(AContext);
+    if (MDrawModulation) drawModulation(AContext);
     paintChildWidgets(AContext);
     if (MDrawBorder) drawBorder(AContext);
   }

@@ -14,13 +14,17 @@
 //----------------------------------------------------------------------
 
 struct MIP_ProcessContext {
-  const clap_process_t* process     = nullptr;
-  MIP_ParameterArray*   parameters  = {};
-  double                samplerate  = 0.0;
-  uint32_t              minbufsize  = 0;
-  uint32_t              maxbufsize  = 0;
-  uint32_t              counter     = 0;
-//float**               buffers     = nullptr;
+  const clap_process_t* process       = nullptr;
+  MIP_ParameterArray*   parameters    = {};
+  double                samplerate    = 0.0;
+  uint32_t              minbufsize    = 0;
+  uint32_t              maxbufsize    = 0;
+  uint32_t              counter       = 0;
+
+  uint32_t              oversampling  = 1;
+  float**               block_buffer  = nullptr;
+  uint32_t              block_length  = 0;
+
 };
 
 //----------------------------------------------------------------------

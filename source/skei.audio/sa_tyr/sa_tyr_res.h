@@ -7,6 +7,8 @@
 #include "audio/old/filters/mip_svf_filter.h"
 #include "audio/old/processing/mip_delay.h"
 
+#define DELAY_LENGTH (4096 * 4)
+
 //----------------------------------------------------------------------
 //
 //
@@ -45,7 +47,7 @@ public:
 public:
 //------------------------------
 
-  typedef MIP_InterpolatedDelay<4096,sa_tyr_DelayFx> sa_tyr_Delay;
+  typedef MIP_InterpolatedDelay<DELAY_LENGTH,sa_tyr_DelayFx> sa_tyr_Delay;
 
 //------------------------------
 private:
@@ -130,6 +132,7 @@ public:
     //fb = fb * fb * fb;
 
     //fb = MIP_Curve(fb,0.95);
+
 fb = MIP_Curve(fb,0.98);
 
     //fb = 1.0 - fb;
@@ -208,20 +211,27 @@ fb = MIP_Curve(fb,0.98);
         break;
       }
 
-      case SA_TYR_RES_TYPE_NONE: {
-        break;
-      }
-
     }
 
     MDelay.getFeedbackFX()->shape = MShape;
-
     out = MDelay.process(_in,fb,delay);
-    return _in + out;
+
+    if (MDelay.hasWrapped()) {
+      out += (MImpulse * _in);
+    }
+    else {
+      out += _in;
+    }
+
+    //return (MImpulse * _in) + out;
+    return out;
 
   }
 
 };
+
+#undef DELAY_LENGTH
+
 
 //----------------------------------------------------------------------
 #endif

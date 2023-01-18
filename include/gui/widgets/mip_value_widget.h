@@ -32,6 +32,9 @@ protected:
 
   int32_t     MNumDigits      = 2;
 
+  bool        MBipolar        = false;
+
+
 //------------------------------
 public:
 //------------------------------
@@ -65,6 +68,12 @@ public:
   virtual void setValueOffset(MIP_DRect AOffset)      { MValueOffset = AOffset; }
 
   virtual void setNumDigits(int32_t ANum)             { MNumDigits = ANum; }
+  virtual void setBipolar(bool ABipolar=true)         { MBipolar = ABipolar; }
+
+  //
+
+  virtual bool isBipolar() { return MBipolar; }
+
 
 //------------------------------
 public:
@@ -122,6 +131,60 @@ public:
     else /*if (MValueAlignment & MIP_TEXT_ALIGN_CENTER)*/  { y += ((mrect.h - h) * 0.5); }
     painter->drawText(x,y,value_txt);
 
+//    if (MDrawModulation) {
+//      double modulation = value + MModulations[0];
+//      if (parameter) modulation = parameter->normalizeValue(modulation);
+//      MIP_DRect modrect = mrect;
+//      modrect.shrink(MModulationOffset);
+//      modrect.w *= modulation;
+//      painter->setFillColor(MModulationColor);
+//      painter->fillRect(modrect.x,modrect.y,modrect.w,modrect.h);
+//    }
+
+  }
+
+  //----------
+
+  virtual void drawModulation(MIP_PaintContext* AContext) {
+
+    MIP_Window* window = (MIP_Window*)getOwnerWindow();
+    double S = window->getWindowScale();
+    MIP_Painter* painter = AContext->painter;
+
+    //double modulation = MValues[0] + MModulations[0];
+    double value = getValue();
+    double modulation = value + getModulation();
+    MIP_Parameter* parameter = getParameter();
+    if (parameter) {
+      value = parameter->normalizeValue(value);
+      modulation = parameter->normalizeValue(modulation);
+    }
+    modulation = MIP_Clamp(modulation,0,1);
+    MIP_DRect r = getRect();
+    MIP_DRect mor = MModulationOffset;
+    mor.scale(S);
+    r.shrink(mor);
+    painter->setFillColor(MModulationColor);
+    if (MBipolar) {
+      if (modulation < 0.5) {
+        r.x = r.x + (r.w * modulation);
+        r.w = (0.5 - modulation) * r.w;
+        painter->fillRect(r.x,r.y,r.w,r.h);
+      }
+      else if (modulation > 0.5) {
+        r.x = r.x + (r.w * 0.5);
+        r.w = (modulation - 0.5) * r.w;
+        painter->fillRect(r.x,r.y,r.w,r.h);
+      }
+      //else {
+      //}
+    }
+    else {
+      r.w *= modulation;
+      painter->fillRect(r.x,r.y,r.w,r.h);
+    }
+
+
   }
 
 //------------------------------
@@ -139,11 +202,12 @@ public:
 
   void on_widget_paint(MIP_PaintContext* AContext) override {
     if (MFillBackground) fillBackground(AContext);
+    if (MDrawModulation) drawModulation(AContext);
     if (MDrawText) drawText(AContext);
     if (MDrawValue) drawValue(AContext);
+    //if (MDrawModulation) drawModulation(AContext);
     paintChildWidgets(AContext);
     if (MDrawBorder) drawBorder(AContext);
-
   }
 
   //----------

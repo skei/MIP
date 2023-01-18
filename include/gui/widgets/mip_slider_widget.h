@@ -81,6 +81,7 @@ public:
     double w = mrect.w * value;//getValue();
     double h = mrect.h;
     painter->fillRect(x,y,w,h);
+
   }
 
 //------------------------------
@@ -90,6 +91,7 @@ public:
   void on_widget_paint(MIP_PaintContext* AContext) override {
     if (MFillBackground) fillBackground(AContext);
     if (MDrawSlider) drawSlider(AContext);
+    if (MDrawModulation) drawModulation(AContext);
     if (MDrawText) drawText(AContext);
     if (MDrawValue) drawValue(AContext);
     paintChildWidgets(AContext);

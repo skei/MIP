@@ -392,10 +392,18 @@ public: // change
   // smallest x2
 
   void overlap(MIP_Rect<T> R) {
-    if ( R.x1() > x1() ) setX1( R.x1() );
-    if ( R.x2() < x2() ) setX2( R.x2() );
-    if ( R.y1() > y1() ) setY1( R.y1() );
-    if ( R.y2() < y2() ) setY2( R.y2() );
+
+    //if (intersects(R)) {
+      if ( R.x1() > x1() ) setX1( R.x1() );
+      if ( R.x2() < x2() ) setX2( R.x2() );
+      if ( R.y1() > y1() ) setY1( R.y1() );
+      if ( R.y2() < y2() ) setY2( R.y2() );
+    //}
+    //else {
+    //  R.w = 0;
+    //  R.h = 0;
+    //}
+    //}
   }
 
 //  void overlap(MIP_Rect<T> R) {

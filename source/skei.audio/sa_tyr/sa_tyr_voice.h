@@ -1,10 +1,9 @@
-#ifndef sa_tyr_voice_incuded
-#define sa_tyr_voice_incuded
+#ifndef sa_tyr_voice_included
+#define sa_tyr_voice_included
 //----------------------------------------------------------------------
 
 #include "base/mip.h"
 #include "audio/mip_audio_math.h"
-
 #include "audio/old/filters/mip_allpass_filter.h"
 #include "audio/old/filters/mip_rc_filter.h"
 #include "audio/old/filters/mip_svf_filter.h"
@@ -12,8 +11,6 @@
 #include "audio/old/synthesis/mip_oscillator2.h"
 #include "audio/old/modulation/mip_envelope.h"
 #include "audio/old/waveforms/mip_polyblep_waveform.h"
-
-//#include "audio/old/mip_voice.h"
 #include "plugin/mip_voice_manager.h"
 
 //----------------------------------------------------------------------
@@ -42,7 +39,6 @@ private:
 
   __MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
   float             MSliceBuffer[MIP_AUDIO_MAX_BLOCK_SIZE]  = {0};
-//float             MSliceBuffer[MIP_AUDIO_SLICE_SIZE]      = {0};
 
   MIP_VoiceContext* MContext                                = nullptr;
   uint32_t          MVoiceIndex                             = 0;
@@ -50,9 +46,6 @@ private:
 //------------------------------
 private:
 //------------------------------
-
-//float*              MVoiceBuffer    = nullptr;
-//uint32_t            MIndex = 0;
 
   double*             MParameters     = nullptr;
   double*             MModulations    = nullptr;
@@ -122,20 +115,9 @@ public:
 public:
 //------------------------------
 
-//  void setup(uint32_t AIndex, MIP_VoiceContext* AContext) {
-//    MVoiceIndex = AIndex;
-//    MContext = AContext;
-
   void init(uint32_t AIndex, MIP_VoiceContext* AContext) {
     MVoiceIndex = AIndex;
     MContext = AContext;
-
-//    // define in voice_manager
-//    #ifdef MIP_VOICE_ADD_TO_BUFFER
-//      MVoiceBuffer = AContext->voicebuffer;
-//    #else
-//      MVoiceBuffer = AContext->voicebuffer + (AIndex * MIP_VOICE_MAX_FRAMESIZE);
-//    #endif
 
     MOscillator1.setSampleRate(MContext->samplerate);
     MOscillator2.setSampleRate(MContext->samplerate);
@@ -218,9 +200,11 @@ public:
     R2 = 0.0;
 
     for (uint32_t i=0; i<PARAM_COUNT; i++) {
+      //MParameters[i]    = 0.0;
       MModulations[i]   = 0.0;
       MParMod[i]        = MParameters[i];
-      MParModTargets[i] = MParameters[i];
+      //MParModTargets[i] = MParameters[i];
+      //MParModFactors[i] = PARMOD_SMOOTH_FACTOR;
     }
 
     return MIP_VOICE_PLAYING;
@@ -353,22 +337,13 @@ public:
   uint32_t process(uint32_t AState, uint32_t AOffset, uint32_t ALength) {
 
     //MIP_Assert(note_key >= 0);
-
-//    float* input0 = MContext->process->audio_inputs->data32[0];
-//    float* input1 = MContext->process->audio_inputs->data32[1];
-//    float* output = MVoiceBuffer + AOffset;
-
     //MIP_Print("voice index %i buffer %p offset %i length %i\n",MVoiceIndex,MContext->buffer,AOffset,ALength);
 
+    // ugh..
     float* input0 = MContext->process_context->process->audio_inputs->data32[0];
     float* input1 = MContext->process_context->process->audio_inputs->data32[1];
 
-    float* output = MContext->buffer;
-    output += (MVoiceIndex * MIP_AUDIO_MAX_BLOCK_SIZE);
-    output += AOffset;
-
-    float* output_buffer = output;
-    output = MSliceBuffer;
+    float* output = MSliceBuffer;
 
     bool osc1_used = false;
     bool osc2_used = false;
@@ -379,26 +354,29 @@ public:
           + MParameters[PAR_OSC1_IN_O1]
           + MParameters[PAR_OSC2_IN_O1]
           + MParameters[PAR_RES1_IN_O1]
-          + MParameters[PAR_RES2_IN_O1]) > 0.0) osc1_used = true;
+          + MParameters[PAR_RES2_IN_O1]) > 0.001) osc1_used = true;
 
     if ((   MParameters[PAR_MASTER_OSC2_OUT]
           + MParameters[PAR_OSC1_IN_O2]
           + MParameters[PAR_OSC2_IN_O2]
           + MParameters[PAR_RES1_IN_O2]
-          + MParameters[PAR_RES2_IN_O2]) > 0.0) osc2_used = true;
+          + MParameters[PAR_RES2_IN_O2]) > 0.001) osc2_used = true;
 
     if ((   MParameters[PAR_MASTER_RES1_OUT]
           + MParameters[PAR_OSC1_IN_R1]
           + MParameters[PAR_OSC2_IN_R1]
           + MParameters[PAR_RES1_IN_R1]
-          + MParameters[PAR_RES2_IN_R1]) > 0.0) res1_used = true;
+          + MParameters[PAR_RES2_IN_R1]) > 0.001) res1_used = true;
 
     if ((   MParameters[PAR_MASTER_RES2_OUT]
           + MParameters[PAR_OSC1_IN_R2]
           + MParameters[PAR_OSC2_IN_R2]
           + MParameters[PAR_RES1_IN_R2]
-          + MParameters[PAR_RES2_IN_R2]) > 0.0) res2_used = true;
+          + MParameters[PAR_RES2_IN_R2]) > 0.001) res2_used = true;
 
+    for (uint32_t i=0; i<PARAM_COUNT; i++) {
+      MParModTargets[i] = MParameters[i] + MModulations[i];
+    }
 
     //------------------------------
     // per sample
@@ -414,7 +392,7 @@ public:
       // not all parameters are 0..1 !!!
 
       for (uint32_t j=0; j<PARAM_COUNT; j++) {
-        MParModTargets[j] = MParameters[j] + MModulations[j];
+        //MParModTargets[j] = MParameters[j] + MModulations[j];
         double diff = MParModTargets[j] - MParMod[j];
         if (abs(diff) < 0.001) MParMod[j] = MParModTargets[j];
         else MParMod[j] += (diff * MParModFactors[j]);
@@ -439,7 +417,10 @@ if (osc1_used) {
                       + (     MParMod[PAR_OSC1_CENT]       );
 
       float osc1_hz = MIP_NoteToHz(note_key + note_tuning + o1_pitch);
-      osc1_hz = MIP_Clamp(osc1_hz,20,20000);
+
+      //osc1_hz = MIP_Clamp(osc1_hz,20,20000 * SA_TYR_OVERSAMPLING);
+      osc1_hz = MIP_Clamp(osc1_hz,20,MContext->samplerate);
+
       MOscillator1.setFrequency(osc1_hz);
 
       float o1_shape      = MIP_Clamp( MParMod[PAR_OSC1_SHAPE], 0, 1 );
@@ -472,7 +453,9 @@ if (osc2_used) {
                       + (     MParMod[PAR_OSC2_CENT]       );
 
       float osc2_hz = MIP_NoteToHz(note_key + note_tuning + o2_pitch);
-      osc2_hz = MIP_Clamp(osc2_hz,20,20000);
+      //osc2_hz = MIP_Clamp(osc2_hz,20,20000 * SA_TYR_OVERSAMPLING);
+      osc2_hz = MIP_Clamp(osc2_hz,20,MContext->samplerate);
+
       MOscillator2.setFrequency(osc2_hz);
 
       float o2_shape      = MIP_Clamp( MParMod[PAR_OSC2_SHAPE], 0, 1 );
@@ -505,7 +488,8 @@ if (res1_used) {
                       + (     MParMod[PAR_RES1_CENT]       );
 
       float res1_hz = MIP_NoteToHz(note_key + note_tuning + r1_pitch);
-      res1_hz = MIP_Clamp(res1_hz,20,20000);
+      //res1_hz = MIP_Clamp(res1_hz,20,20000 * SA_TYR_OVERSAMPLING);
+      res1_hz = MIP_Clamp(res1_hz,20,MContext->samplerate);
       MResonator1.setHz(res1_hz);
 
       float r1_shape  = MIP_Clamp( MParMod[PAR_RES1_SHAPE], 0, 1 );
@@ -527,7 +511,8 @@ if (res1_used) {
       MResonator1.setImpulse(imp1);
 
       float r1_spd = 1.0 - MIP_Clamp(MParMod[PAR_RES1_SPEED],0,1);
-      r1_spd = (r1_spd * r1_spd * r1_spd) * 10000;
+      //r1_spd = (r1_spd * r1_spd * r1_spd) * 10000 * SA_TYR_OVERSAMPLING;
+      r1_spd = (r1_spd * r1_spd * r1_spd) * MContext->samplerate * 0.25;
       MResonator1.setSpeed( r1_spd );
 
       float r1s = MIP_Clamp( MParMod[PAR_RES1_IN_S], 0, 1 );
@@ -546,7 +531,10 @@ if (res2_used) {
                       + (     MParMod[PAR_RES2_CENT]       );
 
       float res2_hz = MIP_NoteToHz(note_key + note_tuning + r2_pitch);
-      res2_hz = MIP_Clamp(res2_hz,20,20000);
+
+      //res2_hz = MIP_Clamp(res2_hz,20,20000 * SA_TYR_OVERSAMPLING);
+      res2_hz = MIP_Clamp(res2_hz,20,MContext->samplerate);
+
       MResonator2.setHz(res2_hz);
 
       float r2_shape  = MIP_Clamp( MParMod[PAR_RES2_SHAPE], 0, 1 );
@@ -559,7 +547,6 @@ if (res2_used) {
       MResonator2.setDamp(r2_damp);
       MResonator2.setRough(r2_rough);
 
-
       uint32_t r2_mode = MParMod[PAR_RES2_TYPE];
       r2_mode = MIP_Clamp( r2_mode, 0, SA_TYR_RES_TYPE_COUNT - 1);
       MResonator2.setMode( r2_mode );
@@ -569,7 +556,8 @@ if (res2_used) {
       MResonator2.setImpulse(imp2);
 
       float r2_spd = 1.0 - MIP_Clamp( MParMod[PAR_RES2_SPEED], 0,1 );
-      r2_spd = (r2_spd * r2_spd * r2_spd) * 10000;
+      //r2_spd = (r2_spd * r2_spd * r2_spd) * 10000 * SA_TYR_OVERSAMPLING;
+      r2_spd = (r2_spd * r2_spd * r2_spd) * MContext->samplerate * 0.25;
       MResonator2.setSpeed( r2_spd );
 
       float r2s = MIP_Clamp( MParMod[PAR_RES2_IN_S], 0, 1 );
@@ -600,16 +588,14 @@ if (res2_used) {
  if (osc1_used) {
 
       rnd = MIP_RandomSigned();
-
       o1_in = O1    * MIP_Clamp( MParMod[PAR_OSC1_IN_O1], 0, 1 )
             + O2    * MIP_Clamp( MParMod[PAR_OSC1_IN_O2], 0, 1 )
             + R1    * MIP_Clamp( MParMod[PAR_OSC1_IN_R1], 0, 1 )
             + R2    * MIP_Clamp( MParMod[PAR_OSC1_IN_R2], 0, 1 )
             + rnd   * MIP_Clamp( MParMod[PAR_OSC1_IN_N],  0, 1 )
             + input * MIP_Clamp( MParMod[PAR_OSC1_IN_A],  0, 1 );
-
       o1_in = MO1InputFilter.process(o1_in);
-      //O1 = MOscillator1.process(o1_in);
+      O1 = MOscillator1.process(o1_in);
 
 }
 
@@ -618,16 +604,14 @@ if (res2_used) {
  if (osc2_used) {
 
       rnd = MIP_RandomSigned();
-
       o2_in = O1    * MIP_Clamp( MParMod[PAR_OSC2_IN_O1], 0, 1 )
             + O2    * MIP_Clamp( MParMod[PAR_OSC2_IN_O2], 0, 1 )
             + R1    * MIP_Clamp( MParMod[PAR_OSC2_IN_R1], 0, 1 )
             + R2    * MIP_Clamp( MParMod[PAR_OSC2_IN_R2], 0, 1 )
             + rnd   * MIP_Clamp( MParMod[PAR_OSC2_IN_N],  0, 1 )
             + input * MIP_Clamp( MParMod[PAR_OSC2_IN_A],  0, 1 );
-
       o2_in = MO2InputFilter.process(o2_in);
-      //O2 = MOscillator2.process(o2_in);
+      O2 = MOscillator2.process(o2_in);
 
 }
 
@@ -636,16 +620,14 @@ if (res2_used) {
 if (res1_used) {
 
       rnd = MIP_RandomSigned();
-
       r1_in = O1    * MIP_Clamp( MParMod[PAR_RES1_IN_O1], 0, 1 )
             + O2    * MIP_Clamp( MParMod[PAR_RES1_IN_O2], 0, 1 )
             + R1    * MIP_Clamp( MParMod[PAR_RES1_IN_R1], 0, 1 )
             + R2    * MIP_Clamp( MParMod[PAR_RES1_IN_R2], 0, 1 )
             + rnd   * MIP_Clamp( MParMod[PAR_RES1_IN_N],  0, 1 )
             + input * MIP_Clamp( MParMod[PAR_RES1_IN_A],  0, 1 );
-
       r1_in = MR1InputFilter.process(r1_in);
-      //R1 = MResonator1.process(r1_in);
+      R1 = MResonator1.process(r1_in);
 
 }
 
@@ -654,25 +636,21 @@ if (res1_used) {
  if (res2_used) {
 
       rnd = MIP_RandomSigned();
-
       r2_in = O1    * MIP_Clamp( MParMod[PAR_RES2_IN_O1], 0, 1 )
             + O2    * MIP_Clamp( MParMod[PAR_RES2_IN_O2], 0, 1 )
             + R1    * MIP_Clamp( MParMod[PAR_RES2_IN_R1], 0, 1 )
             + R2    * MIP_Clamp( MParMod[PAR_RES2_IN_R2], 0, 1 )
             + rnd   * MIP_Clamp( MParMod[PAR_RES2_IN_N],  0, 1 )
             + input * MIP_Clamp( MParMod[PAR_RES2_IN_A],  0, 1 );
-
       r2_in = MR2InputFilter.process(r2_in);
-      //R2 = MResonator2.process(r2_in);
-
+      R2 = MResonator2.process(r2_in);
 }
 
       // process
-
-      if (osc1_used) O1 = MOscillator1.process(o1_in);
-      if (osc2_used) O2 = MOscillator2.process(o2_in);
-      if (res1_used) R1 = MResonator1.process(r1_in);
-      if (res2_used) R2 = MResonator2.process(r2_in);
+//      if (osc1_used) O1 = MOscillator1.process(o1_in);
+//      if (osc2_used) O2 = MOscillator2.process(o2_in);
+//      if (res1_used) R1 = MResonator1.process(r1_in);
+//      if (res2_used) R2 = MResonator2.process(r2_in);
 
       float out = (O1 * MIP_Clamp( MParMod[PAR_MASTER_OSC1_OUT], 0, 1 ))
                 + (O2 * MIP_Clamp( MParMod[PAR_MASTER_OSC2_OUT], 0, 1 ))
@@ -688,8 +666,11 @@ if (res1_used) {
       float fr = MIP_Clamp( MParMod[PAR_FLT1_FREQ], 0, 1 );
       float bw = MIP_Clamp( MParMod[PAR_FLT1_RES],  0, 1 );
 
+      //if (SA_TYR_OVERSAMPLING == 2) fr *= fr;
+      //else if (SA_TYR_OVERSAMPLING == 2) fr *= (fr * fr);
+
       MFilter.setBW(1.0 - bw);
-      MFilter.setFreq(fr * fr);
+      MFilter.setFreq(fr * fr * fr);
       out = MFilter.process(out);
 
       // env, velocity, press..
@@ -702,25 +683,14 @@ if (res1_used) {
 
       // out
 
-      //#ifdef MIP_VOICE_ADD_TO_BUFFER
-      //  *output++ += out;
-      //#else
-        *output++ = out;
-      //#endif
-
-      // prepare for next sample
-      //
+      *output++ = out;
 
     }
 
-    //memcpy(output_buffer,MSliceBuffer,MIP_AUDIO_SLICE_SIZE*sizeof(float));
+    float* output_buffer = MContext->voice_buffer;
+    output_buffer += (MVoiceIndex * MIP_AUDIO_MAX_BLOCK_SIZE);
+    output_buffer += AOffset;
     memcpy(output_buffer,MSliceBuffer,ALength*sizeof(float));
-
-    //float* src = MSliceBuffer;
-    //float* dst = output_buffer;
-    //for (uint32_t i=0; i<ALength; i++) {
-    //  *dst++ = *src++;
-    //}
 
     //------------------------------
     //
@@ -752,6 +722,10 @@ if (res1_used) {
   }
 
 };
+
+//----------------------------------------------------------------------
+
+typedef MIP_VoiceManager<sa_tyr_voice,SA_TYR_NUM_VOICES> sa_tyr_voice_manager;
 
 //----------------------------------------------------------------------
 #endif

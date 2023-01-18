@@ -102,13 +102,14 @@ public:
 
         // oct
 
-        sa_tyr_DragValueWidget* osc1_oct_slider = new sa_tyr_DragValueWidget( MIP_DRect(10+10,HH+150,72,20),"Oct");
+        //sa_tyr_DragValueWidget* osc1_oct_slider = new sa_tyr_DragValueWidget( MIP_DRect(10+10,HH+150,72,20),"Oct");
+        sa_tyr_DragValueWidget* osc1_oct_slider = new sa_tyr_DragValueWidget( MIP_DRect(10+10,HH+150,72,20),"Oct", 0.0, true);
         osc1_panel->appendChildWidget(osc1_oct_slider);
         connect(osc1_oct_slider,AParameters->getItem(PAR_OSC1_OCT));
 
         // semi
 
-        sa_tyr_DragValueWidget* osc1_semi_slider = new sa_tyr_DragValueWidget( MIP_DRect(94+10,HH+150,72,20),"Semi");
+        sa_tyr_DragValueWidget* osc1_semi_slider = new sa_tyr_DragValueWidget( MIP_DRect(94+10,HH+150,72,20),"Semi", 0.0, true);
         osc1_panel->appendChildWidget(osc1_semi_slider);
         connect(osc1_semi_slider,AParameters->getItem(PAR_OSC1_SEMI));
 
@@ -161,7 +162,7 @@ public:
         osc1_panel->appendChildWidget(osc1_phase_shaper_selector);
         connect(osc1_phase_shaper_selector,AParameters->getItem(PAR_OSC1_PM_TYPE));
 
-        sa_tyr_SliderWidget* osc1_phase_shaper_slider = new sa_tyr_SliderWidget(MIP_DRect(135+10,HH+240,115,20),"Phase",0.0,true);
+        sa_tyr_SliderWidget* osc1_phase_shaper_slider = new sa_tyr_SliderWidget(MIP_DRect(135+10,HH+240,115,20),"Phase",0.0);//true);
         osc1_panel->appendChildWidget(osc1_phase_shaper_slider);
         connect(osc1_phase_shaper_slider,AParameters->getItem(PAR_OSC1_PM_AMOUNT));
 
@@ -171,7 +172,7 @@ public:
         osc1_panel->appendChildWidget(osc1_wave_shaper_selector);
         connect(osc1_wave_shaper_selector,AParameters->getItem(PAR_OSC1_WM_TYPE));
 
-        sa_tyr_SliderWidget* osc1_wave_shaper_slider = new sa_tyr_SliderWidget(MIP_DRect(135+10,HH+270,115,20),"Wave",0.0,true);
+        sa_tyr_SliderWidget* osc1_wave_shaper_slider = new sa_tyr_SliderWidget(MIP_DRect(135+10,HH+270,115,20),"Wave",0.0);//,true);
         osc1_panel->appendChildWidget(osc1_wave_shaper_slider);
         connect(osc1_wave_shaper_slider,AParameters->getItem(PAR_OSC1_WM_AMOUNT));
 
@@ -256,13 +257,13 @@ public:
 
         // oct
 
-        sa_tyr_DragValueWidget* res1_oct_slider = new sa_tyr_DragValueWidget( MIP_DRect(10+10,HH+310+230+10,72,20),"Oct");
+        sa_tyr_DragValueWidget* res1_oct_slider = new sa_tyr_DragValueWidget( MIP_DRect(10+10,HH+310+230+10,72,20),"Oct", 0.0, true);
         res1_panel->appendChildWidget(res1_oct_slider);
         connect(res1_oct_slider,AParameters->getItem(PAR_RES1_OCT));
 
         // semi
 
-        sa_tyr_DragValueWidget* res1_semi_slider = new sa_tyr_DragValueWidget( MIP_DRect(94+10,HH+310+230+10,72,20),"Semi");
+        sa_tyr_DragValueWidget* res1_semi_slider = new sa_tyr_DragValueWidget( MIP_DRect(94+10,HH+310+230+10,72,20),"Semi", 0.0, true);
         res1_panel->appendChildWidget(res1_semi_slider);
         connect(res1_semi_slider,AParameters->getItem(PAR_RES1_SEMI));
 
@@ -303,13 +304,13 @@ public:
 
         // oct
 
-        sa_tyr_DragValueWidget* osc2_oct_slider = new sa_tyr_DragValueWidget( MIP_DRect(280+10,HH+150,72,20),"Oct");
+        sa_tyr_DragValueWidget* osc2_oct_slider = new sa_tyr_DragValueWidget( MIP_DRect(280+10,HH+150,72,20),"Oct", 0.0, true);
         osc2_panel->appendChildWidget(osc2_oct_slider);
         connect(osc2_oct_slider,AParameters->getItem(PAR_OSC2_OCT));
 
         // semi
 
-        sa_tyr_DragValueWidget* osc2_semi_slider = new sa_tyr_DragValueWidget( MIP_DRect(280+94,HH+150,72,20),"Semi");
+        sa_tyr_DragValueWidget* osc2_semi_slider = new sa_tyr_DragValueWidget( MIP_DRect(280+94,HH+150,72,20),"Semi", 0.0, true);
         osc2_panel->appendChildWidget(osc2_semi_slider);
         connect(osc2_semi_slider,AParameters->getItem(PAR_OSC2_SEMI));
 
@@ -362,7 +363,7 @@ public:
         osc2_panel->appendChildWidget(osc2_phase_shaper_selector);
         connect(osc2_phase_shaper_selector,AParameters->getItem(PAR_OSC2_PM_TYPE));
 
-        sa_tyr_SliderWidget* osc2_phase_shaper_slider = new sa_tyr_SliderWidget(MIP_DRect(280+135,HH+240,115,20),"Phase",0.0,true);
+        sa_tyr_SliderWidget* osc2_phase_shaper_slider = new sa_tyr_SliderWidget(MIP_DRect(280+135,HH+240,115,20),"Phase",0.0);//,true);
         osc2_panel->appendChildWidget(osc2_phase_shaper_slider);
         connect(osc2_phase_shaper_slider,AParameters->getItem(PAR_OSC2_PM_AMOUNT));
 
@@ -372,7 +373,7 @@ public:
         osc2_panel->appendChildWidget(osc2_wave_shaper_selector);
         connect(osc2_wave_shaper_selector,AParameters->getItem(PAR_OSC2_WM_TYPE));
 
-        sa_tyr_SliderWidget* osc2_wave_shaper_slider = new sa_tyr_SliderWidget(MIP_DRect(280+135,HH+270,115,20),"Wave",0.0,true);
+        sa_tyr_SliderWidget* osc2_wave_shaper_slider = new sa_tyr_SliderWidget(MIP_DRect(280+135,HH+270,115,20),"Wave",0.0);//,true);
         osc2_panel->appendChildWidget(osc2_wave_shaper_slider);
         connect(osc2_wave_shaper_slider,AParameters->getItem(PAR_OSC2_WM_AMOUNT));
 
@@ -457,13 +458,13 @@ public:
 
         // oct
 
-        sa_tyr_DragValueWidget* res2_oct_slider = new sa_tyr_DragValueWidget( MIP_DRect(280+10,HH+310+230+10,72,20),"Oct");
+        sa_tyr_DragValueWidget* res2_oct_slider = new sa_tyr_DragValueWidget( MIP_DRect(280+10,HH+310+230+10,72,20),"Oct", 0.0, true);
         res2_panel->appendChildWidget(res2_oct_slider);
         connect(res2_oct_slider,AParameters->getItem(PAR_RES2_OCT));
 
         // semi
 
-        sa_tyr_DragValueWidget* res2_semi_slider = new sa_tyr_DragValueWidget( MIP_DRect(280+94,HH+310+230+10,72,20),"Semi");
+        sa_tyr_DragValueWidget* res2_semi_slider = new sa_tyr_DragValueWidget( MIP_DRect(280+94,HH+310+230+10,72,20),"Semi", 0.0, true);
         res2_panel->appendChildWidget(res2_semi_slider);
         connect(res2_semi_slider,AParameters->getItem(PAR_RES2_SEMI));
 

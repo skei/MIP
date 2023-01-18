@@ -424,7 +424,6 @@ public: // window
   */
 
   void on_window_resize(int32_t AWidth, int32_t AHeight) override {
-    MIP_PRINT;
     //    uint32_t w2 = MIP_NextPowerOfTwo(AWidth);
     //    uint32_t h2 = MIP_NextPowerOfTwo(AHeight);
     //    if ((w2 =! MWindowWidth) || (h2 =! MWindowHeight)) {
@@ -447,6 +446,7 @@ public: // window
   //----------
 
   void on_window_paint(int32_t AXpos, int32_t AYpos, int32_t AWidth, int32_t AHeight) override {
+
     MIP_Assert(MWindowPainter);
     MIP_DRect r = MIP_DRect(AXpos,AYpos,AWidth,AHeight);
     //queueDirtyRect(r.x,r.y,r.w,r.h);
@@ -473,7 +473,7 @@ public: // window
         MIP_PaintContext pc;
         pc.painter = MWindowPainter;
         pc.updateRect = MIP_DRect(r.x,r.y,r.w,r.h);
-        MRootWidget->on_widget_paint(&pc);
+        if (MRootWidget) MRootWidget->on_widget_paint(&pc);
         MWindowPainter->resetClip();
       MWindowPainter->endFrame();
 
@@ -506,7 +506,7 @@ public: // window
         MIP_PaintContext pc;
         pc.painter = MWindowPainter;
         pc.updateRect = MIP_DRect(r.x,r.y,r.w,r.h);
-        MRootWidget->on_widget_paint(&pc);
+        if (MRootWidget) MRootWidget->on_widget_paint(&pc);
         MWindowPainter->resetClip();
 
       MWindowPainter->endFrame();
@@ -657,6 +657,7 @@ public: // window
   //----------
 
   void on_window_timer() override {
+    //MIP_PRINT;
 
     if (MWindowListener) MWindowListener->do_window_listener_timer();
     if (!MWindowPainter) return;

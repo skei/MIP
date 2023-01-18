@@ -1,3 +1,4 @@
-not yet!
+not yet..
+soon..
 (linux/windows, clap/vst2/vst3/exe/ladspa, opengl)
 

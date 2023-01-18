@@ -10,9 +10,13 @@ class MIP_AllpassFilter {
 
   private:
 
-    T a;
-    T x0,x1,x2;
-    T y0,y1,y2;
+    T a   = 0.0;
+    T x0  = 0.0;
+    T x1  = 0.0;
+    T x2  = 0.0;
+    T y0  = 0.0;
+    T y1  = 0.0;
+    T y2  = 0.0;
 
   public:
 
@@ -32,6 +36,15 @@ class MIP_AllpassFilter {
 
     MIP_AllpassFilter(T ACoefficient) {
       setCoefficient(ACoefficient);
+    }
+
+    void reset() {
+      x0  = 0;
+      x1  = 0;
+      x2  = 0;
+      y0  = 0;
+      y1  = 0;
+      y2  = 0;
     }
 
     void setCoefficient(T ACoefficient) {

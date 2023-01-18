@@ -196,7 +196,12 @@ public: // plugin
   //----------
 
   clap_process_status process(const clap_process_t *process) override {
-    MProcessContext.process = process;
+
+    MProcessContext.process       = process;
+    MProcessContext.oversampling  = 1;
+    MProcessContext.block_buffer  = MProcessContext.process->audio_outputs[0].data32;
+    MProcessContext.block_length  = MProcessContext.process->frames_count;
+
     processTransport(process->transport);
     preProcessEvents(process->in_events,process->out_events);
     processEvents(process->in_events,process->out_events);
@@ -204,8 +209,10 @@ public: // plugin
     processAudioBlock(&MProcessContext);
     postProcessEvents(process->in_events,process->out_events);
     flushHostParams(process->out_events);
+
     MProcessContext.process = nullptr;
     MProcessContext.counter += 1;
+
     return CLAP_PROCESS_CONTINUE;
   }
 

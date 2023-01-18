@@ -117,7 +117,8 @@ protected:
   MIP_Color           MIndicatorColor   = MIP_Color(1.0, 1.0, 1.0, 0.5);
 
   bool                MDrawModulation   = false;//true;
-  MIP_Color           MModulationColor  = MIP_Color(0,1,1,0.5);
+  MIP_Color           MModulationColor  = MIP_Color(1,0,0,0.25);
+  MIP_DRect           MModulationOffset = MIP_DRect(0,0,0,0);
 
 //------------------------------
 public:
@@ -220,6 +221,7 @@ public:
 
   virtual void setDrawModulation(bool ADraw=true)             { MDrawModulation = ADraw; }
   virtual void setModulationColor(MIP_Color AColor)           { MModulationColor = AColor; }
+  virtual void setModulationOffset(MIP_DRect AOffset)         { MModulationOffset = AOffset; }
 
   virtual void setDrawIndicator(bool ADraw=true)              { MDrawIndicator = ADraw; }
   virtual void setIndicatorColor(MIP_Color AColor)            { MIndicatorColor = AColor; }

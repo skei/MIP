@@ -42,8 +42,6 @@ protected:
   //uint32_t    MSnapMode       = 1;        // 0: always snap, 1: shift disables snapping
 
   bool        MQuantize       = false;
-  bool        MBipolar        = false;
-
 
 //------------------------------
 public:
@@ -89,7 +87,6 @@ public:
   virtual void setSnapDist(float ADist)             { MSnapDist = ADist; }
 
   virtual void setQuantize(bool AQuantize=true)     { MQuantize = AQuantize; }
-  virtual void setBipolar(bool ABipolar=true)       { MBipolar = ABipolar; }
 
   //----------
 

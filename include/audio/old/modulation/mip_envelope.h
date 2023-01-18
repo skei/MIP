@@ -74,8 +74,14 @@ class MIP_Envelope {
     */
 
     T calcRate(T ms) {
+
+
       T a = ms * mip_env_rate_scale; // 0..1 -> 0..25
       a = (a*a*a);
+
+      T scale = MSampleRate / 44100.0;
+      a *= scale;
+
       a += 1.0;
       return 1.0 / a;
     }

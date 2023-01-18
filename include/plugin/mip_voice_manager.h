@@ -101,22 +101,22 @@ public:
     MClapHost = AHost;
     if (MClapHost) {
       MThreadPool = (const clap_host_thread_pool*)MClapHost->get_extension(MClapHost,CLAP_EXT_THREAD_POOL);
-      LOG.print("VOICE MANAGER: threadpool? %s\n", MThreadPool ? "true" : "false" );
+      LOG.print("VOICE MANAGER: thread-pool: %s\n", MThreadPool ? "true" : "false" );
     }
   }
 
   //----------
 
   void activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count, MIP_ParameterArray* AParameters) {
-
-    MIP_Print("AParameters %p\n",AParameters);
-
+    //MIP_Print("AParameters %p\n",AParameters);
     MVoiceContext.process_context   = nullptr; //
-    MVoiceContext.buffer            = MVoiceBuffer;
+    MVoiceContext.voice_buffer      = MVoiceBuffer;
     MVoiceContext.min_frames_count  = min_frames_count;
     MVoiceContext.max_frames_count  = max_frames_count;
     MVoiceContext.samplerate        = sample_rate;
-    MVoiceContext.parameters        = AParameters;
+// !!
+    MVoiceContext.parameters        = AParameters; // already in MIP_ProcessContext?
+//
     for (uint32_t i=0; i<COUNT; i++) {
       MVoices[i].init(i,&MVoiceContext);
     }
@@ -125,6 +125,35 @@ public:
 //------------------------------
 public:
 //------------------------------
+
+  /*
+    TODO:
+    - redo the noteid/pck/global selector..
+      any -1 means 'don't care about it'
+      anytihng else = 'i DO care about it'
+      check passes if both are equal or 'selector' is -1
+  */
+
+  //----------
+
+  bool isGlobal(uint32_t index, int32_t noteid, int32_t port, int32_t channel, int32_t key) {
+    if ((noteid  == -1) && (port == -1) && (channel == -1) && (key == -1)) return true;
+    return false;
+  }
+
+  //----------
+
+  bool isTargeted(uint32_t index, int32_t noteid, int32_t port, int32_t channel, int32_t key) {
+    if ( ((noteid  == -1) || (MVoices[index].note.noteid  == noteid))
+      && ((port    == -1) || (MVoices[index].note.port    == port))
+      && ((channel == -1) || (MVoices[index].note.channel == channel))
+      && ((key     == -1) || (MVoices[index].note.key     == key)) ) {
+      return true;
+    }
+    return false;
+  }
+
+  //----------
 
   void processNoteOn(const clap_event_note_t* event) {
     int32_t voice = findFreeVoice(MIP_VOICE_MANAGER_STEAL_VOICES);
@@ -142,9 +171,17 @@ public:
   //----------
 
   void processNoteOff(const clap_event_note_t* event) {
+
     bool has_noteid = (event->note_id != -1);
     bool has_pck = ((event->port_index != -1) && (event->channel != -1) && (event->key != -1));
+
     for (int32_t voice=0; voice<COUNT; voice++) {
+
+      //if (isTargeted(voice,event->note_id,event->port_index,event->channel,event->key)) {
+      //  MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_OFF, event->header.time, event->key, event->velocity);
+      //  MVoices[voice].events.write(ve);
+      //}
+
       if (has_noteid && (event->note_id == MVoices[voice].note.noteid)) {
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_OFF, event->header.time, event->key, event->velocity);
         MVoices[voice].events.write(ve);
@@ -153,10 +190,12 @@ public:
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_OFF, event->header.time, event->key, event->velocity);
         MVoices[voice].events.write(ve);
       }
+
       //else {
       //  MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_OFF, event->header.time, event->key, event->velocity);
       //  MVoices[voice].events.write(ve);
       //}
+
     }
   }
 
@@ -166,6 +205,12 @@ public:
     bool has_noteid = (event->note_id != -1);
     bool has_pck = ((event->port_index != -1) && (event->channel != -1) && (event->key != -1));
     for (int32_t voice=0; voice<COUNT; voice++) {
+
+      //if (isTargeted(voice,event->note_id,event->port_index,event->channel,event->key)) {
+      //  MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_CHOKE, event->header.time, event->key, event->velocity);
+      //  MVoices[voice].events.write(ve);
+      //}
+
       if (has_noteid && (event->note_id == MVoices[voice].note.noteid)) {
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_CHOKE, event->header.time, event->key, event->velocity);
         MVoices[voice].events.write(ve);
@@ -174,6 +219,7 @@ public:
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_CHOKE, event->header.time, event->key, event->velocity);
         MVoices[voice].events.write(ve);
       }
+
       //else {
       //  MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_CHOKE, event->header.time, event->key, event->velocity);
       //  MVoices[voice].events.write(ve);
@@ -187,6 +233,12 @@ public:
     bool has_noteid = (event->note_id != -1);
     bool has_pck = ((event->port_index != -1) && (event->channel != -1) && (event->key != -1));
     for (int32_t voice=0; voice<COUNT; voice++) {
+
+      //if (isTargeted(voice,event->note_id,event->port_index,event->channel,event->key)) {
+      //  MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_EXPRESSION, event->header.time, event->expression_id, event->value);
+      //  MVoices[voice].events.write(ve);
+      //}
+
       if (has_noteid && (event->note_id == MVoices[voice].note.noteid)) {
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_EXPRESSION, event->header.time, event->expression_id, event->value);
         MVoices[voice].events.write(ve);
@@ -195,6 +247,7 @@ public:
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_EXPRESSION, event->header.time, event->expression_id, event->value);
         MVoices[voice].events.write(ve);
       }
+
       //else {
       //  MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_EXPRESSION, event->header.time, event->expression_id, event->value);
       //  MVoices[voice].events.write(ve);
@@ -208,6 +261,12 @@ public:
     bool has_noteid = (event->note_id != -1);
     bool has_pck = ((event->port_index != -1) && (event->channel != -1) && (event->key != -1));
     for (int32_t voice=0; voice<COUNT; voice++) {
+
+      //if (isTargeted(voice,event->note_id,event->port_index,event->channel,event->key)) {
+      //  MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_NOTE_EXPRESSION, event->header.time, event->expression_id, event->value);
+      //  MVoices[voice].events.write(ve);
+      //}
+
       if (has_noteid && (event->note_id == MVoices[voice].note.noteid)) {
         MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_VALUE, event->header.time, event->param_id, event->value);
         MVoices[voice].events.write(ve);
@@ -237,6 +296,13 @@ public:
     bool has_noteid = (event->note_id != -1);
     bool has_pck = ((event->port_index != -1) && (event->channel != -1) && (event->key != -1));
     for (int32_t voice=0; voice<COUNT; voice++) {
+
+      //if (isTargeted(voice,event->note_id,event->port_index,event->channel,event->key)) {
+      //  MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_MOD, event->header.time, event->param_id, event->amount);
+      //  MVoices[voice].events.write(ve);
+      //}
+
+
       if (has_noteid) {
         if (event->note_id == MVoices[voice].note.noteid) {
           MIP_VoiceEvent ve = MIP_VoiceEvent(CLAP_EVENT_PARAM_MOD, event->header.time, event->param_id, event->amount);
@@ -329,7 +395,7 @@ public:
         // still waiting, not started? something might be wrong..
         MVoices[i].state = MIP_VOICE_OFF;
         queueNoteEnd(MVoices[i].note);      // ???
-        MIP_Print("voice %i -> OFF\n",i);
+        //MIP_Print("voice %i -> OFF\n",i);
       }
       if (MVoices[i].state == MIP_VOICE_FINISHED) {
         MVoices[i].state = MIP_VOICE_OFF;
@@ -344,8 +410,13 @@ public:
 //------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AProcessContext) {
+
     MVoiceContext.process_context = AProcessContext;
-    uint32_t blocksize = AProcessContext->process->frames_count;
+    uint32_t blocksize = AProcessContext->block_length;
+    float** output = AProcessContext->block_buffer;
+
+    MIP_ClearStereoBuffer(output,blocksize);
+
     // set up active voices
     MNumActiveVoices = 0;
     uint32_t num_playing = 0;
@@ -359,6 +430,7 @@ public:
     }
     MNumPlayingVoices = num_playing;
     MNumReleasedVoices = num_released;
+
     // process active voices
     if (MNumActiveVoices > 0) {
       // thread-pool..
@@ -375,14 +447,14 @@ public:
         }
       }
       // mix, (post-process)
-      float** output = AProcessContext->process->audio_outputs[0].data32;
-      MIP_ClearStereoBuffer(output,blocksize);
+
       for (uint32_t i=0; i<MNumActiveVoices; i++) {
         uint32_t voice = MActiveVoices[i];
         float* buffer = MVoiceBuffer;
         buffer += (voice * MIP_AUDIO_MAX_BLOCK_SIZE);
         MIP_AddMonoToStereoBuffer(output,buffer,blocksize);
       }
+
     } // num voices > 0
   }
 
@@ -414,7 +486,7 @@ private:
 
   int32_t findFreeVoice(bool AReleased=false) {
     for (uint32_t i=0; i<COUNT; i++) {
-      if (MVoices[i].state == MIP_VOICE_OFF) {
+      if ((MVoices[i].state == MIP_VOICE_OFF) /*|| (MVoices[i].state == MIP_VOICE_FINISHED)*/) {
         return i;
       }
     }

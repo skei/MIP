@@ -158,6 +158,9 @@ public:
       setSnapDist(ASnapDist);
       setBipolar(true);
     }
+    setDrawModulation(true);
+    setModulationColor(MIP_Color(1,0,0,0.25));
+    setModulationOffset(MIP_DRect( 4,4,4,4 ));
   }
 
 };
@@ -179,8 +182,11 @@ public:
       setSnap(true);
       setSnapPos(ASnapPos);
       setSnapDist(ASnapDist);
-      setBipolar(true);
+      //setBipolar(true);
     }
+    setDrawModulation(true);
+    setModulationColor(MIP_Color(1,0,0,0.25));
+    //setModulationOffset(MIP_DRect( 4,4,4,4 ));
   }
 
 };
@@ -204,10 +210,16 @@ public:
       MKnobWidget->setSnapDist(ASnapDist);
       MKnobWidget->setBipolar(true);
     }
+    MLabelWidget->setTextSize(15);
+    MKnobWidget->setModArcThickness(5);
+    MKnobWidget->setModArcOffset(2);
     MKnobWidget->setArcThickness(10);
     MKnobWidget->setValueSize(12);
-    MLabelWidget->setTextSize(15);
-    //MValueWidget->setTextSize(12);
+    MKnobWidget->setDrawModulation(true);
+    MKnobWidget->setModulationColor(MIP_Color(1,0,0,0.5));
+    MKnobWidget->setModArcThickness(5);
+    MKnobWidget->setModArcOffset(3);
+
   }
 
 };
@@ -230,8 +242,10 @@ public:
     MKnobWidget->setArcThickness(5);
     MKnobWidget->setValueSize(8);
     MLabelWidget->setTextSize(12);
-    //MValueWidget->setTextSize(10);
-
+    MKnobWidget->setDrawModulation(true);
+    MKnobWidget->setModulationColor(MIP_Color(1,0,0,0.5));
+    MKnobWidget->setModArcThickness(3);
+    MKnobWidget->setModArcOffset(1.5);
   }
 
 };

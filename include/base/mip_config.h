@@ -24,7 +24,7 @@
 
   #define MIP_ALIGNMENT_SIMD                        16
   #define MIP_ALIGNMENT_CACHE                       64
-  #define MIP_AUDIO_SLICE_SIZE                      32
+  #define MIP_AUDIO_SLICE_SIZE                      16
   #define MIP_AUDIO_MAX_BLOCK_SIZE                  4096
   #define MIP_CLIP_RECT_STACK_SIZE                  1024
   #define MIP_LOGFILE_NAME                          "mip.log"
@@ -54,7 +54,7 @@
   #define MIP_LOGGING
   #define MIP_LOG_APPEND
 //#define MIP_NO_AUTODELETE
-  #define MIP_NO_DEFAULT_WARNINGS
+//#define MIP_NO_DEFAULT_WARNINGS
 //#define MIP_NO_DMC_COMPRESS
 //#define MIP_NO_ENTRY
 //#define MIP_NO_STDLIB
@@ -136,10 +136,10 @@
 //#define MIP_NO_ENTRY
 //#define MIP_NO_PLUGIN
 //#define MIP_NO_REGISTRY
-  #define MIP_PLUGIN_CLAP
+//#define MIP_PLUGIN_CLAP
 //#define MIP_PLUGIN_EXE
-  #define MIP_PLUGIN_VST2
-  #define MIP_PLUGIN_VST3
+//#define MIP_PLUGIN_VST2
+//#define MIP_PLUGIN_VST3
 //#define MIP_PLUGIN_GENERIC_EDITOR
 //#define MIP_VOICE_MANAGER_CONVERT_MIDI
   #define MIP_VOICE_MANAGER_SEND_GLOBAL_PARAMS_TO_ALL_VOICES

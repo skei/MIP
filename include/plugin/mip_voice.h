@@ -36,8 +36,8 @@ public:
 //------------------------------
 
   __MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
-
   VOICE               voice       = {};
+
   MIP_VoiceContext*   context     = nullptr;
   MIP_Note            note        = {};
   uint32_t            state       = MIP_VOICE_OFF;
@@ -138,7 +138,9 @@ private:
   void handleAllEvents() {
     MIP_VoiceEvent event;
     while (events.read(&event)) handleEvent(event);
-    uint32_t length = context->process_context->process->frames_count;
+
+    uint32_t length = context->process_context->block_length;
+
     state = voice.process(state,0,length);
   }
 
@@ -146,7 +148,9 @@ private:
 
   void handleInterleavedEvents() {
     uint32_t current_time = 0;
-    uint32_t remaining = context->process_context->process->frames_count;
+
+    uint32_t remaining = context->process_context->block_length;
+
     MIP_VoiceEvent event = {};
     while (remaining > 0) {
       if (events.read(&event)) {
@@ -173,7 +177,9 @@ private:
   //----------
 
   void handleQuantizedEvents() {
-    uint32_t        buffer_length = context->process_context->process->frames_count;
+
+    uint32_t buffer_length = context->process_context->block_length;
+
     uint32_t        current_time  = 0;
     uint32_t        remaining     = buffer_length;
     uint32_t        next_event    = 0;

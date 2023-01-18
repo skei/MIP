@@ -1,33 +1,30 @@
 
 #include "audio/mip_audio_utils.h"
-
+#include "audio/old/filters/mip_decimator_filter.h"
 #include "plugin/mip_note.h"
 #include "plugin/mip_plugin.h"
 #include "plugin/mip_voice.h"
 #include "plugin/mip_voice_manager.h"
-
-#ifndef MIP_NO_GUI
-  #include "plugin/mip_editor.h"
-#endif
+#include "plugin/mip_editor.h"
 
 //----------------------------------------------------------------------
 
-#define SA_TYR_EDITOR_WIDTH   836
-#define SA_TYR_EDITOR_HEIGHT  703
-#define SA_TYR_NUM_VOICES     256
-#define SA_TYR_PLUGIN_NAME    "sa_tyr"
-#define SA_TYR_PLUGIN_VERSION "0.0.12"
+#define SA_TYR_EDITOR_WIDTH     836
+#define SA_TYR_EDITOR_HEIGHT    703
+#define SA_TYR_NUM_VOICES       64
+#define SA_TYR_PLUGIN_AUTHOR    "skei.audio"
+#define SA_TYR_PLUGIN_NAME      "sa_tyr"
+#define SA_TYR_PLUGIN_VERSION   "0.0.12"
+#define SA_TYR_PLUGIN_WWW       "https://torhelgeskei.com"
+
+// ugh.. offsets, etc should be multiplied by oversampling tii...
+#define SA_TYR_OVERSAMPLING     1
+
+//----------
 
 #include "sa_tyr/sa_tyr_parameters.h"
 #include "sa_tyr/sa_tyr_voice.h"
-
-typedef MIP_VoiceManager<sa_tyr_voice,SA_TYR_NUM_VOICES> sa_tyr_voice_manager;
-
-#ifndef MIP_NO_GUI
-  #include "sa_tyr/sa_tyr_editor.h"
-#endif
-
-
+#include "sa_tyr/sa_tyr_editor.h"
 
 //----------------------------------------------------------------------
 //
@@ -35,19 +32,23 @@ typedef MIP_VoiceManager<sa_tyr_voice,SA_TYR_NUM_VOICES> sa_tyr_voice_manager;
 //
 //----------------------------------------------------------------------
 
+#define CHAR_ARRAY (const char*[])
+
 const clap_plugin_descriptor_t sa_tyr_descriptor = {
   .clap_version  = CLAP_VERSION,
-  //.id            = "skei.audio/sa_tyr/0.0.12",
-  .id            = "skei.audio/" SA_TYR_PLUGIN_NAME "/" SA_TYR_PLUGIN_VERSION,
+  .id            = SA_TYR_PLUGIN_AUTHOR "/" SA_TYR_PLUGIN_NAME "/" SA_TYR_PLUGIN_VERSION,
   .name          = SA_TYR_PLUGIN_NAME,
-  .vendor        = "skei.audio",
-  .url           = "https://torhelgeskei.com",
+  .vendor        = SA_TYR_PLUGIN_AUTHOR,
+  .url           = SA_TYR_PLUGIN_WWW,
   .manual_url    = "",
   .support_url   = "",
   .version       = SA_TYR_PLUGIN_VERSION,
   .description   = "",
-  .features      = (const char*[]){ CLAP_PLUGIN_FEATURE_INSTRUMENT, nullptr }
+  //.features      = (const char*[]){ CLAP_PLUGIN_FEATURE_INSTRUMENT, nullptr }
+  .features      = CHAR_ARRAY { CLAP_PLUGIN_FEATURE_INSTRUMENT, nullptr }
 };
+
+#undef CHAR_ARRAY
 
 //----------------------------------------------------------------------
 //
@@ -62,20 +63,22 @@ class sa_tyr_plugin
 private:
 //------------------------------
 
-  sa_tyr_voice_manager MVoiceManager = {};
+  sa_tyr_voice_manager  MVoiceManager       = {};
+
+  MIP_Decimator59Filter MDecimator_l0       = {};
+  //MIP_Decimator59Filter MDecimator_l1       = {};
+  MIP_Decimator59Filter MDecimator_l        = {};
+  MIP_Decimator59Filter MDecimator_r0       = {};
+  //MIP_Decimator59Filter MDecimator_r1       = {};
+  MIP_Decimator59Filter MDecimator_r        = {};
+
+  __MIP_ALIGNED(MIP_ALIGNMENT_CACHE) float left_buffer[16384] = {0};
+  __MIP_ALIGNED(MIP_ALIGNMENT_CACHE) float right_buffer[16384] = {0};
+  __MIP_ALIGNED(MIP_ALIGNMENT_CACHE) float* block_buffer[2] = { left_buffer, right_buffer };
 
 //------------------------------
 public:
 //------------------------------
-
-  /*
-    ---           without   with thread-pool:
-    reaper/linux  45        60
-    bitwig/linux  45        60
-    reaper/wine   35 *      180 *
-  */
-
-  //----------
 
   sa_tyr_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
@@ -97,10 +100,6 @@ public: // plugin
   bool init() final {
     bool result = MIP_Plugin::init();
     if (result) {
-      //appendAudioInputPort( new MIP_AudioPort() );
-      //appendAudioOutputPort( new MIP_AudioPort() );
-      //appendNoteInputPort( new MIP_NotePort() );
-      //appendNoteOutputPort( new MIP_NotePort() );
       appendStereoInput();
       appendStereoOutput();
       appendNoteInput();
@@ -126,8 +125,9 @@ public: // plugin
   //----------
 
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) final {
-    MIP_Plugin::activate(sample_rate,min_frames_count,max_frames_count);
-    MVoiceManager.activate(sample_rate,min_frames_count,max_frames_count,&MParameters);
+    uint32_t srate = sample_rate * SA_TYR_OVERSAMPLING;
+    MIP_Plugin::activate(srate,min_frames_count,max_frames_count);
+    MVoiceManager.activate(srate,min_frames_count,max_frames_count,&MParameters);
     return true;
   }
 
@@ -136,8 +136,6 @@ public: // gui
 //------------------------------
 
 #ifndef MIP_NO_GUI
-
-  //#ifndef MIP_PLUGIN_GENERIC_EDITOR
 
   bool gui_create(const char *api, bool is_floating) final {
     //MIP_Plugin::gui_create(api,is_floating);
@@ -150,11 +148,9 @@ public: // gui
     //return true;
   }
 
-  //#endif
-
   //----------
 
-  void on_editor_timer() override {
+  void on_editor_timer() final {
     if (MEditor && MEditor->isEditorOpen()) {
       sa_tyr_editor* editor = (sa_tyr_editor*)MEditor;
       editor->timer_update(&MVoiceManager);
@@ -178,7 +174,7 @@ public: // voice into
   }
 
 //------------------------------
-public:
+public: // thread pool
 //------------------------------
 
   void thread_pool_exec(uint32_t task_index) final {
@@ -241,19 +237,86 @@ public: // audio
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
 
-    float** buffer  = AContext->process->audio_outputs[0].data32;
+    float**  output = AContext->process->audio_outputs[0].data32;
     uint32_t length = AContext->process->frames_count;
 
-    MIP_ClearStereoBuffer(buffer,length);
+    MIP_ClearStereoBuffer(output,length);
+
+    // set to defaults in MIP_Plugin.process()
+
+    if (SA_TYR_OVERSAMPLING > 1) {
+      MProcessContext.oversampling = SA_TYR_OVERSAMPLING;
+      MProcessContext.block_buffer = block_buffer;
+      MProcessContext.block_length = length * SA_TYR_OVERSAMPLING;
+    }
+
+    // process the voices
+
     MVoiceManager.processAudioBlock(AContext);
 
-    // gain & pan
+    // downsample
+    // todo.. do better than this!
+
+//    if (SA_TYR_OVERSAMPLING == 1) {
+//      //MIP_CopyStereoBuffer(output,block_buffer,block_length);
+//    }
+//
+//    else {
+
+    if (SA_TYR_OVERSAMPLING > 1) {
+
+      float* src0 = left_buffer;
+      float* src1 = right_buffer;
+      float* dst0 = output[0];
+      float* dst1 = output[1];
+
+      if (SA_TYR_OVERSAMPLING == 2) {
+        for (uint32_t i=0; i<length; i++) {
+          float l0  = *src0++;
+          float l1  = *src0++;
+          //float l   = (l0 + l1) * 0.5;
+          float l   = MDecimator_l.process(l0,l1);
+          float r0  = *src1++;
+          float r1  = *src1++;
+          //float r   = (r0 + r1) * 0.5;
+          float r   = MDecimator_r.process(r0,r1);
+          *dst0++ = l;
+          *dst1++ = r;
+        }
+      }
+
+      else if (SA_TYR_OVERSAMPLING == 4) {
+        for (uint32_t i=0; i<length; i++) {
+          float l00 = *src0++;
+          float l01 = *src0++;
+          float l10 = *src0++;
+          float l11 = *src0++;
+          float l0  = MDecimator_l0.process(l00,l01);
+          //float l1  = MDecimator_l1.process(l10,l11);
+          float l1  = MDecimator_l0.process(l10,l11);
+          float l   = MDecimator_l.process(l0,l1);
+          float r00 = *src1++;
+          float r01 = *src1++;
+          float r10 = *src1++;
+          float r11 = *src1++;
+          float r0  = MDecimator_r0.process(r00,r01);
+          //float r1  = MDecimator_r1.process(r10,r11);
+          float r1  = MDecimator_r0.process(r10,r11);
+          float r   = MDecimator_r.process(r0,r1);
+          *dst0++ = l;
+          *dst1++ = r;
+        }
+      }
+
+    } // os 1
+
     double gain     = MParameters[PAR_MASTER_VOL]->getValue();
     double pan      = MParameters[PAR_MASTER_PAN]->getValue();
     double left     = (1.0 - pan) * gain;
     double right    = (0.0 + pan) * gain;
 
-    MIP_ScaleStereoBuffer(buffer,left,right,length);
+    MIP_ScaleStereoBuffer(output,left,right,length);
+
   }
 
 };
