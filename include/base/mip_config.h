@@ -24,7 +24,7 @@
 
   #define MIP_ALIGNMENT_SIMD                        16
   #define MIP_ALIGNMENT_CACHE                       64
-  #define MIP_AUDIO_SLICE_SIZE                      16
+  #define MIP_AUDIO_SLICE_SIZE                      32
   #define MIP_AUDIO_MAX_BLOCK_SIZE                  4096
   #define MIP_CLIP_RECT_STACK_SIZE                  1024
   #define MIP_LOGFILE_NAME                          "mip.log"
@@ -37,7 +37,6 @@
   #define MIP_PLUGIN_GENERIC_EDITOR_WIDTH           500
   #define MIP_VOICE_MAX_EVENTS_PER_BLOCK            4096
   #define MIP_VOICE_MANAGER_MAX_EVENTS_PER_BLOCK    4096
-//  #define MIP_VOICE_MANAGER_MAX_BLOCK_SIZE          4096
   #define MIP_VOICE_MANAGER_STEAL_VOICES            true
   #define MIP_WINDOW_MAX_DIRTY_WIDGETS              1024
   #define MIP_WINDOW_TIMER_MS                       30
