@@ -25,7 +25,7 @@
   #define MIP_ALIGNMENT_SIMD                        16
   #define MIP_ALIGNMENT_CACHE                       64
   #define MIP_AUDIO_SLICE_SIZE                      32
-  #define MIP_AUDIO_MAX_BLOCK_SIZE                  4096
+  #define MIP_AUDIO_MAX_BLOCK_SIZE                  4096 * 4
   #define MIP_CLIP_RECT_STACK_SIZE                  1024
   #define MIP_LOGFILE_NAME                          "mip.log"
   #define MIP_MAX_PATH_LENGTH                       512
@@ -35,6 +35,14 @@
   #define MIP_PLUGIN_MAX_GUI_EVENTS                 32
   #define MIP_PLUGIN_MAX_PARAM_EVENTS               4096
   #define MIP_PLUGIN_GENERIC_EDITOR_WIDTH           500
+
+  #define MIP_PLUGIN_VST3_TIMER_MS                  50
+  #define MIP_PLUGIN_VST3_MAX_AUDIO_BLOCK_SIZE      4096
+  #define MIP_PLUGIN_VST3_MAX_EVENTS_PER_BLOCK      4096
+  #define MIP_PLUGIN_VST3_MAX_EVENT_SIZE            256
+  #define MIP_PLUGIN_VST3_MAX_NOTE_IDS              32
+  #define MIP_PLUGIN_VST3_MAX_GUI_EVENTS            32
+
   #define MIP_VOICE_MAX_EVENTS_PER_BLOCK            4096
   #define MIP_VOICE_MANAGER_MAX_EVENTS_PER_BLOCK    4096
   #define MIP_VOICE_MANAGER_STEAL_VOICES            true
@@ -149,9 +157,6 @@
 //#define MIP_VST2_XAYMAR
 //#define MIP_VST3_SDK
 //#define MIP_VST3_TRAVESTY
-
-
-
 
 
 //----------------------------------------------------------------------

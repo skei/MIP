@@ -10,11 +10,7 @@
 #include "plugin/mip_note.h"
 #include "plugin/mip_voice.h"
 
-//----------------------------------------------------------------------
-//
-//
-//
-//----------------------------------------------------------------------
+//----------
 
 typedef MIP_Queue<MIP_Note,MIP_VOICE_MANAGER_MAX_EVENTS_PER_BLOCK> MIP_NoteQueue;
 
@@ -31,11 +27,11 @@ class MIP_VoiceManager {
 private:
 //------------------------------
 
-  __MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
-  float MVoiceBuffer[COUNT * MIP_AUDIO_MAX_BLOCK_SIZE] = {0};
-
   MIP_Voice<VOICE>              MVoices[COUNT]        = {};
   MIP_VoiceContext              MVoiceContext         = {};
+
+  __MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
+  float MVoiceBuffer[COUNT * MIP_AUDIO_MAX_BLOCK_SIZE] = {0};
 
   uint32_t                      MNumPlayingVoices     = 0;
   uint32_t                      MNumReleasedVoices    = 0;
@@ -154,6 +150,8 @@ public:
   }
 
   //----------
+
+  // process -> prepare
 
   void processNoteOn(const clap_event_note_t* event) {
     int32_t voice = findFreeVoice(MIP_VOICE_MANAGER_STEAL_VOICES);
@@ -451,7 +449,7 @@ public:
       for (uint32_t i=0; i<MNumActiveVoices; i++) {
         uint32_t voice = MActiveVoices[i];
         float* buffer = MVoiceBuffer;
-        buffer += (voice * MIP_AUDIO_MAX_BLOCK_SIZE);
+        buffer += (voice * MIP_AUDIO_MAX_BLOCK_SIZE);// * MVoiceContext->); // * block_size? process->max_frames_count?
         MIP_AddMonoToStereoBuffer(output,buffer,blocksize);
       }
 

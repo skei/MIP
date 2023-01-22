@@ -27,7 +27,7 @@ public:
   clap_host_check_for_update_t*   MCheckForUpdate   = nullptr;
   clap_host_cv_t*                 MCV               = nullptr;
   clap_host_event_registry_t*     MEventRegistry    = nullptr;
-  clap_host_file_reference*       MFileReference    = nullptr;
+  //clap_host_file_reference*       MFileReference    = nullptr;
   clap_host_gui_t*                MGui              = nullptr;
   clap_host_latency_t*            MLatency          = nullptr;
   clap_host_log_t*                MLog              = nullptr;
@@ -36,7 +36,7 @@ public:
   clap_host_note_ports_t*         MNotePorts        = nullptr;
   clap_host_params_t*             MParams           = nullptr;
   clap_host_posix_fd_support_t*   MPosixFdSupport   = nullptr;
-  clap_host_quick_controls_t*     MQuickControls    = nullptr;
+  //clap_host_quick_controls_t*     MQuickControls    = nullptr;
   clap_host_state_t*              MState            = nullptr;
   clap_host_surround_t*           MSurround         = nullptr;
   clap_host_tail_t*               MTail             = nullptr;
@@ -103,7 +103,7 @@ public:
     MCheckForUpdate   = (clap_host_check_for_update_t*)MHost->get_extension(MHost,CLAP_EXT_CHECK_FOR_UPDATE);
     MCV               = (clap_host_cv_t*)MHost->get_extension(MHost,CLAP_EXT_CV);
     MEventRegistry    = (clap_host_event_registry_t*)MHost->get_extension(MHost,CLAP_EXT_EVENT_REGISTRY);
-    MFileReference    = (clap_host_file_reference*)MHost->get_extension(MHost,CLAP_EXT_FILE_REFERENCE);
+    //MFileReference    = (clap_host_file_reference*)MHost->get_extension(MHost,CLAP_EXT_FILE_REFERENCE);
     MGui              = (clap_host_gui_t*)MHost->get_extension(MHost,CLAP_EXT_GUI);
     MLatency          = (clap_host_latency_t*)MHost->get_extension(MHost,CLAP_EXT_LATENCY);
     MLog              = (clap_host_log_t*)MHost->get_extension(MHost,CLAP_EXT_LOG);
@@ -112,7 +112,7 @@ public:
     MNotePorts        = (clap_host_note_ports_t*)MHost->get_extension(MHost,CLAP_EXT_NOTE_PORTS);
     MParams           = (clap_host_params_t*)MHost->get_extension(MHost,CLAP_EXT_PARAMS);
     MPosixFdSupport   = (clap_host_posix_fd_support_t*)MHost->get_extension(MHost,CLAP_EXT_POSIX_FD_SUPPORT);
-    MQuickControls    = (clap_host_quick_controls_t*)MHost->get_extension(MHost,CLAP_EXT_QUICK_CONTROLS);
+    //MQuickControls    = (clap_host_quick_controls_t*)MHost->get_extension(MHost,CLAP_EXT_QUICK_CONTROLS);
     MState            = (clap_host_state_t*)MHost->get_extension(MHost,CLAP_EXT_STATE);
     MSurround         = (clap_host_surround_t*)MHost->get_extension(MHost,CLAP_EXT_SURROUND);
     MTail             = (clap_host_tail_t*)MHost->get_extension(MHost,CLAP_EXT_TAIL);

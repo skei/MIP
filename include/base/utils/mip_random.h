@@ -9,9 +9,9 @@
 //----------------------------------------------------------------------
 
 /*
-float   MIP_Random(void);
-float   MIP_RandomSigned(void);
-float   MIP_RandomRange(float minval, float maxval);
+double   MIP_Random(void);
+double   MIP_RandomSigned(void);
+double   MIP_RandomRange(double minval, double maxval);
 int32   MIP_RandomInt(void);
 int32   MIP_RandomSignedInt(void);
 int32   MIP_RandomRangeInt(int32 minval, int32 maxval);
@@ -24,9 +24,9 @@ int32   MIP_RandomRangeInt(int32 minval, int32 maxval);
 //#define MIP_RandomSignedInt  MIP_RandomSignedInt_System
 //#define MIP_RandomRangeInt   MIP_RandomRangeInt_System
 
-float   MIP_Random_LCG();
-float   MIP_RandomSigned_LCG();
-float   MIP_RandomRange_LCG(float minval, float maxval);
+double   MIP_Random_LCG();
+double   MIP_RandomSigned_LCG();
+double   MIP_RandomRange_LCG(double minval, double maxval);
 int32_t MIP_RandomInt_LCG();
 int32_t MIP_RandomSignedInt_LCG();
 int32_t MIP_RandomRangeInt_LCG(int32_t minval, int32_t maxval);
@@ -42,22 +42,22 @@ int32_t MIP_RandomRangeInt_LCG(int32_t minval, int32_t maxval);
 // system
 //----------------------------------------------------------------------
 
-float MIP_Random_System(void) {
-  float rnd = (float)rand();
-  float result = rnd * (float)MIP_INVRANDMAX;
+double MIP_Random_System(void) {
+  double rnd = (double)rand();
+  double result = rnd * (double)MIP_INVRANDMAX;
   return result;
 }
 
 //----------
 
-float MIP_RandomSigned_System(void) {
-  float r = (float)rand() * (float)MIP_INVRANDMAX;// / (float)RAND_MAX;
+double MIP_RandomSigned_System(void) {
+  double r = (double)rand() * (double)MIP_INVRANDMAX;// / (double)RAND_MAX;
   return r * 2.0f - 1.0f;
 }
 
 // inclusive
 
-float MIP_RandomRange_System(float minval, float maxval) {
+double MIP_RandomRange_System(double minval, double maxval) {
   return minval + (MIP_Random() * (maxval - minval) );
 }
 
@@ -84,12 +84,12 @@ int32_t MIP_RandomRangeInt_System(int32_t minval, int32_t maxval) {
 
 //----------------------------------------------------------------------
 // http://iquilezles.org/www/articles/sfrand/sfrand.htm
-// returns a random float within the range of -1 to 1
+// returns a random double within the range of -1 to 1
 //----------------------------------------------------------------------
 
 /*
-float SRandFloat(int* a_Seed) {
-  float res;
+double SRanddouble(int* a_Seed) {
+  double res;
   *a_Seed *= 16807;
   // warning: dereferencing type-punned pointer will break strict-aliasing rules|
   // warning: dereferencing pointer \91res.89\92 does break strict-aliasing rules|
@@ -136,28 +136,36 @@ float SRandFloat(int* a_Seed) {
 uint32_t rand_lcg_seed = 666;
 
 int32_t rand_lcg() {
-  rand_lcg_seed = ((uint64_t)rand_lcg_seed * 279470273UL) % 4294967291UL;
-  return (int32_t)rand_lcg_seed;
+  //rand_lcg_seed = ((uint64_t)rand_lcg_seed * 279470273UL) % 4294967291UL;
+  //return (int32_t)rand_lcg_seed;
+  uint64_t v = (uint64_t)rand_lcg_seed * 279470273UL;
+  v %= 4294967291UL;
+  rand_lcg_seed = (uint32_t)v;
+  return (uint32_t)v;
 }
 
 //
 
-float MIP_Random_LCG(void) {
-  float result = (float)rand_lcg() * (float)MIP_INVRANDMAX;
+double MIP_Random_LCG(void) {
+  double result = (double)rand_lcg() * (double)MIP_INVRANDMAX;
   return abs(result);
 }
 
 //----------
 
-float MIP_RandomSigned_LCG(void) {
-  float result = (float)rand_lcg() * (float)MIP_INVRANDMAX;// / (float)RAND_MAX;
-  //return r * 2.0f - 1.0f;
+double MIP_RandomSigned_LCG(void) {
+  double result = (double)rand_lcg();
+  result *= (double)MIP_INVRANDMAX;
+  //return result * 2.0f - 1.0f;
+
+  //printf("rnd %.3f MIP_INVRANDMAX %f\n",result,MIP_INVRANDMAX);
+
   return result;
 }
 
 // inclusive
 
-float MIP_RandomRange_LCG(float minval, float maxval) {
+double MIP_RandomRange_LCG(double minval, double maxval) {
   return minval + (MIP_Random_LCG() * (maxval - minval) );
 }
 
@@ -364,18 +372,18 @@ for (int i=0; i<samplesToProduce; ++i) {
 //----------------------------------------------------------------------
 
 //----------------------------------------------------------------------
-// fast float random numbers
+// fast double random numbers
 // http://www.musicdsp.org/archive.php?classid=5#273
 //----------------------------------------------------------------------
 
 /*
-  a small and fast implementation for random float numbers in the range [-1,1],
+  a small and fast implementation for random double numbers in the range [-1,1],
   usable as white noise oscillator.
   compared to the naive usage of the rand() function it gives a speedup factor
   of 9-10. compared to a direct implementation of the rand() function (visual
   studio implementation) it still gives a speedup by a factor of 2-3.
   apart from beeing faster it also provides more precision for the resulting
-  floats since its base values use full 32bit precision.
+  doubles since its base values use full 32bit precision.
 */
 
 //----------
@@ -388,7 +396,7 @@ for (int i=0; i<samplesToProduce; ++i) {
   is written such that it assumes that RAND_MAX is equal to 0x7FFF, which was
   not true on my system (it was 0x7FFFFFFF). Fortunately, this was easy to fix.
   I simply removed the >> 16 and worked fine for me. My final implementation was:
-  return (float)(RandSeed = RandSeed * 214013L + 2531011L) / 0x7FFFFFFF * 2.0f * amp - amp;
+  return (double)(RandSeed = RandSeed * 214013L + 2531011L) / 0x7FFFFFFF * 2.0f * amp - amp;
   where "amp" is the desired amplitude.
 
   -----
@@ -401,7 +409,7 @@ for (int i=0; i<samplesToProduce; ++i) {
   I don't understand Judahmenter's comment about 3 not limiting the amplitude.
   As it stands it returns a value -1 to 1, so just multiply by your 'amp' value.
   This turns into a handy 0-1 random number if you take off the sign bit:
-  (float)(RandSeed & 0x7FFFFFFF) * 4.6566129e-010f;
+  (double)(RandSeed & 0x7FFFFFFF) * 4.6566129e-010f;
 */
 
 //----------
@@ -415,8 +423,8 @@ static int RandSeed = 1;
 // using rand() (16bit precision)
 // takes about 110 seconds for 2 billion calls
 
-float RandFloat1() {
-  return ((float)rand()/RAND_MAX) * 2.0f - 1.0f;
+double Randdouble1() {
+  return ((double)rand()/RAND_MAX) * 2.0f - 1.0f;
 }
 
 //----------
@@ -424,18 +432,18 @@ float RandFloat1() {
 // direct implementation of rand() (16 bit precision)
 // takes about 32 seconds for 2 billion calls
 
-float RandFloat2() {
-  return ((float)(((RandSeed = RandSeed * 214013L + 2531011L) >> 16) & 0x7fff)/RAND_MAX) * 2.0f - 1.0f;
+double Randdouble2() {
+  return ((double)(((RandSeed = RandSeed * 214013L + 2531011L) >> 16) & 0x7fff)/RAND_MAX) * 2.0f - 1.0f;
 }
 
 //----------
 
-// fast rand float, using full 32bit precision
+// fast rand double, using full 32bit precision
 // takes about 12 seconds for 2 billion calls
 
-float Fast_RandFloat() {
+double Fast_Randdouble() {
   RandSeed *= 16807;
-  return (float)RandSeed * 4.6566129e-010f;
+  return (double)RandSeed * 4.6566129e-010f;
 }
 */
 

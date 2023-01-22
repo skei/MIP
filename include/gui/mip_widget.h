@@ -314,15 +314,19 @@ public:
 //------------------------------
 
   //virtual void appendChildWidget(MIP_Widget* AWidget, MIP_WidgetListener* AListener=nullptr) {
-  virtual MIP_Widget* appendChildWidget(MIP_Widget* AWidget, MIP_WidgetListener* AListener=nullptr) {
+  virtual MIP_Widget* appendChildWidget(MIP_Widget* AWidget, bool ARealign=false, MIP_WidgetListener* AListener=nullptr) {
     int32_t index = MChildren.size();
     //AWidget->MParent = this;
     if (AListener) AWidget->MWidgetListener = AListener;
     else AWidget->MWidgetListener = this;
     AWidget->MIndex = index;
 
-//    MWidget->MRect.x += MRect.x;
-//    MWidget->MRect.y += MRect.y;
+    if (ARealign) {
+      AWidget->MRect.x += MRect.x;
+      AWidget->MRect.y += MRect.y;
+      AWidget->MBaseRect.x += MRect.x;
+      AWidget->MBaseRect.y += MRect.y;
+    }
 
     MChildren.append(AWidget);
     //return index;

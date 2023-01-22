@@ -174,13 +174,17 @@ public:
     if (index < 0) return kNotImplemented;
     const clap_plugin_descriptor_t* descriptor = MIP_REGISTRY.getDescriptor(index);
     //MIP_Vst3Host* vst3_host = new MIP_Vst3Host();
+
     MIP_Vst3HostImplementation* vst3_host = new MIP_Vst3HostImplementation();
+
     //MIP_Print("vst3_host: %p\n",vst3_host);
     //MIP_Print("vst3_host->getHost(): %p\n",vst3_host->getHost());
 
     MIP_ClapPlugin* plugin = MIP_CreatePlugin(index,descriptor,vst3_host->getHost());
     plugin->init();
     MIP_Vst3Plugin* vst3plugin = new MIP_Vst3Plugin(plugin,vst3_host);
+
+
 
 //    MIP_Plugin* plug = (MIP_Plugin*)plugin;
 //    uint32_t num_par = plug->getParameterCount();
@@ -265,6 +269,7 @@ bool vst3_module_exit(void) asm ("ModuleExit");
 __attribute__ ((visibility ("default")))
 IPluginFactory* PLUGIN_API mip_vst3_entry() {
   MIP_Print("GetPluginFactory\n");
+  printf("GetPluginFactory\n");
   return new MIP_Vst3Entry();
 }
 
@@ -277,6 +282,7 @@ IPluginFactory* PLUGIN_API mip_vst3_entry() {
 __attribute__ ((visibility ("default")))
 bool vst3_module_entry(void* sharedLibraryHandle)  {
   MIP_Print("ModuleEntry\n");
+  printf("ModuleEntry\n");
   //if (++counter == 1) {
   //  moduleHandle = sharedLibraryHandle;
   //  return true;
@@ -288,6 +294,7 @@ bool vst3_module_entry(void* sharedLibraryHandle)  {
 __attribute__ ((visibility ("default")))
 bool vst3_module_exit(void) {
   MIP_Print("ModuleExit\n");
+  printf("ModuleExit\n");
   //if (--counter == 0) {
   //  moduleHandle = nullptr;
   //  return true;

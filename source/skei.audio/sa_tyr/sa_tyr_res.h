@@ -120,22 +120,15 @@ public:
   //----------
 
   T process(T in) {
-    T out = in;
 
+    T out = in;
     T delay = (MSampleRate / MHz);
     //delay *= 0.5;
 
     // feedback
 
     T fb = MFeedback;
-    //fb = 1.0 - fb;
-    //fb = fb * fb * fb;
-
-    //fb = MIP_Curve(fb,0.95);
-
-fb = MIP_Curve(fb,0.98);
-
-    //fb = 1.0 - fb;
+    fb = MIP_Curve(fb,0.98);
 
     // damp
 
@@ -169,54 +162,33 @@ fb = MIP_Curve(fb,0.98);
 
     //_in *= (MShape * 2.0);
 
-    switch (MMode) {
+//    switch (MMode) {
+//      case SA_TYR_RES_TYPE_PLUCK: {
+//        if (MDelay.hasWrapped()) {
+//          _in = 0.0;
+//        }
+//        break;
+//      }
+//      case SA_TYR_RES_TYPE_REP: {
+//        break;
+//      }
+//    }
 
-      case SA_TYR_RES_TYPE_PLUCK: {
-        if (MDelay.hasWrapped()) {
-          _in = 0.0;
-          //_in *= MImpulse;
-        }
-        break;
-      }
-
-      case SA_TYR_RES_TYPE_REP: {
-
-        /*
-        if (MDelay.hasWrapped()) {
-          MSpeedCounter += 1;
-          if (MSpeedCounter >= MSpeed) {
-            MSpeedCounter = 0;
-            MDelay.start();
-          }
-          else {
-            _in = 0.0;
-            //_in *= fabs( MImpulse );
-            //_in += (_in * MImpulse);
-          }
-        }
-        */
-
-        //float ph = MDelay.getPhase();
-        //if (ph < 0.5) {
-        //  float p = ph * 2.0;
-        //  //_in *= p;
-        //  _in = p;
-        //}
-        //else {
-        //  float p = 1.0 - ((ph - 0.5) * 2.0);
-        //  //_in *= p;
-        //  _in = p;
-        //}
-
-        break;
-      }
-
+    if ((MMode == SA_TYR_RES_TYPE_PLUCK) && MDelay.hasWrapped()) {
+      _in = 0.0;
     }
 
     MDelay.getFeedbackFX()->shape = MShape;
     out = MDelay.process(_in,fb,delay);
 
-    if (MDelay.hasWrapped()) {
+//    if (MDelay.hasWrapped() && (MMode == SA_TYR_RES_TYPE_REP)) {
+//      out += (MImpulse * _in);
+//    }
+//    else {
+//      out += _in;
+//    }
+
+    if ((MMode == SA_TYR_RES_TYPE_REP) && MDelay.hasWrapped()) {
       out += (MImpulse * _in);
     }
     else {

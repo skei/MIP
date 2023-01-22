@@ -106,36 +106,18 @@ public:
 
   //----------
 
-  // don't touch stuff other voices might be touching!
-
   uint32_t process(uint32_t AState, uint32_t AOffset, uint32_t ALength) {
-    //MIP_Print("state %i offset %i length %i\n",AState,AOffset,ALength);
-
-    float* buffer = MContext->buffer;
-    buffer += (MIndex * MIP_VOICE_MANAGER_MAX_BLOCK_SIZE);
+    float* buffer = MContext->voice_buffer;
+    buffer += (MIndex * MIP_AUDIO_MAX_BLOCK_SIZE);
     buffer += AOffset;
-
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
       for (uint32_t i=0; i<ALength; i++) {
-        ph = MIP_Fract(ph);           // wrap phase
-        //float v = sin(ph * MIP_PI2);
-        float v = (ph * 2.0) - 1.0;   // 0..1 -> -1..1
-
-        // waste some cpu for testing..
-        /*
-        double r = MIP_RandomSigned();
-        for (uint32_t test_i=0; test_i<200; test_i++) {
-          v += (r * 0.0001);
-          r += 0.001;
-        }
-        */
-
-        *buffer++ = v * 0.1;          // scale it down a bit
-        ph += phadd;                  // advance phase
-
-
-      } // for voices
-    } // playing
+        ph = MIP_Fract(ph);
+        float v = (ph * 2.0) - 1.0;
+        *buffer++ = v * 0.1;
+        ph += phadd;
+      }
+    }
     else {
       memset(buffer,0,ALength * sizeof(float));
     }
@@ -145,29 +127,17 @@ public:
   //----------
 
   uint32_t processSlice(uint32_t AState, uint32_t AOffset) {
-    //MIP_Print("state %i offset %i\n",AState,AOffset);
-    float* buffer = MContext->buffer;
-    buffer += (MIndex * MIP_VOICE_MANAGER_MAX_BLOCK_SIZE);
+    float* buffer = MContext->voice_buffer;
+    buffer += (MIndex * MIP_AUDIO_MAX_BLOCK_SIZE);
     buffer += AOffset;
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
       for (uint32_t i=0; i<MIP_AUDIO_SLICE_SIZE; i++) {
         ph = MIP_Fract(ph);
-        //float v = sin(ph * MIP_PI2);
         float v = (ph * 2.0) - 1.0;
-
-        // waste some cpu for testing..
-        /*
-        double r = MIP_RandomSigned();
-        for (uint32_t test_i=0; test_i<200; test_i++) {
-          v += (r * 0.0001);
-          r += 0.001;
-        }
-        */
-
         *buffer++ = v * 0.1;
         ph += phadd;
-      } // for voices
-    } // playing
+      }
+    }
     else {
       memset(buffer,0,MIP_AUDIO_SLICE_SIZE * sizeof(float));
     }

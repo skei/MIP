@@ -53,7 +53,9 @@
 // nc -U -l -k /tmp/mip.socket
 
 #ifdef MIP_PLUGIN
-  #define MIP_DEBUG_PRINT_SOCKET
+  #ifdef MIP_LINUX
+    #define MIP_DEBUG_PRINT_SOCKET
+  #endif
 #endif
 
 #include "base/mip_debug.h"

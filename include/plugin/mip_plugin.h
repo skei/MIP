@@ -501,11 +501,21 @@ public: // ext gui
 
   bool gui_set_size(uint32_t width, uint32_t height) override {
     //MIP_Print("%i,%i\n",width,height);
-    MIP_Assert(MEditor);
+
+    // !Meditor in reaper/vst3..
+    //MIP_Assert(MEditor);
+
     //MIsEditorBusy = true;
-    bool result = MEditor->setSize(width,height);
-    //MIsEditorBusy = false;
-    return result;
+    if (MEditor) {
+      bool result = MEditor->setSize(width,height);
+      //MIsEditorBusy = false;
+      return result;
+    }
+    else {
+      //MInitialEditorWidth = width;
+      //MInitialEditorHeight = height;
+      return true;
+    }
   }
 
   //----------

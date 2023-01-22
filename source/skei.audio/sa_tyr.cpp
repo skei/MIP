@@ -11,14 +11,14 @@
 
 #define SA_TYR_EDITOR_WIDTH     836
 #define SA_TYR_EDITOR_HEIGHT    703
-#define SA_TYR_NUM_VOICES       64
+#define SA_TYR_NUM_VOICES       128
 #define SA_TYR_PLUGIN_AUTHOR    "skei.audio"
 #define SA_TYR_PLUGIN_NAME      "sa_tyr"
-#define SA_TYR_PLUGIN_VERSION   "0.0.12"
+#define SA_TYR_PLUGIN_VERSION   "0.0.13"
 #define SA_TYR_PLUGIN_WWW       "https://torhelgeskei.com"
 
 // ugh.. offsets, etc should be multiplied by oversampling tii...
-#define SA_TYR_OVERSAMPLING     1
+#define SA_TYR_OVERSAMPLING     4
 
 //----------
 
@@ -66,10 +66,8 @@ private:
   sa_tyr_voice_manager  MVoiceManager       = {};
 
   MIP_Decimator59Filter MDecimator_l0       = {};
-  //MIP_Decimator59Filter MDecimator_l1       = {};
-  MIP_Decimator59Filter MDecimator_l        = {};
   MIP_Decimator59Filter MDecimator_r0       = {};
-  //MIP_Decimator59Filter MDecimator_r1       = {};
+  MIP_Decimator59Filter MDecimator_l        = {};
   MIP_Decimator59Filter MDecimator_r        = {};
 
   __MIP_ALIGNED(MIP_ALIGNMENT_CACHE) float left_buffer[16384] = {0};

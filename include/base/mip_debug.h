@@ -27,6 +27,14 @@
     #include <sys/un.h>
   #endif
   #ifdef MIP_WIN32
+
+    #ifndef _WIN32_WINNT
+      #define _WIN32_WINNT 0x0600
+    #endif
+
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+
   #endif
 #endif
 
@@ -82,7 +90,14 @@ private:
   char MPrintBuffer[256] = {0};
 
   #ifdef MIP_DEBUG_PRINT_SOCKET
-    int MSocketHandle = 0;
+    #ifdef MIP_WIN32
+      //unsigned int  MSocketHandle = 0;
+      SOCKET  MSocketHandle = 0;
+      WSADATA MWsadata      = {};
+    #endif
+    #ifdef MIP_LINUX
+      int MSocketHandle = 0;
+    #endif
   #endif
 
   #ifdef MIP_DEBUG_PRINT_TIME
@@ -173,6 +188,20 @@ private:
       snprintf(address.sun_path,108,"/tmp/mip.socket"); // max 108?
       connect(MSocketHandle,reinterpret_cast<sockaddr*>(&address),sizeof(sockaddr_un));
     #endif
+
+    #ifdef MIP_WIN32
+      if (WSAStartup(MAKEWORD(2,2),&MWsadata)) {
+        //fprintf(stderr, "Failed to initialize.\n");
+      }
+
+      MSocketHandle = socket(PF_UNIX,SOCK_STREAM,0);
+
+      //sockaddr_un address;
+      //memset(&address,0,sizeof(sockaddr_un));
+      //address.sun_family = 0; // TODO!
+      //snprintf(address.sun_path,108,"/tmp/mip.socket"); // max 108?
+      //connect(MSocketHandle,reinterpret_cast<sockaddr*>(&address),sizeof(sockaddr_un));
+    #endif
   }
 
   //----------
@@ -180,6 +209,10 @@ private:
   void socket_close() {
     #ifdef MIP_LINUX
       close(MSocketHandle);
+    #endif
+    #ifdef MIP_WIN32
+      closesocket(MSocketHandle);
+      WSACleanup();
     #endif
   }
 

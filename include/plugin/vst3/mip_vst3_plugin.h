@@ -15,12 +15,12 @@
 
 //typedef MIP_Array<clap_event_header_t*> MIP_Vst3EventHeaders;
 
-#define MIP_PLUGIN_VST3_TIMER_MS               50
-#define MIP_PLUGIN_VST3_MAX_AUDIO_BLOCK_SIZE   4096
-#define MIP_PLUGIN_VST3_MAX_EVENTS_PER_BLOCK   4096
-#define MIP_PLUGIN_VST3_MAX_EVENT_SIZE         256
-#define MIP_PLUGIN_VST3_MAX_NOTE_IDS           32
-#define MIP_PLUGIN_VST3_MAX_GUI_EVENTS         32
+//#define MIP_PLUGIN_VST3_TIMER_MS               50
+//#define MIP_PLUGIN_VST3_MAX_AUDIO_BLOCK_SIZE   4096
+//#define MIP_PLUGIN_VST3_MAX_EVENTS_PER_BLOCK   4096
+//#define MIP_PLUGIN_VST3_MAX_EVENT_SIZE         256
+//#define MIP_PLUGIN_VST3_MAX_NOTE_IDS           32
+//#define MIP_PLUGIN_VST3_MAX_GUI_EVENTS         32
 
 // events buffer : 4096 * 256 = 1m
 
@@ -186,7 +186,7 @@ private: // out_events
           MIP_Print("TODO: send PARAM_GESTURE_BEGIN to host\n");
           return true;
         case CLAP_EVENT_PARAM_GESTURE_END:
-          MIP_Print("TODO: send PARAM_GESTURE_BEGIN to host\n");
+          MIP_Print("TODO: send PARAM_GESTURE_END to host\n");
           return true;
 
         case CLAP_EVENT_PARAM_VALUE: {
@@ -194,8 +194,16 @@ private: // out_events
           clap_event_param_value_t* param_value = (clap_event_param_value_t*)event;
           uint32_t index = param_value->param_id;
           double value = param_value->value;
+
           clap_param_info_t info;
-          MPlugin->params_get_info(index,&info);
+
+          MIP_Print("\n");
+          MIP_Print("index %i\n",index);
+          MIP_Print("&info %p\n",&info);
+          MIP_Print("MPlugin %p\n",MPlugin);
+          MIP_Print("\n");
+
+          MPlugin->params_get_info(index,&info); // crash? (win32)
           double range = info.max_value - info.min_value;
           if (range > 0) {
             value -= info.min_value;
@@ -2543,11 +2551,11 @@ public:
 
 };
 
-#undef MIP_PLUGIN_VST3_TIMER_MS
-#undef MIP_PLUGIN_VST3_MAX_AUDIO_BLOCK_SIZE
-#undef MIP_PLUGIN_VST3_MAX_EVENTS_PER_BLOCK
-#undef MIP_PLUGIN_VST3_MAX_EVENT_SIZE
-#undef MIP_PLUGIN_VST3_MAX_NOTE_IDS
+//#undef MIP_PLUGIN_VST3_TIMER_MS
+//#undef MIP_PLUGIN_VST3_MAX_AUDIO_BLOCK_SIZE
+//#undef MIP_PLUGIN_VST3_MAX_EVENTS_PER_BLOCK
+//#undef MIP_PLUGIN_VST3_MAX_EVENT_SIZE
+//#undef MIP_PLUGIN_VST3_MAX_NOTE_IDS
 
 //----------------------------------------------------------------------
 #endif

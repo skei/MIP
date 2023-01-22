@@ -89,8 +89,9 @@ const char  MIP_NULL_STRING[] = "";
   #define MIP_UINT_MAX     MIP_UINT64_MAX  // 18446744073709551615UL
 #endif
 
-#define MIP_RANDMAX        RAND_MAX  // 2147483647
-#define MIP_INVRANDMAX     (1.0 / (float)MIP_RANDMAX)
+//#define MIP_RANDMAX        RAND_MAX  // 2147483647
+#define MIP_RANDMAX        0x7fffffff
+#define MIP_INVRANDMAX     (1.0 / (double)MIP_RANDMAX)
 
 //----------------------------------------------------------------------
 #endif
