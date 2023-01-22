@@ -1,4 +1,7 @@
 
+//#define MIP_PLUGIN_CLAP
+#define MIP_PLUGIN_VST3
+
 #include "audio/mip_audio_utils.h"
 #include "audio/old/filters/mip_decimator_filter.h"
 #include "plugin/mip_note.h"

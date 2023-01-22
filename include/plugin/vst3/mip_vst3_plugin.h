@@ -90,8 +90,9 @@ private:
   MIP_Vst3NoteId                  MNoteIds[MIP_PLUGIN_VST3_MAX_NOTE_IDS]                                   = {};
 
   MIP_Queue<uint32_t,MIP_PLUGIN_VST3_MAX_GUI_EVENTS> MHostParamQueue = {}; // gui -> host
-  double  MQueuedHostParamValues[MIP_PLUGIN_VST3_MAX_GUI_EVENTS] = {0};
-  //double  MQueuedHostParamValues[MIP_PLUGIN_VST3_MAX_EVENTS_PER_BLOCK] = {0};
+
+  //double  MQueuedHostParamValues[MIP_PLUGIN_VST3_MAX_GUI_EVENTS] = {0};
+  double  MQueuedHostParamValues[MIP_PLUGIN_VST3_MAX_EVENTS_PER_BLOCK] = {0};
 
 //------------------------------
 public:

@@ -24,10 +24,10 @@
 //
 //----------------------------------------------------------------------
 
-#ifndef MIP_NO_GUI
-  #define MIP_GUI_XCB
-  #define MIP_PAINTER_NANOVG
-#endif
+//#ifndef MIP_NO_GUI
+//  #define MIP_GUI_XCB
+//  #define MIP_PAINTER_NANOVG
+//#endif
 
 #define MIP_PLUGIN_GENERIC_EDITOR
 
