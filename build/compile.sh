@@ -33,10 +33,10 @@
 #FLAGS=""
 #LIBS=""
 
-FLAGS="-Wall "
+FLAGS="-Wall -Wno-unknown-pragmas -std=gnu++17 -shared -fPIC -Wl,--as-needed -pthread -O3 -ffast-math -s -static-libstdc++ -static-libgcc -fPIE "
 DEF=""
-INC="-I../include "
-LIB="-lpthread -lrt -lm"
+INC="-I../include -I../include/extern/vst3/vst3sdk "
+LIB="-lX11 -lX11-xcb -lxcb -lxcb-util -lxcb-image -lxcb-cursor -lxkbcommon -lxcb-keysyms -lGL -lGLU -lGLX -ldl -lrt "
 #POST="-s -lstdc++ -lm "
 
 # --------------------------------------------------
@@ -92,7 +92,7 @@ do
 done
 
 # --------------------------------------------------
-# paths..
+# input, output
 # --------------------------------------------------
 
 INPUT_FILE=${INPUT##*/}
@@ -123,7 +123,7 @@ echo "OUTPUT     : $OUTPUT"
 echo "OUTPUT_FILE: $OUTPUT_FILE"
 echo "OUTPUT_BASE: $OUTPUT_BASE"
 echo "OUTPUT_EXT : $OUTPUT_EXT"
-echo "OUTPUT_DIR : $OUTPUT_DIR"
+echo "OUTPUT_DIR : $OUTPUT_DIR" 
 
 # --------------------------------------------------
 #
@@ -135,11 +135,11 @@ echo "OUTPUT_DIR : $OUTPUT_DIR"
 
 # ----------
 
-#if [ "$DEBUG" = "on" ]; then
-#  C_FLAGS+=""
+if [ "$DEBUG" = "on" ]; then
+  FLAGS+="-DMIP_DEBUG "
 #else
 #  FLAGS=""
-#fi
+fi
 
 # ----------
 
@@ -149,29 +149,33 @@ echo "OUTPUT_DIR : $OUTPUT_DIR"
 
 # ----------
 
-#if [ "$TYPE" = "exe" ]; then
-#  FLAGS+="-DKODE_PLUGIN_EXE "
-#fi
+if [ "$FORMAT" = "clap" ]; then
+  FLAGS+="-DMIP_PLUGIN_CLAP "
+fi
 
-#if [ "$TYPE" = "ladspa" ]; then
+if [ "$FORMAT" = "exe" ]; then
+  FLAGS+="-DMIP_PLUGIN_EXE "
+fi
+
+#if [ "$FORMAT" = "ladspa" ]; then
 #  FLAGS+="-DKODE_PLUGIN_LADSPA "
 #fi
 
-#if [ "$TYPE" = "dssi" ]; then
+#if [ "$FORMAT" = "dssi" ]; then
 #  FLAGS+="-DKODE_PLUGIN_DSSI "
 #fi
 
-#if [ "$TYPE" = "lv2" ]; then
+#if [ "$FORMAT" = "lv2" ]; then
 #  FLAGS+="-DKODE_PLUGIN_LV2 "
 #fi
 
-#if [ "$TYPE" = "vst2" ]; then
-#  FLAGS+="-DKODE_PLUGIN_VST2 "
-#fi
+if [ "$FORMAT" = "vst2" ]; then
+  FLAGS+="-DMIP_PLUGIN_VST2 "
+fi
 
-#if [ "$TYPE" = "vst3" ]; then
-#  FLAGS+="-DKODE_PLUGIN_VST3 "
-#fi
+if [ "$FORMAT" = "vst3" ]; then
+  FLAGS+="-DMIP_PLUGIN_VST3 "
+fi
 
 # ----------
 
@@ -185,9 +189,9 @@ echo "OUTPUT_DIR : $OUTPUT_DIR"
 
 # ----------
 
-#if [ "$GUI" = "nogui" ]; then
-#  DEF+="-DKODE_NO_GUI "
-#fi
+if [ "$GUI" = "nogui" ]; then
+  DEF+="-DMIP_NO_GUI "
+fi
 
 #if [ "$GUI" = "xcb" ]; then
 #  FLAGS+="-DKODE_GUI_XCB "
