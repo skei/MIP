@@ -1,12 +1,4 @@
 
-//// nc -U -l -k /tmp/mip.socket
-//#ifdef MIP_PLUGIN
-//  #define MIP_DEBUG_PRINT_SOCKET
-//#endif
-
-//----------
-
-
 #define SA_BOTAGE_NAME          "sa_botage"
 #define SA_BOTAGE_VENDOR        "skei.audio"
 #define SA_BOTAGE_VERSION       "0.1.19"

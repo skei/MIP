@@ -1,4 +1,9 @@
-// 174 LOC
+
+#define MIP_PLUGIN_CLAP
+#define MIP_PLUGIN_VST2
+#define MIP_PLUGIN_VST3
+
+//----------
 
 #include "base/mip.h"
 #include "audio/mip_audio_math.h"
@@ -215,6 +220,7 @@ public:
   bool gui_create(const char* api, bool is_floating) final {
     MIsEditorOpen = false;
     MEditor = new MIP_Editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
+
     if (MEditor) {
       MIP_PanelWidget* background = new MIP_PanelWidget(MIP_DRect(0,0, MY_PLUGIN_EDITOR_WIDTH, MY_PLUGIN_EDITOR_HEIGHT));
       MEditor->setRootWidget(background);

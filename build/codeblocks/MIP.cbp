@@ -315,6 +315,7 @@
 					<Add library="gdi32" />
 					<Add library="msimg32" />
 					<Add library="opengl32" />
+					<Add library="ws2_32" />
 				</Linker>
 			</Target>
 			<Target title="win32 plugin sanitize">
@@ -361,6 +362,7 @@
 		<Unit filename="../../include/audio/io/mip_jack.h" />
 		<Unit filename="../../include/audio/mip_audio_file.h" />
 		<Unit filename="../../include/audio/mip_audio_math.h" />
+		<Unit filename="../../include/audio/mip_audio_processor.h" />
 		<Unit filename="../../include/audio/mip_audio_utils.h" />
 		<Unit filename="../../include/audio/old/analysis/mip_beat_detector.h" />
 		<Unit filename="../../include/audio/old/analysis/mip_envelope_follower.h" />

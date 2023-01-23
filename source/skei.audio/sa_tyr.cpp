@@ -1,5 +1,5 @@
 
-//#define MIP_PLUGIN_CLAP
+#define MIP_PLUGIN_CLAP
 #define MIP_PLUGIN_VST3
 
 #include "audio/mip_audio_utils.h"

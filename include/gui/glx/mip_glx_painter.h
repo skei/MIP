@@ -134,20 +134,16 @@ public:
       MIP_Assert(window);
       MDrawable = glXCreateWindow(MDisplay,MFBConfig,window,nullptr);
       MDrawableIsWindow = true;
-
       MIP_GLXDisableVSync(MDisplay,MDrawable);
-
     }
     else if (ATarget->tgtIsSurface()) { // todo
       //MIP_Print("pixmap\n");
-
       MFBConfig = findFBConfig(MIP_GlxPixmapAttribs); // crash..
       MContext = createContext(MFBConfig);
       xcb_pixmap_t pixmap = ATarget->tgtGetPixmap();
       MIP_Assert(pixmap);
       MDrawable = glXCreatePixmap(MDisplay,MFBConfig,pixmap,nullptr);
       MDrawableIsWindow = false;
-
     }
     else {
       MIP_Print("ATarget is not a window or surface\n");
@@ -307,8 +303,7 @@ private:
   //    loadOpenGL();
 
   GLXContext createContext(GLXFBConfig fbconfig) {
-    //MIP_PRINT;
-    GLXContext context = glXCreateNewContext(MDisplay,fbconfig,GLX_RGBA_TYPE,nullptr,True);
+    GLXContext context = glXCreateNewContext(MDisplay,fbconfig,GLX_RGBA_TYPE,nullptr,True); // ???
     MIP_Assert(context);
     MIP_LoadOpenGL();
     return context;

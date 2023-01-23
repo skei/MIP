@@ -1,6 +1,6 @@
 # depslib dependency file v1.0
-1674328467 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../source/skei.audio/sa_tyr.cpp"
+1674467271 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../source/skei.audio/sa_mael.cpp"
 
 1670414796 /DISKS/sda2/code/git/MIP/build/test/test1.cpp
 	"gui/mip_window.h"
@@ -500,7 +500,7 @@
 	"base/mip.h"
 	"gui/gdi/mip_gdi.h"
 
-1672669006 /DISKS/sda2/code/git/MIP/include/gui/glx/mip_glx_painter.h
+1674467504 /DISKS/sda2/code/git/MIP/include/gui/glx/mip_glx_painter.h
 	"base/mip.h"
 	"gui/base/mip_base_painter.h"
 	"gui/glx/mip_glx.h"
@@ -874,7 +874,7 @@
 
 1672175500 /DISKS/sda2/code/git/MIP/include/plugin/exe/mip_exe.h
 
-1674323741 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
+1674466993 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_botage.cpp
 	"plugin/mip_plugin.h"
 	"audio/mip_audio_utils.h"
 	"sa_botage/sa_botage_parameters.h"
@@ -1345,7 +1345,7 @@
 1655451196 /DISKS/sda2/code/git/MIP/include/plugin/vst3/mip_vst3_host_implementation.h
 	"plugin/clap/mip_clap_host_implementation.h"
 
-1674327348 /DISKS/sda2/code/git/MIP/include/plugin/vst3/mip_vst3_plugin.h
+1674380357 /DISKS/sda2/code/git/MIP/include/plugin/vst3/mip_vst3_plugin.h
 	"base/mip.h"
 	"plugin/clap/mip_clap.h"
 	"plugin/vst3/mip_vst3.h"
@@ -1471,7 +1471,7 @@
 	"plugin/clap/mip_clap.h"
 	"plugin/mip_process_context.h"
 
-1673461061 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_mael.cpp
+1674467256 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_mael.cpp
 	"base/mip.h"
 	"audio/mip_audio_math.h"
 	"audio/mip_audio_utils.h"
