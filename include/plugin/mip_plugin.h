@@ -48,6 +48,7 @@ protected:
   MIP_NotePortArray     MNoteOutputPorts          = {};
 
   MIP_Editor*           MEditor                   = nullptr;
+  //MIP_ClapHost*         MHost                     = nullptr;
 
   bool                  MIsInitialized            = false;
   bool                  MIsActivated              = false;
@@ -82,7 +83,7 @@ public:
   MIP_Plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_ClapPlugin(ADescriptor,AHost) {
     //MIP_PRINT;
-    // TODO: implenent MExeHost
+    //MHost = new MIP_ClapHost(AHost);
     //TODO: setInitialEditorSize
     #ifndef MIP_EXE
       LOG.print("  CLAP: host.name:    %s\n",AHost->name);
@@ -104,6 +105,7 @@ public:
       deleteNoteInputPorts();
       deleteNoteOutputPorts();
     #endif
+    //delete MHost;
   }
 
 //------------------------------
@@ -225,6 +227,7 @@ public: // plugin
     if (strcmp(id,CLAP_EXT_AUDIO_PORTS_CONFIG)      == 0) return &MAudioPortsConfig;
     if (strcmp(id,CLAP_EXT_AUDIO_PORTS)             == 0) return &MAudioPorts;
     if (strcmp(id,CLAP_EXT_CHECK_FOR_UPDATE)        == 0) return &MCheckForUpdate;        // draft
+    if (strcmp(id,CLAP_EXT_CONTEXT_MENU)            == 0) return &MContextMenu   ;        // draft
     if (strcmp(id,CLAP_EXT_CV)                      == 0) return &MCV;                    // draft
     #ifndef MIP_NO_GUI
     if (strcmp(id,CLAP_EXT_GUI)                     == 0) return &MGui;
@@ -237,12 +240,15 @@ public: // plugin
     if (strcmp(id,CLAP_EXT_PARAMS)                  == 0) return &MParams;
     if (strcmp(id,CLAP_EXT_PRESET_LOAD)             == 0) return &MPresetLoad;            // draft
     if (strcmp(id,CLAP_EXT_REMOTE_CONTROLS)         == 0) return &MRemoteControls;        // draft
+    if (strcmp(id,CLAP_EXT_RESOURCE_DIRECTORY)      == 0) return &MResourceDirectory;     // draft
     if (strcmp(id,CLAP_EXT_RENDER)                  == 0) return &MRender;
     if (strcmp(id,CLAP_EXT_STATE)                   == 0) return &MState;
+    if (strcmp(id,CLAP_EXT_STATE_CONTEXT)           == 0) return &MStateContext;          // draft
     if (strcmp(id,CLAP_EXT_SURROUND)                == 0) return &MSurround;              // draft
     if (strcmp(id,CLAP_EXT_THREAD_POOL)             == 0) return &MThreadPool;
     if (strcmp(id,CLAP_EXT_TIMER_SUPPORT)           == 0) return &MTimerSupport;
     if (strcmp(id,CLAP_EXT_TRACK_INFO)              == 0) return &MTrackInfo;             // draft
+    if (strcmp(id,CLAP_EXT_TRIGGERS)                == 0) return &MTriggers;              // draft
     if (strcmp(id,CLAP_EXT_TUNING)                  == 0) return &MTuning;                // draft
     if (strcmp(id,CLAP_EXT_VOICE_INFO)              == 0) return &MVoiceInfo;             // draft
     return nullptr;
@@ -268,6 +274,8 @@ public: // draft audio-ports-activation
   bool audio_ports_activation_can_activate_while_processing() override {
     return false;
   }
+
+  //----------
 
   void audio_ports_activation_set_active(bool is_input, uint32_t port_index, bool is_active) override {
   }
@@ -337,54 +345,31 @@ public: // draft check-for-updates
   }
 
 //------------------------------
+public: // draft context-menu
+//------------------------------
+
+  bool context_menu_populate(const clap_context_menu_target_t *target, const clap_context_menu_builder_t *builder) override {
+    MIP_Print("target.kind %i target.id %i\n",target->kind,target->id);
+    if (builder->supports(builder,CLAP_CONTEXT_MENU_ITEM_ENTRY)) {
+      builder->add_item(builder,CLAP_CONTEXT_MENU_ITEM_ENTRY,"Hello world!");
+    }
+    return false;
+  }
+
+  //----------
+
+  bool context_menu_perform(const clap_context_menu_target_t *target, clap_id action_id) override {
+    MIP_Print("target.kind %i target.id %i action_id %i\n",target->kind,target->id,action_id);
+    return false;
+  }
+
+//------------------------------
 public: // draft cv
 //------------------------------
 
   bool cv_get_channel_type(bool is_input, uint32_t port_index, uint32_t channel_index, uint32_t *channel_type) override {
     return false;
   }
-
-//------------------------------
-public: // draft file-reference
-//------------------------------
-
-  /*
-
-  uint32_t file_reference_count() override {
-    return 0;
-  }
-
-  //----------
-
-  bool file_reference_get(uint32_t index, clap_file_reference_t *file_reference) override {
-    return false;
-  }
-
-  //----------
-
-  bool file_reference_get_blake3_digest(clap_id resource_id, uint8_t *digest) override {
-    return false;
-  }
-
-  //----------
-
-  bool file_reference_get_file_size(clap_id resource_id, uint64_t *size) override {
-    return false;
-  }
-
-  //----------
-
-  bool file_reference_update_path(clap_id resource_id, const char *path) override {
-    return false;
-  }
-
-  //----------
-
-  bool file_reference_save_resources() override {
-    return false;
-  }
-
-  */
 
 //------------------------------
 public: // ext gui
@@ -603,21 +588,24 @@ public: // draft midi-mappings
   }
 
 //------------------------------
-public: // ext note-names
+public: // ext note-name
 //------------------------------
 
-  uint32_t note_names_count() override {
-    return 0;
+  uint32_t note_name_count() override {
+    return 1;
   }
 
   //----------
 
-  bool note_names_get(uint32_t index, clap_note_name_t *note_name) override {
-   //strncpy(note_name->name,"name",CLAP_NAME_SIZE);
-   //note_name->port = -1;
-   //note_name->key = -1;
-   //note_name->channel = -1;
-   return false;
+  bool note_name_get(uint32_t index, clap_note_name_t *note_name) override {
+    if (index == 0) {
+      strncpy(note_name->name,"thirty-six",CLAP_NAME_SIZE);
+      note_name->port = -1;
+      note_name->key = 36;
+      note_name->channel = -1;
+      return true;
+    }
+    return false;
   }
 
 //------------------------------
@@ -647,9 +635,17 @@ public: // ext note-ports
 public: // draft param-indication
 //------------------------------
 
+  // CLAP_PARAM_INDICATION_AUTOMATION_NONE        = 0
+  // CLAP_PARAM_INDICATION_AUTOMATION_PRESENT     = 1 // The host has an automation for this parameter, but it isn't playing it
+  // CLAP_PARAM_INDICATION_AUTOMATION_PLAYING     = 2 // The host is playing an automation for this parameter
+  // CLAP_PARAM_INDICATION_AUTOMATION_RECORDING   = 3 // The host is recording an automation on this parameter
+  // CLAP_PARAM_INDICATION_AUTOMATION_OVERRIDING  = 4 // The host should play an automation for this parameter, but the user has started to ajust this parameter and is overriding the automation playback
+
   void param_indication_set_mapping(clap_id param_id, bool has_mapping, const clap_color_t *color, const char *label, const char *description) override {
     MIP_Print("id %i mapping %i color %i.%i.%i label '%s' description '%s'\n",param_id,has_mapping,color->red,color->green,color->blue,label,description);
   }
+
+  //----------
 
   void param_indication_set_automation(clap_id param_id, uint32_t automation_state, const clap_color_t *color) override {
     MIP_Print("id %i state %i color %i.%i.%i\n",param_id,automation_state,color->red,color->green,color->blue);
@@ -734,12 +730,14 @@ public: // draft remote-controls
     return 1;
   }
 
+  //----------
+
   bool remote_controls_get(uint32_t page_index, clap_remote_controls_page_t *page) override {
     MIP_PRINT;
     if (page_index == 0) {
-      strcpy(page->section_name,"SectionName");
+      strcpy(page->section_name,"Section");
       page->page_id = 0;
-      strcpy(page->page_name,"PageName");
+      strcpy(page->page_name,"Page");
       page->param_ids[0] = 0;
       page->param_ids[1] = 1;
       page->param_ids[2] = 2;
@@ -848,6 +846,22 @@ public: // ext state
   }
 
 //------------------------------
+public: // draft state-context
+//------------------------------
+
+  bool state_context_save(const clap_ostream_t *stream, uint32_t context_type) override {
+    MIP_Print("context_type %i\n",context_type);
+    return true;
+  }
+
+  //----------
+
+  bool state_context_load(const clap_istream_t *stream, uint32_t context_type) override {
+    MIP_Print("context_type %i\n",context_type);
+    return true;
+  }
+
+//------------------------------
 public: // draft surround
 //------------------------------
 
@@ -887,7 +901,30 @@ public: // draft track-info
 //------------------------------
 
   void track_info_changed() override {
+    const clap_host_t* claphost = getClapHost();
+    const clap_host_track_info_t* track_info = (const clap_host_track_info_t*)claphost->get_extension(claphost,CLAP_EXT_TRACK_INFO);
+    if (track_info) {
+      clap_track_info_t info;
+      if (track_info->get(claphost,&info)) {
+        MIP_Print("flags %i name %s color (rgb) %i.%i.%i channels %i (%s)\n",info.flags,info.name,info.color.red,info.color.green,info.color.blue,info.audio_channel_count,info.audio_port_type);
+      }
+    }
   }
+
+//------------------------------
+public: // draft triggers
+//------------------------------
+
+  uint32_t triggers_count() override {
+    return 0;
+  }
+
+  //----------
+
+  bool triggers_get_info(uint32_t index, clap_trigger_info_t *trigger_info) override {
+    return false;
+  }
+
 
 //------------------------------
 public: // draft tuning
@@ -908,6 +945,16 @@ public: // ext voice-info
     */
     return false;
   }
+
+
+
+//--------------------------------------------------
+//
+//
+//
+//--------------------------------------------------
+
+
 
 //------------------------------
 public: // editor listener
@@ -939,7 +986,7 @@ public: // editor listener
   //----------
 
   // called by editor,
-  // after editor has been called from window
+  // after editor has been called from/in window
   // (timer callback)
 
   void on_editor_timer() override {

@@ -660,8 +660,8 @@ public: // window
     //MIP_PRINT;
 
     if (MWindowListener) MWindowListener->do_window_listener_timer();
-    if (!MWindowPainter) return;
 
+    if (!MWindowPainter) return; // just for safety?
     #ifdef MIP_WINDOW_BUFFERED
     if (!MRenderBuffer) return;
     #endif

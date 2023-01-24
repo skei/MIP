@@ -77,13 +77,9 @@ private:
   MIP_DRect           MRect             = {};
   MIP_DRect           MBaseRect         = {};
   int32_t             MCursor           = MIP_CURSOR_DEFAULT;
-
-//  MIP_Parameter*      MParameter        = nullptr;
-
   MIP_Parameter*      MParameters[16]   = {0};
   uint32_t            MNumParameters    = 0;
-
-  uint32_t            MDirtyIndex       = 0;
+  //uint32_t            MDirtyIndex       = 0;
 
 //------------------------------
 protected:
@@ -116,7 +112,7 @@ protected:
   double              MIndicatorValue   = 0.0;
   MIP_Color           MIndicatorColor   = MIP_Color(1.0, 1.0, 1.0, 0.5);
 
-  bool                MDrawModulation   = false;//true;
+  bool                MDrawModulation   = false;
   MIP_Color           MModulationColor  = MIP_Color(1,0,0,0.25);
   MIP_DRect           MModulationOffset = MIP_DRect(0,0,0,0);
 

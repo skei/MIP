@@ -189,12 +189,19 @@ int main(int argc, char** argv) {
     if (result) {
       if (arguments.hasOption("-lpa")) mip_exe_list_parameters(index);
       if (arguments.hasOption("-lpo")) mip_exe_list_ports(index);
+
+      // init audio/midi
+
       plugin->activate(44100,0,1024);
       plugin->start_processing();
       bool with_gui = !arguments.hasOption("-ned");
       if (with_gui) mip_exe_open_editor();
       //..
+
       mip_exe_unload_plugin();
+
+      // shutwodn audio/midi
+
     }
   }
   return 0;

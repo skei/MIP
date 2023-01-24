@@ -4,6 +4,7 @@
 
 //#include "base/mip.h"
 #include "plugin/clap/mip_clap.h"
+#include "plugin/clap/mip_clap_host.h"
 
 //----------------------------------------------------------------------
 //
@@ -14,10 +15,10 @@
 class MIP_ClapPlugin {
 
 //------------------------------
-protected:
+private:
 //------------------------------
 
-  const clap_host_t* MHost = nullptr;
+  const clap_host_t* MClapHost = nullptr;
 
 //------------------------------
 public:
@@ -25,7 +26,7 @@ public:
 
   MIP_ClapPlugin(const clap_plugin_descriptor_t* descriptor, const clap_host_t* host) {
     LOG.print("MIP_ClapPlugin()\n");
-    MHost = host;
+    MClapHost = host;
     MPlugin.desc = descriptor;
   }
 
@@ -46,7 +47,7 @@ public:
   //----------
 
   const clap_host_t* getClapHost() {
-    return MHost;
+    return MClapHost;
   }
 
   //----------
@@ -83,6 +84,8 @@ public: // extensions
   virtual uint32_t            audio_ports_count(bool is_input) { return 0; }
   virtual bool                audio_ports_get(uint32_t index, bool is_input, clap_audio_port_info_t *info) { return false; }
   virtual void                check_for_updates_check(bool include_preview) { }
+  virtual bool                context_menu_populate(const clap_context_menu_target_t *target, const clap_context_menu_builder_t *builder) { return false; }
+  virtual bool                context_menu_perform(const clap_context_menu_target_t *target, clap_id action_id) { return false; }
   virtual bool                cv_get_channel_type(bool is_input, uint32_t port_index, uint32_t channel_index, uint32_t *channel_type) { return false; }
   virtual bool                gui_is_api_supported(const char *api, bool is_floating) { return false; }
   virtual bool                gui_get_preferred_api(const char **api, bool *is_floating) { return false; }
@@ -102,8 +105,8 @@ public: // extensions
   virtual uint32_t            latency_get() { return 0; }
   virtual uint32_t            midi_mappings_count() { return 0; }
   virtual bool                midi_mappings_get(uint32_t index, clap_midi_mapping_t *mapping) { return false; }
-  virtual uint32_t            note_names_count() { return 0; }
-  virtual bool                note_names_get(uint32_t index, clap_note_name_t *note_name) { return false; }
+  virtual uint32_t            note_name_count() { return 0; }
+  virtual bool                note_name_get(uint32_t index, clap_note_name_t *note_name) { return false; }
   virtual uint32_t            note_ports_count(bool is_input) { return 0; }
   virtual bool                note_ports_get(uint32_t index, bool is_input, clap_note_port_info_t* info) { return false; }
   virtual void                param_indication_set_mapping(clap_id param_id, bool has_mapping, const clap_color_t *color, const char *label, const char *description) {}
@@ -120,14 +123,22 @@ public: // extensions
   virtual bool                remote_controls_get(uint32_t page_index, clap_remote_controls_page_t *page) { return false; }
   virtual bool                render_has_hard_realtime_requirement() { return false; }
   virtual bool                render_set(clap_plugin_render_mode mode) { return false; }
+  virtual void                resource_directory_set_directory(const char *path, bool is_shared) {}
+  virtual void                resource_directory_collect(bool all) {}
+  virtual uint32_t            resource_directory_get_files_count() { return 0; }
+  virtual int32_t             resource_directory_get_file_path(uint32_t index, char *path, uint32_t path_size) { return -1; }
   virtual bool                state_save(const clap_ostream_t *stream) { return false; }
   virtual bool                state_load(const clap_istream_t *stream) { return false; }
+  virtual bool                state_context_save(const clap_ostream_t *stream, uint32_t context_type) { return false; }
+  virtual bool                state_context_load(const clap_istream_t *stream, uint32_t context_type) { return false; }
   virtual uint32_t            surround_get_channel_map(bool is_input, uint32_t port_index, uint8_t *channel_map, uint32_t channel_map_capacity) { return 0; }
   virtual void                surround_changed() { }
   virtual uint32_t            tail_get() { return 0; }
   virtual void                thread_pool_exec(uint32_t task_index) { }
   virtual void                timer_support_on_timer(clap_id timer_id) { }
   virtual void                track_info_changed() { }
+  virtual uint32_t            triggers_count() { return 0; }
+  virtual bool                triggers_get_info(uint32_t index, clap_trigger_info_t *trigger_info) { return false; }
   virtual void                tuning_changed() { }
   virtual bool                voice_info_get(clap_voice_info_t *info) { return false; }
 
@@ -232,7 +243,6 @@ protected:
 private: // ext: audio ports activation
 //------------------------------
 
-
   //
 
   static
@@ -321,6 +331,29 @@ protected:
 
   const clap_plugin_check_for_update_t MCheckForUpdate = {
     .check = clap_plugin_check_for_update_check
+  };
+
+//------------------------------
+private: // draft context-menu
+//------------------------------
+
+  static
+  bool clap_plugin_context_menu_populate_callback(const clap_plugin_t *plugin, const clap_context_menu_target_t *target, const clap_context_menu_builder_t *builder) {
+    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+    return plug->context_menu_populate(target,builder);
+  }
+
+  static
+  bool clap_plugin_context_menu_perform_callback(const clap_plugin_t *plugin, const clap_context_menu_target_t *target, clap_id action_id) {
+    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+    return plug->context_menu_perform(target,action_id);
+  }
+
+protected:
+
+  const clap_plugin_context_menu_t MContextMenu = {
+    .populate = clap_plugin_context_menu_populate_callback,
+    .perform = clap_plugin_context_menu_perform_callback
   };
 
 //------------------------------
@@ -497,22 +530,22 @@ private: // ext: note names
 //------------------------------
 
   static
-  uint32_t clap_plugin_note_names_count_callback(const clap_plugin_t *plugin) {
+  uint32_t clap_plugin_note_name_count_callback(const clap_plugin_t *plugin) {
     MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
-    return plug->note_names_count();
+    return plug->note_name_count();
   }
 
   static
-  bool clap_plugin_note_names_get_callback(const clap_plugin_t *plugin, uint32_t index, clap_note_name_t *note_name) {
+  bool clap_plugin_note_name_get_callback(const clap_plugin_t *plugin, uint32_t index, clap_note_name_t *note_name) {
     MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
-    return plug->note_names_get(index,note_name);
+    return plug->note_name_get(index,note_name);
   }
 
 protected:
 
   const clap_plugin_note_name MNoteName = {
-    .count  = clap_plugin_note_names_count_callback,
-    .get    = clap_plugin_note_names_get_callback
+    .count  = clap_plugin_note_name_count_callback,
+    .get    = clap_plugin_note_name_get_callback
   };
 
 //------------------------------
@@ -694,6 +727,43 @@ protected:
   };
 
 //------------------------------
+private: // draft: resource-directory
+//------------------------------
+
+  static
+  void clap_plugin_resource_directory_set_directory_callback(const clap_plugin_t *plugin, const char *path, bool is_shared) {
+    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+    plug->resource_directory_set_directory(path,is_shared);
+  }
+
+  static
+  void clap_plugin_resource_directory_collect_callback(const clap_plugin_t *plugin, bool all) {
+    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+    return plug->resource_directory_collect(all);
+  }
+
+  static
+  uint32_t clap_plugin_resource_directory_get_files_count_callback(const clap_plugin_t *plugin) {
+    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+    return plug->resource_directory_get_files_count();
+  }
+
+  static
+  int32_t clap_plugin_resource_directory_get_file_path_callback(const clap_plugin_t *plugin, uint32_t index, char *path, uint32_t path_size) {
+    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+    return plug->resource_directory_get_file_path(index,path,path_size);
+  }
+
+protected:
+
+  const clap_plugin_resource_directory_t MResourceDirectory = {
+    .set_directory = clap_plugin_resource_directory_set_directory_callback,
+    .collect = clap_plugin_resource_directory_collect_callback,
+    .get_files_count = clap_plugin_resource_directory_get_files_count_callback,
+    .get_file_path = clap_plugin_resource_directory_get_file_path_callback
+  };
+
+//------------------------------
 private: // ext: state
 //------------------------------
 
@@ -717,6 +787,30 @@ protected:
   };
 
 //------------------------------
+private: // draft: state-context
+//------------------------------
+
+
+  static
+  bool clap_plugin_state_context_save_callback(const clap_plugin_t *plugin, const clap_ostream_t *stream, uint32_t context_type) {
+    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+    return plug->state_context_save(stream,context_type);
+  }
+
+  static
+  bool clap_plugin_state_context_load_callback(const clap_plugin_t *plugin, const clap_istream_t *stream, uint32_t context_type) {
+    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+    return plug->state_context_load(stream,context_type);
+  }
+
+protected:
+
+  const clap_plugin_state_context_t MStateContext = {
+    .save = clap_plugin_state_context_save_callback,
+    .load = clap_plugin_state_context_load_callback
+  };
+
+//------------------------------
 private: // draft: surround
 //------------------------------
 
@@ -737,22 +831,6 @@ protected:
   const clap_plugin_surround_t MSurround = {
     .get_channel_map  = clap_plugin_surround_get_channel_map_callback,
     .changed          = clap_plugin_surround_changed_callback
-  };
-
-//------------------------------
-private: // draft: track info
-//------------------------------
-
-  static
-  void clap_plugin_track_info_changed_callback(const clap_plugin_t *plugin) {
-    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
-    plug->track_info_changed();
-  }
-
-protected:
-
-  const clap_plugin_track_info_t MTrackInfo = {
-    .changed = clap_plugin_track_info_changed_callback
   };
 
 //------------------------------
@@ -801,6 +879,46 @@ protected:
 
   const clap_plugin_timer_support_t MTimerSupport = {
     .on_timer = clap_plugin_timer_support_on_timer_callback
+  };
+
+//------------------------------
+private: // draft: track info
+//------------------------------
+
+  static
+  void clap_plugin_track_info_changed_callback(const clap_plugin_t *plugin) {
+    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+    plug->track_info_changed();
+  }
+
+protected:
+
+  const clap_plugin_track_info_t MTrackInfo = {
+    .changed = clap_plugin_track_info_changed_callback
+  };
+
+//------------------------------
+private: // draft: triggers
+//------------------------------
+
+
+  static
+  uint32_t clap_plugin_triggers_count_callback(const clap_plugin_t *plugin) {
+    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+    return plug->triggers_count();
+  }
+
+  static
+  bool clap_plugin_triggers_get_info_callback(const clap_plugin_t *plugin, uint32_t index, clap_trigger_info_t *trigger_info) {
+    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+    return plug->triggers_get_info(index,trigger_info);
+  }
+
+protected:
+
+  const clap_plugin_triggers_t MTriggers = {
+    .count = clap_plugin_triggers_count_callback,
+    .get_info = clap_plugin_triggers_get_info_callback
   };
 
 //------------------------------

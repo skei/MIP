@@ -1,7 +1,7 @@
 
 #define MIP_PLUGIN_CLAP
-#define MIP_PLUGIN_VST2
-#define MIP_PLUGIN_VST3
+//#define MIP_PLUGIN_VST2
+//#define MIP_PLUGIN_VST3
 
 //----------
 
@@ -169,8 +169,8 @@ private:
 //------------------------------
 
   myVoiceManager    MVoiceManager   = {};
-  MIP_Parameter*    par_gain        = nullptr;
   double            p_gain          = 0.0;
+  MIP_Parameter*    par_gain        = nullptr;
   MIP_KnobWidget*   wdg_gain        = nullptr;
   MIP_VoicesWidget* wdg_voices      = nullptr;
   MIP_ValueWidget*  wdg_voices_txt1 = nullptr;
@@ -183,6 +183,7 @@ public:
 
   my_plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_Plugin(ADescriptor,AHost) {
+    MIP_PRINT;
     setInitialEditorSize(MY_PLUGIN_EDITOR_WIDTH,MY_PLUGIN_EDITOR_HEIGHT);
     MVoiceManager.setProcessThreaded(true);
     MVoiceManager.setEventMode(MIP_VOICE_EVENT_MODE_QUANTIZED);
