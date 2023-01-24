@@ -91,6 +91,36 @@ public:
       LOG.print("  CLAP: host.url:     %s\n",AHost->url);
       LOG.print("  CLAP: host.version: %s\n",AHost->version);
       LOG.print("  CLAP: host.data:    %p\n",AHost->host_data);
+
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_AMBISONIC, (AHost->get_extension(AHost,CLAP_EXT_AMBISONIC)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_AUDIO_PORTS_CONFIG, (AHost->get_extension(AHost,CLAP_EXT_AUDIO_PORTS_CONFIG)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_AUDIO_PORTS, (AHost->get_extension(AHost,CLAP_EXT_AUDIO_PORTS)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_CHECK_FOR_UPDATE, (AHost->get_extension(AHost,CLAP_EXT_CHECK_FOR_UPDATE)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_CONTEXT_MENU, (AHost->get_extension(AHost,CLAP_EXT_CONTEXT_MENU)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_CV, (AHost->get_extension(AHost,CLAP_EXT_CV)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_EVENT_REGISTRY, (AHost->get_extension(AHost,CLAP_EXT_EVENT_REGISTRY)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_GUI, (AHost->get_extension(AHost,CLAP_EXT_GUI)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_LATENCY, (AHost->get_extension(AHost,CLAP_EXT_LATENCY)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_LOG, (AHost->get_extension(AHost,CLAP_EXT_LOG)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_MIDI_MAPPINGS, (AHost->get_extension(AHost,CLAP_EXT_MIDI_MAPPINGS)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_NOTE_NAME, (AHost->get_extension(AHost,CLAP_EXT_NOTE_NAME)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_NOTE_PORTS, (AHost->get_extension(AHost,CLAP_EXT_NOTE_PORTS)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_PARAMS, (AHost->get_extension(AHost,CLAP_EXT_PARAMS)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_POSIX_FD_SUPPORT, (AHost->get_extension(AHost,CLAP_EXT_POSIX_FD_SUPPORT)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_REMOTE_CONTROLS, (AHost->get_extension(AHost,CLAP_EXT_REMOTE_CONTROLS)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_RESOURCE_DIRECTORY, (AHost->get_extension(AHost,CLAP_EXT_RESOURCE_DIRECTORY)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_STATE, (AHost->get_extension(AHost,CLAP_EXT_STATE)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_SURROUND, (AHost->get_extension(AHost,CLAP_EXT_SURROUND)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_TAIL, (AHost->get_extension(AHost,CLAP_EXT_TAIL)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_THREAD_CHECK, (AHost->get_extension(AHost,CLAP_EXT_THREAD_CHECK)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_THREAD_POOL, (AHost->get_extension(AHost,CLAP_EXT_THREAD_POOL)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_TIMER_SUPPORT, (AHost->get_extension(AHost,CLAP_EXT_TIMER_SUPPORT)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_TRACK_INFO, (AHost->get_extension(AHost,CLAP_EXT_TRACK_INFO)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_TRANSPORT_CONTROL, (AHost->get_extension(AHost,CLAP_EXT_TRANSPORT_CONTROL)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_TRIGGERS, (AHost->get_extension(AHost,CLAP_EXT_TRIGGERS)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_TUNING, (AHost->get_extension(AHost,CLAP_EXT_TUNING)) );
+      LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_VOICE_INFO, (AHost->get_extension(AHost,CLAP_EXT_VOICE_INFO)) );
+
     #endif
   }
 
@@ -173,6 +203,7 @@ public: // plugin
   //----------
 
   bool start_processing() override {
+    LOG.print("PLUGIN: start_processing\n");
     //MIP_Assert(!MIsProcessing);
     if (!MIsProcessing) {
       MProcessContext.counter = 0;
@@ -184,6 +215,7 @@ public: // plugin
   //----------
 
   void stop_processing() override {
+    LOG.print("PLUGIN: stop_processing\n");
     //MIP_Assert(MIsProcessing);
     //if (MIsProcessing)
     MIsProcessing = false;
@@ -263,7 +295,7 @@ public: // plugin
 public: // draft ambisonic
 //------------------------------
 
-  bool ambisonic_get_info(bool is_input,  uint32_t port_index, clap_ambisonic_info_t *info) override {
+  bool ambisonic_get_info(bool is_input, uint32_t port_index, clap_ambisonic_info_t *info) override {
     return false;
   }
 
@@ -272,12 +304,14 @@ public: // draft audio-ports-activation
 //------------------------------
 
   bool audio_ports_activation_can_activate_while_processing() override {
+    MIP_PRINT;
     return false;
   }
 
   //----------
 
   void audio_ports_activation_set_active(bool is_input, uint32_t port_index, bool is_active) override {
+    MIP_PRINT;
   }
 
 //------------------------------
@@ -342,6 +376,7 @@ public: // draft check-for-updates
 //------------------------------
 
   void check_for_updates_check(bool include_preview) override {
+    MIP_PRINT;
   }
 
 //------------------------------
@@ -368,6 +403,7 @@ public: // draft cv
 //------------------------------
 
   bool cv_get_channel_type(bool is_input, uint32_t port_index, uint32_t channel_index, uint32_t *channel_type) override {
+    MIP_PRINT;
     return false;
   }
 
@@ -414,14 +450,10 @@ public: // ext gui
   //----------
 
   void gui_destroy() override {
-    //MIP_Print("\n");
-    //MIP_Assert(MEditor);
     if (MEditor) {
       if (MIsEditorOpen) gui_hide();
       MIsEditorOpen = false;
-      if (MIsEditorOpen) {
-        MEditor->hide();
-      }
+      //if (MIsEditorOpen) MEditor->hide();
       delete MEditor;
     }
   }
@@ -429,20 +461,15 @@ public: // ext gui
   //----------
 
   bool gui_set_scale(double scale) override {
-    //MIP_Print("%f\n",scale);
-    //MIP_Assert(MEditor);
     if (MEditor) return MEditor->setScale(scale);
-    else return 1.0;
+    else return false;
   }
 
   //----------
 
   bool gui_get_size(uint32_t *width, uint32_t *height) override {
-    //MIP_Assert(MEditor);
     if (MEditor) {
-      bool result = MEditor->getSize(width,height);
-      //MIP_Print("-> %i,%i\n",*width,*height);
-      return result;
+      return MEditor->getSize(width,height);
     }
     else {
       *width = MInitialEditorWidth;
@@ -454,8 +481,6 @@ public: // ext gui
   //----------
 
   bool gui_can_resize() override {
-    //MIP_Print("\n");
-    //MIP_Assert(MEditor);
     if (MEditor) return MEditor->canResize();
     else return false;
   }
@@ -463,103 +488,75 @@ public: // ext gui
   //----------
 
   bool gui_get_resize_hints(clap_gui_resize_hints_t *hints) override {
-    //MIP_Print("\n");
-    //MIP_Assert(MEditor);
     if (MEditor) return MEditor->getResizeHints(hints);
-    else {
-      return false;
-    }
+    else return false;
   }
 
   //----------
 
   bool gui_adjust_size(uint32_t *width, uint32_t *height) override {
-    MIP_Assert(MEditor);
-    //uint32_t w = *width;
-    //uint32_t h = *height;
-    bool result = MEditor->adjustSize(width,height);
-    //MIP_Print("%i,%i -> %i,%i\n",w,h,*width,*height);
-    return result;
+    if (MEditor) return MEditor->adjustSize(width,height);
+    else return false;
   }
 
   //----------
 
   bool gui_set_size(uint32_t width, uint32_t height) override {
-    //MIP_Print("%i,%i\n",width,height);
-
-    // !Meditor in reaper/vst3..
-    //MIP_Assert(MEditor);
-
     //MIsEditorBusy = true;
-    if (MEditor) {
-      bool result = MEditor->setSize(width,height);
-      //MIsEditorBusy = false;
-      return result;
-    }
-    else {
-      //MInitialEditorWidth = width;
-      //MInitialEditorHeight = height;
-      return true;
-    }
+    if (MEditor) return MEditor->setSize(width,height);
+    else return true; // true?
   }
 
   //----------
 
   bool gui_set_parent(const clap_window_t *window) override {
-    //MIP_Print("\n");
-    MIP_Assert(MEditor);
-    return MEditor->setParent(window);
+    if (MEditor) return MEditor->setParent(window);
+    else return false;
   }
 
   //----------
 
   bool gui_set_transient(const clap_window_t *window) override {
-    //MIP_Print("\n");
-    MIP_Assert(MEditor);
-    return MEditor->setTransient(window);
+    if (MEditor) return MEditor->setTransient(window);
+    else return false;
   }
 
   //----------
 
   void gui_suggest_title(const char *title) override {
-    //MIP_Print("\n");
-    MIP_Assert(MEditor);
-    MEditor->suggestTitle(title);
+    if (MEditor) MEditor->suggestTitle(title);
   }
 
   //----------
 
   bool gui_show() override {
-    //MIP_Print("\n");
-    MIP_Assert(MEditor);
-    updateEditorParameterValues();
-    bool result = MEditor->show();
-    if (result) {
-      //#ifdef MIP_LINUX
-      //  LOG.print("PLUGIN: Starting gui timer\n");
-      //  MGuiTimer.start(MIP_EDITOR_TIMER_MS);
-      //#endif
-      //#ifdef MIP_WIN32
-      //  MIP_Win32Window* window = MEditor->getWindow();
-      //  HWND hwnd = window->getHandle();
-      //  LOG.print("PLUGIN: Starting gui timer\n");
-      //  MGuiTimer.start(MIP_EDITOR_TIMER_MS,hwnd);
-      //#endif
-      MIsEditorOpen = true;
+    if (MEditor) {
+      updateEditorParameterValues();
+      bool result = MEditor->show();
+      if (result) {
+        //#ifdef MIP_LINUX
+        //  LOG.print("PLUGIN: Starting gui timer\n");
+        //  MGuiTimer.start(MIP_EDITOR_TIMER_MS);
+        //#endif
+        //#ifdef MIP_WIN32
+        //  MIP_Win32Window* window = MEditor->getWindow();
+        //  HWND hwnd = window->getHandle();
+        //  LOG.print("PLUGIN: Starting gui timer\n");
+        //  MGuiTimer.start(MIP_EDITOR_TIMER_MS,hwnd);
+        //#endif
+        MIsEditorOpen = true;
+      }
+      return result;
     }
-    return result;
+    else return false;
   }
 
   //----------
 
   bool gui_hide() override {
-    //MIP_Print("\n");
-    MIP_Assert(MEditor);
-//    LOG.print("PLUGIN: Stopping gui timer\n");
-//    MGuiTimer.stop();
     MIsEditorOpen = false;
-    bool result = MEditor->hide();
-    return result;
+    if (MEditor) return MEditor->hide();
+    return true;
   }
 
 //------------------------------
@@ -575,6 +572,7 @@ public: // draft midi-mappings
 //------------------------------
 
   uint32_t midi_mappings_count() override {
+    MIP_PRINT;
     return 0;
   }
 
@@ -592,6 +590,7 @@ public: // ext note-name
 //------------------------------
 
   uint32_t note_name_count() override {
+    MIP_PRINT;
     return 1;
   }
 
@@ -1696,25 +1695,25 @@ public: // generic gui
     MIP_SAHeaderWidget* saheader = new MIP_SAHeaderWidget(MIP_DRect(0,0,w,80),getClapDescriptor());
     panel->appendChildWidget(saheader);
 
-//    saheader->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
-//    saheader->setPluginName(name);
-//    saheader->setPluginVersion(version);
-//    saheader->setPluginVersion(getDescriptor()->version);
+    //    saheader->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
+    //    saheader->setPluginName(name);
+    //    saheader->setPluginVersion(version);
+    //    saheader->setPluginVersion(getDescriptor()->version);
 
     //----- footer -----
 
-//    MIP_TextWidget* footer_panel = new MIP_TextWidget(MIP_DRect(0,(h-25),w,25), "footer" );
-//    panel->appendChildWidget(footer_panel);
-//    footer_panel->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
-//    footer_panel->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
-//    footer_panel->setFillBackground(true);
-//    footer_panel->setBackgroundColor(0.4);
-//    footer_panel->setDrawBorder(false);
-//    footer_panel->setDrawText(true);
-//    footer_panel->setTextColor(MIP_Color(0.75));
-//    footer_panel->setTextSize(-0.5);
-//    footer_panel->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
-//    footer_panel->setTextOffset(MIP_DPoint(5,0));
+    //    MIP_TextWidget* footer_panel = new MIP_TextWidget(MIP_DRect(0,(h-25),w,25), "footer" );
+    //    panel->appendChildWidget(footer_panel);
+    //    footer_panel->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
+    //    footer_panel->Layout.scaleMode = MIP_WIDGET_SCALE_MODE_INITIAL_RATIO;
+    //    footer_panel->setFillBackground(true);
+    //    footer_panel->setBackgroundColor(0.4);
+    //    footer_panel->setDrawBorder(false);
+    //    footer_panel->setDrawText(true);
+    //    footer_panel->setTextColor(MIP_Color(0.75));
+    //    footer_panel->setTextSize(-0.5);
+    //    footer_panel->setTextAlignment(MIP_TEXT_ALIGN_LEFT);
+    //    footer_panel->setTextOffset(MIP_DPoint(5,0));
 
     //----- parameters -----
 

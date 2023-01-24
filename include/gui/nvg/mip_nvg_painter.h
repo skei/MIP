@@ -538,9 +538,9 @@ public:
     //flags |= NVG_IMAGE_NEAREST;           // Image interpolation is Nearest instead Linear
     int image = nvgCreateImage(MContext,AFilename,flags);
     MIP_Assert(image);
-//    int w,h;
-//    nvgImageSize(MContext,image,&w,&h);
-//    MIP_Print("image %i size %i,%i\n",image,w,h);
+    //int w,h;
+    //nvgImageSize(MContext,image,&w,&h);
+    //MIP_Print("image %i size %i,%i\n",image,w,h);
     return image;
   }
 

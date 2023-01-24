@@ -3,12 +3,16 @@
 //----------------------------------------------------------------------
 /*
 
-repainting:
+  this has to nbe seriously cleaned up..
+  refactored..
 
-a) WM_PAINT/EXPOSE
-b) timer, 50hz
-c) do_widget update
+  ---
 
+  repainting:
+
+  a) WM_PAINT/EXPOSE
+  b) timer, 50hz
+  c) do_widget update
 
 */
 //----------------------------------------------------------------------
@@ -633,7 +637,6 @@ public: // window
   //----------
 
   void on_window_enter(int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
-    //MIP_PRINT;
     //if (!MCapturedMouseWidget) {
     //  updateHoverWidget(AXpos,AYpos);
     //}
@@ -642,7 +645,6 @@ public: // window
   //----------
 
   void on_window_leave(int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
-    //MIP_PRINT;
     //if (!MCapturedMouseWidget) {
     //  if (MHoverWidget) MHoverWidget->on_widget_leave(AXpos,AYpos);
     //}
@@ -657,16 +659,11 @@ public: // window
   //----------
 
   void on_window_timer() override {
-    //MIP_PRINT;
-
     if (MWindowListener) MWindowListener->do_window_listener_timer();
-
-    if (!MWindowPainter) return; // just for safety?
+    if (!MWindowPainter) return;
     #ifdef MIP_WINDOW_BUFFERED
-    if (!MRenderBuffer) return;
+      if (!MRenderBuffer) return;
     #endif
-
-    //flushDirtyRects();
     flushDirtyWidgets();
 
     //#ifdef MIP_WINDOW_FULL_UPDATE_RECT
@@ -691,10 +688,6 @@ public: // widget listener
   //----------
 
   void do_widget_redraw(MIP_Widget* AWidget, uint32_t AMode=0) override {
-    //paintWidget(AWidget,AMode);
-    //MIP_DRect r = AWidget->getRect();
-    //invalidate(r.x,r.y,r.w,r.h);
-    //queueDirtyRect(r.x,r.y,r.w,r.h);
     queueDirtyWidget(AWidget);
   }
 
@@ -727,7 +720,6 @@ public: // widget listener
   //----------
 
   void do_widget_set_cursor_pos(MIP_Widget* AWidget, int32_t AXpos, int32_t AYpos) override {
-    //MIP_PRINT;
     setCursorPos(AXpos,AYpos);
   }
 

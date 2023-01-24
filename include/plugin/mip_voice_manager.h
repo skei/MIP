@@ -500,7 +500,6 @@ private:
           }
         }
       }
-
       if (lowest_index >= 0) {
         // kill released note..
         queueNoteEnd( MVoices[lowest_index].note );

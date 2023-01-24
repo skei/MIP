@@ -101,6 +101,9 @@ public:
 public:
 //------------------------------
 
+  // override this, so that the system knows which widget to _really_
+  // connect a parameter to..
+
   MIP_Widget* getConnection(uint32_t AIndex) override {
     return MKnobWidget;
   }

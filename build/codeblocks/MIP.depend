@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1674467271 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../source/skei.audio/sa_mael.cpp"
+1674593740 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../build/test/test2.cpp"
 
 1670414796 /DISKS/sda2/code/git/MIP/build/test/test1.cpp
 	"gui/mip_window.h"
 	"gui/mip_widgets.h"
 
-1674492100 /DISKS/sda2/code/git/MIP/include/gui/mip_window.h
+1674592896 /DISKS/sda2/code/git/MIP/include/gui/mip_window.h
 	"base/mip.h"
 	"base/system/mip_lock.h"
 	"gui/mip_paint_context.h"
@@ -35,7 +35,7 @@
 	"base/mip_test.h"
 	"plugin/mip_registry.h"
 
-1674327382 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
+1674595619 /DISKS/sda2/code/git/MIP/include/base/mip_config.h
 
 1641519085 /DISKS/sda2/code/git/MIP/include/base/mip_attributes.h
 
@@ -537,7 +537,7 @@
 	<X11/Xlib.h>
 	<X11/Xlib-xcb.h>
 
-1672698912 /DISKS/sda2/code/git/MIP/include/gui/nvg/mip_nvg_painter.h
+1674595770 /DISKS/sda2/code/git/MIP/include/gui/nvg/mip_nvg_painter.h
 	"base/mip.h"
 	"gui/glx/mip_glx_painter.h"
 	"gui/wgl/mip_wgl_painter.h"
@@ -657,7 +657,7 @@
 	"gui/cairo/mip_cairo.h"
 	"extern/stb/stb_image.h"
 
-1674328355 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
+1674592677 /DISKS/sda2/code/git/MIP/include/gui/mip_widget.h
 	"base/mip.h"
 	"gui/base/mip_base_window.h"
 	"gui/mip_paint_context.h"
@@ -913,7 +913,7 @@
 1670549407 /DISKS/sda2/code/git/MIP/include/base/utils/mip_tcc2.h
 	<dlfcn.h>
 
-1672488768 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob2_widget.h
+1674592036 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_knob2_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_panel_widget.h"
 	"gui/widgets/mip_knob_widget.h"
@@ -1429,7 +1429,7 @@
 	"../../events.h"
 	"../../string-sizes.h"
 
-1673889339 /DISKS/sda2/code/git/MIP/build/test/test2.cpp
+1674595557 /DISKS/sda2/code/git/MIP/build/test/test2.cpp
 	"gui/mip_window.h"
 
 1672662724 /DISKS/sda2/code/git/MIP/build/test/test_fbo.cpp

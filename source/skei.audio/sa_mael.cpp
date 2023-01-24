@@ -64,6 +64,7 @@ public:
   void init(uint32_t AIndex, MIP_VoiceContext* AContext) {
     MIndex = AIndex;
     MContext = AContext;
+    MIP_Assert(MContext);
   }
 
   //----------
@@ -78,6 +79,7 @@ public:
     float hz = MIP_NoteToHz(AKey);
     float srate = MContext->samplerate;
     ph = 0;
+    MIP_Assert(srate > 0);
     phadd = hz / srate;
     return MIP_VOICE_PLAYING;
   }
@@ -113,6 +115,7 @@ public:
 
   uint32_t process(uint32_t AState, uint32_t AOffset, uint32_t ALength) {
     float* buffer = MContext->voice_buffer;
+    MIP_Assert(buffer);
     buffer += (MIndex * MIP_AUDIO_MAX_BLOCK_SIZE);
     buffer += AOffset;
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
@@ -133,6 +136,7 @@ public:
 
   uint32_t processSlice(uint32_t AState, uint32_t AOffset) {
     float* buffer = MContext->voice_buffer;
+    MIP_Assert(buffer);
     buffer += (MIndex * MIP_AUDIO_MAX_BLOCK_SIZE);
     buffer += AOffset;
     if ((AState == MIP_VOICE_PLAYING) || (AState == MIP_VOICE_RELEASED)) {
@@ -287,7 +291,7 @@ public:
 public:
 //------------------------------
 
-  void on_editor_timer() override {
+  void on_editor_timer() final {
     if (MEditor && MEditor->isEditorOpen()) {
       uint32_t num = MVoiceManager.getMaxVoices();
       for (uint32_t i=0; i<num; i++) {
