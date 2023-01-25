@@ -1,26 +1,6 @@
 #!/bin/bash
 
 # --------------------------------------------------
-
-#g++ -Wextra -Wall -std=gnu++14 -Wl,--as-needed -g -fno-pie -rdynamic -Wl,-Bsymbolic -DMIP_EXE -DMIP_DEBUG -I../include -I../include/extern/vst3 -c /DISKS/sda2/code/git/MIP2/build/build.cpp -o obj/debug/build/build.o
-
-#g++  -o ../bin/build_linux_debug obj/debug/build/build.o  -Wl,--as-needed -no-pie  -lpthread -lrt -lm -ldl -lxcb -lxcb-util -lxcb-image -lxcb-cursor -lxcb-keysyms -lxkbcommon -lX11 -lX11-xcb -lGL -lGLX -lGLU -lglut -lcairo -ljack -lsndfile
-
-# --------------------------------------------------
-# --------------------------------------------------
-# --------------------------------------------------
-
-#ALL_C_FLAGS="-std=c++11 -Wall -Wl,--as-needed, -faligned-new, -fexceptions "
-#DEBUG_C_FLAGS="-g, -Wl,-Bsymbolic, -rdynamic -DKODE_DEBUG "
-#RELEASE_C_FLAGS="-O3, -s, -msse4, -mfpmath=sse "
-#EXE_C_FLAGS="-fno-pie "
-#VST_C_FLAGS="-fPIE "
-
-#ALL_L_FLAGS="-lrt, -lpthread, -lxcb, -lxcb-util, -lxcb-image, -lxcb-cursor, -lxcb-keysyms, -lcairo, -lportaudio, -lSDL2, -lSDL2_image, -lSDL2_mixer "
-#EXE_L_FLAGS="-no-pie "
-#VST_L_FLAGS="-fPIE, -fPIC "
-
-# --------------------------------------------------
 # default values
 # --------------------------------------------------
 
@@ -33,7 +13,7 @@
 #FLAGS=""
 #LIBS=""
 
-FLAGS="-Wall -Wno-unknown-pragmas -std=gnu++17 -shared -fPIC -Wl,--as-needed -pthread -O3 -ffast-math -s -static-libstdc++ -static-libgcc -fPIE "
+FLAGS="-Wall -Wno-unknown-pragmas -std=gnu++17 -shared -fPIC -Wl,--as-needed -pthread -O3 -ffast-math -s -static-libstdc++ -static-libgcc "
 DEF=""
 INC="-I../include -I../include/extern/vst3/vst3sdk "
 LIB="-lX11 -lX11-xcb -lxcb -lxcb-util -lxcb-image -lxcb-cursor -lxkbcommon -lxcb-keysyms -lGL -lGLU -lGLX -ldl -lrt "
@@ -100,12 +80,12 @@ INPUT_BASE=${INPUT_FILE%%.*}
 INPUT_EXT=${INPUT_FILE##*.}
 INPUT_DIR=${INPUT%$INPUT_FILE}
 
-echo ""
-echo "INPUT     : $INPUT"
-echo "INPUT_FILE: $INPUT_FILE"
-echo "INPUT_BASE: $INPUT_BASE"
-echo "INPUT_EXT : $INPUT_EXT"
-echo "INPUT_DIR : $INPUT_DIR"
+#echo ""
+#echo "INPUT     : $INPUT"
+#echo "INPUT_FILE: $INPUT_FILE"
+#echo "INPUT_BASE: $INPUT_BASE"
+#echo "INPUT_EXT : $INPUT_EXT"
+#echo "INPUT_DIR : $INPUT_DIR"
 
 # input = ../plugins/fx_pitch.cpp"
 # input_file = fx_pitch.cpp
@@ -118,12 +98,12 @@ OUTPUT_BASE=${OUTPUT_FILE%%.*}
 OUTPUT_EXT=${OUTPUT_FILE##*.}
 OUTPUT_DIR=${OUTPUT%$OUTPUT_FILE}
 
-echo ""
-echo "OUTPUT     : $OUTPUT"
-echo "OUTPUT_FILE: $OUTPUT_FILE"
-echo "OUTPUT_BASE: $OUTPUT_BASE"
-echo "OUTPUT_EXT : $OUTPUT_EXT"
-echo "OUTPUT_DIR : $OUTPUT_DIR" 
+#echo ""
+#echo "OUTPUT     : $OUTPUT"
+#echo "OUTPUT_FILE: $OUTPUT_FILE"
+#echo "OUTPUT_BASE: $OUTPUT_BASE"
+#echo "OUTPUT_EXT : $OUTPUT_EXT"
+#echo "OUTPUT_DIR : $OUTPUT_DIR" 
 
 # --------------------------------------------------
 #
@@ -249,11 +229,12 @@ CMDLINE+=$DEF
 CMDLINE+=$INC
 CMDLINE+=$LIB
 
-echo ""
-echo "compiling $INPUT_BASE"
+#echo ""
+#echo "compiling $INPUT_BASE"
 echo "gcc" $CMDLINE $INPUT -o $OUTPUT $POST
-# gcc $CMDLINE compile.cpp -o $OUTPUT.so $POST
+gcc $CMDLINE $INPUT -o $OUTPUT $POST
 
+# gcc $CMDLINE compile.cpp -o $OUTPUT.so $POST
 ##rm compile.cpp
 
 

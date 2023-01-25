@@ -1,5 +1,5 @@
 
-#define MIP_PLUGIN_CLAP
+//#define MIP_PLUGIN_CLAP
 //#define MIP_PLUGIN_VST2
 //#define MIP_PLUGIN_VST3
 
