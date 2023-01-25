@@ -295,7 +295,8 @@ public: // plugin
 public: // draft ambisonic
 //------------------------------
 
-  bool ambisonic_get_info(bool is_input, uint32_t port_index, clap_ambisonic_info_t *info) override {
+  //bool ambisonic_get_info(bool is_input, uint32_t port_index, clap_ambisonic_info_t *info) override {
+  bool ambisonic_get_info(clap_id config_id, bool is_input,  uint32_t port_index, clap_ambisonic_info_t *info) override {
     return false;
   }
 
@@ -310,8 +311,9 @@ public: // draft audio-ports-activation
 
   //----------
 
-  void audio_ports_activation_set_active(bool is_input, uint32_t port_index, bool is_active) override {
+  bool audio_ports_activation_set_active(bool is_input, uint32_t port_index, bool is_active) override {
     MIP_PRINT;
+    return true;
   }
 
 //------------------------------
@@ -716,7 +718,7 @@ public: // ext posix-fd-support
 public: // draft preset-load
 //------------------------------
 
-  bool preset_load_from_file(const char *path) override {
+  bool preset_load_from_uri(const char *uri, const char *load_key) override {
     return false;
   }
 
@@ -864,7 +866,7 @@ public: // draft state-context
 public: // draft surround
 //------------------------------
 
-  uint32_t surround_get_channel_map(bool is_input, uint32_t port_index, uint8_t *channel_map, uint32_t channel_map_capacity) override {
+  uint32_t surround_get_channel_map(clap_id config_id, bool is_input, uint32_t port_index, uint8_t *channel_map, uint32_t channel_map_capacity) override {
     return 0;
   }
 

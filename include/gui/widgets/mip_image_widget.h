@@ -24,6 +24,7 @@ protected:
   int32_t     MImage          = -1;
   void*       MBuffer         = nullptr;
   uint32_t    MBufferSize     = 0;
+  const char* MFilename       = nullptr;
   double      MAlpha          = 1.0;
   double      MAngle          = 0.0;
   bool        MMipMapped      = false;
@@ -35,9 +36,16 @@ public:
   MIP_ImageWidget(MIP_DRect ARect, void* ABuffer, uint32_t ASize)
   : MIP_PanelWidget(ARect) {
     setFillBackground(false);
-    //setBackgroundColor(MIP_COLOR_MAGENTA);
     MBuffer = ABuffer;
     MBufferSize = ASize;
+  }
+
+  //----------
+
+  MIP_ImageWidget(MIP_DRect ARect, const char* AFilename)
+  : MIP_PanelWidget(ARect) {
+    setFillBackground(false);
+    MFilename = AFilename;
   }
 
   //----------
@@ -79,8 +87,14 @@ public:
     MIP_Painter* painter = AContext->painter;
     MIP_DRect mrect = getRect();
     if (!MInitialized) {
-      MImage = painter->loadImage(MBuffer,MBufferSize);
-      MInitialized = true;
+      if (MBuffer && (MBufferSize > 0)) {
+        MImage = painter->loadImage(MBuffer,MBufferSize);
+        MInitialized = true;
+      }
+      else if (MFilename) {
+        MImage = painter->loadImage(MFilename);
+        MInitialized = true;
+      }
     }
 
     if (MMipMapped) {

@@ -6,7 +6,7 @@
 #define SA_BOTAGE_EDITOR_HEIGHT 392
 
 //#define MIP_PLUGIN_CLAP
-#define MIP_PLUGIN_VST3
+//#define MIP_PLUGIN_VST3
 
 //----------------------------------------------------------------------
 

@@ -19,7 +19,7 @@
 
 
 //#include "../build/test/test1.cpp"
-#include "../build/test/test2.cpp"
+//#include "../build/test/test2.cpp"
 //#include "../build/test/test_fbo.cpp"
 //#include "../build/test/plug1.cpp"
 //#include "../build/test/plug2.cpp"
@@ -97,7 +97,7 @@
 
 
 
-//#include "../source/skei.audio/sa_botage.cpp"
+#include "../source/skei.audio/sa_botage.cpp"
 //#include "../source/skei.audio/sa_bulum.cpp"
 //#include "../source/skei.audio/sa_cred.cpp"
 //#include "../source/skei.audio/sa_mael.cpp"

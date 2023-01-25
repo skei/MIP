@@ -1,6 +1,6 @@
 # depslib dependency file v1.0
-1674593740 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../build/test/test2.cpp"
+1674669747 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../source/skei.audio/sa_mael.cpp"
 
 1670414796 /DISKS/sda2/code/git/MIP/build/test/test1.cpp
 	"gui/mip_window.h"
@@ -230,12 +230,13 @@
 	"extern/clap/ext/draft/check-for-update.h"
 	"extern/clap/ext/draft/transport-control.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/clap.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/clap.h
 	"entry.h"
-	"plugin-factory.h"
-	"plugin-invalidation.h"
-	"plugin-features.h"
+	"factory/plugin-factory.h"
+	"factory/draft/plugin-invalidation.h"
+	"factory/draft/preset-discovery.h"
 	"plugin.h"
+	"plugin-features.h"
 	"host.h"
 	"ext/audio-ports-config.h"
 	"ext/audio-ports.h"
@@ -269,17 +270,17 @@
 	"ext/draft/triggers.h"
 	"ext/draft/tuning.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/entry.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/entry.h
 	"version.h"
 	"private/macros.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/version.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/version.h
 	"private/macros.h"
 	"private/std.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/private/macros.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/private/macros.h
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/private/std.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/private/std.h
 	"macros.h"
 	<cstdint>
 	<stdint.h>
@@ -290,149 +291,149 @@
 1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/plugin-factory.h
 	"plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/plugin.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/plugin.h
 	"private/macros.h"
 	"host.h"
 	"process.h"
 	"plugin-features.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/host.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/host.h
 	"version.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/process.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/process.h
 	"events.h"
 	"audio-buffer.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/events.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/events.h
 	"private/std.h"
 	"fixedpoint.h"
 	"id.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/fixedpoint.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/fixedpoint.h
 	"private/std.h"
 	"private/macros.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/id.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/id.h
 	"private/std.h"
 	"private/macros.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/audio-buffer.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/audio-buffer.h
 	"private/std.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/plugin-features.h
-	"private/macros.h"
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/plugin-features.h
 
 1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/plugin-invalidation.h
 	"private/std.h"
 	"private/macros.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/audio-ports-config.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/audio-ports-config.h
 	"../string-sizes.h"
 	"../plugin.h"
+	"audio-ports.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/string-sizes.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/string-sizes.h
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/audio-ports.h
-	"../plugin.h"
-	"../string-sizes.h"
-
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/event-registry.h
-	"../plugin.h"
-
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/gui.h
-	"../plugin.h"
-
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/latency.h
-	"../plugin.h"
-
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/log.h
-	"../plugin.h"
-
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/note-name.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/audio-ports.h
 	"../plugin.h"
 	"../string-sizes.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/note-ports.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/event-registry.h
+	"../plugin.h"
+
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/gui.h
+	"../plugin.h"
+
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/latency.h
+	"../plugin.h"
+
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/log.h
+	"../plugin.h"
+
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/note-name.h
 	"../plugin.h"
 	"../string-sizes.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/params.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/note-ports.h
 	"../plugin.h"
 	"../string-sizes.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/posix-fd-support.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/params.h
+	"../plugin.h"
+	"../string-sizes.h"
+
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/posix-fd-support.h
 	"../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/render.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/render.h
 	"../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/state.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/state.h
 	"../plugin.h"
 	"../stream.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/stream.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/stream.h
 	"private/std.h"
 	"private/macros.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/tail.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/tail.h
 	"../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/thread-check.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/thread-check.h
 	"../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/thread-pool.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/thread-pool.h
 	"../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/timer-support.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/timer-support.h
 	"../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/voice-info.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/voice-info.h
 	"../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/ambisonic.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/ambisonic.h
 	"../../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/cv.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/cv.h
 	"../../plugin.h"
 
 1666348610 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/file-reference.h
 	"../../plugin.h"
 	"../../string-sizes.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/midi-mappings.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/midi-mappings.h
 	"../../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/preset-load.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/preset-load.h
 	"../../plugin.h"
 
 1666348610 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/quick-controls.h
 	"../../plugin.h"
 	"../../string-sizes.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/state-context.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/state-context.h
 	"../../plugin.h"
 	"../../stream.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/surround.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/surround.h
 	"../../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/track-info.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/track-info.h
 	"../../plugin.h"
 	"../../color.h"
 	"../../string-sizes.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/color.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/color.h
 	"private/std.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/tuning.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/tuning.h
 	"../../plugin.h"
 	"../../events.h"
 	"../../string-sizes.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/check-for-update.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/check-for-update.h
 	"../../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/transport-control.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/transport-control.h
 	"../../plugin.h"
 
 1672181243 /DISKS/sda2/code/git/MIP/include/plugin/mip_registry.h
@@ -734,7 +735,7 @@
 	"gui/mip_widgets.h"
 	"plugin/mip_entry.h"
 
-1674492100 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
+1674670377 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
 	"base/mip.h"
 	"base/system/mip_timer.h"
 	"plugin/mip_parameter.h"
@@ -757,8 +758,9 @@
 	"base/mip.h"
 	"plugin/clap/mip_clap.h"
 
-1673187935 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_plugin.h
+1674670365 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_plugin.h
 	"plugin/clap/mip_clap.h"
+	"plugin/clap/mip_clap_host.h"
 
 1673731153 /DISKS/sda2/code/git/MIP/include/plugin/mip_editor.h
 	"base/mip.h"
@@ -896,7 +898,7 @@
 
 1670527716 /DISKS/sda2/code/git/MIP/source/skei.audio/img/mip_img.h
 
-1672173822 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_image_widget.h
+1674656792 /DISKS/sda2/code/git/MIP/include/gui/widgets/mip_image_widget.h
 	"base/mip.h"
 	"gui/widgets/mip_panel_widget.h"
 
@@ -1403,28 +1405,28 @@
 	"base/mip.h"
 	<ladspa.h>
 
-1669323612 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_host.h
+1674589126 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_host.h
 	"base/mip.h"
 	"plugin/clap/mip_clap.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/audio-ports-activation.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/audio-ports-activation.h
 	"../../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/context-menu.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/context-menu.h
 	"../../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/param-indication.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/param-indication.h
 	"../params.h"
 	"../../color.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/remote-controls.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/remote-controls.h
 	"../../plugin.h"
 	"../../string-sizes.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/resource-directory.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/resource-directory.h
 	"../../plugin.h"
 
-1672431729 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/triggers.h
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/ext/draft/triggers.h
 	"../../plugin.h"
 	"../../events.h"
 	"../../string-sizes.h"
@@ -1458,7 +1460,7 @@
 	"plugin/mip_voice_manager.h"
 	"plugin/mip_entry.h"
 
-1674162655 /DISKS/sda2/code/git/MIP/include/plugin/mip_voice_manager.h
+1674591746 /DISKS/sda2/code/git/MIP/include/plugin/mip_voice_manager.h
 	"plugin/mip_note.h"
 	"plugin/mip_voice.h"
 
@@ -1471,7 +1473,7 @@
 	"plugin/clap/mip_clap.h"
 	"plugin/mip_process_context.h"
 
-1674578221 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_mael.cpp
+1674644837 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_mael.cpp
 	"base/mip.h"
 	"audio/mip_audio_math.h"
 	"audio/mip_audio_utils.h"
@@ -1485,4 +1487,16 @@
 	"gui/widgets/mip_panel_widget.h"
 
 1674057775 /DISKS/sda2/code/git/MIP/include/audio/old/filters/mip_decimator_filter.h
+
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/factory/plugin-factory.h
+	"../plugin.h"
+
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/factory/draft/plugin-invalidation.h
+	"../../private/std.h"
+	"../../private/macros.h"
+
+1674668332 /DISKS/sda2/code/git/MIP/include/extern/clap/factory/draft/preset-discovery.h
+	"../../private/std.h"
+	"../../private/macros.h"
+	"../../version.h"
 

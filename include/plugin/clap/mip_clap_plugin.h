@@ -75,9 +75,9 @@ public: // plugin
 public: // extensions
 //------------------------------
 
-  virtual bool                ambisonic_get_info(bool is_input,  uint32_t port_index, clap_ambisonic_info_t *info) { return false; }
+  virtual bool                ambisonic_get_info(clap_id config_id, bool is_input,  uint32_t port_index, clap_ambisonic_info_t *info) { return false; }
   virtual bool                audio_ports_activation_can_activate_while_processing() { return false; }
-  virtual void                audio_ports_activation_set_active(bool is_input, uint32_t port_index, bool is_active) {}
+  virtual bool                audio_ports_activation_set_active(bool is_input, uint32_t port_index, bool is_active) { return false; }
   virtual uint32_t            audio_ports_config_count() { return 0; }
   virtual bool                audio_ports_config_get(uint32_t index, clap_audio_ports_config_t *config) { return false; }
   virtual bool                audio_ports_config_select(clap_id config_id) { return false; }
@@ -118,7 +118,7 @@ public: // extensions
   virtual bool                params_text_to_value(clap_id param_id, const char *display, double *value) { return false; }
   virtual void                params_flush(const clap_input_events_t *in, const clap_output_events_t *out) { }
   virtual void                posix_fd_support_on_fd(int fd, clap_posix_fd_flags_t flags) { }
-  virtual bool                preset_load_from_file(const char *path) { return false; }
+  virtual bool                preset_load_from_uri(const char *uri, const char *load_key) { return false; }
   virtual uint32_t            remote_controls_count() { return 0; }
   virtual bool                remote_controls_get(uint32_t page_index, clap_remote_controls_page_t *page) { return false; }
   virtual bool                render_has_hard_realtime_requirement() { return false; }
@@ -131,7 +131,7 @@ public: // extensions
   virtual bool                state_load(const clap_istream_t *stream) { return false; }
   virtual bool                state_context_save(const clap_ostream_t *stream, uint32_t context_type) { return false; }
   virtual bool                state_context_load(const clap_istream_t *stream, uint32_t context_type) { return false; }
-  virtual uint32_t            surround_get_channel_map(bool is_input, uint32_t port_index, uint8_t *channel_map, uint32_t channel_map_capacity) { return 0; }
+  virtual uint32_t            surround_get_channel_map(clap_id config_id, bool is_input, uint32_t port_index, uint8_t *channel_map, uint32_t channel_map_capacity) { return 0; }
   virtual void                surround_changed() { }
   virtual uint32_t            tail_get() { return 0; }
   virtual void                thread_pool_exec(uint32_t task_index) { }
@@ -228,9 +228,9 @@ private: // draft: ambisonic
 //------------------------------
 
   static
-  bool clap_plugin_ambisonic_get_info_callback(const clap_plugin_t *plugin, bool is_input,  uint32_t port_index, clap_ambisonic_info_t *info) {
+  bool clap_plugin_ambisonic_get_info_callback(const clap_plugin_t *plugin, clap_id config_id, bool is_input,  uint32_t port_index, clap_ambisonic_info_t *info) {
     MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
-    return plug->ambisonic_get_info(is_input,port_index,info);
+    return plug->ambisonic_get_info(config_id,is_input,port_index,info);
   }
 
 protected:
@@ -252,9 +252,9 @@ private: // ext: audio ports activation
   }
 
   static
-  void clap_plugin_audio_ports_activation_set_active_callback(const clap_plugin_t *plugin, bool is_input, uint32_t port_index, bool is_active) {
+  bool clap_plugin_audio_ports_activation_set_active_callback(const clap_plugin_t *plugin, bool is_input, uint32_t port_index, bool is_active) {
     MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
-    plug->audio_ports_activation_set_active(is_input,port_index,is_active);
+    return plug->audio_ports_activation_set_active(is_input,port_index,is_active);
   }
 
 protected:
@@ -668,16 +668,23 @@ protected:
 private: // draft: preset load
 //------------------------------
 
+//  static
+//  bool clap_plugin_preset_load_from_file_callback(const clap_plugin_t *plugin, const char *path) {
+//    MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
+//    return plug->preset_load_from_file(path);
+//  }
+
   static
-  bool clap_plugin_preset_load_from_file_callback(const clap_plugin_t *plugin, const char *path) {
+  bool clap_plugin_preset_load_from_uri_callback(const clap_plugin_t *plugin, const char *uri, const char *load_key) {
     MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
-    return plug->preset_load_from_file(path);
+    return plug->preset_load_from_uri(uri,load_key);
   }
 
 protected:
 
   const clap_plugin_preset_load_t MPresetLoad = {
-    .from_file = clap_plugin_preset_load_from_file_callback
+    //.from_file = clap_plugin_preset_load_from_file_callback
+    .from_uri = clap_plugin_preset_load_from_uri_callback
   };
 
 //------------------------------
@@ -815,9 +822,9 @@ private: // draft: surround
 //------------------------------
 
   static
-  uint32_t clap_plugin_surround_get_channel_map_callback(const clap_plugin_t *plugin, bool is_input, uint32_t port_index, uint8_t *channel_map, uint32_t channel_map_capacity) {
+  uint32_t clap_plugin_surround_get_channel_map_callback(const clap_plugin_t *plugin, clap_id config_id, bool is_input, uint32_t port_index, uint8_t *channel_map, uint32_t channel_map_capacity) {
     MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
-    return plug->surround_get_channel_map(is_input,port_index,channel_map,channel_map_capacity);
+    return plug->surround_get_channel_map(config_id,is_input,port_index,channel_map,channel_map_capacity);
   }
 
   static
@@ -825,6 +832,16 @@ private: // draft: surround
     MIP_ClapPlugin* plug = (MIP_ClapPlugin*)plugin->plugin_data;
     plug->surround_changed();
   }
+
+
+
+   uint32_t(CLAP_ABI *get_channel_map)(const clap_plugin_t *plugin,
+                                       clap_id config_id,
+                                       bool                 is_input,
+                                       uint32_t             port_index,
+                                       uint8_t             *channel_map,
+                                       uint32_t             channel_map_capacity);
+
 
 protected:
 

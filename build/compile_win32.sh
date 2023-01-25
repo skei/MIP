@@ -16,7 +16,7 @@
 FLAGS="-Wall -Wno-unknown-pragmas -std=gnu++17 -shared -fPIC -Wl,--as-needed -pthread -O3 -ffast-math -s -static-libstdc++ -static-libgcc "
 DEF=""
 INC="-I../include -I../include/extern/vst3/vst3sdk "
-LIB="-lX11 -lX11-xcb -lxcb -lxcb-util -lxcb-image -lxcb-cursor -lxkbcommon -lxcb-keysyms -lGL -lGLU -lGLX -ldl -lrt "
+LIB="-lgdi32 -lmsimg32 -lopengl32 "
 #POST="-s -lstdc++ -lm "
 
 FLAGS+="-DMIP_NO_DEFAULT_WARNINGS "
@@ -182,15 +182,15 @@ fi
 # ----------
 
 #if [ "$PAINTER" = "nopainter" ]; then
-#  FLAGS+="-DKODE_NO_PAINTER "
+#  FLAGS+="-DMIP_NO_PAINTER "
 #fi
 
 #if [ "$PAINTER" = "cairo" ]; then
-#  FLAGS+="-DKODE_PAINTER_CAIRO "
+#  FLAGS+="-DMIP_PAINTER_CAIRO "
 #fi
 
 #if [ "$PAINTER" = "xcb" ]; then
-#  FLAGS+="-DKODE_PAINTER_XCB "
+#  FLAGS+="-DMIP_PAINTER_XCB "
 #fi
 
 # ----------
@@ -214,33 +214,17 @@ fi
 #echo "lib:" $LIB
 
 # --------------------------------------------------
-# create compile.cpp
-# --------------------------------------------------
-
-# echo 'compile.cpp:'
-#echo '#include "base/kode.h"' >> compile.cpp
-#echo '#include "'$INPUT_FILE'"' >> compile.cpp
-
-# --------------------------------------------------
 # finalize command line
 # --------------------------------------------------
 
-CMDLINE=""
-CMDLINE+=$FLAGS
-CMDLINE+=$DEF
-CMDLINE+=$INC
-CMDLINE+=$LIB
-
-#echo ""
+#CMDLINE=""
+#CMDLINE+=$FLAGS
+#CMDLINE+=$DEF
+#CMDLINE+=$INC
+#CMDLINE+=$LIB
 #echo "compiling $INPUT_BASE"
-#echo "gcc" $CMDLINE $INPUT -o $OUTPUT $POST
-#gcc $CMDLINE $INPUT -o $OUTPUT $POST
+#echo "x86_64-w64-mingw32-g++" $CMDLINE $INPUT -o $OUTPUT $POST
 
-echo "g++" $FLAGS $DEF $INC $INPUT -o $OUTPUT $LIB $POST
-g++ $FLAGS $DEF $INC $INPUT -o $OUTPUT $LIB $POST
-
-
-# gcc $CMDLINE compile.cpp -o $OUTPUT.so $POST
-##rm compile.cpp
-
+echo "x86_64-w64-mingw32-g++" $FLAGS $DEF $INC $INPUT -o $OUTPUT $LIB $POST
+x86_64-w64-mingw32-g++ $FLAGS $DEF $INC $INPUT -o $OUTPUT $LIB $POST
 
