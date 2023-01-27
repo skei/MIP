@@ -1,6 +1,6 @@
 # depslib dependency file v1.0
-1674669747 source:/DISKS/sda2/code/git/MIP/build/build.cpp
-	"../source/skei.audio/sa_mael.cpp"
+1674743979 source:/DISKS/sda2/code/git/MIP/build/build.cpp
+	"../source/skei.audio/sa_tyr.cpp"
 
 1670414796 /DISKS/sda2/code/git/MIP/build/test/test1.cpp
 	"gui/mip_window.h"
@@ -735,7 +735,7 @@
 	"gui/mip_widgets.h"
 	"plugin/mip_entry.h"
 
-1674670377 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
+1674693011 /DISKS/sda2/code/git/MIP/include/plugin/mip_plugin.h
 	"base/mip.h"
 	"base/system/mip_timer.h"
 	"plugin/mip_parameter.h"
@@ -780,11 +780,12 @@
 	"plugin/vst2/mip_vst2_entry.h"
 	"plugin/vst3/mip_vst3_entry.h"
 
-1673401516 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_entry.h
+1674692534 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_entry.h
 	"base/mip.h"
 	"plugin/mip_registry.h"
 	"plugin/clap/mip_clap.h"
 	"plugin/clap/mip_clap_factory.h"
+	"plugin/clap/mip_clap_preset_discovery.h"
 
 1672181282 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_factory.h
 	"base/mip.h"
@@ -1049,7 +1050,7 @@
 	"plugin/mip_plugin.h"
 	"plugin/mip_entry.h"
 
-1674088966 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr.cpp
+1674388315 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_tyr.cpp
 	"audio/mip_audio_utils.h"
 	"audio/old/filters/mip_decimator_filter.h"
 	"plugin/mip_note.h"
@@ -1499,4 +1500,14 @@
 	"../../private/std.h"
 	"../../private/macros.h"
 	"../../version.h"
+
+1674687309 /DISKS/sda2/code/git/MIP/source/skei.audio/sa_ports/sa_freeverb.h
+	"plugin/mip_plugin.h"
+	"plugin/mip_entry.h"
+
+1674692568 /DISKS/sda2/code/git/MIP/include/plugin/clap/mip_clap_preset_discovery.h
+	"base/mip.h"
+	"plugin/clap/mip_clap.h"
+	"plugin/mip_registry.h"
+	"plugin/mip_plugin.h"
 

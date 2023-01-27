@@ -22,6 +22,7 @@
 #include "sa_ports/sa_event_horizon.h"
 #include "sa_ports/sa_exciter.h"
 #include "sa_ports/sa_exciter2.h"
+#include "sa_ports/sa_freeverb.h"
 #include "sa_ports/sa_hall_reverb.h"
 #include "sa_ports/sa_hrtf.h"
 #include "sa_ports/sa_large_room_reverb.h"

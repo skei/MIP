@@ -557,6 +557,9 @@
 		<Unit filename="../../include/extern/clap/ext/thread-pool.h" />
 		<Unit filename="../../include/extern/clap/ext/timer-support.h" />
 		<Unit filename="../../include/extern/clap/ext/voice-info.h" />
+		<Unit filename="../../include/extern/clap/factory/draft/plugin-invalidation.h" />
+		<Unit filename="../../include/extern/clap/factory/draft/preset-discovery.h" />
+		<Unit filename="../../include/extern/clap/factory/plugin-factory.h" />
 		<Unit filename="../../include/extern/clap/fixedpoint.h" />
 		<Unit filename="../../include/extern/clap/host.h" />
 		<Unit filename="../../include/extern/clap/id.h" />
@@ -728,6 +731,7 @@
 		<Unit filename="../../include/plugin/clap/mip_clap_host_implementation.h" />
 		<Unit filename="../../include/plugin/clap/mip_clap_hosted_plugin.h" />
 		<Unit filename="../../include/plugin/clap/mip_clap_plugin.h" />
+		<Unit filename="../../include/plugin/clap/mip_clap_preset_discovery.h" />
 		<Unit filename="../../include/plugin/clap/mip_clap_utils.h" />
 		<Unit filename="../../include/plugin/exe/mip_exe.h" />
 		<Unit filename="../../include/plugin/exe/mip_exe_entry.h" />
@@ -804,6 +808,7 @@
 		<Unit filename="../../source/skei.audio/sa_ports/sa_event_horizon.h" />
 		<Unit filename="../../source/skei.audio/sa_ports/sa_exciter.h" />
 		<Unit filename="../../source/skei.audio/sa_ports/sa_exciter2.h" />
+		<Unit filename="../../source/skei.audio/sa_ports/sa_freeverb.h" />
 		<Unit filename="../../source/skei.audio/sa_ports/sa_hall_reverb.h" />
 		<Unit filename="../../source/skei.audio/sa_ports/sa_hrtf.h" />
 		<Unit filename="../../source/skei.audio/sa_ports/sa_large_room_reverb.h" />

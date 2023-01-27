@@ -6,6 +6,7 @@
 #include "plugin/mip_registry.h"
 #include "plugin/clap/mip_clap.h"
 #include "plugin/clap/mip_clap_factory.h"
+#include "plugin/clap/mip_clap_preset_discovery.h"
 
 //----------------------------------------------------------------------
 
@@ -36,12 +37,9 @@ const void* clap_entry_get_factory_callback(const char* factory_id) {
   LOG.print("CLAP_ENTRY: get_factory %s\n",factory_id);
   const void* factory = MIP_REGISTRY.findFactoryById(factory_id);
   if (!factory) {
-    if (strcmp(factory_id,CLAP_PLUGIN_FACTORY_ID) == 0) {
-      return &MIP_CLAP_FACTORY;
-    }
-    else {
-      return nullptr;
-    }
+    if (strcmp(factory_id,CLAP_PLUGIN_FACTORY_ID) == 0) return &MIP_CLAP_FACTORY;
+    if (strcmp(factory_id,CLAP_PRESET_DISCOVERY_FACTORY_ID) == 0) return &MIP_CLAP_PRESET_DISCOVERY;
+    return nullptr;
   }
   return factory;
 }

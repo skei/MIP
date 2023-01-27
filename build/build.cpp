@@ -70,18 +70,23 @@
 
 
 
+//#include "../source/skei.audio/sa_ports.cpp"
+
 //#include "../source/skei.audio/sa_ports/sa_compciter.h"
 //#include "../source/skei.audio/sa_ports/sa_event_horizon.h"
 //#include "../source/skei.audio/sa_ports/sa_exciter.h"
+//#include "../source/skei.audio/sa_ports/sa_freeverb.h"
 //#include "../source/skei.audio/sa_ports/sa_hall_reverb.h"
 //#include "../source/skei.audio/sa_ports/sa_hrtf.h"
 //#include "../source/skei.audio/sa_ports/sa_large_room_reverb.h"
 //#include "../source/skei.audio/sa_ports/sa_limiter.h"
+//#include "../source/skei.audio/sa_ports/sa_phaser.h"
 //#include "../source/skei.audio/sa_ports/sa_saturation.h"
 //#include "../source/skei.audio/sa_ports/sa_small_room_reverb.h"
 //#include "../source/skei.audio/sa_ports/sa_sonic_maximizer.h"
 //#include "../source/skei.audio/sa_ports/sa_tilteq.h"
 //#include "../source/skei.audio/sa_ports/sa_transient_killer.h"
+
 
 
 
@@ -97,11 +102,12 @@
 
 
 
-#include "../source/skei.audio/sa_botage.cpp"
+//#include "../source/skei.audio/sa_botage.cpp"
 //#include "../source/skei.audio/sa_bulum.cpp"
 //#include "../source/skei.audio/sa_cred.cpp"
 //#include "../source/skei.audio/sa_mael.cpp"
-//#include "../source/skei.audio/sa_tyr.cpp"
+#include "../source/skei.audio/sa_tyr.cpp"
+
 
 //
 

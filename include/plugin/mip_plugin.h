@@ -385,11 +385,17 @@ public: // draft check-for-updates
 public: // draft context-menu
 //------------------------------
 
+  /*
+    target:
+      kind: CLAP_CONTEXT_MENU_TARGET_KIND_GLOBAL, CLAP_CONTEXT_MENU_TARGET_KIND_PARAM
+      id
+  */
+
   bool context_menu_populate(const clap_context_menu_target_t *target, const clap_context_menu_builder_t *builder) override {
     MIP_Print("target.kind %i target.id %i\n",target->kind,target->id);
-    if (builder->supports(builder,CLAP_CONTEXT_MENU_ITEM_ENTRY)) {
-      builder->add_item(builder,CLAP_CONTEXT_MENU_ITEM_ENTRY,"Hello world!");
-    }
+    //if (builder->supports(builder,CLAP_CONTEXT_MENU_ITEM_ENTRY)) {
+    //  builder->add_item(builder,CLAP_CONTEXT_MENU_ITEM_ENTRY,nullptr);
+    //}
     return false;
   }
 
@@ -636,20 +642,41 @@ public: // ext note-ports
 public: // draft param-indication
 //------------------------------
 
+  /*
+    Sets or clears a mapping indication.
+    has_mapping: does the parameter currently has a mapping?
+    color: if set, the color to use to highlight the control in the plugin GUI
+    label: if set, a small string to display on top of the knob which identifies the hardware
+    controller description: if set, a string which can be used in a tooltip, which describes the
+    current mapping
+    Parameter indications should not be saved in the plugin context, and are off by default.
+    [main-thread]
+  */
+
+  void param_indication_set_mapping(clap_id param_id, bool has_mapping, const clap_color_t *color, const char *label, const char *description) override {
+    MIP_Print("id %i mapping %i color %i.%i.%i label '%s' description '%s'\n",param_id,has_mapping,color->red,color->green,color->blue,label,description);
+    //MParameters[param_id]->setIndicationMapping(has_mapping,color,label,description);
+  }
+
+  //----------
+
   // CLAP_PARAM_INDICATION_AUTOMATION_NONE        = 0
   // CLAP_PARAM_INDICATION_AUTOMATION_PRESENT     = 1 // The host has an automation for this parameter, but it isn't playing it
   // CLAP_PARAM_INDICATION_AUTOMATION_PLAYING     = 2 // The host is playing an automation for this parameter
   // CLAP_PARAM_INDICATION_AUTOMATION_RECORDING   = 3 // The host is recording an automation on this parameter
   // CLAP_PARAM_INDICATION_AUTOMATION_OVERRIDING  = 4 // The host should play an automation for this parameter, but the user has started to ajust this parameter and is overriding the automation playback
 
-  void param_indication_set_mapping(clap_id param_id, bool has_mapping, const clap_color_t *color, const char *label, const char *description) override {
-    MIP_Print("id %i mapping %i color %i.%i.%i label '%s' description '%s'\n",param_id,has_mapping,color->red,color->green,color->blue,label,description);
-  }
-
-  //----------
+  /*
+    Sets or clears an automation indication.
+    automation_state: current automation state for the given parameter
+    color: if set, the color to use to display the automation indication in the plugin GUI
+    Parameter indications should not be saved in the plugin context, and are off by default.
+    [main-thread]
+  */
 
   void param_indication_set_automation(clap_id param_id, uint32_t automation_state, const clap_color_t *color) override {
     MIP_Print("id %i state %i color %i.%i.%i\n",param_id,automation_state,color->red,color->green,color->blue);
+    //MParameters[param_id]->setIndicationAutomation(automation_state,color);
   }
 
 //------------------------------
@@ -717,6 +744,14 @@ public: // ext posix-fd-support
 //------------------------------
 public: // draft preset-load
 //------------------------------
+
+  /*
+    Loads a preset in the plugin native preset file format from a URI. eg:
+    - "file:///home/abique/.u-he/Diva/Presets/Diva/HS Bass Nine.h2p", load_key: null
+    - "plugin://<plugin-id>", load_key: <XXX>
+    The preset discovery provider defines the uri and load_key to be passed to this function.
+    [main-thread]
+  */
 
   bool preset_load_from_uri(const char *uri, const char *load_key) override {
     return false;
@@ -1639,7 +1674,6 @@ public: // generic gui
 
   #ifndef MIP_NO_GUI
 
-
   uint32_t getGenericNumControls() {
     uint32_t num = 0;
     for (uint32_t i=0; i<MParameters.size(); i++) {
@@ -1668,7 +1702,7 @@ public: // generic gui
   //----------
 
   uint32_t calcGenericHeight(uint32_t ANumParams) {
-    return 80 + 10 + (ANumParams * 20) + ((ANumParams-1) * 5) + 10;// + 25;
+    return 80 + 10 + (ANumParams * 20) + ((ANumParams-1) * 5) + 10      + 25;
   }
 
   //----------
