@@ -27,6 +27,7 @@
 #include "sa_ports/sa_hrtf.h"
 #include "sa_ports/sa_large_room_reverb.h"
 #include "sa_ports/sa_limiter.h"
+#include "sa_ports/sa_phaser.h"
 #include "sa_ports/sa_saturation.h"
 #include "sa_ports/sa_small_room_reverb.h"
 #include "sa_ports/sa_sonic_maximizer.h"
@@ -52,10 +53,12 @@ void MIP_Register() {
   MIP_REGISTRY.appendDescriptor(&sa_event_horizon_descriptor);
   MIP_REGISTRY.appendDescriptor(&sa_exciter_descriptor);
   MIP_REGISTRY.appendDescriptor(&sa_exciter2_descriptor);
+  MIP_REGISTRY.appendDescriptor(&sa_freeverb_descriptor);
   MIP_REGISTRY.appendDescriptor(&sa_hall_reverb_descriptor);
   MIP_REGISTRY.appendDescriptor(&sa_hrtf_descriptor);
   MIP_REGISTRY.appendDescriptor(&sa_large_room_reverb_descriptor);
   MIP_REGISTRY.appendDescriptor(&sa_limiter_descriptor);
+  MIP_REGISTRY.appendDescriptor(&sa_phaser_descriptor);
   MIP_REGISTRY.appendDescriptor(&sa_saturation_descriptor);
   MIP_REGISTRY.appendDescriptor(&sa_small_room_reverb_descriptor);
   MIP_REGISTRY.appendDescriptor(&sa_sonic_maximizer_descriptor);
@@ -76,15 +79,17 @@ MIP_Plugin* MIP_CreatePlugin(uint32_t AIndex, const clap_plugin_descriptor_t* AD
     case 1:  return new sa_event_horizon_plugin(ADescriptor,AHost);
     case 2:  return new sa_exciter_plugin(ADescriptor,AHost);
     case 3:  return new sa_exciter2_plugin(ADescriptor,AHost);
-    case 4:  return new sa_hall_reverb_plugin(ADescriptor,AHost);
-    case 5:  return new sa_hrtf_plugin(ADescriptor,AHost);
-    case 6:  return new sa_large_room_reverb_plugin(ADescriptor,AHost);
-    case 7:  return new sa_limiter_plugin(ADescriptor,AHost);
-    case 8:  return new sa_saturation_plugin(ADescriptor,AHost);
-    case 9:  return new sa_small_room_reverb_plugin(ADescriptor,AHost);
-    case 10: return new sa_sonic_maximizer_plugin(ADescriptor,AHost);
-    case 11: return new sa_tilteq_plugin(ADescriptor,AHost);
-    case 12: return new sa_transient_killer_plugin(ADescriptor,AHost);
+    case 4:  return new sa_freeverb_plugin(ADescriptor,AHost);
+    case 5:  return new sa_hall_reverb_plugin(ADescriptor,AHost);
+    case 6:  return new sa_hrtf_plugin(ADescriptor,AHost);
+    case 7:  return new sa_large_room_reverb_plugin(ADescriptor,AHost);
+    case 8:  return new sa_limiter_plugin(ADescriptor,AHost);
+    case 9:  return new sa_phaser_plugin(ADescriptor,AHost);
+    case 10: return new sa_saturation_plugin(ADescriptor,AHost);
+    case 11: return new sa_small_room_reverb_plugin(ADescriptor,AHost);
+    case 12: return new sa_sonic_maximizer_plugin(ADescriptor,AHost);
+    case 13: return new sa_tilteq_plugin(ADescriptor,AHost);
+    case 14: return new sa_transient_killer_plugin(ADescriptor,AHost);
   }
   return nullptr;
 }

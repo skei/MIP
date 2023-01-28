@@ -223,12 +223,17 @@ public:
   //----------
 
   bool gui_create(const char* api, bool is_floating) final {
-    MIsEditorOpen = false;
-    MEditor = new MIP_Editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
+    //MIsEditorOpen = false;
+    //MEditor = new MIP_Editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
+    MIP_Editor* editor = new MIP_Editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
 
-    if (MEditor) {
+    //if (MEditor) {
+    if (editor) {
+
+      setEditor(editor);
+
       MIP_PanelWidget* background = new MIP_PanelWidget(MIP_DRect(0,0, MY_PLUGIN_EDITOR_WIDTH, MY_PLUGIN_EDITOR_HEIGHT));
-      MEditor->setRootWidget(background);
+      /*MEditor*/editor->setRootWidget(background);
 
       wdg_voices = new MIP_VoicesWidget(MIP_DRect(50,20,400,20),MY_PLUGIN_MAX_VOICES);
       background->appendChildWidget(wdg_voices);
@@ -266,10 +271,10 @@ public:
       wdg_gain->setSnap(true);
       background->appendChildWidget(wdg_gain);
 
-      MEditor->connect( wdg_gain, par_gain );
+      /*MEditor*/editor->connect( wdg_gain, par_gain );
 
     }
-    return (MEditor);
+    return (/*MEditor*/editor);
   }
 
   //----------
@@ -292,7 +297,9 @@ public:
 //------------------------------
 
   void on_editor_timer() final {
-    if (MEditor && MEditor->isEditorOpen()) {
+    MIP_Editor* editor = getEditor();
+    //if (MEditor && MEditor->isEditorOpen()) {
+    if (editor && editor->isEditorOpen()) {
       uint32_t num = MVoiceManager.getMaxVoices();
       for (uint32_t i=0; i<num; i++) {
         uint32_t state = MVoiceManager.getVoiceState(i);

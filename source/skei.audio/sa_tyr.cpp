@@ -140,9 +140,12 @@ public: // gui
 
   bool gui_create(const char *api, bool is_floating) final {
     //MIP_Plugin::gui_create(api,is_floating);
-    MIsEditorOpen = false;
-    MEditor = new sa_tyr_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters,getClapDescriptor());
-    return (MEditor);
+//    MIsEditorOpen = false;
+    //MEditor = new sa_tyr_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters,getClapDescriptor());
+    //return (MEditor);
+    MIP_Editor* editor = new sa_tyr_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters,getClapDescriptor());
+    setEditor(editor);
+    return (editor);
     //MEditor->setCanResizeEditor(true);
     //MEditor->setResizeProportional(true);
     //MEditor->setProportionalSize(EDITOR_WIDTH,EDITOR_HEIGHT);
@@ -152,8 +155,10 @@ public: // gui
   //----------
 
   void on_editor_timer() final {
-    if (MEditor && MEditor->isEditorOpen()) {
-      sa_tyr_editor* editor = (sa_tyr_editor*)MEditor;
+    sa_tyr_editor* editor = (sa_tyr_editor*)getEditor();
+    //if (MEditor && MEditor->isEditorOpen()) {
+    if (editor && editor->isEditorOpen()) {
+      //sa_tyr_editor* editor = (sa_tyr_editor*)MEditor;
       editor->timer_update(&MVoiceManager);
     }
     MIP_Plugin::on_editor_timer();
@@ -246,9 +251,13 @@ public: // audio
     // set to defaults in MIP_Plugin.process()
 
     if (SA_TYR_OVERSAMPLING > 1) {
-      MProcessContext.oversampling = SA_TYR_OVERSAMPLING;
-      MProcessContext.block_buffer = block_buffer;
-      MProcessContext.block_length = length * SA_TYR_OVERSAMPLING;
+      //MProcessContext.oversampling = SA_TYR_OVERSAMPLING;
+      //MProcessContext.block_buffer = block_buffer;
+      //MProcessContext.block_length = length * SA_TYR_OVERSAMPLING;
+      MIP_ProcessContext* context = getProcessContext();
+      context->oversampling = SA_TYR_OVERSAMPLING;
+      context->block_buffer = block_buffer;
+      context->block_length = length * SA_TYR_OVERSAMPLING;
     }
 
     // process the voices

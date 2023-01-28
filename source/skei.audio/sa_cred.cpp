@@ -163,7 +163,8 @@ public: // plugin
     bool result = MIP_Plugin::gui_create(api,is_floating);
     if (result) {
       MIP_PanelWidget* MRoot = new MIP_PanelWidget( MIP_DRect(0,0,EDITOR_WIDTH,EDITOR_HEIGHT) );
-      MEditor->setRootWidget(MRoot);
+      //MEditor->setRootWidget(MRoot);
+      setEditorRootWidget(MRoot);
 
       MIP_SAHeaderWidget* header  = new MIP_SAHeaderWidget(MIP_DRect(0,0,EDITOR_WIDTH,80),getClapDescriptor());
       MRoot->appendChildWidget(header);
@@ -176,9 +177,10 @@ public: // plugin
       MRoot->appendChildWidget(slider2);
       MRoot->appendChildWidget(slider3);
 
-      MEditor->connect(slider1,getParameter(0));
-      MEditor->connect(slider2,getParameter(1));
-      MEditor->connect(slider3,getParameter(2));
+      MIP_Editor* editor = getEditor();
+      editor->connect(slider1,getParameter(0));
+      editor->connect(slider2,getParameter(1));
+      editor->connect(slider3,getParameter(2));
 
     }
     return result;
@@ -187,8 +189,10 @@ public: // plugin
   //----------
 
   void processNoteOn(const clap_event_note_t* event) final {
-    MIP_Assert( MProcessContext.process );
-    const clap_output_events_t *out_events = MProcessContext.process->out_events;
+    //MIP_Assert( MProcessContext.process );
+    MIP_ProcessContext* context = getProcessContext();
+    //const clap_output_events_t *out_events = MProcessContext.process->out_events;
+    const clap_output_events_t *out_events = context->process->out_events;
     int32_t channel = event->channel;
     int32_t key = event->key;
     int32_t value = get_fibo();
@@ -204,8 +208,10 @@ public: // plugin
   //----------
 
   void processNoteOff(const clap_event_note_t* event) final {
-    MIP_Assert( MProcessContext.process );
-    const clap_output_events_t *out_events = MProcessContext.process->out_events;
+    //MIP_Assert( MProcessContext.process );
+    MIP_ProcessContext* context = getProcessContext();
+    //const clap_output_events_t *out_events = MProcessContext.process->out_events;
+    const clap_output_events_t *out_events = context->process->out_events;
     int32_t channel = event->channel;
     int32_t key = event->key;
     MIP_Assert( (channel >= 0) && (channel <= 15) );
@@ -221,8 +227,10 @@ public: // plugin
   //----------
 
   void processNoteChoke(const clap_event_note_t* event) final {
-    MIP_Assert( MProcessContext.process );
-    const clap_output_events_t *out_events = MProcessContext.process->out_events;
+    //MIP_Assert( MProcessContext.process );
+    MIP_ProcessContext* context = getProcessContext();
+    //const clap_output_events_t *out_events = MProcessContext.process->out_events;
+    const clap_output_events_t *out_events = context->process->out_events;
     int32_t channel = event->channel;
     int32_t key = event->key;
     MIP_Assert( (channel >= 0) && (channel <= 15) );
@@ -238,8 +246,10 @@ public: // plugin
   //----------
 
   void processNoteExpression(const clap_event_note_expression_t* event) final {
-    MIP_Assert( MProcessContext.process );
-    const clap_output_events_t *out_events = MProcessContext.process->out_events;
+    //MIP_Assert( MProcessContext.process );
+    MIP_ProcessContext* context = getProcessContext();
+    //const clap_output_events_t *out_events = MProcessContext.process->out_events;
+    const clap_output_events_t *out_events = context->process->out_events;
     int32_t channel = event->channel;
     int32_t key = event->key;
     MIP_Assert( (channel >= 0) && (channel <= 15) );

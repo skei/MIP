@@ -34,21 +34,9 @@ class MIP_Plugin
 private:
 //------------------------------
 
-  uint32_t MProcessCount = 0;
-
-//------------------------------
-protected:
-//------------------------------
+  //uint32_t MProcessCount = 0;
 
   MIP_ProcessContext    MProcessContext           = {};
-  MIP_ParameterArray    MParameters               = {};
-  MIP_AudioPortArray    MAudioInputPorts          = {};
-  MIP_AudioPortArray    MAudioOutputPorts         = {};
-  MIP_NotePortArray     MNoteInputPorts           = {};
-  MIP_NotePortArray     MNoteOutputPorts          = {};
-
-  MIP_Editor*           MEditor                   = nullptr;
-  //MIP_ClapHost*         MHost                     = nullptr;
 
   bool                  MIsInitialized            = false;
   bool                  MIsActivated              = false;
@@ -58,8 +46,6 @@ protected:
 
   uint32_t              MSelectedAudioPortsConfig = 0;
   int32_t               MRenderMode               = CLAP_RENDER_REALTIME;
-  uint32_t              MInitialEditorWidth       = 256;
-  uint32_t              MInitialEditorHeight      = 256;
 
   // write values before indexes
   // read indexes before values
@@ -75,6 +61,23 @@ protected:
   MIP_Queue<double,MIP_PLUGIN_MAX_PARAM_EVENTS>   MQueuedGuiParamValues     = {};
   MIP_Queue<double,MIP_PLUGIN_MAX_PARAM_EVENTS>   MQueuedGuiModValues       = {};
   MIP_Queue<double,MIP_PLUGIN_MAX_GUI_EVENTS>     MQueuedHostParamValues    = {};
+
+//------------------------------
+protected:
+//------------------------------
+
+  uint32_t              MInitialEditorWidth       = 256;
+  uint32_t              MInitialEditorHeight      = 256;
+
+  MIP_AudioPortArray    MAudioInputPorts          = {};
+  MIP_AudioPortArray    MAudioOutputPorts         = {};
+  MIP_NotePortArray     MNoteInputPorts           = {};
+  MIP_NotePortArray     MNoteOutputPorts          = {};
+
+  MIP_ParameterArray    MParameters               = {};
+  MIP_Editor*           MEditor                   = nullptr;
+  //MIP_ClapHost*         MHost                     = nullptr;
+
 
 //------------------------------
 public:
@@ -142,7 +145,8 @@ public:
 public:
 //------------------------------
 
-  virtual void setInitialEditorSize(uint32_t AWidth, uint32_t AHeight) {
+  //virtual
+  void setInitialEditorSize(uint32_t AWidth, uint32_t AHeight) {
     MInitialEditorWidth  = AWidth;
     MInitialEditorHeight = AHeight;
     //MEditor.setInitialSize(AWidth,AHeight); // ->gui_create
@@ -150,8 +154,26 @@ public:
 
   //----------
 
-  virtual MIP_Editor* getEditor() {
+  //virtual
+  MIP_Editor* getEditor() {
     return MEditor;
+  }
+
+  //virtual
+  void setEditor(MIP_Editor* AEditor) {
+    MEditor = AEditor;
+    MIsEditorOpen = false;
+  }
+
+  //virtual
+  void setEditorRootWidget(MIP_Widget* AWidget) {
+    MEditor->setRootWidget(AWidget);
+  }
+
+  //------
+
+  MIP_ProcessContext* getProcessContext() {
+    return &MProcessContext;
   }
 
 //------------------------------

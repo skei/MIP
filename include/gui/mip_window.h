@@ -70,9 +70,6 @@ private:
 
   MIP_WindowListener* MWindowListener = nullptr;
 
-  //test
-  //void* MRenderBuffer = nullptr;
-
   /*
   MBackgroundWidget
   MRootWidget
@@ -95,6 +92,7 @@ private:
 
   int32_t           MMouseClickedX        = 0;
   int32_t           MMouseClickedY        = 0;
+  uint32_t          MMouseClickedB        = 0;
   int32_t           MMousePreviousX       = 0;
   int32_t           MMousePreviousY       = 0;
   int32_t           MMouseDragX           = 0;
@@ -110,7 +108,6 @@ private:
   void*             MRenderBuffer         = nullptr;
 
   //MIP_Lock          MPaintLock            = {};
-
 
 //------------------------------
 protected:
@@ -149,19 +146,14 @@ public:
   //----------
 
   virtual ~MIP_Window() {
-
-//    PaintLock.lock();
-
+    //    PaintLock.lock();
     if (MWindowPainter) {
       #ifdef MIP_WINDOW_BUFFERED
       deleteRenderBuffer();
       #endif
     }
     delete MWindowPainter;
-
-
-//    MPaintLock.unlock();
-
+    //    MPaintLock.unlock();
   }
 
 //------------------------------
@@ -261,9 +253,7 @@ public: // buffer
 //------------------------------
 
   void createRenderBuffer(uint32_t AWidth, uint32_t AHeight) {
-
-//    MPaintLock.lock();
-
+    //    MPaintLock.lock();
     //MIP_Print("AWidth %i AHeight %i\n",AWidth,AHeight);
     MIP_Assert(MWindowPainter);
     if (MWindowPainter) {
@@ -273,18 +263,14 @@ public: // buffer
       //MIP_Print("MRenderBuffer: %p\n",MRenderBuffer);
       MIP_Assert(MRenderBuffer);
     }
-
-//    MPaintLock.unlock();
-
+    //    MPaintLock.unlock();
   }
 
   //----------
 
   void deleteRenderBuffer() {
     //MIP_PRINT;
-
-//    MPaintLock.lock();
-
+    //    MPaintLock.lock();
     //MIP_Assert(MWindowPainter);
     if (MWindowPainter) {
       MIP_Assert(MRenderBuffer);
@@ -294,17 +280,13 @@ public: // buffer
       MRenderBuffer = nullptr;
       //MIP_Print("MRenderBuffer: %p\n",MRenderBuffer);
     }
-
-//    MPaintLock.unlock();
-
+    //    MPaintLock.unlock();
   }
 
   //----------
 
   void resizeRenderBuffer(uint32_t AWidth, uint32_t AHeight) {
-
-//    MPaintLock.lock();
-
+    //    MPaintLock.lock();
     //MIP_Print("AWidth %i AHeight %i\n",AWidth,AHeight);
     //MIP_Print("MRenderBufferWidth %i MRenderBufferHeight %i\n",MRenderBufferWidth,MRenderBufferHeight);
     if ((MRenderBufferWidth == AWidth) && (MRenderBufferHeight == AHeight)) {
@@ -319,9 +301,7 @@ public: // buffer
     MRenderBufferWidth = AWidth;
     MRenderBufferHeight = AHeight;
     MRenderBuffer = new_render_buffer;
-
-//    MPaintLock.unlock();
-
+    //    MPaintLock.unlock();
   }
 
 //------------------------------
@@ -433,7 +413,6 @@ public: // window
     //    if ((w2 =! MWindowWidth) || (h2 =! MWindowHeight)) {
     //      MIP_Print("TODO: resize buffer: %i, %i\n",w2,h2);
     //    }
-    //
     //    #ifdef MIP_WINDOW_BUFFERED
     //      resizeWindowBuffer(AWidth,AHeight);
     //    #endif
@@ -468,17 +447,21 @@ public: // window
       MWindowPainter->selectRenderBuffer(MRenderBuffer);
       MWindowPainter->setViewport(0,0,MRenderBufferWidth,MRenderBufferHeight);
       MWindowPainter->beginFrame(MRenderBufferWidth,MRenderBufferHeight,1.0);
+
         MWindowPainter->setClip(MIP_DRect(r.x,r.y,r.w,r.h));
         MWindowPainter->setClipRect(MIP_DRect(r.x,r.y,r.w,r.h));
+
         //if (MFillBackground) {
         //  MWindowPainter->setFillColor(MBackgroundColor);
         //  MWindowPainter->fillRect(AXpos,AYpos,AWidth,AHeight);
         //}
+
         MIP_PaintContext pc;
         pc.painter = MWindowPainter;
         pc.updateRect = MIP_DRect(r.x,r.y,r.w,r.h);
         if (MRootWidget) MRootWidget->on_widget_paint(&pc);
         MWindowPainter->resetClip();
+
       MWindowPainter->endFrame();
 
       // draw fbo to window
@@ -486,9 +469,11 @@ public: // window
       MWindowPainter->selectRenderBuffer(nullptr);
       MWindowPainter->setViewport(0,0,MWindowWidth,MWindowHeight);
       MWindowPainter->beginFrame(MWindowWidth,MWindowHeight,1.0);
+
         int image = MWindowPainter->getImageFromRenderBuffer(MRenderBuffer);
         MWindowPainter->setFillImage(image,r.x,r.y,1.0,1.0);
         MWindowPainter->fillRect(r.x,r.y,r.w,r.h);
+
       MWindowPainter->endFrame();
       MWindowPainter->endPaint(0);
 
@@ -541,37 +526,46 @@ public: // window
   //----------
 
   void on_window_mouse_click(uint32_t AButton, uint32_t AState, int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
-    MMouseClickedX = AXpos;
-    MMouseClickedY = AYpos;
-    MMouseDragX = AXpos;
-    MMouseDragY = AYpos;
-    if (MModalWidget) {
-      if (AButton == MIP_BUTTON_LEFT) {
-        if (!MModalWidget->getRect().contains(AXpos,AYpos)) {
+    if (!MCapturedWidget) {
+      MIP_Print("click\n");
+      MMouseClickedX = AXpos;
+      MMouseClickedY = AYpos;
+      MMouseClickedB = AButton;
+      MMouseDragX = AXpos;
+      MMouseDragY = AYpos;
+      if (MModalWidget) {
+        if (AButton == MIP_BUTTON_LEFT) {
+          if (!MModalWidget->getRect().contains(AXpos,AYpos)) {
+            //MIP_PRINT;
+            MModalWidget->on_widget_notify(0,0);
+          }
+        } // left
+        if (AButton == MIP_BUTTON_RIGHT) {
           //MIP_PRINT;
           MModalWidget->on_widget_notify(0,0);
-        }
-      }
-      if (AButton == MIP_BUTTON_RIGHT) {
-        //MIP_PRINT;
-        MModalWidget->on_widget_notify(0,0);
-      }
-    }
-    if (MHoverWidget) {
-      //MMouseLockedWidget = MHoverWidget;
-      MCapturedWidget = MHoverWidget;
-      MHoverWidget->on_widget_mouse_click(AButton,AState,AXpos,AYpos,ATime);
-    }
+        } // right
+      } // modal
+      if (MHoverWidget) {
+        //MMouseLockedWidget = MHoverWidget;
+        MCapturedWidget = MHoverWidget;
+        MHoverWidget->on_widget_mouse_click(AButton,AState,AXpos,AYpos,ATime);
+      } // hover
+    } // !captured
   }
 
   //----------
 
   void on_window_mouse_release(uint32_t AButton, uint32_t AState, int32_t AXpos, int32_t AYpos, uint32_t ATime) override {
+    //if (MMouseClicked) {
+    //}
     if (MCapturedWidget) {
-      //MMouseLockedWidget = nullptr;
-      MCapturedWidget->on_widget_mouse_release(AButton,AState,AXpos,AYpos,ATime);
-      MCapturedWidget = nullptr;
-      updateHoverWidget(AXpos,AYpos);
+      if (MMouseClickedB == AButton) {
+        MIP_Print("release\n");
+        //MMouseLockedWidget = nullptr;
+        MCapturedWidget->on_widget_mouse_release(AButton,AState,AXpos,AYpos,ATime);
+        MCapturedWidget = nullptr;
+        updateHoverWidget(AXpos,AYpos);
+      }
     }
   }
 

@@ -27,24 +27,24 @@ class MIP_VoiceManager {
 private:
 //------------------------------
 
-  MIP_Voice<VOICE>              MVoices[COUNT]        = {};
-  MIP_VoiceContext              MVoiceContext         = {};
+  MIP_Voice<VOICE>              MVoices[COUNT]          = {};
+  MIP_VoiceContext              MVoiceContext           = {};
 
   __MIP_ALIGNED(MIP_ALIGNMENT_CACHE)
-  float MVoiceBuffer[COUNT * MIP_AUDIO_MAX_BLOCK_SIZE] = {0};
+  float MVoiceBuffer[COUNT * MIP_AUDIO_MAX_BLOCK_SIZE]  = {0};
 
-  uint32_t                      MNumPlayingVoices     = 0;
-  uint32_t                      MNumReleasedVoices    = 0;
+  uint32_t                      MNumPlayingVoices       = 0;
+  uint32_t                      MNumReleasedVoices      = 0;
 
-  MIP_NoteQueue                 MNoteEndQueue         = {};
+  MIP_NoteQueue                 MNoteEndQueue           = {};
 
-  const clap_plugin_t*          MClapPlugin           = nullptr;
-  const clap_host_t*            MClapHost             = nullptr;
-  const clap_host_thread_pool*  MThreadPool           = nullptr;
+  const clap_plugin_t*          MClapPlugin             = nullptr;
+  const clap_host_t*            MClapHost               = nullptr;
+  const clap_host_thread_pool*  MThreadPool             = nullptr;
 
-  bool                          MProcessThreaded      = false;
-  uint32_t                      MNumActiveVoices      = 0;
-  uint32_t                      MActiveVoices[COUNT]  = {};
+  bool                          MProcessThreaded        = false;
+  uint32_t                      MNumActiveVoices        = 0;
+  uint32_t                      MActiveVoices[COUNT]    = {};
 
 //------------------------------
 public:

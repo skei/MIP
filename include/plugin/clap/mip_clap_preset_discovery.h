@@ -37,6 +37,8 @@ void clap_preset_discovery_provider_destroy_callback(const struct clap_preset_di
 
 bool clap_preset_discovery_provider_get_metadata_callback(const struct clap_preset_discovery_provider *provider, const char *uri, const clap_preset_discovery_metadata_receiver_t *metadata_receiver) {
   MIP_PRINT;
+  //metadata_receiver->begin_preset(metadata_receiver,"preset","load_key");
+  //metadata_receiver->add_plugin_id(metadata_receiver,"preset","plugin_id");
   return false;
 }
 

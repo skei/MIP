@@ -3,6 +3,7 @@
 //----------------------------------------------------------------------
 
 /*
+  from: ??
   1. Set a flag when you see the WM_ENTERSIZEMOVE.
   2. Change your WM_SIZE handler to check the flag and do nothing if set.
   3. Change your WM_PAINT handler to check the flag and do a simple, fast

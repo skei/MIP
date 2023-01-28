@@ -32,6 +32,9 @@
 //
 //----------------------------------------------------------------------
 
+// DESC = global/const struct (descriptor)
+// PLUG = plugin class
+
 #define MIP_DEFAULT_ENTRY(DESC,PLUG)                                                                                      \
                                                                                                                           \
   void MIP_Register() {                                                                                                   \

@@ -169,7 +169,8 @@ public: // plugin
     bool result = MIP_Plugin::gui_create(api,is_floating);
     if (result) {
       MIP_Widget* panel = setupGenericEditor();
-      MEditor->setRootWidget(panel);
+      //MEditor->setRootWidget(panel);
+      setEditorRootWidget(panel);
     }
     return result;
   }

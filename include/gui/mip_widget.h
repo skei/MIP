@@ -272,11 +272,21 @@ public:
 
   //----------
 
+  /*
+    tell the widget to update itself
+    (notifies parent/listener)
+  */
+
   virtual void update() {
     if (MWidgetListener) MWidgetListener->do_widget_update(this);
   }
 
   //----------
+
+  /*
+    tell the widget to redraw itself
+    (notifies parent/listener)
+  */
 
   virtual void redraw() {
     if (MWidgetListener) MWidgetListener->do_widget_redraw(this);
@@ -316,7 +326,7 @@ public:
 
   //----------
 
-  // returns (sub_) child at (x/y)
+  // returns (sub-) child at (x/y)
   // or self/this if no child widgets at that point
 
   virtual MIP_Widget* findChildWidget(double AXpos, double AYpos, bool ARecursive=true) {

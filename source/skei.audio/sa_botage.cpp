@@ -85,9 +85,12 @@ public:
 
   bool gui_create(const char* api, bool is_floating) final {
     //MIP_Print("\n");
-    MIsEditorOpen = false;
-    MEditor = new sa_botage_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters,getClapDescriptor());
-    return (MEditor);
+//    MIsEditorOpen = false;
+    //MEditor = new sa_botage_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters,getClapDescriptor());
+    //return (MEditor);
+    MIP_Editor* editor = new sa_botage_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters,getClapDescriptor());
+    setEditor(editor);
+    return (editor);
   }
 
   //----------
@@ -121,8 +124,10 @@ public:
 
   void on_editor_timer() override {
     //MIP_PRINT;
-    if (MEditor && MEditor->isEditorOpen()) {
-      sa_botage_editor* editor = (sa_botage_editor*)MEditor;
+    sa_botage_editor* editor = (sa_botage_editor*)getEditor();
+    //if (MEditor && MEditor->isEditorOpen()) {
+    if (editor && editor->isEditorOpen()) {
+      //sa_botage_editor* editor = (sa_botage_editor*)MEditor;
       editor->updateWaveformWidget(&MProcessor);
       editor->updateProbIndicators(&MProcessor);
     }

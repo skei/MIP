@@ -131,6 +131,8 @@ public:
     }
   }
 
+  //----------
+
   MIP_Widget* getRootWidget() {
     if (MWindow) return MWindow->getRootWidget();
     return nullptr;
@@ -176,20 +178,17 @@ public:
 
   //----------
 
-  virtual void redraw(MIP_Widget* AWidget) {
-    if (MWindow && MIsEditorOpen) {
-      MIP_PRINT;
-    }
-  }
-
-//------------------------------
-public:
-//------------------------------
-
   virtual MIP_ParameterArray* getParameters() {
     return MParameters;
   }
 
+  //----------
+
+  //virtual void redraw(MIP_Widget* AWidget) {
+  //  if (MWindow && MIsEditorOpen) {
+  //    MIP_PRINT;
+  //  }
+  //}
 
 //------------------------------
 public:

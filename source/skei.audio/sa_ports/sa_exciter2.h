@@ -251,12 +251,14 @@ public: // plugin
 
   bool init() final {
 
-    appendAudioInputPort(  &myAudioInputPorts[0]  );
-    appendAudioOutputPort( &myAudioOutputPorts[0] );
+    //appendAudioInputPort(  &myAudioInputPorts[0]  );
+    //appendAudioOutputPort( &myAudioOutputPorts[0] );
+    appendStereoInput();
+    appendStereoOutput();
 
-    appendParameter(new MIP_Parameter( 0, "Mix",   "", 0,    100,   0,    CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_Parameter( 1, "Drive", "", 0,    100,   0,    CLAP_PARAM_IS_AUTOMATABLE ));
-    appendParameter(new MIP_Parameter( 2, "Freq",  "", 2000, 10000, 5000, CLAP_PARAM_IS_AUTOMATABLE ));
+    appendParameter(new MIP_Parameter( "Mix",   0,    100,   0 ));
+    appendParameter(new MIP_Parameter( "Drive", 0,    100,   0 ));
+    appendParameter(new MIP_Parameter( "Freq",  2000, 10000, 5000 ));
 
     bool result = MIP_Plugin::init();
     if (result) {
