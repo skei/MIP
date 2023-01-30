@@ -14,7 +14,7 @@
 
 #define EDITOR_WIDTH  400
 #define EDITOR_HEIGHT 500
-#define SA_CRED_VERSION "0.0.1"
+#define SA_CRED_VERSION "0.3.1"
 
 #define MIP_MAX_GRAINS 1024
 #define MIP_BUFFERSIZE (1024*1024)
@@ -50,13 +50,13 @@ const char* sa_bulum_features[] = {
 
 const clap_plugin_descriptor_t sa_bulum_descriptor = {
   CLAP_VERSION,
-  "skei.audio/sa_bulum/0.0.1",
+  "skei.audio/sa_bulum/0.3.1",
   "sa_bulum",
   "skei.audio",
   "https://torhelgeskei.com",
   "",
   "",
-  "0.0.1",
+  "0.3.1",
   "sa_bulum",
   sa_bulum_features
 };

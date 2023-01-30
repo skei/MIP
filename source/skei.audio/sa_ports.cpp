@@ -1,16 +1,16 @@
 
-#ifndef MIP_EXE
-  #define MIP_DEBUG_PRINT_SOCKET
-  //nc -U -l -k /tmp/mip.socket
-#endif
+//#ifndef MIP_EXE
+//  #define MIP_DEBUG_PRINT_SOCKET
+//  //nc -U -l -k /tmp/mip.socket
+//#endif
 
 //----------
 
-#ifdef __gnu_linux__
-  #define MIP_GUI_XCB
-#else
-  #define MIP_GUI_WIN32
-#endif
+//#ifdef __gnu_linux__
+//  #define MIP_GUI_XCB
+//#else
+//  #define MIP_GUI_WIN32
+//#endif
 
 #define MIP_PAINTER_NANOVG
 #define MIP_PLUGIN_GENERIC_EDITOR

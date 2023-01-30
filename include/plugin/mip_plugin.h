@@ -442,6 +442,7 @@ public: // ext gui
 //------------------------------
 
   bool gui_is_api_supported(const char *api, bool is_floating) override {
+    LOG.print("MIP_Plugin.gui_is_api_supported: %s (%i)\n",api,is_floating);
     //MIP_Print("\n");
     #ifdef MIP_LINUX
       if (!is_floating && (strcmp(api,CLAP_WINDOW_API_X11) == 0)) return true;
@@ -455,6 +456,7 @@ public: // ext gui
   //----------
 
   bool gui_get_preferred_api(const char **api, bool *is_floating) override {
+    LOG.print("MIP_Plugin.gui_get_preferred_size\n");
     //MIP_Print("\n");
     #ifdef MIP_LINUX
       *api = CLAP_WINDOW_API_X11;
@@ -470,6 +472,7 @@ public: // ext gui
   //----------
 
   bool gui_create(const char *api, bool is_floating) override {
+    LOG.print("MIP_Plugin.gui_create: %s (%i)\n",api,is_floating);
     //MIP_Print("\n");
     MIsEditorOpen = false;
     MEditor = new MIP_Editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters);
@@ -480,6 +483,7 @@ public: // ext gui
   //----------
 
   void gui_destroy() override {
+    LOG.print("MIP_Plugin.gui_destroy\n");
     if (MEditor) {
       if (MIsEditorOpen) gui_hide();
       MIsEditorOpen = false;
@@ -491,6 +495,7 @@ public: // ext gui
   //----------
 
   bool gui_set_scale(double scale) override {
+    LOG.print("MIP_Plugin.gui_set_scale: %f\n",scale);
     if (MEditor) return MEditor->setScale(scale);
     else return false;
   }
@@ -498,12 +503,17 @@ public: // ext gui
   //----------
 
   bool gui_get_size(uint32_t *width, uint32_t *height) override {
+    //LOG.print("MIP_Plugin.gui_get_size\n");
     if (MEditor) {
-      return MEditor->getSize(width,height);
+      //return MEditor->getSize(width,height);
+      bool result = MEditor->getSize(width,height);
+      LOG.print("MIP_Plugin.gui_get_size -> %i,%i\n",*width,*height);
+      return result;
     }
     else {
       *width = MInitialEditorWidth;
       *height = MInitialEditorHeight;
+      LOG.print("MIP_Plugin.gui_get_size -> %i,%i\n",*width,*height);
       return true;
     }
   }
@@ -511,6 +521,7 @@ public: // ext gui
   //----------
 
   bool gui_can_resize() override {
+    LOG.print("MIP_Plugin.gui_can_resize\n");
     if (MEditor) return MEditor->canResize();
     else return false;
   }
@@ -518,6 +529,7 @@ public: // ext gui
   //----------
 
   bool gui_get_resize_hints(clap_gui_resize_hints_t *hints) override {
+    LOG.print("MIP_Plugin.gui_get_resize_hints\n");
     if (MEditor) return MEditor->getResizeHints(hints);
     else return false;
   }
@@ -525,6 +537,7 @@ public: // ext gui
   //----------
 
   bool gui_adjust_size(uint32_t *width, uint32_t *height) override {
+    LOG.print("MIP_Plugin.gui_adjust size (%i,%i)\n",*width,*height);
     if (MEditor) return MEditor->adjustSize(width,height);
     else return false;
   }
@@ -532,6 +545,7 @@ public: // ext gui
   //----------
 
   bool gui_set_size(uint32_t width, uint32_t height) override {
+    LOG.print("MIP_Plugin.gui_set_size: %i,%i\n",width,height);
     //MIsEditorBusy = true;
     if (MEditor) return MEditor->setSize(width,height);
     else return true; // true?
@@ -540,6 +554,7 @@ public: // ext gui
   //----------
 
   bool gui_set_parent(const clap_window_t *window) override {
+    LOG.print("MIP_Plugin.gui_set_parent\n");
     if (MEditor) return MEditor->setParent(window);
     else return false;
   }
@@ -547,6 +562,7 @@ public: // ext gui
   //----------
 
   bool gui_set_transient(const clap_window_t *window) override {
+    LOG.print("MIP_Plugin.gui_set_transient\n");
     if (MEditor) return MEditor->setTransient(window);
     else return false;
   }
@@ -554,12 +570,14 @@ public: // ext gui
   //----------
 
   void gui_suggest_title(const char *title) override {
+    LOG.print("MIP_Plugin.gui_suggest_title: %s\n",title);
     if (MEditor) MEditor->suggestTitle(title);
   }
 
   //----------
 
   bool gui_show() override {
+    LOG.print("MIP_Plugin.gui_show\n");
     if (MEditor) {
       updateEditorParameterValues();
       bool result = MEditor->show();
@@ -584,6 +602,7 @@ public: // ext gui
   //----------
 
   bool gui_hide() override {
+    LOG.print("MIP_Plugin.gui_hide\n");
     MIsEditorOpen = false;
     if (MEditor) return MEditor->hide();
     return true;

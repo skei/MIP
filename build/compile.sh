@@ -236,7 +236,8 @@ CMDLINE+=$LIB
 #echo "gcc" $CMDLINE $INPUT -o $OUTPUT $POST
 #gcc $CMDLINE $INPUT -o $OUTPUT $POST
 
-echo "g++" $FLAGS $DEF $INC $INPUT -o $OUTPUT $LIB $POST
+# echo "g++" $FLAGS $DEF $INC $INPUT -o $OUTPUT $LIB $POST
+echo compiling $INPUT_BASE as linux $FORMAT
 g++ $FLAGS $DEF $INC $INPUT -o $OUTPUT $LIB $POST
 
 

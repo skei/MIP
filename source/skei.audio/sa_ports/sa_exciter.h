@@ -58,7 +58,7 @@ const clap_plugin_descriptor_t sa_exciter_descriptor = {
   "https://torhelgeskei.com",
   "",
   "",
-  "0.0.1",
+  "0.3.1",
   "sa_exciter",
   sa_exciter_features
 };

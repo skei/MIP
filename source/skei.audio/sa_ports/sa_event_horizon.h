@@ -47,7 +47,7 @@ const clap_plugin_descriptor_t sa_event_horizon_descriptor = {
   "https://torhelgeskei.com",
   "",
   "",
-  "0.0.1",
+  "0.3.1",
   "sa_ports / sa_event_horizon",
   sa_event_horizon_features
 };

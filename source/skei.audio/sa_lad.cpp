@@ -82,7 +82,7 @@ void MIP_RegisterLadspa(const LADSPA_Descriptor* ladspa_descriptor, const char* 
   clap_descriptor->url          = "";
   clap_descriptor->manual_url   = "";
   clap_descriptor->support_url  = "";
-  clap_descriptor->version      = "0.0.1";
+  clap_descriptor->version      = "0.3.1";
   clap_descriptor->description  = "";
   clap_descriptor->features   = MIP_LadspaPluginFeatures;
   MIP_REGISTRY.appendDescriptor(clap_descriptor);

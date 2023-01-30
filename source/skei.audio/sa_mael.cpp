@@ -26,13 +26,13 @@
 
 const clap_plugin_descriptor_t my_descriptor = {
   .clap_version = CLAP_VERSION,
-  .id           = "skei.audio/sa_mael/0.0.1",
+  .id           = "skei.audio/sa_mael/0.3.1",
   .name         = "sa_mael",
   .vendor       = "skei.audio",
   .url          = "",
   .manual_url   = "",
   .support_url  = "",
-  .version      = "0.0.1",
+  .version      = "0.3.1",
   .description  = "...",
   .features     = (const char*[]){CLAP_PLUGIN_FEATURE_INSTRUMENT,nullptr}
 };

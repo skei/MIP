@@ -1,16 +1,11 @@
+latest binaries can always be found in our discord channel
+(windows/linux, clap/vst3)
 
-[todo]
+https://discord.gg/KMNea8P6Pe
 
-
-
-----------------------------------------------------------------------
-author
-----------------------------------------------------------------------
-
-  Tor-Helge Skei
-  tor.helge.skei@gmail.com
+contact:
+  https://github.com/skei/MIP
   https://torhelgeskei.com
-  https://github.com/skei
+  tor.helge.skei@gmail.com
   https://www.youtube.com/@torhelgeskei
-
 

@@ -1,0 +1,14 @@
+
+----------------------------------------------------------------------
+
+known bugs/issues:
+
+* win32: ableton live crashes when closing the editor, and reopening it again
+
+  confirmed in wine/bitwig
+  editor opens ok initially, but if i close it, then reopen it, it crashes
+  does not happen if i resize editor before closing
+  suggesting something is not reset/reinit'ed
+  check what resizing does that makes it not crash
+
+  .. same thing happen in linux/vst3 (bitwig)

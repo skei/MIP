@@ -1,6 +1,6 @@
 
-#define MIP_PLUGIN_CLAP
-#define MIP_PLUGIN_VST3
+//#define MIP_PLUGIN_CLAP
+//#define MIP_PLUGIN_VST3
 
 #include "audio/mip_audio_utils.h"
 #include "audio/old/filters/mip_decimator_filter.h"
@@ -17,7 +17,7 @@
 #define SA_TYR_NUM_VOICES       128
 #define SA_TYR_PLUGIN_AUTHOR    "skei.audio"
 #define SA_TYR_PLUGIN_NAME      "sa_tyr"
-#define SA_TYR_PLUGIN_VERSION   "0.0.13"
+#define SA_TYR_PLUGIN_VERSION   "0.3.1"
 #define SA_TYR_PLUGIN_WWW       "https://torhelgeskei.com"
 
 // ugh.. offsets, etc should be multiplied by oversampling tii...

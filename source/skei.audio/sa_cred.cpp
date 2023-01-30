@@ -41,19 +41,19 @@
 #define EDITOR_WIDTH    400
 #define EDITOR_HEIGHT   190
 
-#define SA_CRED_VERSION "0.0.1"
+#define SA_CRED_VERSION "0.3.1"
 
 //----------
 
 const clap_plugin_descriptor_t myDescriptor = {
    .clap_version  = CLAP_VERSION,
-   .id            = "skei.audio/sa_cred/0.0.1",
+   .id            = "skei.audio/sa_cred/0.3.1",
    .name          = "sa_cred",
    .vendor        = "skei.audio",
    .url           = "",
    .manual_url    = "",
    .support_url   = "",
-   .version       = "0.0.1",
+   .version       = SA_CRED_VERSION,
    .description   = "Fibonacci/Pisano Note Modifier",
    .features      =  (const char *[]){ CLAP_PLUGIN_FEATURE_NOTE_EFFECT, "Hello world!", nullptr }
 };

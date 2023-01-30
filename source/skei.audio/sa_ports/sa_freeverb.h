@@ -28,13 +28,13 @@ const char* sa_freeverb_features[] = {
 
 const clap_plugin_descriptor_t sa_freeverb_descriptor = {
   CLAP_VERSION,
-  "skei.audio/sa_freeverb/0.0.1",
+  "skei.audio/sa_freeverb",
   "sa_freeverb",
   "skei.audio",
   "https://torhelgeskei.com",
   "",
   "",
-  "0.0.1",
+  "0.3.1",
   "",
   sa_freeverb_features
 };

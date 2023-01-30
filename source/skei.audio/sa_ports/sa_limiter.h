@@ -36,7 +36,7 @@ const clap_plugin_descriptor_t sa_limiter_descriptor = {
   "https://torhelgeskei.com",
   "",
   "",
-  "0.0.1",
+  "0.3.1",
   "sa_limiter",
   sa_limiter_features
 };

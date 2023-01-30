@@ -225,6 +225,7 @@ fi
 #echo "compiling $INPUT_BASE"
 #echo "x86_64-w64-mingw32-g++" $CMDLINE $INPUT -o $OUTPUT $POST
 
-echo "x86_64-w64-mingw32-g++" $FLAGS $DEF $INC $INPUT -o $OUTPUT $LIB $POST
+#echo "x86_64-w64-mingw32-g++" $FLAGS $DEF $INC $INPUT -o $OUTPUT $LIB $POST
+echo compiling $INPUT_BASE as windows $FORMAT
 x86_64-w64-mingw32-g++ $FLAGS $DEF $INC $INPUT -o $OUTPUT $LIB $POST
 

@@ -1,8 +1,22 @@
 
-----------------------------------------------------------------------
-
 v0.3.0 - 01.dec.2022
 * restart
 
+MIP:
+* win32 support more or less on the same level as linux
+* scalable, gpu-accelerated gui
+* logging
+* unit testing
+
 ----------------------------------------------------------------------
 
+0.3.1 - 1.feb.2023
+
+MIP
+
+* better opengl context handling
+* improved resizing vs redrawing vs timer handling
+* added support for drawing to/from fbo
+* fixed disappearing mouse cursor
+* included example/test plugins:
+* initial compile/build scripts

@@ -59,7 +59,7 @@ const clap_plugin_descriptor_t sa_compciter_descriptor = {
   "https://torhelgeskei.com",
   "",
   "",
-  "0.0.1",
+  "0.3.1",
   "sa_ports / sa_compciter",
   sa_compciter_features
 };

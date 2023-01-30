@@ -60,7 +60,7 @@ const clap_plugin_descriptor_t sa_sonic_maximizer_descriptor = {
   "https://torhelgeskei.com",
   "",
   "",
-  "0.0.1",
+  "0.3.1",
   "sa_ports/sa_sonic_maximizer",
   sa_sonic_maximizer_features
 };

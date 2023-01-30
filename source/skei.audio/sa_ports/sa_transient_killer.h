@@ -44,7 +44,7 @@ const clap_plugin_descriptor_t sa_transient_killer_descriptor = {
   "https://torhelgeskei.com",
   "",
   "",
-  "0.0.1",
+  "0.3.1",
   "sa_transient_killer",
   sa_transient_killer_features
 };
