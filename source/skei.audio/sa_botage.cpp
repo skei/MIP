@@ -1,12 +1,7 @@
 
 #define SA_BOTAGE_NAME          "sa_botage"
-#define SA_BOTAGE_VENDOR        "skei.audio"
-#define SA_BOTAGE_VERSION       "0.3.1"
 #define SA_BOTAGE_EDITOR_WIDTH  490 + 132
 #define SA_BOTAGE_EDITOR_HEIGHT 392
-
-//#define MIP_PLUGIN_CLAP
-//#define MIP_PLUGIN_VST3
 
 //----------------------------------------------------------------------
 
@@ -25,15 +20,15 @@
 
 const clap_plugin_descriptor_t sa_botage_descriptor = {
   .clap_version = CLAP_VERSION,
-  .id           = SA_BOTAGE_VENDOR "/" SA_BOTAGE_NAME "/v" SA_BOTAGE_VERSION,
+  .id           = MIP_VENDOR "/" SA_BOTAGE_NAME,
   .name         = SA_BOTAGE_NAME,
-  .vendor       = SA_BOTAGE_VENDOR,
-  .url          = "",
+  .vendor       = MIP_VENDOR,
+  .url          = MIP_URL,
   .manual_url   = "",
   .support_url  = "",
-  .version      = SA_BOTAGE_VERSION,
+  .version      = MIP_VERSION,
   .description  = "sabotages your audio",
-  .features     = (const char*[]){"audio-effect",nullptr}
+  .features     = (const char*[]){ CLAP_PLUGIN_FEATURE_AUDIO_EFFECT, nullptr }
 };
 
 //----------------------------------------------------------------------
@@ -84,20 +79,14 @@ public:
   //----------
 
   bool gui_create(const char* api, bool is_floating) final {
-    //MIP_Print("\n");
-//    MIsEditorOpen = false;
-    //MEditor = new sa_botage_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters,getClapDescriptor());
-    //return (MEditor);
-    MIP_Editor* editor = new sa_botage_editor(this,MInitialEditorWidth,MInitialEditorHeight,&MParameters,getClapDescriptor());
+    setEditorIsOpen(false);
+    uint32_t width = MInitialEditorWidth;
+    uint32_t height = MInitialEditorHeight;
+    const clap_plugin_descriptor_t* descriptor = getClapDescriptor();
+    MIP_Editor* editor = new sa_botage_editor(this,width,height,&MParameters,descriptor);
     setEditor(editor);
     return (editor);
   }
-
-  //----------
-
-  //void gui_destroy() final {
-  //  MIP_Plugin::gui_destroy();
-  //}
 
   //----------
 
@@ -123,11 +112,8 @@ public:
 //------------------------------
 
   void on_editor_timer() override {
-    //MIP_PRINT;
     sa_botage_editor* editor = (sa_botage_editor*)getEditor();
-    //if (MEditor && MEditor->isEditorOpen()) {
     if (editor && editor->isEditorOpen()) {
-      //sa_botage_editor* editor = (sa_botage_editor*)MEditor;
       editor->updateWaveformWidget(&MProcessor);
       editor->updateProbIndicators(&MProcessor);
     }
@@ -147,5 +133,5 @@ public:
   #include "plugin/mip_entry.h"
   MIP_DEFAULT_ENTRY(sa_botage_descriptor,sa_botage_plugin);
 
-#endif // MIP_NO_ENTRY
+#endif
 

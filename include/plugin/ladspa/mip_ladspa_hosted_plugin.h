@@ -524,6 +524,7 @@ private: // events
 private: // ladspa
 //------------------------------
 
+  #ifdef MIP_LINUX
   void loadLadspaPlugin(const char* APath, uint32_t AIndex) {
     MIP_Print("path '%s' index %i\n",APath,AIndex);
     MLibHandle = dlopen(APath,RTLD_LAZY|RTLD_LOCAL); // RTLD_NOW, RTLD_LAZY
@@ -535,9 +536,14 @@ private: // ladspa
       }
     }
   }
+  #endif
+
+  #ifdef MIP_WIN32
+  #endif
 
   //----------
 
+  #ifdef MIP_LINUX
   void unloadLadspaPlugin() {
     MIP_Print("\n");
     if (MLibHandle) {
@@ -545,6 +551,10 @@ private: // ladspa
       MLibHandle = nullptr;
     }
   }
+  #endif
+
+  #ifdef MIP_WIN32
+  #endif
 
   //----------
 

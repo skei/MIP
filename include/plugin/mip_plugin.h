@@ -154,6 +154,12 @@ public:
 
   //----------
 
+  void setEditorIsOpen(bool AIsOpen=true) {
+    MIsEditorOpen = AIsOpen;
+  }
+
+  //----------
+
   //virtual
   MIP_Editor* getEditor() {
     return MEditor;

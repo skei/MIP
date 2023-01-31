@@ -112,17 +112,17 @@ public:
     int j;
     m = in + fbout * fb / 100.0;
     if (((skipcount++) % lfoskipsamples) == 0) {
-      gain = (1.0 + cos(skipcount * lfoskip + phase)) / 2.0;
-      gain =(exp(gain * phaserlfoshape) - 1.0) / (exp(phaserlfoshape) - 1.0);
-      gain = 1 - gain / 255.0 * depth;
+      gain = (1.0 + cosf((float)skipcount * lfoskip + phase)) / 2.0;
+      gain = (expf(gain * phaserlfoshape) - 1.0) / (expf(phaserlfoshape) - 1.0);
+      gain = 1.0 - gain / 255.0 * (float)depth;
     }
-    for (j = 0; j < stages; j++) {
+    for (j=0; j<stages; j++) {
       tmp = old[j];
       old[j] = gain * tmp + m;
       m = tmp - gain * old[j];
     }
     fbout = m;
-    out = (m * drywet + in * (255.0 - drywet)) / 255.0;
+    out = ((m * (float)drywet) + (in * (255.0 - (float)drywet))) / 255.0;
     if (out < -1.0) out = -1.0;
     if (out > 1.0) out = 1.0;
     return out;
@@ -223,12 +223,12 @@ public: // plugin
   bool init() final {
     appendStereoInput();
     appendStereoOutput();
-    appendParameter( new MIP_Parameter(   "LFO Freq",       0,    0,    127 ));
-    appendParameter( new MIP_Parameter(   "LFO StartPhase", 0,    0,    127 ));
-    appendParameter( new MIP_Parameter(   "Feedback",       0,    0,    127 ));
-    appendParameter( new MIP_Parameter(   "Depth",          100,  0,    127 ));
+    appendParameter( new MIP_Parameter(   "LFO Freq",       0.4,  0.05, 5.0 ));
+    appendParameter( new MIP_Parameter(   "LFO StartPhase", 0,    0,    256 ));
+    appendParameter( new MIP_Parameter(   "Feedback",       0,    0,    1 ));
+    appendParameter( new MIP_Parameter(   "Depth",          100,  0,    200 ));
     appendParameter( new MIP_IntParameter("Stages",         2,    0,    10  ));
-    appendParameter( new MIP_Parameter(   "Dry / Wet",      128,  0,    127 ));
+    appendParameter( new MIP_Parameter(   "Dry / Wet",      128,  0,    256 ));
     MNeedRecalc = true;
     bool result = MIP_Plugin::init();
     return result;

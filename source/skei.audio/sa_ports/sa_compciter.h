@@ -158,17 +158,17 @@ private:
 
   void recalc(float srate) {
     need_recalc = false;
-    threshDB  = - MParameters[0]->getValue();;
-    thresh    = exp(threshDB / c);
-    ratio     = 1 / 20;
-    release   = exp(-60 / (pow(1 - MParameters[1]->getValue() / 100, 3) * 500 * srate / 1000) / c);
-    t0        = 0;
-    t1        = 0;
-    blp       = -exp(-2 * MIP_PI * MParameters[2]->getValue() * 3 / srate);
-    alp       = 1.0 + blp;
-    wet       = exp(MParameters[3]->getValue() / c) / exp((threshDB - threshDB * ratio ) / c);
-    dry       = exp(MParameters[4]->getValue() / c);
-    seekgain  = 1;
+    threshDB    = - MParameters[0]->getValue();;
+    thresh      = exp(threshDB / c);
+    ratio       = 1 / 20;
+    release     = exp(-60 / (pow(1 - MParameters[1]->getValue() / 100, 3) * 500 * srate / 1000) / c);
+    t0          = 0;
+    t1          = 0;
+    blp         = -exp(-2 * MIP_PI * MParameters[2]->getValue() * 3 / srate);
+    alp         = 1.0 + blp;
+    wet         = exp(MParameters[3]->getValue() / c) / exp((threshDB - threshDB * ratio ) / c);
+    dry         = exp(MParameters[4]->getValue() / c);
+    seekgain    = 1;
   }
 
 //------------------------------

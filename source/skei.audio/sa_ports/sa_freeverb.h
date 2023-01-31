@@ -19,6 +19,11 @@
 //
 //----------------------------------------------------------------------
 
+const char* mode_txt[] = {
+  "Normal",
+  "Freeze"
+};
+
 const char* sa_freeverb_features[] = {
   "audio_effect",
   nullptr
@@ -28,13 +33,13 @@ const char* sa_freeverb_features[] = {
 
 const clap_plugin_descriptor_t sa_freeverb_descriptor = {
   CLAP_VERSION,
-  "skei.audio/sa_freeverb",
+  MIP_VENDOR "/" "sa_freeverb",
   "sa_freeverb",
-  "skei.audio",
-  "https://torhelgeskei.com",
+  MIP_VENDOR,
+  MIP_URL,
   "",
   "",
-  "0.3.1",
+  MIP_VERSION,
   "",
   sa_freeverb_features
 };
@@ -530,12 +535,12 @@ public: // plugin
     if (result) {
       appendStereoInput();
       appendStereoOutput();
-      appendParameter( new MIP_Parameter( "Roomsize", 0.5,  0,1 ));
-      appendParameter( new MIP_Parameter( "Damp",     0.5,  0,1 ));
-      appendParameter( new MIP_Parameter( "Wet",      0.5,  0,1 ));
-      appendParameter( new MIP_Parameter( "Dry",      0.5,  0,1 ));
-      appendParameter( new MIP_Parameter( "Width",    0.5,  0,1 ));
-      appendParameter( new MIP_Parameter( "Mode",     0,    0,1 ));
+      appendParameter( new MIP_Parameter(     "Roomsize", 0.56, 0.01, 2.0 ));
+      appendParameter( new MIP_Parameter(     "Damp",     0.45, 0.01, 2.0 ));
+      appendParameter( new MIP_Parameter(     "Wet",      0.57, 0.01, 2.0 ));
+      appendParameter( new MIP_Parameter(     "Dry",      0.43, 0.01, 2.0 ));
+      appendParameter( new MIP_Parameter(     "Width",    0.56, 0.01, 2.0 ));
+      appendParameter( new MIP_TextParameter( "Mode",     0,    0,    1, mode_txt ));
       MNeedRecalc = true;
     }
     return result;
@@ -559,19 +564,6 @@ public: // plugin
     return result;
   }
 
-  //----------
-
-  //const void* get_extension(const char *id) final {
-  //  const void* ext = MIP_Plugin::get_extension(id);
-  //  if (!ext) {
-  //    if (strcmp(id,CLAP_EXT_GUI) == 0)             return &MGui;
-  //    if (strcmp(id,CLAP_EXT_AUDIO_PORTS) == 0)     return &MAudioPorts;
-  //    if (strcmp(id,CLAP_EXT_NOTE_PORTS) == 0)      return &MNotePorts;
-  //    if (strcmp(id,CLAP_EXT_QUICK_CONTROLS) == 0)  return &MQuickControls;
-  //  }
-  //  return ext;
-  //}
-
 };
 
 //----------------------------------------------------------------------
@@ -585,7 +577,7 @@ public: // plugin
   #include "plugin/mip_entry.h"
   MIP_DEFAULT_ENTRY(sa_freeverb_descriptor,sa_freeverb_plugin)
 
-#endif // MIP_NO_ENTRY
+#endif
 
 //----------------------------------------------------------------------
 #endif

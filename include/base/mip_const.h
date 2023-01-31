@@ -2,7 +2,14 @@
 #define mip_const_included
 //----------------------------------------------------------------------
 
-const char* MIP_VERSION       = "0.3.1";
+//const char* MIP_VERSION       = "0.3.1";
+//const char* MIP_VENDOR        = "skei.audio";
+//const char* MIP_URL           = "https://github.com/skei/MIP";
+
+#define MIP_VERSION           "0.3.1"
+#define MIP_VENDOR            "skei.audio"
+#define MIP_URL               "https://github.com/skei/MIP"
+
 const char  MIP_HEX_TABLE[]   = "0123456789ABCDEF";
 const char  MIP_CSYMBOLS[]    = "________________________________________________0123456789_______ABCDEFGHIJKLMNOPQRSTUVWXYZ______abcdefghijklmnopqrstuvwxyz_____";
 const char  MIP_NULL_STRING[] = "";
