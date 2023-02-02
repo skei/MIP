@@ -8,6 +8,10 @@
 #include "plugin/mip_plugin.h"
 
 //----------------------------------------------------------------------
+//
+// discovery provider
+//
+//----------------------------------------------------------------------
 
 const clap_preset_discovery_provider_descriptor_t MIP_CLAP_PRESET_DISCOVERY_DESCRIPTOR {
   CLAP_VERSION,
@@ -16,11 +20,7 @@ const clap_preset_discovery_provider_descriptor_t MIP_CLAP_PRESET_DISCOVERY_DESC
   "skei.audio"
 };
 
-//----------------------------------------------------------------------
-//
-//
-//
-//----------------------------------------------------------------------
+//----------
 
 bool clap_preset_discovery_provider_init_callback(const struct clap_preset_discovery_provider *provider) {
   MIP_PRINT;
@@ -62,7 +62,7 @@ const clap_preset_discovery_provider_t MIP_CLAP_PRESET_DISCOVERY_PROVIDER {
 
 //----------------------------------------------------------------------
 //
-//
+// discovery factory
 //
 //----------------------------------------------------------------------
 

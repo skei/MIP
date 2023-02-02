@@ -2,6 +2,22 @@
 #define mip_editor_included
 //----------------------------------------------------------------------
 
+/*
+
+  notes to self:
+
+  this one should have a major overhaul.. it's a mess.. generally, an
+  editor acts as the in-between between a plugin and a window.. a plugin
+  has an editor, but the editor communicates back via an editor-listener
+  (which can be 'intercepted')..
+
+  - the (embedded) window
+  - parameter <-> widget connections
+  - event thread, timer (gui updates)
+  - aspect ratio (window size)
+
+*/
+
 #include "base/mip.h"
 #include "plugin/clap/mip_clap.h"
 //#include "plugin/mip_editor_window.h"
@@ -103,22 +119,15 @@ public:
 public:
 //------------------------------
 
-  //  virtual void setWidth(uint32_t AWidth) { MWidth = AWidth; }
-  //  virtual void setHeight(uint32_t AHeight) { MHeight = AHeight; }
-  //  virtual void setSize(uint32_t AWidth, uint32_t AHeight) { MWidth = AWidth; MHeight = AHeight; }
-  //  virtual void setScale(double AScale) { MScale = AScale; }
+  //virtual void setEditorListener(MIP_EditorListener* AListener) {
+  //  MEditorListener = AListener;
+  //}
 
   //----------
 
-  virtual void setEditorListener(MIP_EditorListener* AListener) {
-    MEditorListener = AListener;
-  }
-
-  //----------
-
-  virtual void setParent(intptr_t AParent) {
-    MParentWindow = AParent;
-  }
+  //virtual void setParent(intptr_t AParent) {
+  //  MParentWindow = AParent;
+  //}
 
   //----------
 
@@ -140,34 +149,35 @@ public:
 
   //----------
 
-  virtual void connect(MIP_Widget* AWidget, MIP_Parameter* AParameter) {
-
-    MIP_Widget* connection = AWidget->getConnection(0);
-
-    //MIP_Print("AWidget %p AParameter %p\n",AWidget,AParameter);
-    /*AWidget*/connection->setParameter(AParameter);
-    AParameter->setWidget(/*AWidget*/connection);
-    double value = AParameter->getValue();
-    /*AWidget*/connection->setValue(value);
-    /*AWidget*/connection->on_widget_connect(AParameter);
-    //double nv = AParameter->normalizeValue(v);
-    //AWidget->setValue(nv);
-    //connect(AWidget,0,AParameter);
-  }
+  //virtual void connect(MIP_Widget* AWidget, MIP_Parameter* AParameter) {
+  //  MIP_Widget* connection = AWidget->getConnection(0);
+  //  connection->setParameter(AParameter);
+  //  AParameter->setWidget(connection);
+  //  double value = AParameter->getValue();
+  //  connection->setValue(value);
+  //  connection->on_widget_connect(AParameter);
+  //}
 
   //----------
 
-  virtual void connect(MIP_Widget* AWidget, uint32_t AIndex, MIP_Parameter* AParameter) {
-    //MIP_Print("AWidget %p AIndex %i AParameter %p\n",AWidget,AIndex,AParameter);
+  //virtual void connect(MIP_Widget* AWidget, uint32_t AIndex, MIP_Parameter* AParameter) {
+  //  MIP_Widget* connection = AWidget->getConnection(AIndex);
+  //  connection->setParameter(AIndex,AParameter);
+  //  AParameter->setWidget(connection);
+  //  double value = AParameter->getValue();
+  //  connection->setValue(AIndex,value);
+  //  connection->on_widget_connect(AParameter);
+  //}
+
+  //----------
+
+  virtual void connect(MIP_Widget* AWidget, MIP_Parameter* AParameter, uint32_t AIndex=0) {
     MIP_Widget* connection = AWidget->getConnection(AIndex);
-    //AWidget->setNumParameters(AIndex);
-    /*AWidget*/connection->setParameter(AIndex,AParameter);
-    AParameter->setWidget(/*AWidget*/connection);
+    connection->setParameter(AIndex,AParameter);
+    AParameter->setWidget(connection);
     double value = AParameter->getValue();
-    /*AWidget*/connection->setValue(AIndex,value);
-    /*AWidget*/connection->on_widget_connect(AParameter);
-    //double nv = AParameter->normalizeValue(v);
-    //AWidget->setValue(nv);
+    connection->setValue(AIndex,value);
+    connection->on_widget_connect(AParameter);
   }
 
   //----------
@@ -282,21 +292,29 @@ public: // clap.gui
   // see: MIP_Window::on_window_resize
 
   virtual bool adjustSize(uint32_t *width, uint32_t *height) {
-//    //double s = 1.0;
-//    double w = *width;
-//    double h = *height;
-//    double aspect = w / h;
-//    if (aspect >= MAspectRatio) w = h * MAspectRatio;
-//    else h = w * MAspectRatio;
-//    //MWindow->setWindowScale(scale);
-//    // avoids a bitwig 'resize dance'..
-//    // jiggling down half a pixels a time in width/height,
-//    // until aspect ratio for both with and height agree..
-//    w = ceil(w);
-//    h = ceil(h);
-//    //MIP_Print("%i, %i -> %i, %i\n",*width,*height,(int)w,(int)h);
-//    *width = w;
-//    *height = h;
+
+// something isn't right...
+/*
+
+    double w = *width;
+    double h = *height;
+    double aspect = w / h;
+    if (aspect >= MAspectRatio) w = h * MAspectRatio;
+    else h = w * MAspectRatio;
+
+    // avoids a bitwig 'resize dance'..
+    // jiggling down half a pixels a time in width/height,
+    // until aspect ratio for both with and height agree..
+
+    w = ceil(w);
+    h = ceil(h);
+
+    MIP_Print("%i, %i -> %i, %i\n",*width,*height,(int)w,(int)h);
+
+    *width = w;
+    *height = h;
+*/
+
     return true;
   }
 
@@ -448,12 +466,13 @@ public: // clap.gui
 public: // window listener
 //------------------------------
 
+  /*
+    we catch the timer event from the window, and pass it on to the
+    editor-listener (plugin).. which will flush (invalidate) updated widgets
+    (connected to params/mods)..
+  */
+
   void do_window_listener_timer() override {
-    //MIP_PRINT;
-    //uint32_t num = MRegisteredTimers.size();
-    //for (uint32-t i=0; i<num; i++) {
-    //  MRegisteredTimers[i]->on_widget_timer();
-    //}
     if (MEditorListener) MEditorListener->on_editor_timer();
   }
 
@@ -461,7 +480,8 @@ public: // window listener
 public: // widget listener
 //------------------------------
 
-  // pass messages on to the window
+  // remember to pass messages on to the window
+  // (we're 'intercepting' messages meant for the window )
 
   //----------
 

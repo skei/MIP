@@ -60,7 +60,7 @@ class MIP_NeuralNeuron {
 
   public:
 
-    uint32_t              MID;        // ID of a particular neuron in a layer, used to find a particular neuron in an array
+    uint32_t            MID;        // ID of a particular neuron in a layer, used to find a particular neuron in an array
     float               MValue;     // Value which Neuron currently is holding
     float               MBias;      // Bias of the neuron
     float               MDelta;     // Used in back  prop. Note it is backprop specific

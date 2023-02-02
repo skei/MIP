@@ -6,6 +6,11 @@
 #include "base/types/mip_color.h"
 //typedef uint32_t MIP_RGBA;
 
+//----------
+
+// typedef uint32_t MIP_RGBA; // 0xaabbggrr
+// typedef uint32_t MIP_BGRA; // 0xaarrggbb
+
 //----------------------------------------------------------------------
 //
 //

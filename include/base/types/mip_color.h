@@ -170,10 +170,10 @@ const MIP_Color MIP_COLOR_CYAN            = MIP_Color( 0.00, 0.50, 0.50 );
 const MIP_Color MIP_COLOR_LIGHT_CYAN      = MIP_Color( 0.00, 0.75, 0.75 );
 const MIP_Color MIP_COLOR_BRIGHT_CYAN     = MIP_Color( 0.00, 1.00, 1.00 );
 
-const MIP_Color MIP_COLOR_DARK_CYAN2       = MIP_Color( 0.00, 0.18, 0.25 );
-const MIP_Color MIP_COLOR_CYAN2            = MIP_Color( 0.00, 0.37, 0.50 );
-const MIP_Color MIP_COLOR_LIGHT_CYAN2      = MIP_Color( 0.00, 0.50, 0.75 );
-const MIP_Color MIP_COLOR_BRIGHT_CYAN2     = MIP_Color( 0.00, 0.75, 1.00 );
+const MIP_Color MIP_COLOR_DARK_CYAN2      = MIP_Color( 0.00, 0.18, 0.25 );
+const MIP_Color MIP_COLOR_CYAN2           = MIP_Color( 0.00, 0.37, 0.50 );
+const MIP_Color MIP_COLOR_LIGHT_CYAN2     = MIP_Color( 0.00, 0.50, 0.75 );
+const MIP_Color MIP_COLOR_BRIGHT_CYAN2    = MIP_Color( 0.00, 0.75, 1.00 );
 
 const MIP_Color MIP_COLOR_DARK_BLUE1      = MIP_Color( 0.00, 0.12, 0.25 );
 const MIP_Color MIP_COLOR_BLUE1           = MIP_Color( 0.00, 0.25, 0.50 );

@@ -158,8 +158,8 @@
     MRangeSizeValueWidget->setSliderColor(            MIP_Color(0.7, 0.0, 0.0) );
     MRangeSizeValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.0, 0.0) );
 
-    connect( MRangeSizeValueWidget, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_RANGE) );
-    connect( MRangeSizeValueWidget, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_RANGE) );
+    connect( MRangeSizeValueWidget, AParameters->getItem(PAR_PROB_SIZE_MIN_RANGE), 0 );
+    connect( MRangeSizeValueWidget, AParameters->getItem(PAR_PROB_SIZE_MAX_RANGE), 1 );
 
     // loop length
 
@@ -190,8 +190,8 @@
     MLoopSizeValueWidget->setInteractiveSliderColor(MIP_Color(0.9, 0.0, 0.0) );
     MLoopSizeValueWidget->setTextColor(             MIP_Color(0, 0, 0, 0.5));
 
-    connect( MLoopSizeValueWidget, 0, AParameters->getItem(PAR_PROB_SIZE_MIN_LOOP) );
-    connect( MLoopSizeValueWidget, 1, AParameters->getItem(PAR_PROB_SIZE_MAX_LOOP) );
+    connect( MLoopSizeValueWidget, AParameters->getItem(PAR_PROB_SIZE_MIN_LOOP), 0 );
+    connect( MLoopSizeValueWidget, AParameters->getItem(PAR_PROB_SIZE_MAX_LOOP), 1 );
 
     //------------------------------
 
@@ -224,8 +224,8 @@
     MRangeSpeedValueWidget->setInteractiveSliderColor(MIP_Color(0.9, 0.45, 0.0) );
     MRangeSpeedValueWidget->setTextColor(             MIP_Color(0, 0, 0, 0.5));
 
-    connect( MRangeSpeedValueWidget, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_RANGE) );
-    connect( MRangeSpeedValueWidget, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_RANGE) );
+    connect( MRangeSpeedValueWidget, AParameters->getItem(PAR_PROB_SPEED_MIN_RANGE), 0 );
+    connect( MRangeSpeedValueWidget, AParameters->getItem(PAR_PROB_SPEED_MAX_RANGE), 1 );
 
     // loop speed
 
@@ -256,8 +256,8 @@
     MLoopSpeedValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.45, 0.0) );
     MLoopSpeedValueWidget->setTextColor(              MIP_Color(0, 0, 0, 0.5));
 
-    connect( MLoopSpeedValueWidget, 0, AParameters->getItem(PAR_PROB_SPEED_MIN_LOOP) );
-    connect( MLoopSpeedValueWidget, 1, AParameters->getItem(PAR_PROB_SPEED_MAX_LOOP) );
+    connect( MLoopSpeedValueWidget, AParameters->getItem(PAR_PROB_SPEED_MIN_LOOP), 0 );
+    connect( MLoopSpeedValueWidget, AParameters->getItem(PAR_PROB_SPEED_MAX_LOOP), 1 );
 
     //------------------------------
 
@@ -290,8 +290,8 @@
     MRangeOffsetValueWidget->setInteractiveSliderColor( MIP_Color(0.9, 0.9, 0.0) );
     MRangeOffsetValueWidget->setTextColor(              MIP_Color(0, 0, 0, 0.5));
 
-    connect( MRangeOffsetValueWidget, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_RANGE) );
-    connect( MRangeOffsetValueWidget, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_RANGE) );
+    connect( MRangeOffsetValueWidget, AParameters->getItem(PAR_PROB_OFFSET_MIN_RANGE), 0 );
+    connect( MRangeOffsetValueWidget, AParameters->getItem(PAR_PROB_OFFSET_MAX_RANGE), 1 );
 
     // loop offset
 
@@ -322,8 +322,8 @@
     MLoopOffsetValueWidget->setInteractiveSliderColor(MIP_Color(0.9, 0.9, 0.0) );
     MLoopOffsetValueWidget->setTextColor(             MIP_Color(0, 0, 0, 0.5));
 
-    connect( MLoopOffsetValueWidget, 0, AParameters->getItem(PAR_PROB_OFFSET_MIN_LOOP) );
-    connect( MLoopOffsetValueWidget, 1, AParameters->getItem(PAR_PROB_OFFSET_MAX_LOOP) );
+    connect( MLoopOffsetValueWidget, AParameters->getItem(PAR_PROB_OFFSET_MIN_LOOP), 0 );
+    connect( MLoopOffsetValueWidget, AParameters->getItem(PAR_PROB_OFFSET_MAX_LOOP), 1 );
 
     //------------------------------
 
@@ -402,8 +402,8 @@
 
     //MRangeFXValueWidget->setSnap(true);
 
-    connect( MRangeFXValueWidget, 0, AParameters->getItem(PAR_PROB_FX_MIN_RANGE) );
-    connect( MRangeFXValueWidget, 1, AParameters->getItem(PAR_PROB_FX_MAX_RANGE) );
+    connect( MRangeFXValueWidget, AParameters->getItem(PAR_PROB_FX_MIN_RANGE), 0 );
+    connect( MRangeFXValueWidget, AParameters->getItem(PAR_PROB_FX_MAX_RANGE), 1 );
 
     // loop fx
 
@@ -436,8 +436,8 @@
 
     //MLoopFXValueWidget->setSnap(true);
 
-    connect( MLoopFXValueWidget, 0, AParameters->getItem(PAR_PROB_FX_MIN_LOOP) );
-    connect( MLoopFXValueWidget, 1, AParameters->getItem(PAR_PROB_FX_MAX_LOOP) );
+    connect( MLoopFXValueWidget, AParameters->getItem(PAR_PROB_FX_MIN_LOOP), 0 );
+    connect( MLoopFXValueWidget, AParameters->getItem(PAR_PROB_FX_MAX_LOOP), 1 );
 
     //------------------------------
     // Effects

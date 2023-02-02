@@ -8,6 +8,10 @@
 // interface
 //----------------------------------------------------------------------
 
+// TODO: ifdef random_system, etc..
+
+
+
 /*
 double   MIP_Random(void);
 double   MIP_RandomSigned(void);
@@ -24,9 +28,11 @@ int32   MIP_RandomRangeInt(int32 minval, int32 maxval);
 //#define MIP_RandomSignedInt  MIP_RandomSignedInt_System
 //#define MIP_RandomRangeInt   MIP_RandomRangeInt_System
 
-double   MIP_Random_LCG();
-double   MIP_RandomSigned_LCG();
-double   MIP_RandomRange_LCG(double minval, double maxval);
+//----------
+
+double  MIP_Random_LCG();
+double  MIP_RandomSigned_LCG();
+double  MIP_RandomRange_LCG(double minval, double maxval);
 int32_t MIP_RandomInt_LCG();
 int32_t MIP_RandomSignedInt_LCG();
 int32_t MIP_RandomRangeInt_LCG(int32_t minval, int32_t maxval);
@@ -134,6 +140,8 @@ double SRanddouble(int* a_Seed) {
 //----------------------------------------------------------------------
 
 uint32_t rand_lcg_seed = 666;
+
+//
 
 int32_t rand_lcg() {
   //rand_lcg_seed = ((uint64_t)rand_lcg_seed * 279470273UL) % 4294967291UL;

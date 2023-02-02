@@ -215,7 +215,7 @@ public:
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) final {
     bool result = MIP_Plugin::activate(sample_rate,min_frames_count,max_frames_count);
     if (result) {
-      MVoiceManager.activate(sample_rate,min_frames_count,max_frames_count,&MParameters);
+      MVoiceManager.activate(sample_rate,min_frames_count,max_frames_count,&MParameters); // &MDspGrid
     }
     return result;
   }
@@ -376,10 +376,13 @@ public: // audio
 //------------------------------
 
   void processAudioBlock(MIP_ProcessContext* AContext) final {
+
     MVoiceManager.processAudioBlock(AContext);
     uint32_t length = AContext->process->frames_count;
     float** buffer = AContext->process->audio_outputs[0].data32;
     MIP_ScaleStereoBuffer(buffer,p_gain,length);
+
+
   }
 
 };

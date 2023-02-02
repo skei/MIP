@@ -2,8 +2,6 @@
 #define mip_plugin_included
 //----------------------------------------------------------------------
 
-// TODO: #ifndef MIP_NO_GUI around editor stuff
-
 #include "base/mip.h"
 #include "base/system/mip_timer.h"
 #include "plugin/mip_parameter.h"
@@ -25,16 +23,11 @@
 
 class MIP_Plugin
 : public MIP_ClapPlugin
-//, public MIP_TimerListener
 , public MIP_EditorListener {
-
-  //friend class MIP_ExeWindow;
 
 //------------------------------
 private:
 //------------------------------
-
-  //uint32_t MProcessCount = 0;
 
   MIP_ProcessContext    MProcessContext           = {};
 
@@ -42,7 +35,8 @@ private:
   bool                  MIsActivated              = false;
   bool                  MIsProcessing             = false;
   bool                  MIsEditorOpen             = false;
-//bool                  MIsEditorBusy             = false;
+
+  // from host
 
   uint32_t              MSelectedAudioPortsConfig = 0;
   int32_t               MRenderMode               = CLAP_RENDER_REALTIME;
@@ -50,16 +44,20 @@ private:
   // write values before indexes
   // read indexes before values
 
+  // -> audio process
   MIP_Queue<uint32_t,MIP_PLUGIN_MAX_PARAM_EVENTS> MProcessParamQueue        = {};
-  MIP_Queue<uint32_t,MIP_PLUGIN_MAX_PARAM_EVENTS> MProcessModQueue          = {};
-  MIP_Queue<uint32_t,MIP_PLUGIN_MAX_PARAM_EVENTS> MGuiParamQueue            = {};
-  MIP_Queue<uint32_t,MIP_PLUGIN_MAX_PARAM_EVENTS> MGuiModQueue              = {};
-  MIP_Queue<uint32_t,MIP_PLUGIN_MAX_GUI_EVENTS>   MHostParamQueue           = {};
-
   MIP_Queue<double,MIP_PLUGIN_MAX_PARAM_EVENTS>   MQueuedProcessParamValues = {};
+  MIP_Queue<uint32_t,MIP_PLUGIN_MAX_PARAM_EVENTS> MProcessModQueue          = {};
   MIP_Queue<double,MIP_PLUGIN_MAX_PARAM_EVENTS>   MQueuedProcessModValues   = {};
+
+  // -> gui
+  MIP_Queue<uint32_t,MIP_PLUGIN_MAX_PARAM_EVENTS> MGuiParamQueue            = {};
   MIP_Queue<double,MIP_PLUGIN_MAX_PARAM_EVENTS>   MQueuedGuiParamValues     = {};
+  MIP_Queue<uint32_t,MIP_PLUGIN_MAX_PARAM_EVENTS> MGuiModQueue              = {};
   MIP_Queue<double,MIP_PLUGIN_MAX_PARAM_EVENTS>   MQueuedGuiModValues       = {};
+
+  // -> host
+  MIP_Queue<uint32_t,MIP_PLUGIN_MAX_GUI_EVENTS>   MHostParamQueue           = {};
   MIP_Queue<double,MIP_PLUGIN_MAX_GUI_EVENTS>     MQueuedHostParamValues    = {};
 
 //------------------------------
@@ -85,7 +83,6 @@ public:
 
   MIP_Plugin(const clap_plugin_descriptor_t* ADescriptor, const clap_host_t* AHost)
   : MIP_ClapPlugin(ADescriptor,AHost) {
-    //MIP_PRINT;
     //MHost = new MIP_ClapHost(AHost);
     //TODO: setInitialEditorSize
     #ifndef MIP_EXE
@@ -94,7 +91,6 @@ public:
       LOG.print("  CLAP: host.url:     %s\n",AHost->url);
       LOG.print("  CLAP: host.version: %s\n",AHost->version);
       LOG.print("  CLAP: host.data:    %p\n",AHost->host_data);
-
       LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_AMBISONIC, (AHost->get_extension(AHost,CLAP_EXT_AMBISONIC)) );
       LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_AUDIO_PORTS_CONFIG, (AHost->get_extension(AHost,CLAP_EXT_AUDIO_PORTS_CONFIG)) );
       LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_AUDIO_PORTS, (AHost->get_extension(AHost,CLAP_EXT_AUDIO_PORTS)) );
@@ -123,14 +119,12 @@ public:
       LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_TRIGGERS, (AHost->get_extension(AHost,CLAP_EXT_TRIGGERS)) );
       LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_TUNING, (AHost->get_extension(AHost,CLAP_EXT_TUNING)) );
       LOG.print("  CLAP: host ext %s: %i\n",CLAP_EXT_VOICE_INFO, (AHost->get_extension(AHost,CLAP_EXT_VOICE_INFO)) );
-
     #endif
   }
 
   //----------
 
   virtual ~MIP_Plugin() {
-    //MIP_PRINT;
     #ifndef MIP_NO_AUTODELETE
       deleteParameters();
       deleteAudioInputPorts();
@@ -145,7 +139,6 @@ public:
 public:
 //------------------------------
 
-  //virtual
   void setInitialEditorSize(uint32_t AWidth, uint32_t AHeight) {
     MInitialEditorWidth  = AWidth;
     MInitialEditorHeight = AHeight;
@@ -160,18 +153,15 @@ public:
 
   //----------
 
-  //virtual
   MIP_Editor* getEditor() {
     return MEditor;
   }
 
-  //virtual
   void setEditor(MIP_Editor* AEditor) {
     MEditor = AEditor;
     MIsEditorOpen = false;
   }
 
-  //virtual
   void setEditorRootWidget(MIP_Widget* AWidget) {
     MEditor->setRootWidget(AWidget);
   }
@@ -188,10 +178,7 @@ public: // plugin
 
   bool init() override {
     LOG.print("PLUGIN: init\n");
-    //MIP_Assert(!MIsInitialized);
-    if (!MIsInitialized) {
-      MIsInitialized = true;
-    }
+    MIsInitialized = true;
     MProcessContext.parameters = &MParameters;
     return true;
   }
@@ -200,8 +187,6 @@ public: // plugin
 
   void destroy() override {
     LOG.print("PLUGIN: destroy\n");
-    //MIP_Assert(MIsInitialized);
-    //if (MIsInitialized)
     MIsInitialized = false;
   }
 
@@ -209,8 +194,6 @@ public: // plugin
 
   bool activate(double sample_rate, uint32_t min_frames_count, uint32_t max_frames_count) override {
     LOG.print("PLUGIN: activate(%.2f,%i,%i)\n",sample_rate,min_frames_count,max_frames_count);
-    //MIP_PRINT;
-    //MIP_Assert(!MIsActivated);
     if (!MIsActivated) {
       setDefaultParameterValues();
       MProcessContext.samplerate = sample_rate;
@@ -223,8 +206,6 @@ public: // plugin
 
   void deactivate() override {
     LOG.print("PLUGIN: deactivate\n");
-    //MIP_Assert(MIsActivated);
-    //if (MIsActivated)
     MIsActivated = false;
   }
 
@@ -232,7 +213,6 @@ public: // plugin
 
   bool start_processing() override {
     LOG.print("PLUGIN: start_processing\n");
-    //MIP_Assert(!MIsProcessing);
     if (!MIsProcessing) {
       MProcessContext.counter = 0;
       MIsProcessing = true;
@@ -244,8 +224,6 @@ public: // plugin
 
   void stop_processing() override {
     LOG.print("PLUGIN: stop_processing\n");
-    //MIP_Assert(MIsProcessing);
-    //if (MIsProcessing)
     MIsProcessing = false;
   }
 
@@ -272,7 +250,10 @@ public: // plugin
     postProcessEvents(process->in_events,process->out_events);
     flushHostParams(process->out_events);
 
+    // make it crash if we try to access it outside of proces()
     MProcessContext.process = nullptr;
+
+    // ever-increasing counter
     MProcessContext.counter += 1;
 
     return CLAP_PROCESS_CONTINUE;
@@ -289,9 +270,12 @@ public: // plugin
     if (strcmp(id,CLAP_EXT_CHECK_FOR_UPDATE)        == 0) return &MCheckForUpdate;        // draft
     if (strcmp(id,CLAP_EXT_CONTEXT_MENU)            == 0) return &MContextMenu   ;        // draft
     if (strcmp(id,CLAP_EXT_CV)                      == 0) return &MCV;                    // draft
+
+    // .. one exception ..
     #ifndef MIP_NO_GUI
     if (strcmp(id,CLAP_EXT_GUI)                     == 0) return &MGui;
     #endif
+
     if (strcmp(id,CLAP_EXT_LATENCY)                 == 0) return &MLatency;
     if (strcmp(id,CLAP_EXT_MIDI_MAPPINGS)           == 0) return &MMidiMappings;          // draft
     if (strcmp(id,CLAP_EXT_NOTE_NAME)               == 0) return &MNoteName;
@@ -317,6 +301,7 @@ public: // plugin
   //----------
 
  void on_main_thread() override {
+   MIP_PRINT;
  }
 
 //------------------------------
@@ -354,7 +339,7 @@ public: // ext audio-ports-config
 
   //----------
 
-  //TODO: don't assume stereo in/out, check MAudioInput/OutputPorts
+  // TODO: don't assume stereo in/out, check MAudioInput/OutputPorts
 
   bool audio_ports_config_get(uint32_t index, clap_audio_ports_config_t *config) override {
     MIP_Assert(index == 0);
@@ -374,7 +359,7 @@ public: // ext audio-ports-config
   //----------
 
   bool audio_ports_config_select(clap_id config_id) override {
-    MIP_Assert(config_id == 0);
+    //MIP_Assert(config_id == 0);
     MSelectedAudioPortsConfig = config_id;
     return false;
   }
@@ -552,7 +537,6 @@ public: // ext gui
 
   bool gui_set_size(uint32_t width, uint32_t height) override {
     LOG.print("MIP_Plugin.gui_set_size: %i,%i\n",width,height);
-    //MIsEditorBusy = true;
     if (MEditor) return MEditor->setSize(width,height);
     else return true; // true?
   }
@@ -588,16 +572,6 @@ public: // ext gui
       updateEditorParameterValues();
       bool result = MEditor->show();
       if (result) {
-        //#ifdef MIP_LINUX
-        //  LOG.print("PLUGIN: Starting gui timer\n");
-        //  MGuiTimer.start(MIP_EDITOR_TIMER_MS);
-        //#endif
-        //#ifdef MIP_WIN32
-        //  MIP_Win32Window* window = MEditor->getWindow();
-        //  HWND hwnd = window->getHandle();
-        //  LOG.print("PLUGIN: Starting gui timer\n");
-        //  MGuiTimer.start(MIP_EDITOR_TIMER_MS,hwnd);
-        //#endif
         MIsEditorOpen = true;
       }
       return result;
@@ -703,6 +677,7 @@ public: // draft param-indication
   void param_indication_set_mapping(clap_id param_id, bool has_mapping, const clap_color_t *color, const char *label, const char *description) override {
     MIP_Print("id %i mapping %i color %i.%i.%i label '%s' description '%s'\n",param_id,has_mapping,color->red,color->green,color->blue,label,description);
     //MParameters[param_id]->setIndicationMapping(has_mapping,color,label,description);
+    //redraw..
   }
 
   //----------
@@ -724,6 +699,7 @@ public: // draft param-indication
   void param_indication_set_automation(clap_id param_id, uint32_t automation_state, const clap_color_t *color) override {
     MIP_Print("id %i state %i color %i.%i.%i\n",param_id,automation_state,color->red,color->green,color->blue);
     //MParameters[param_id]->setIndicationAutomation(automation_state,color);
+    //redraw..
   }
 
 //------------------------------
@@ -861,6 +837,7 @@ public: // ext state
 
   bool state_save(const clap_ostream_t *stream) override {
     //MIP_PRINT;
+    uint32_t total = 0;
     uint32_t written = 0;
     uint32_t version = 0;
     uint32_t num_params = MParameters.size();
@@ -870,12 +847,14 @@ public: // ext state
       MIP_Print("state_save: error writing version\n");
       return false;
     }
+    total += sizeof(uint32_t);
     // num params
     written = stream->write(stream,&num_params,sizeof(uint32_t));
     if (written != sizeof(uint32_t)) {
       MIP_Print("state_save: error writing parameter count\n");
       return false;
     }
+    total += sizeof(uint32_t);
     // param values
     for (uint32_t i=0; i<num_params; i++) {
       double value = MParameters[i]->getValue();
@@ -884,7 +863,9 @@ public: // ext state
         MIP_Print("state_load: error writing parameter %i\n",i);
         return false;
       }
+      total += sizeof(double);
     }
+    MIP_Print("total: %i\n",total);
     return true;
   }
 
@@ -892,6 +873,7 @@ public: // ext state
 
   bool state_load(const clap_istream_t *stream) override {
     //MIP_PRINT;
+    uint32_t total = 0;
     uint32_t read = 0;
     uint32_t version = 0;
     uint32_t num_params = 0;
@@ -901,6 +883,7 @@ public: // ext state
       MIP_Print("state_load: error reading version\n");
       return false;
     }
+    total += sizeof(uint32_t);
     //TODO: check version
     // num params
     read = stream->read(stream,&num_params,sizeof(uint32_t));
@@ -908,6 +891,7 @@ public: // ext state
       MIP_Print("state_load: error reading parameter count\n");
       return false;
     }
+    total += sizeof(uint32_t);
     //TODO: check num params = marameters.size
     if (num_params != MParameters.size()) {
       MIP_Print("state_load: wrong parameter count\n");
@@ -921,10 +905,15 @@ public: // ext state
         MIP_Print("state_load: error reading parameter %i\n",i);
         return false;
       }
+      total += sizeof(double);
       MParameters[i]->setValue(value);
     }
+
+    MIP_Print("total: %i\n",total);
+
     updateParameterValues();
     //updateEditorParameterValues();
+
     return true;
   }
 
@@ -1072,9 +1061,11 @@ public: // editor listener
   // after editor has been called from/in window
   // (timer callback)
 
+  // the parameters are already checked for valid connections, hopefully?
+
   void on_editor_timer() override {
     //MIP_PRINT;
-    if (MIsEditorOpen) { //  && !MIsEditorBusy) {
+    if (MIsEditorOpen) {
       flushGuiParams();
       flushGuiMods();
     }
@@ -1137,6 +1128,8 @@ public: // parameters
   }
 
   //----------
+
+  // aka updateProcessParamValues()
 
   void updateParameterValues() {
     for (uint32_t i=0; i<MParameters.size(); i++) {
@@ -1427,6 +1420,9 @@ public: // queues
 
     when a parameter is updated, we also want to update the gui..
     we queue the events, and flush them all in a timer callback
+
+    is the parameter already checked for (valid) connection to widget?
+    if not, potentially discard already here..
   */
 
   void queueGuiParam(uint32_t AIndex, double AValue) {

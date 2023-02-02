@@ -4,7 +4,7 @@
 
 /*
 
-doubly-linked 'invasive' list..
+doubly-linked 'intrusive' list..
 
   a templates (ala array)data-container)
   b multiple inheritance (ala widgetListener)
